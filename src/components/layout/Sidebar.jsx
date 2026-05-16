@@ -1,22 +1,17 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {
-  LayoutDashboard,
-  UserCircle,
-  CalendarDays,
-  Users,
-  Clock,
-  Settings,
-  Star,
-  ShieldCheck,
+  LayoutDashboard, UserCircle, CalendarDays,
+  Users, Clock, Settings, Star, ShieldCheck, LogOut,
 } from 'lucide-react'
+import { useAuth } from '../../contexts/AuthContext'
 
 const nav = [
-  { to: '/dashboard',   label: 'Übersicht',    icon: LayoutDashboard },
-  { to: '/profile',     label: 'Mein Profil',  icon: UserCircle },
-  { to: '/activities',  label: 'Aktivitäten',  icon: CalendarDays },
-  { to: '/leads',       label: 'Anfragen',     icon: Users },
-  { to: '/schedule',    label: 'Kalender',     icon: Clock },
-  { to: '/settings',   label: 'Plan & Abo',   icon: Settings },
+  { to: '/dashboard',  label: 'Übersicht',   icon: LayoutDashboard },
+  { to: '/profile',    label: 'Mein Profil', icon: UserCircle },
+  { to: '/activities', label: 'Aktivitäten', icon: CalendarDays },
+  { to: '/leads',      label: 'Anfragen',    icon: Users },
+  { to: '/schedule',   label: 'Kalender',    icon: Clock },
+  { to: '/settings',   label: 'Plan & Abo',  icon: Settings },
 ]
 
 const adminNav = [
@@ -24,6 +19,18 @@ const adminNav = [
 ]
 
 export default function Sidebar() {
+  const { user, signOut } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/login', { replace: true })
+  }
+
+  const initials = user?.email
+    ? user.email.slice(0, 2).toUpperCase()
+    : '?'
+
   return (
     <aside className="w-60 shrink-0 bg-white border-r border-gray-100 min-h-screen flex flex-col">
       {/* Logo */}
@@ -67,17 +74,24 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* Partner info */}
-      <div className="px-3 py-4 border-t border-gray-100">
+      {/* User + logout */}
+      <div className="px-3 py-4 border-t border-gray-100 space-y-1">
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-semibold text-sm">
-            TS
+          <div className="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-semibold text-sm shrink-0">
+            {initials}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">Tanzschule Wels</p>
-            <p className="text-xs text-gray-500 truncate">Premium Partner</p>
+            <p className="text-xs font-medium text-gray-900 truncate">{user?.email ?? '—'}</p>
+            <p className="text-xs text-gray-400">Partner</p>
           </div>
         </div>
+        <button
+          onClick={handleSignOut}
+          className="nav-link nav-link-inactive w-full text-red-500 hover:bg-red-50 hover:text-red-600"
+        >
+          <LogOut size={16} />
+          Abmelden
+        </button>
       </div>
     </aside>
   )

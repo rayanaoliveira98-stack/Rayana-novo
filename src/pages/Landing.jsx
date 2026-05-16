@@ -187,7 +187,7 @@ export default function Landing() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <a href="/dashboard" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            <a href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
               Partner-Login
             </a>
             <a
@@ -565,7 +565,7 @@ export default function Landing() {
             <a href="#" className="hover:text-white transition-colors">Datenschutz</a>
             <a href="#" className="hover:text-white transition-colors">Impressum</a>
             <a href="#" className="hover:text-white transition-colors">Kontakt</a>
-            <a href="/dashboard" className="hover:text-white transition-colors">Partner-Login</a>
+            <a href="/login" className="hover:text-white transition-colors">Partner-Login</a>
           </div>
           <div className="flex gap-3">
             <a href="#" className="flex items-center gap-1.5 text-xs hover:text-white transition-colors">

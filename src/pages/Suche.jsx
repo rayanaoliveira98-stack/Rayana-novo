@@ -366,7 +366,7 @@ export default function Suche() {
             </div>
             <span className="font-bold text-sm text-gray-900">Rayana</span>
           </NavLink>
-          <NavLink to="/dashboard" className="text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors">
+          <NavLink to="/login" className="text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors">
             Partner-Login
           </NavLink>
         </div>
