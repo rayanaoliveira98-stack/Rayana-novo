@@ -180,6 +180,7 @@ export default function Landing() {
           </div>
 
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+            <a href="/suche" className="hover:text-gray-900 transition-colors">Aktivitäten suchen</a>
             <a href="#wie-es-funktioniert" className="hover:text-gray-900 transition-colors">So funktioniert's</a>
             <a href="#preise" className="hover:text-gray-900 transition-colors">Preise</a>
             <a href="#faq" className="hover:text-gray-900 transition-colors">FAQ</a>
@@ -233,10 +234,10 @@ export default function Landing() {
             Kostenlos als Partner registrieren <ArrowRight size={16} />
           </a>
           <a
-            href="#wie-es-funktioniert"
-            className="px-6 py-3.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-colors"
+            href="/suche"
+            className="px-6 py-3.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
           >
-            Mehr erfahren
+            Aktivitäten entdecken <ArrowRight size={16} />
           </a>
         </div>
         <p className="mt-4 text-xs text-gray-400">Keine Kreditkarte · Immer kostenlos startbar</p>

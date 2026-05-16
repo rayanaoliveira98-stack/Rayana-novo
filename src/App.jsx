@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import Landing from './pages/Landing'
+import Suche from './pages/Suche'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import Activities from './pages/Activities'
@@ -14,6 +15,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/suche" element={<Suche />} />
         <Route element={<Layout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<Profile />} />
