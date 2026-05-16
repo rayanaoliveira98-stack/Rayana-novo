@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import {
   Star, Check, ArrowRight, MapPin, Users, TrendingUp,
-  Zap, Instagram, Mail, Phone, ChevronDown, Menu, X,
+  Zap, Instagram, Mail, ChevronDown, Menu, X, Loader2,
 } from 'lucide-react'
+import { supabase } from '../lib/supabase'
 
 const categories = [
   { emoji: '🩰', label: 'Ballett & Tanz' },
@@ -142,10 +143,26 @@ export default function Landing() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [form, setForm] = useState({ name: '', city: '', category: '', email: '', phone: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.email) return
+    setLoading(true)
+    setError(null)
+    const { error: err } = await supabase.from('partner_leads').insert({
+      name:     form.name,
+      city:     form.city || null,
+      category: form.category || null,
+      email:    form.email,
+      phone:    form.phone || null,
+    })
+    setLoading(false)
+    if (err) {
+      setError('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.')
+      return
+    }
     setSubmitted(true)
   }
 
@@ -478,8 +495,20 @@ export default function Landing() {
                   onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                 />
               </div>
-              <button type="submit" className="w-full py-3 bg-brand-600 text-white font-semibold rounded-xl hover:bg-brand-700 transition-colors flex items-center justify-center gap-2">
-                Kostenlos registrieren <ArrowRight size={16} />
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
+                  {error}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 bg-brand-600 text-white font-semibold rounded-xl hover:bg-brand-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              >
+                {loading
+                  ? <><Loader2 size={16} className="animate-spin" /> Wird gesendet…</>
+                  : <>Kostenlos registrieren <ArrowRight size={16} /></>
+                }
               </button>
               <p className="text-xs text-center text-gray-400">
                 Kein Spam. Keine Kreditkarte. Jederzeit kündbar.
