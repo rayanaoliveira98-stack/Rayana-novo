@@ -7,6 +7,7 @@ import Activities from './pages/Activities'
 import Leads from './pages/Leads'
 import Schedule from './pages/Schedule'
 import Settings from './pages/Settings'
+import Admin from './pages/Admin'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="leads" element={<Leads />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>
     </BrowserRouter>

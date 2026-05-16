@@ -7,6 +7,7 @@ import {
   Clock,
   Settings,
   Star,
+  ShieldCheck,
 } from 'lucide-react'
 
 const nav = [
@@ -16,6 +17,10 @@ const nav = [
   { to: '/leads',       label: 'Anfragen',     icon: Users },
   { to: '/schedule',    label: 'Kalender',     icon: Clock },
   { to: '/settings',   label: 'Plan & Abo',   icon: Settings },
+]
+
+const adminNav = [
+  { to: '/admin', label: 'Partner-Leads', icon: ShieldCheck },
 ]
 
 export default function Sidebar() {
@@ -44,6 +49,22 @@ export default function Sidebar() {
             {label}
           </NavLink>
         ))}
+
+        <div className="pt-3 mt-3 border-t border-gray-100">
+          <p className="px-3 mb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Admin</p>
+          {adminNav.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `nav-link ${isActive ? 'nav-link-active' : 'nav-link-inactive'}`
+              }
+            >
+              <Icon size={18} />
+              {label}
+            </NavLink>
+          ))}
+        </div>
       </nav>
 
       {/* Partner info */}
