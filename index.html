@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Saltino – Premium Familien-Salzwelt</title>
+  <title>FITARY – Train Smarter. Live Better.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=Barlow+Condensed:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -15,447 +15,550 @@
   <nav class="nav" id="nav">
     <div class="nav__inner">
       <a href="#" class="nav__logo">
-        <span class="logo-dino">🦕</span>
-        <span class="logo-text">Saltino</span>
+        <span class="logo-mark">F</span>
+        <span class="logo-text">ITARY</span>
       </a>
       <ul class="nav__links">
-        <li><a href="#konzept">Konzept</a></li>
-        <li><a href="#zonen">Zonen</a></li>
-        <li><a href="#erlebnis">Erlebnis</a></li>
-        <li><a href="#kontakt" class="nav__cta">Buchen</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#trainers">Trainers</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#join" class="nav__cta">Start Free Trial</a></li>
       </ul>
-      <button class="nav__burger" id="burger" aria-label="Menü öffnen">
+      <button class="nav__burger" id="burger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero__bg">
-      <div class="salt-particle" style="--x:15%;--y:20%;--s:3px;--d:2.1s"></div>
-      <div class="salt-particle" style="--x:35%;--y:60%;--s:2px;--d:3.4s"></div>
-      <div class="salt-particle" style="--x:55%;--y:30%;--s:4px;--d:1.8s"></div>
-      <div class="salt-particle" style="--x:75%;--y:70%;--s:2px;--d:4.2s"></div>
-      <div class="salt-particle" style="--x:85%;--y:15%;--s:3px;--d:2.9s"></div>
-      <div class="salt-particle" style="--x:20%;--y:80%;--s:2px;--d:3.7s"></div>
-      <div class="salt-particle" style="--x:65%;--y:45%;--s:5px;--d:2.3s"></div>
-      <div class="salt-particle" style="--x:10%;--y:50%;--s:2px;--d:5.1s"></div>
-      <div class="salt-particle" style="--x:90%;--y:55%;--s:3px;--d:1.5s"></div>
-      <div class="salt-particle" style="--x:45%;--y:85%;--s:2px;--d:3.9s"></div>
+      <div class="hero__grid-lines"></div>
+      <div class="hero__orb hero__orb--1"></div>
+      <div class="hero__orb hero__orb--2"></div>
     </div>
     <div class="hero__content">
-      <p class="hero__eyebrow">Premium Familien-Salzwelt</p>
+      <div class="hero__badge">
+        <span class="badge-dot"></span>
+        <span>50,000+ Active Members</span>
+      </div>
       <h1 class="hero__headline">
-        Spielend<br />
-        <em>gesund atmen.</em>
+        Train Smarter.<br />
+        <em>Live Better.</em>
       </h1>
       <p class="hero__sub">
-        Ein Ort, der Eltern zur Ruhe bringt —<br />
-        und Kinder auf ein Salzabenteuer schickt.
+        Personalized workouts, expert coaching, and real results —
+        all in one app built for people who take fitness seriously.
       </p>
       <div class="hero__actions">
-        <a href="#kontakt" class="btn btn--primary">Termin buchen</a>
-        <a href="#konzept" class="btn btn--ghost">Mehr entdecken</a>
+        <a href="#join" class="btn btn--primary">Start Free Trial</a>
+        <a href="#programs" class="btn btn--ghost">
+          <span class="play-icon">▶</span>
+          See Programs
+        </a>
       </div>
-      <div class="hero__micro">
-        <div class="micro-stat">
-          <span class="micro-stat__num">98%</span>
-          <span class="micro-stat__label">Luftreinheit</span>
+      <div class="hero__stats">
+        <div class="stat">
+          <span class="stat__num">500+</span>
+          <span class="stat__label">Workouts</span>
         </div>
-        <div class="micro-divider"></div>
-        <div class="micro-stat">
-          <span class="micro-stat__num">3–6</span>
-          <span class="micro-stat__label">Jahre empfohlen</span>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat__num">40+</span>
+          <span class="stat__label">Expert Trainers</span>
         </div>
-        <div class="micro-divider"></div>
-        <div class="micro-stat">
-          <span class="micro-stat__num">45'</span>
-          <span class="micro-stat__label">Session</span>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat__num">4.9★</span>
+          <span class="stat__label">App Rating</span>
         </div>
       </div>
     </div>
-    <div class="hero__dino">
-      <div class="dino-char">
-        <div class="dino-body">
-          <div class="dino-eye"></div>
-          <div class="dino-spot"></div>
-          <div class="dino-tail"></div>
-          <div class="dino-leg dino-leg--l"></div>
-          <div class="dino-leg dino-leg--r"></div>
+    <div class="hero__visual">
+      <div class="app-mockup">
+        <div class="mockup-screen">
+          <div class="mockup-header">
+            <span class="mockup-greeting">Good morning, Alex 👋</span>
+            <div class="mockup-streak">
+              <span class="streak-fire">🔥</span>
+              <span>14 day streak</span>
+            </div>
+          </div>
+          <div class="mockup-workout-card">
+            <div class="workout-tag">TODAY'S PLAN</div>
+            <h4>Upper Body Power</h4>
+            <p>45 min · Intermediate · 6 exercises</p>
+            <div class="workout-progress">
+              <div class="progress-bar"><div class="progress-fill" style="--pct: 60%"></div></div>
+              <span>3/6 complete</span>
+            </div>
+          </div>
+          <div class="mockup-metrics">
+            <div class="metric-chip">
+              <span class="metric-icon">⚡</span>
+              <div>
+                <div class="metric-val">842</div>
+                <div class="metric-lbl">kcal burned</div>
+              </div>
+            </div>
+            <div class="metric-chip">
+              <span class="metric-icon">❤️</span>
+              <div>
+                <div class="metric-val">156</div>
+                <div class="metric-lbl">avg bpm</div>
+              </div>
+            </div>
+          </div>
+          <div class="mockup-next">
+            <span>Next: Bench Press · 3 × 8 reps</span>
+            <button class="mockup-btn">Go →</button>
+          </div>
         </div>
+        <div class="mockup-glow"></div>
       </div>
-      <div class="dino-shadow"></div>
     </div>
     <div class="hero__scroll">
-      <span>Entdecken</span>
-      <div class="scroll-arrow"></div>
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- KONZEPT -->
-  <section class="konzept" id="konzept">
+  <!-- SOCIAL PROOF TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>⚡ 500+ Workout Plans</span>
+      <span>✦ Expert-Led Programs</span>
+      <span>🏆 #1 Fitness App 2024</span>
+      <span>⚡ Real-Time Coaching</span>
+      <span>✦ 50k+ Active Members</span>
+      <span>🔥 Nutrition Tracking</span>
+      <span>⚡ 500+ Workout Plans</span>
+      <span>✦ Expert-Led Programs</span>
+      <span>🏆 #1 Fitness App 2024</span>
+      <span>⚡ Real-Time Coaching</span>
+      <span>✦ 50k+ Active Members</span>
+      <span>🔥 Nutrition Tracking</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
     <div class="container">
-      <div class="section-label">Unser Konzept</div>
-      <div class="konzept__grid">
-        <div class="konzept__text">
-          <h2>Nicht Krankenhaus.<br />Nicht Spielplatz.<br /><em>Saltino.</em></h2>
-          <p>Wir haben einen Ort geschaffen, der das Beste aus Scandinavian Family Design, Wellness-Ästhetik und modernem Café-Gefühl vereint — für Eltern, die ihren Kindern etwas Gutes tun wollen, ohne auf eigene Auszeit zu verzichten.</p>
-          <p>Natürliche Salzpartikel in der Luft. Warmes Licht. Holz, Beige, Stille. Und irgendwo in den Salzbergen: ein kleiner Dino, der schon wartet.</p>
+      <div class="section-label">Why FITARY</div>
+      <h2 class="section-title">Everything you need.<br /><em>Nothing you don't.</em></h2>
+      <p class="section-sub">We built FITARY for athletes who want results — not fluff. Every feature is designed with one goal: helping you progress faster.</p>
+
+      <div class="features-grid">
+        <div class="feature-card feature-card--accent">
+          <div class="feature-icon">🎯</div>
+          <h3>Adaptive AI Coaching</h3>
+          <p>Our AI adjusts every workout in real-time based on your performance, recovery data, and goals. No two sessions are the same.</p>
+          <div class="feature-tag">Powered by AI</div>
         </div>
-        <div class="konzept__pillars">
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Scandinavian Design</h3>
-            <p>Warmer Minimalismus. Natürliche Materialien. Kein Überfluss — nur das Wesentliche.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Gesundheit durch Spiel</h3>
-            <p>Halotherapie in einer Umgebung, die Kinder begeistert und Eltern entspannt.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Lifestyle Marke</h3>
-            <p>Kein Therapieangebot. Ein Premium Family Wellness Club mit eigenem Charakter.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Mini Microclimate</h3>
-            <p>Luftfeuchtigkeit, Salzpartikel, Temperatur — alles sichtbar. Das ist High-End.</p>
-          </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Performance Analytics</h3>
+          <p>Deep insights into strength gains, endurance, and body composition. Track every rep, set, and PR with precision.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🥗</div>
+          <h3>Nutrition Planning</h3>
+          <p>Macro tracking, meal plans, and 1,000+ recipes synced to your workout intensity and personal goals.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h3>Live Group Classes</h3>
+          <p>Train with others in real-time. Daily live sessions with certified trainers across all fitness levels and disciplines.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏅</div>
+          <h3>Challenges & Leaderboards</h3>
+          <p>Stay motivated with weekly challenges, community leaderboards, and achievement milestones that keep you accountable.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Offline Mode</h3>
+          <p>Download any workout, program, or class. No Wi-Fi? No problem. FITARY works wherever you do.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- AIR QUALITY DASHBOARD -->
-  <section class="air-quality">
+  <!-- PROGRAMS -->
+  <section class="programs" id="programs">
     <div class="container">
-      <div class="aq-card">
-        <p class="aq-label">Live Raumklima</p>
-        <div class="aq-metrics">
-          <div class="aq-metric">
-            <div class="aq-value">99<span>%</span></div>
-            <div class="aq-name">Luftreinheit</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:99%"></div></div>
-          </div>
-          <div class="aq-metric">
-            <div class="aq-value">3.2<span>µm</span></div>
-            <div class="aq-name">Salzpartikel</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:80%"></div></div>
-          </div>
-          <div class="aq-metric">
-            <div class="aq-value">22<span>°C</span></div>
-            <div class="aq-name">Temperatur</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:65%"></div></div>
-          </div>
-          <div class="aq-metric">
-            <div class="aq-value">55<span>%</span></div>
-            <div class="aq-name">Luftfeuchtigkeit</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:55%"></div></div>
-          </div>
-        </div>
-        <p class="aq-note">Optimales Raumklima für Atemwege — kontinuierlich überwacht.</p>
+      <div class="section-label">Programs</div>
+      <h2 class="section-title">Find your<br /><em>perfect program.</em></h2>
+
+      <div class="program-filters">
+        <button class="filter-btn filter-btn--active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="strength">Strength</button>
+        <button class="filter-btn" data-filter="cardio">Cardio</button>
+        <button class="filter-btn" data-filter="hiit">HIIT</button>
+        <button class="filter-btn" data-filter="mobility">Mobility</button>
       </div>
-    </div>
-  </section>
 
-  <!-- ZONEN -->
-  <section class="zonen" id="zonen">
-    <div class="container">
-      <div class="section-label">Die Welt von Saltino</div>
-      <h2 class="section-title">Fünf Zonen.<br /><em>Ein Erlebnis.</em></h2>
-
-      <div class="zone-cards">
-
-        <div class="zone-card zone-card--hero">
-          <div class="zone-card__tag">Zone 01</div>
-          <div class="zone-card__deco">
-            <div class="salt-floor">
-              <div class="salt-mountain sm-1"></div>
-              <div class="salt-mountain sm-2"></div>
-              <div class="dino-footprint fp-1">·</div>
-              <div class="dino-footprint fp-2">·</div>
-              <div class="dino-footprint fp-3">·</div>
+      <div class="programs-grid">
+        <div class="program-card" data-type="strength">
+          <div class="program-card__visual pc--strength">
+            <div class="program-card__tag">Strength</div>
+            <div class="program-intensity">
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar"></span>
+              <span class="intensity-bar"></span>
             </div>
           </div>
-          <h3>Salzspielraum</h3>
-          <p>Der Held des Projekts. Weißer Salzboden, kleine Salzberge, Holzrutschen und Kletterparcours — alles in warmem Licht. Dino-Fußspuren führen durch das weiße Abenteuer.</p>
-          <ul class="zone-features">
-            <li>Weißer Salzboden & Salzberge</li>
-            <li>Holzrutschen & Kletterelemente</li>
-            <li>Indirekte Wandbeleuchtung</li>
-            <li>Dino-Fußspuren im Salz</li>
-            <li>Wolken-Deckenoptik</li>
+          <div class="program-card__body">
+            <h3>Power Build 12</h3>
+            <p>12-week progressive strength program designed to maximize muscle and functional power output.</p>
+            <div class="program-meta">
+              <span>12 weeks</span>
+              <span>·</span>
+              <span>4×/week</span>
+              <span>·</span>
+              <span>Intermediate</span>
+            </div>
+            <a href="#join" class="btn btn--sm">Start Program</a>
+          </div>
+        </div>
+
+        <div class="program-card" data-type="hiit">
+          <div class="program-card__visual pc--hiit">
+            <div class="program-card__tag">HIIT</div>
+            <div class="program-intensity">
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+            </div>
+          </div>
+          <div class="program-card__body">
+            <h3>Burn & Build</h3>
+            <p>High-intensity interval training that torches fat while preserving hard-earned muscle mass.</p>
+            <div class="program-meta">
+              <span>8 weeks</span>
+              <span>·</span>
+              <span>5×/week</span>
+              <span>·</span>
+              <span>Advanced</span>
+            </div>
+            <a href="#join" class="btn btn--sm">Start Program</a>
+          </div>
+        </div>
+
+        <div class="program-card" data-type="cardio">
+          <div class="program-card__visual pc--cardio">
+            <div class="program-card__tag">Cardio</div>
+            <div class="program-intensity">
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar"></span>
+              <span class="intensity-bar"></span>
+            </div>
+          </div>
+          <div class="program-card__body">
+            <h3>Endurance Engine</h3>
+            <p>Build your aerobic base with structured running, cycling, and rowing sessions for lasting stamina.</p>
+            <div class="program-meta">
+              <span>10 weeks</span>
+              <span>·</span>
+              <span>3×/week</span>
+              <span>·</span>
+              <span>All Levels</span>
+            </div>
+            <a href="#join" class="btn btn--sm">Start Program</a>
+          </div>
+        </div>
+
+        <div class="program-card" data-type="mobility">
+          <div class="program-card__visual pc--mobility">
+            <div class="program-card__tag">Mobility</div>
+            <div class="program-intensity">
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar i-fill"></span>
+              <span class="intensity-bar"></span>
+              <span class="intensity-bar"></span>
+              <span class="intensity-bar"></span>
+            </div>
+          </div>
+          <div class="program-card__body">
+            <h3>FlexCore</h3>
+            <p>Daily mobility routines and deep stretch work to unlock movement, prevent injury, and recover faster.</p>
+            <div class="program-meta">
+              <span>6 weeks</span>
+              <span>·</span>
+              <span>Daily</span>
+              <span>·</span>
+              <span>Beginner</span>
+            </div>
+            <a href="#join" class="btn btn--sm">Start Program</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINERS -->
+  <section class="trainers" id="trainers">
+    <div class="container">
+      <div class="section-label">Expert Trainers</div>
+      <h2 class="section-title">Learn from the<br /><em>best in the game.</em></h2>
+      <p class="section-sub">Every FITARY trainer is certified, experienced, and genuinely passionate about helping you achieve your goals.</p>
+
+      <div class="trainers-grid">
+        <div class="trainer-card">
+          <div class="trainer-avatar ta--1">
+            <div class="avatar-shape">
+              <div class="av-initials">MR</div>
+            </div>
+            <div class="trainer-specialty-badge">Strength</div>
+          </div>
+          <div class="trainer-info">
+            <h4>Marcus Reid</h4>
+            <p class="trainer-title">Strength & Conditioning</p>
+            <p class="trainer-bio">Former Olympic powerlifter. 10+ years coaching elite athletes and everyday people to their strongest selves.</p>
+            <div class="trainer-stats">
+              <span>47 Programs</span>
+              <span>12k Followers</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="trainer-card">
+          <div class="trainer-avatar ta--2">
+            <div class="avatar-shape">
+              <div class="av-initials">SC</div>
+            </div>
+            <div class="trainer-specialty-badge badge--orange">HIIT</div>
+          </div>
+          <div class="trainer-info">
+            <h4>Sofia Chen</h4>
+            <p class="trainer-title">HIIT & Metabolic Training</p>
+            <p class="trainer-bio">Certified HIIT specialist and sports nutritionist. Her classes are known for being brutally fun — and incredibly effective.</p>
+            <div class="trainer-stats">
+              <span>32 Programs</span>
+              <span>18k Followers</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="trainer-card">
+          <div class="trainer-avatar ta--3">
+            <div class="avatar-shape">
+              <div class="av-initials">JK</div>
+            </div>
+            <div class="trainer-specialty-badge badge--purple">Mobility</div>
+          </div>
+          <div class="trainer-info">
+            <h4>Jordan Kim</h4>
+            <p class="trainer-title">Mobility & Recovery</p>
+            <p class="trainer-bio">Yoga teacher, physical therapist, and movement coach. Specializes in helping athletes move pain-free and perform at their peak.</p>
+            <div class="trainer-stats">
+              <span>28 Programs</span>
+              <span>9k Followers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-label">Real Results</div>
+      <h2 class="section-title">Members who<br /><em>transformed.</em></h2>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="t-quote">"</div>
+          <p>Lost 22 lbs in 3 months without feeling like I was starving. The nutrition syncing with workouts is a game changer. I've never been this consistent.</p>
+          <div class="t-author">
+            <div class="t-avatar">AM</div>
+            <div>
+              <strong>Amy M.</strong>
+              <span>Lost 22 lbs · Power Build 12</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card testimonial-card--featured">
+          <div class="t-result-badge">+35% Strength Gain</div>
+          <div class="t-quote">"</div>
+          <p>I've tried every fitness app out there. FITARY is the only one that actually adapts to me. After 6 months, I hit a 315 lb deadlift — a PR I didn't think was possible at 42.</p>
+          <div class="t-author">
+            <div class="t-avatar">DT</div>
+            <div>
+              <strong>David T.</strong>
+              <span>315lb Deadlift PR · Strength Focus</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="t-quote">"</div>
+          <p>The live classes kept me accountable when I didn't feel like working out. The community is genuinely supportive — not toxic like other fitness spaces online.</p>
+          <div class="t-author">
+            <div class="t-avatar">PL</div>
+            <div>
+              <strong>Priya L.</strong>
+              <span>90-day streak · HIIT Devotee</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-label">Plans</div>
+      <h2 class="section-title">Simple pricing.<br /><em>No surprises.</em></h2>
+      <p class="section-sub">Start free. Upgrade when you're ready. Cancel any time.</p>
+
+      <div class="pricing-toggle">
+        <span class="toggle-label toggle-label--active">Monthly</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="billingToggle" />
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label" id="annualLabel">Annual <span class="save-badge">Save 40%</span></span>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="plan-name">Free</div>
+          <div class="plan-price">
+            <span class="price-amount">$0</span>
+            <span class="price-period">forever</span>
+          </div>
+          <p class="plan-desc">Get started with core workouts, no credit card required.</p>
+          <ul class="plan-features">
+            <li class="feat-yes">20 free workouts</li>
+            <li class="feat-yes">3 beginner programs</li>
+            <li class="feat-yes">Basic progress tracking</li>
+            <li class="feat-no">AI adaptive coaching</li>
+            <li class="feat-no">Nutrition planning</li>
+            <li class="feat-no">Live classes</li>
+            <li class="feat-no">Offline downloads</li>
           </ul>
+          <a href="#join" class="btn btn--ghost btn--full">Get Started Free</a>
         </div>
 
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 02</div>
-          <div class="zone-card__icon">☕</div>
-          <h3>Soft Lounge Café</h3>
-          <p>Modernes Boutique-Café für Eltern. Matcha, Cappuccino, gesunde Snacks, WLAN — und volle Sicht auf die spielenden Kinder.</p>
-          <ul class="zone-features">
-            <li>Specialty Coffee & Matcha Bar</li>
-            <li>Gesunde Snacks & Kuchen</li>
-            <li>WLAN & Ladestationen</li>
-            <li>Ruhige Ambientmusik</li>
+        <div class="pricing-card pricing-card--featured">
+          <div class="plan-popular-badge">Most Popular</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="$19" data-annual="$11">$19</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="plan-desc">Everything you need to reach your peak performance.</p>
+          <ul class="plan-features">
+            <li class="feat-yes">Unlimited workouts</li>
+            <li class="feat-yes">500+ programs</li>
+            <li class="feat-yes">AI adaptive coaching</li>
+            <li class="feat-yes">Full nutrition planning</li>
+            <li class="feat-yes">Live classes daily</li>
+            <li class="feat-yes">Offline downloads</li>
+            <li class="feat-yes">Advanced analytics</li>
           </ul>
+          <a href="#join" class="btn btn--primary btn--full">Start 7-Day Trial</a>
         </div>
 
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 03</div>
-          <div class="zone-card__icon">🌿</div>
-          <h3>Baby Corner</h3>
-          <p>Speziell für 0–3 Jahre. Weiche Materialien, ruhigere Atmosphäre, perfekte Salzkonzentration für die Kleinsten.</p>
-          <ul class="zone-features">
-            <li>Altersgerechte Spielelemente</li>
-            <li>Extra-weiche Böden</li>
-            <li>Angepasstes Raumklima</li>
-            <li>Windeln & Pflegestation</li>
+        <div class="pricing-card">
+          <div class="plan-name">Elite</div>
+          <div class="plan-price">
+            <span class="price-amount" data-monthly="$49" data-annual="$29">$49</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="plan-desc">1-on-1 coaching and a fully personalized experience.</p>
+          <ul class="plan-features">
+            <li class="feat-yes">Everything in Pro</li>
+            <li class="feat-yes">1-on-1 trainer sessions</li>
+            <li class="feat-yes">Custom meal plans</li>
+            <li class="feat-yes">Priority support</li>
+            <li class="feat-yes">Body composition analysis</li>
+            <li class="feat-yes">Early access to features</li>
+            <li class="feat-yes">Exclusive challenges</li>
           </ul>
-        </div>
-
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 04</div>
-          <div class="zone-card__icon">🎂</div>
-          <h3>Birthday & Events</h3>
-          <p>Exklusive Geburtstagsfeiern und Gruppenevents. Private Buchung, Deko-Package, unvergessliche Momente — mit der besten Marge.</p>
-          <ul class="zone-features">
-            <li>Private Buchung möglich</li>
-            <li>Dino Birthday Packages</li>
-            <li>Catering-Option</li>
-            <li>Bis 20 Kinder</li>
-          </ul>
-        </div>
-
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 05</div>
-          <div class="zone-card__icon">✨</div>
-          <h3>Retail Wall</h3>
-          <p>Kuratierte Produkte zum Mitnehmen: Salzlampen, Dino-Merch, Atemwegsprodukte, Kinderprodukte — alles in der Saltino-Ästhetik.</p>
-          <ul class="zone-features">
-            <li>Saltino Dino Merch</li>
-            <li>Salzlampen & Dekoration</li>
-            <li>Atemwegs- & Kinderprodukte</li>
-            <li>Limitierte Editionen</li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- INSTAGRAMMABLE SPOTS -->
-  <section class="erlebnis" id="erlebnis">
-    <div class="container">
-      <div class="section-label">Instagrammable Spots</div>
-      <h2 class="section-title">Gebaut um geteilt<br /><em>zu werden.</em></h2>
-      <p class="section-sub">Jeder Spot ist ein organischer Content-Creator. Eure Gäste machen die Reichweite.</p>
-
-      <div class="spots-grid">
-        <div class="spot">
-          <div class="spot__visual spot__visual--egg">
-            <div class="egg-shape">
-              <span class="egg-dino">🦕</span>
-            </div>
-          </div>
-          <h4>Das Dino-Ei</h4>
-          <p>Riesiges begehbares Ei — perfekte Story. Kinder lieben es. Eltern posten es.</p>
-        </div>
-
-        <div class="spot">
-          <div class="spot__visual spot__visual--volcano">
-            <div class="volcano-shape">
-              <div class="volcano-smoke s1"></div>
-              <div class="volcano-smoke s2"></div>
-              <div class="volcano-smoke s3"></div>
-            </div>
-          </div>
-          <h4>Salz-Vulkan</h4>
-          <p>Puffende Salzkristalle, indirektes Glühen — ein Wow-Moment für jeden Besucher.</p>
-        </div>
-
-        <div class="spot">
-          <div class="spot__visual spot__visual--cave">
-            <div class="cave-shape">
-              <div class="cave-glow"></div>
-            </div>
-          </div>
-          <h4>Kristall-Höhle</h4>
-          <p>Eine kleine Höhle aus Salzwänden mit blauem Ambienzlicht. Magisch und ruhig.</p>
-        </div>
-
-        <div class="spot spot--neon">
-          <div class="spot__visual spot__visual--neon">
-            <div class="neon-sign">
-              Spielend<br />gesund atmen.
-            </div>
-          </div>
-          <h4>Neon-Schild</h4>
-          <p>Das Haupt-Statement als Neon — jeder fotografiert es. Gratis Marketing.</p>
-        </div>
-
-        <div class="spot">
-          <div class="spot__visual spot__visual--cloud">
-            <div class="cloud-wall">
-              <div class="cloud c1"></div>
-              <div class="cloud c2"></div>
-              <div class="cloud c3"></div>
-            </div>
-          </div>
-          <h4>Wolkenwand</h4>
-          <p>Weiche 3D-Wolken mit sanftem Licht. Ein Kindheitstraum zum Anfassen.</p>
+          <a href="#join" class="btn btn--ghost btn--full">Start 7-Day Trial</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- DESIGN LANGUAGE -->
-  <section class="design-lang">
+  <!-- APP DOWNLOAD CTA -->
+  <section class="app-cta" id="join">
     <div class="container">
-      <div class="section-label">Designsprache</div>
-      <h2 class="section-title">Modern Organic<br /><em>Family Wellness.</em></h2>
-
-      <div class="design-grid">
-        <div class="color-story">
-          <h4>Farbwelt</h4>
-          <div class="swatches">
-            <div class="swatch" style="background:#FAF7F2" data-name="Soft White"></div>
-            <div class="swatch" style="background:#F0E6CF" data-name="Warm Beige"></div>
-            <div class="swatch" style="background:#D9C4A3" data-name="Sand"></div>
-            <div class="swatch" style="background:#C8A97A" data-name="Light Oak"></div>
-            <div class="swatch" style="background:#B5835A" data-name="Clay"></div>
-            <div class="swatch" style="background:#C96B44" data-name="Terracotta"></div>
-            <div class="swatch" style="background:#CC6633" data-name="Burnt Orange"></div>
-            <div class="swatch" style="background:#8FA88A" data-name="Sage Green"></div>
+      <div class="app-cta__inner">
+        <div class="app-cta__text">
+          <div class="section-label">Get the App</div>
+          <h2>Your fitness journey<br /><em>starts today.</em></h2>
+          <p>Join 50,000+ members who train smarter with FITARY. First 7 days are completely free — no credit card needed.</p>
+          <div class="app-buttons">
+            <a href="#" class="app-btn">
+              <span class="app-btn__icon">🍎</span>
+              <div>
+                <span class="app-btn__sub">Download on the</span>
+                <span class="app-btn__store">App Store</span>
+              </div>
+            </a>
+            <a href="#" class="app-btn">
+              <span class="app-btn__icon">▶</span>
+              <div>
+                <span class="app-btn__sub">Get it on</span>
+                <span class="app-btn__store">Google Play</span>
+              </div>
+            </a>
           </div>
+          <p class="app-cta__note">Available on iOS 15+ and Android 10+</p>
         </div>
-
-        <div class="material-story">
-          <h4>Materialien</h4>
-          <div class="materials">
-            <div class="material-chip">Helles Holz</div>
-            <div class="material-chip">Naturstein</div>
-            <div class="material-chip">Leinentextilien</div>
-            <div class="material-chip">Matte Oberflächen</div>
-            <div class="material-chip">Organische Formen</div>
-            <div class="material-chip">Indirekte Beleuchtung</div>
-            <div class="material-chip">Salzwände</div>
-            <div class="material-chip">Kork</div>
-          </div>
-        </div>
-
-        <div class="feel-story">
-          <h4>Atmosphäre</h4>
-          <div class="feel-words">
-            <span class="feel-word">Ruhig</span>
-            <span class="feel-word">Warm</span>
-            <span class="feel-word">Clean</span>
-            <span class="feel-word">Hochwertig</span>
-            <span class="feel-word">Einladend</span>
-            <span class="feel-word">Modern</span>
-            <span class="feel-word">Spielend</span>
-            <span class="feel-word">Gesund</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DINO MASCOT -->
-  <section class="mascot">
-    <div class="container">
-      <div class="mascot__inner">
-        <div class="mascot__dinos">
-          <div class="mascot-dino md-1">
-            <div class="md-body">
-              <div class="md-eye"></div>
+        <div class="app-cta__visual">
+          <div class="phone-frames">
+            <div class="phone-frame pf--back">
+              <div class="phone-screen">
+                <div class="ps-stat-grid">
+                  <div class="ps-stat">
+                    <span class="ps-stat-val">2,840</span>
+                    <span class="ps-stat-lbl">kcal burned this week</span>
+                  </div>
+                  <div class="ps-chart">
+                    <div class="chart-bar" style="--h:40%"></div>
+                    <div class="chart-bar" style="--h:70%"></div>
+                    <div class="chart-bar" style="--h:55%"></div>
+                    <div class="chart-bar" style="--h:90%"></div>
+                    <div class="chart-bar" style="--h:65%"></div>
+                    <div class="chart-bar" style="--h:80%"></div>
+                    <div class="chart-bar chart-bar--today" style="--h:45%"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="mascot-dino md-2">
-            <div class="md-body">
-              <div class="md-eye"></div>
-              <div class="md-blush"></div>
+            <div class="phone-frame pf--front">
+              <div class="phone-screen">
+                <div class="ps-header">
+                  <span>FITARY</span>
+                  <span>🏋️</span>
+                </div>
+                <div class="ps-workout-now">
+                  <div class="ps-wn-tag">NOW PLAYING</div>
+                  <div class="ps-wn-title">Romanian Deadlift</div>
+                  <div class="ps-wn-set">Set 2 of 4 · 45 sec rest</div>
+                  <div class="ps-timer">0:38</div>
+                  <div class="ps-wn-controls">
+                    <button class="ps-ctrl">⏮</button>
+                    <button class="ps-ctrl ps-ctrl--main">⏸</button>
+                    <button class="ps-ctrl">⏭</button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="mascot-dino md-3">
-            <div class="md-body">
-              <div class="md-eye"></div>
-            </div>
-          </div>
-        </div>
-        <div class="mascot__text">
-          <div class="section-label">Das Maskottchen</div>
-          <h2>Dino trifft<br /><em>Wellness.</em></h2>
-          <p>Clean, soft, modern, emotional — wie eine moderne Kinderbuchmarke. Kleine runde Formen, minimalistische Augen, sanfte Farben. Kein billiger Cartoon — ein emotionaler Markencharakter.</p>
-          <p>Dino begleitet Kinder durch das Salzabenteuer und taucht auf jeder Kommunikation auf.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA / KONTAKT -->
-  <section class="kontakt" id="kontakt">
-    <div class="container">
-      <div class="kontakt__card">
-        <div class="section-label">Bereit für das Erlebnis?</div>
-        <h2>Dein Saltino-Abenteuer<br /><em>beginnt hier.</em></h2>
-        <p>Buche jetzt deine Session für die ganze Familie. Begrenzte Plätze pro Tag für beste Qualität.</p>
-
-        <form class="booking-form" id="bookingForm">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" placeholder="Vorname Nachname" required />
-            </div>
-            <div class="form-group">
-              <label for="email">E-Mail</label>
-              <input type="email" id="email" placeholder="deine@email.de" required />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="datum">Wunschdatum</label>
-              <input type="date" id="datum" required />
-            </div>
-            <div class="form-group">
-              <label for="kinder">Anzahl Kinder</label>
-              <select id="kinder">
-                <option value="1">1 Kind</option>
-                <option value="2">2 Kinder</option>
-                <option value="3">3 Kinder</option>
-                <option value="4+">4+ Kinder</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="paket">Paket</label>
-            <select id="paket">
-              <option value="standard">Standard Session (45 Min) — €24 / Kind</option>
-              <option value="family">Family Package (2 Kinder + 1 Elternteil) — €54</option>
-              <option value="birthday">Birthday Package (Gruppe bis 15) — ab €199</option>
-              <option value="monthly">Monatsabo (8 Sessions) — €79 / Kind</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn--primary btn--full">
-            Anfrage senden →
-          </button>
-        </form>
-
-        <div class="kontakt__info">
-          <div class="info-item">
-            <span class="info-icon">📍</span>
-            <span>Musterstraße 42, 10115 Berlin</span>
-          </div>
-          <div class="info-item">
-            <span class="info-icon">🕐</span>
-            <span>Mo–Fr 9–20 Uhr · Sa–So 9–18 Uhr</span>
-          </div>
-          <div class="info-item">
-            <span class="info-icon">📞</span>
-            <span>+49 30 123 456 789</span>
           </div>
         </div>
       </div>
@@ -467,36 +570,47 @@
     <div class="container">
       <div class="footer__inner">
         <div class="footer__brand">
-          <span class="logo-dino">🦕</span>
-          <span class="logo-text">Saltino</span>
-          <p>Premium Familien-Salzwelt.<br />Spielend gesund atmen.</p>
+          <a href="#" class="nav__logo footer__logo">
+            <span class="logo-mark">F</span>
+            <span class="logo-text">ITARY</span>
+          </a>
+          <p>Train Smarter. Live Better.<br />Your fitness, your way.</p>
+          <div class="footer__socials">
+            <a href="#" class="social-link">IG</a>
+            <a href="#" class="social-link">TT</a>
+            <a href="#" class="social-link">YT</a>
+            <a href="#" class="social-link">X</a>
+          </div>
         </div>
         <div class="footer__links">
           <div class="footer__col">
-            <h5>Angebote</h5>
-            <a href="#">Einzelsession</a>
-            <a href="#">Family Package</a>
-            <a href="#">Geburtstag</a>
-            <a href="#">Monatsabo</a>
+            <h5>Product</h5>
+            <a href="#">Features</a>
+            <a href="#">Programs</a>
+            <a href="#">Trainers</a>
+            <a href="#">Nutrition</a>
+            <a href="#">Live Classes</a>
           </div>
           <div class="footer__col">
-            <h5>Saltino</h5>
-            <a href="#">Über uns</a>
-            <a href="#">Halotherapie</a>
-            <a href="#">FAQ</a>
-            <a href="#">Kontakt</a>
+            <h5>Company</h5>
+            <a href="#">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Careers</a>
+            <a href="#">Press</a>
+            <a href="#">Contact</a>
           </div>
           <div class="footer__col">
-            <h5>Social</h5>
-            <a href="#">Instagram</a>
-            <a href="#">TikTok</a>
-            <a href="#">Facebook</a>
+            <h5>Support</h5>
+            <a href="#">Help Center</a>
+            <a href="#">Community</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
           </div>
         </div>
       </div>
       <div class="footer__bottom">
-        <span>© 2025 Saltino. Alle Rechte vorbehalten.</span>
-        <span>Datenschutz · Impressum · AGB</span>
+        <span>© 2025 FITARY Inc. All rights reserved.</span>
+        <span>Privacy Policy · Terms of Service · Cookie Policy</span>
       </div>
     </div>
   </footer>

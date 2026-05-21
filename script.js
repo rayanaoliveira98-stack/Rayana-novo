@@ -1,101 +1,100 @@
-// Saltino — Premium Familien-Salzwelt
+// FITARY — Train Smarter. Live Better.
 
-// Nav scroll behavior
+// Nav scroll effect
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
+  nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-// Mobile burger menu
+// Mobile menu
 const burger = document.getElementById('burger');
-const navLinks = document.querySelector('.nav__links');
-if (burger && navLinks) {
-  burger.addEventListener('click', () => {
-    const isOpen = navLinks.style.display === 'flex';
-    navLinks.style.cssText = isOpen
-      ? ''
-      : 'display:flex;flex-direction:column;position:fixed;top:72px;left:0;right:0;background:var(--soft-white);padding:24px;gap:20px;box-shadow:0 8px 32px rgba(44,36,24,.12);z-index:99;';
-    burger.setAttribute('aria-expanded', String(!isOpen));
-  });
+let mobileMenu = null;
 
-  navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => { navLinks.style.cssText = ''; });
+function buildMobileMenu() {
+  const menu = document.createElement('nav');
+  menu.className = 'nav__mobile-menu';
+  menu.innerHTML = `
+    <a href="#programs" onclick="closeMobile()">Programs</a>
+    <a href="#features" onclick="closeMobile()">Features</a>
+    <a href="#trainers" onclick="closeMobile()">Trainers</a>
+    <a href="#pricing" onclick="closeMobile()">Pricing</a>
+    <a href="#join" class="nav__cta" onclick="closeMobile()">Start Free Trial</a>
+  `;
+  document.body.appendChild(menu);
+  return menu;
+}
+
+function closeMobile() {
+  if (mobileMenu) {
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+window.closeMobile = closeMobile;
+
+if (burger) {
+  burger.addEventListener('click', () => {
+    if (!mobileMenu) mobileMenu = buildMobileMenu();
+    const open = mobileMenu.classList.toggle('open');
+    document.body.style.overflow = open ? 'hidden' : '';
   });
 }
 
-// Scroll fade-in
-const observer = new IntersectionObserver(
-  entries => entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      observer.unobserve(e.target);
-    }
-  }),
-  { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+// Program filters
+const filterBtns = document.querySelectorAll('.filter-btn');
+const programCards = document.querySelectorAll('.program-card');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('filter-btn--active'));
+    btn.classList.add('filter-btn--active');
+
+    const filter = btn.dataset.filter;
+    programCards.forEach(card => {
+      const match = filter === 'all' || card.dataset.type === filter;
+      card.style.display = match ? '' : 'none';
+    });
+  });
+});
+
+// Pricing toggle — annual / monthly
+const billingToggle = document.getElementById('billingToggle');
+const toggleLabels  = document.querySelectorAll('.toggle-label');
+const priceAmounts  = document.querySelectorAll('.price-amount[data-monthly]');
+
+if (billingToggle) {
+  billingToggle.addEventListener('change', () => {
+    const isAnnual = billingToggle.checked;
+    toggleLabels[0].classList.toggle('toggle-label--active', !isAnnual);
+    toggleLabels[1].classList.toggle('toggle-label--active', isAnnual);
+    priceAmounts.forEach(el => {
+      el.textContent = isAnnual ? el.dataset.annual : el.dataset.monthly;
+    });
+  });
+}
+
+// Scroll-triggered reveal
+const revealEls = document.querySelectorAll(
+  '.feature-card, .program-card, .trainer-card, .testimonial-card, .pricing-card'
 );
 
-document.querySelectorAll(
-  '.pillar, .zone-card, .spot, .aq-metric, .swatch, .material-chip, .feel-word, .mascot-dino'
-).forEach((el, i) => {
-  el.classList.add('fade-up');
-  el.style.transitionDelay = `${(i % 4) * 80}ms`;
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(28px)';
+  el.style.transition = `opacity .5s ease ${(i % 4) * 0.08}s, transform .5s ease ${(i % 4) * 0.08}s`;
   observer.observe(el);
 });
-
-// Color swatch tooltips (touch support)
-document.querySelectorAll('.swatch').forEach(swatch => {
-  swatch.addEventListener('click', () => {
-    const name = swatch.getAttribute('data-name');
-    const bg   = swatch.style.background;
-    const tip  = document.createElement('div');
-    tip.textContent = name;
-    tip.style.cssText = `
-      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-      background:var(--dark); color:#fff; padding:8px 20px;
-      border-radius:var(--radius-pill); font-size:13px;
-      opacity:0; transition:opacity .2s; pointer-events:none; z-index:200;
-    `;
-    document.body.appendChild(tip);
-    requestAnimationFrame(() => { tip.style.opacity = '1'; });
-    setTimeout(() => {
-      tip.style.opacity = '0';
-      setTimeout(() => tip.remove(), 200);
-    }, 1800);
-  });
-});
-
-// Booking form
-const form = document.getElementById('bookingForm');
-if (form) {
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const btn = form.querySelector('button[type="submit"]');
-    const original = btn.textContent;
-    btn.textContent = '✓ Anfrage gesendet!';
-    btn.style.background = 'var(--sage)';
-    btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = original;
-      btn.style.background = '';
-      btn.disabled = false;
-      form.reset();
-    }, 3500);
-  });
-}
-
-// Air quality metrics — subtle live animation
-const aqValues = document.querySelectorAll('.aq-value');
-setInterval(() => {
-  aqValues.forEach(v => {
-    const base = parseFloat(v.dataset.base || v.textContent);
-    if (!v.dataset.base) v.dataset.base = base;
-    const jitter = (Math.random() - 0.5) * 0.4;
-    const unit = v.querySelector('span');
-    const unitText = unit ? unit.outerHTML : '';
-    const numStr = (base + jitter).toFixed(base > 10 ? 0 : 1);
-    v.innerHTML = numStr + unitText;
-  });
-}, 3000);
 
 // Smooth anchor scroll
 document.querySelectorAll('a[href^="#"]').forEach(a => {
