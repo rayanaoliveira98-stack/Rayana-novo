@@ -2,505 +2,773 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Saltino – Premium Familien-Salzwelt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c2219" />
+  <title>FITARY · Boutique PT Studio Wels</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    html,body{margin:0;padding:0;background:#0c2219}
+    #root{min-height:100vh}
+    /* loading state before React mounts */
+    #boot{min-height:100vh;display:grid;place-items:center;color:#f3f0e7;
+      font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.3em}
+  </style>
 </head>
 <body>
+  <div id="root"><div id="boot">FITARY · LÄDT…</div></div>
 
-  <!-- NAV -->
-  <nav class="nav" id="nav">
-    <div class="nav__inner">
-      <a href="#" class="nav__logo">
-        <span class="logo-dino">🦕</span>
-        <span class="logo-text">Saltino</span>
-      </a>
-      <ul class="nav__links">
-        <li><a href="#konzept">Konzept</a></li>
-        <li><a href="#zonen">Zonen</a></li>
-        <li><a href="#erlebnis">Erlebnis</a></li>
-        <li><a href="#kontakt" class="nav__cta">Buchen</a></li>
-      </ul>
-      <button class="nav__burger" id="burger" aria-label="Menü öffnen">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
+  <!-- localStorage-backed shim for the app's window.storage API -->
+  <script>
+    window.storage = {
+      async get(key){ const v = localStorage.getItem(key); return v == null ? null : { value: v }; },
+      async set(key, value){ localStorage.setItem(key, value); },
+      async remove(key){ localStorage.removeItem(key); },
+    };
+  </script>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero__bg">
-      <div class="salt-particle" style="--x:15%;--y:20%;--s:3px;--d:2.1s"></div>
-      <div class="salt-particle" style="--x:35%;--y:60%;--s:2px;--d:3.4s"></div>
-      <div class="salt-particle" style="--x:55%;--y:30%;--s:4px;--d:1.8s"></div>
-      <div class="salt-particle" style="--x:75%;--y:70%;--s:2px;--d:4.2s"></div>
-      <div class="salt-particle" style="--x:85%;--y:15%;--s:3px;--d:2.9s"></div>
-      <div class="salt-particle" style="--x:20%;--y:80%;--s:2px;--d:3.7s"></div>
-      <div class="salt-particle" style="--x:65%;--y:45%;--s:5px;--d:2.3s"></div>
-      <div class="salt-particle" style="--x:10%;--y:50%;--s:2px;--d:5.1s"></div>
-      <div class="salt-particle" style="--x:90%;--y:55%;--s:3px;--d:1.5s"></div>
-      <div class="salt-particle" style="--x:45%;--y:85%;--s:2px;--d:3.9s"></div>
-    </div>
-    <div class="hero__content">
-      <p class="hero__eyebrow">Premium Familien-Salzwelt</p>
-      <h1 class="hero__headline">
-        Spielend<br />
-        <em>gesund atmen.</em>
-      </h1>
-      <p class="hero__sub">
-        Ein Ort, der Eltern zur Ruhe bringt —<br />
-        und Kinder auf ein Salzabenteuer schickt.
-      </p>
-      <div class="hero__actions">
-        <a href="#kontakt" class="btn btn--primary">Termin buchen</a>
-        <a href="#konzept" class="btn btn--ghost">Mehr entdecken</a>
-      </div>
-      <div class="hero__micro">
-        <div class="micro-stat">
-          <span class="micro-stat__num">98%</span>
-          <span class="micro-stat__label">Luftreinheit</span>
-        </div>
-        <div class="micro-divider"></div>
-        <div class="micro-stat">
-          <span class="micro-stat__num">3–6</span>
-          <span class="micro-stat__label">Jahre empfohlen</span>
-        </div>
-        <div class="micro-divider"></div>
-        <div class="micro-stat">
-          <span class="micro-stat__num">45'</span>
-          <span class="micro-stat__label">Session</span>
-        </div>
-      </div>
-    </div>
-    <div class="hero__dino">
-      <div class="dino-char">
-        <div class="dino-body">
-          <div class="dino-eye"></div>
-          <div class="dino-spot"></div>
-          <div class="dino-tail"></div>
-          <div class="dino-leg dino-leg--l"></div>
-          <div class="dino-leg dino-leg--r"></div>
-        </div>
-      </div>
-      <div class="dino-shadow"></div>
-    </div>
-    <div class="hero__scroll">
-      <span>Entdecken</span>
-      <div class="scroll-arrow"></div>
-    </div>
-  </section>
+  <!-- Babel transpiles the JSX module below at runtime -->
+  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
 
-  <!-- KONZEPT -->
-  <section class="konzept" id="konzept">
-    <div class="container">
-      <div class="section-label">Unser Konzept</div>
-      <div class="konzept__grid">
-        <div class="konzept__text">
-          <h2>Nicht Krankenhaus.<br />Nicht Spielplatz.<br /><em>Saltino.</em></h2>
-          <p>Wir haben einen Ort geschaffen, der das Beste aus Scandinavian Family Design, Wellness-Ästhetik und modernem Café-Gefühl vereint — für Eltern, die ihren Kindern etwas Gutes tun wollen, ohne auf eigene Auszeit zu verzichten.</p>
-          <p>Natürliche Salzpartikel in der Luft. Warmes Licht. Holz, Beige, Stille. Und irgendwo in den Salzbergen: ein kleiner Dino, der schon wartet.</p>
-        </div>
-        <div class="konzept__pillars">
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Scandinavian Design</h3>
-            <p>Warmer Minimalismus. Natürliche Materialien. Kein Überfluss — nur das Wesentliche.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Gesundheit durch Spiel</h3>
-            <p>Halotherapie in einer Umgebung, die Kinder begeistert und Eltern entspannt.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Lifestyle Marke</h3>
-            <p>Kein Therapieangebot. Ein Premium Family Wellness Club mit eigenem Charakter.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar__icon">✦</div>
-            <h3>Mini Microclimate</h3>
-            <p>Luftfeuchtigkeit, Salzpartikel, Temperatur — alles sichtbar. Das ist High-End.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <script type="text/babel" data-type="module" data-presets="react">
+import React, { useState, useEffect, useMemo, useCallback } from "https://esm.sh/react@18.3.1";
+import { createRoot } from "https://esm.sh/react-dom@18.3.1/client?deps=react@18.3.1";
+import {
+  Home, CalendarDays, Tag, Wallet, Clock, MapPin, Check, X, Plus,
+  ChevronLeft, ChevronRight, Users, Zap, ArrowRight, AlertCircle,
+  ShieldCheck, Crown, Sparkles, Phone, Ban
+} from "https://esm.sh/lucide-react@0.460.0?deps=react@18.3.1";
 
-  <!-- AIR QUALITY DASHBOARD -->
-  <section class="air-quality">
-    <div class="container">
-      <div class="aq-card">
-        <p class="aq-label">Live Raumklima</p>
-        <div class="aq-metrics">
-          <div class="aq-metric">
-            <div class="aq-value">99<span>%</span></div>
-            <div class="aq-name">Luftreinheit</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:99%"></div></div>
-          </div>
-          <div class="aq-metric">
-            <div class="aq-value">3.2<span>µm</span></div>
-            <div class="aq-name">Salzpartikel</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:80%"></div></div>
-          </div>
-          <div class="aq-metric">
-            <div class="aq-value">22<span>°C</span></div>
-            <div class="aq-name">Temperatur</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:65%"></div></div>
-          </div>
-          <div class="aq-metric">
-            <div class="aq-value">55<span>%</span></div>
-            <div class="aq-name">Luftfeuchtigkeit</div>
-            <div class="aq-bar"><div class="aq-bar-fill" style="--pct:55%"></div></div>
-          </div>
-        </div>
-        <p class="aq-note">Optimales Raumklima für Atemwege — kontinuierlich überwacht.</p>
+/* ============================== BRAND ============================== */
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+:root{
+  --green-950:#0c2219; --green-900:#10402f; --green-850:#143a2c; --green-800:#184334;
+  --green-700:#1f5240; --green-600:#27664f;
+  --rust:#c0432a; --rust-2:#d4633f; --mint:#cbe6ad; --lime:#c7ff3c;
+  --cream:#f3f0e7; --cream-2:rgba(243,240,231,.62); --cream-3:rgba(243,240,231,.34);
+  --ink:#0b0f0d;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.fit-root{font-family:'Archivo',sans-serif;color:var(--cream)}
+.disp{font-family:'Anton',sans-serif;letter-spacing:.01em;line-height:.92;text-transform:uppercase}
+.mono{font-family:'Space Mono',monospace}
+.fade-up{animation:fadeUp .55s cubic-bezier(.16,.84,.44,1) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.pop{animation:pop .4s cubic-bezier(.2,.9,.3,1.4) both}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.toast-in{animation:toastIn .45s cubic-bezier(.16,.84,.44,1) both}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,18px)}to{opacity:1;transform:translate(-50%,0)}}
+.sheet-in{animation:sheetIn .42s cubic-bezier(.16,.84,.44,1) both}
+@keyframes sheetIn{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.fit-root button{font-family:inherit;cursor:pointer;border:none;background:none}
+.tap{transition:transform .12s ease,opacity .2s ease,background .2s ease}
+.tap:active{transform:scale(.96)}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.noscroll::-webkit-scrollbar{display:none}
+`;
+
+/* ============================== DATA ============================== */
+// weekday: 1=Mo ... 7=So
+const CATALOG = [
+  { id:"earlybird", title:"Early Bird Strength", sub:"Kraft am Morgen", cat:"Kleingruppe", tag:"KRAFT", days:[1,3,5], time:"06:30", end:"07:20", cap:5 },
+  { id:"morgens",   title:"Morgens Fit & Vital", sub:"Kreislauf · Haltung · Mobilität", cat:"Kleingruppe", tag:"VITAL", days:[2,4], time:"08:30", end:"09:20", cap:5 },
+  { id:"pt",        title:"1:1 Personal Training", sub:"Private Coaching mit Yalcin", cat:"Personal", tag:"1:1", days:[1,2,3,4,5], time:"16:00", end:"16:50", cap:1 },
+  { id:"mobility",  title:"Kraft & Mobility", sub:"Beweglichkeit & Prävention", cat:"Kleingruppe", tag:"MOBILITY", days:[3], time:"17:00", end:"17:50", cap:5 },
+  { id:"athletic",  title:"Athletic Boost", sub:"Dein Afterwork-Upgrade", cat:"Kleingruppe", tag:"PERFORMANCE", days:[1,3], time:"18:00", end:"18:50", cap:5 },
+  { id:"boxing",    title:"Fitness Boxing", sub:"Stress raus. Kraft rein.", cat:"Kleingruppe", tag:"BOXING", days:[2,4], time:"19:00", end:"19:50", cap:5 },
+];
+const TRAINER = "Yalcin Arslan";
+const WD_SHORT = ["So","Mo","Di","Mi","Do","Fr","Sa"];
+const WD_LONG  = ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+const MONTHS = ["Jän.","Feb.","März","Apr.","Mai","Juni","Juli","Aug.","Sep.","Okt.","Nov.","Dez."];
+
+const DEFAULT_STATE = {
+  pass:{ blockRemaining:7, blockTotal:10, aboActive:false, aboType:null, memberNr:"FIT-2407", memberSince:"2024" },
+  bookings:[],
+  name:"Mitglied",
+};
+const STORE_KEY = "fitary-app-v1";
+
+/* ============================== UTILS ============================== */
+function seed(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function startOfWeek(d){const x=new Date(d);const off=(x.getDay()+6)%7;x.setHours(0,0,0,0);x.setDate(x.getDate()-off);return x;}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function iso(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+function sameISO(a,b){return iso(a)===iso(b);}
+function sessionDate(dateISO,time){const [y,m,dd]=dateISO.split("-").map(Number);const [hh,mm]=time.split(":").map(Number);return new Date(y,m-1,dd,hh,mm);}
+function hoursUntil(dt){return (dt.getTime()-Date.now())/3600000;}
+
+function sessionsForDay(dateObj){
+  const wd = dateObj.getDay()===0?7:dateObj.getDay();
+  const dISO = iso(dateObj);
+  return CATALOG.filter(c=>c.days.includes(wd)).map(c=>({
+    ...c, id:`${c.id}__${dISO}__${c.time}`, courseId:c.id, dateISO:dISO,
+  })).sort((a,b)=>a.time.localeCompare(b.time));
+}
+
+/* ============================== APP ============================== */
+function FitaryApp(){
+  const [state,setState] = useState(null);
+  const [tab,setTab] = useState("home");
+  const [toast,setToast] = useState(null);
+  const [sheet,setSheet] = useState(null); // 'buy' | {type:'confirm',booking}
+  const [now] = useState(()=>new Date());
+
+  // load
+  useEffect(()=>{(async()=>{
+    try{ const r = await window.storage.get(STORE_KEY); setState(r?JSON.parse(r.value):DEFAULT_STATE); }
+    catch{ setState(DEFAULT_STATE); }
+  })();},[]);
+  // persist
+  const save = useCallback(async(next)=>{ setState(next); try{ await window.storage.set(STORE_KEY,JSON.stringify(next)); }catch{} },[]);
+
+  const fireToast = useCallback((msg,kind="ok")=>{ setToast({msg,kind,id:Date.now()}); },[]);
+  useEffect(()=>{ if(!toast)return; const t=setTimeout(()=>setToast(null),2600); return ()=>clearTimeout(t); },[toast]);
+
+  if(!state) return (
+    <div className="fit-root" style={{minHeight:"100vh",display:"grid",placeItems:"center",background:"var(--green-950)"}}>
+      <style>{CSS}</style>
+      <div style={{textAlign:"center"}}>
+        <Wordmark size={34}/>
+        <div className="mono" style={{marginTop:16,fontSize:11,letterSpacing:".3em",color:"var(--cream-3)"}}>LÄDT…</div>
       </div>
     </div>
-  </section>
+  );
 
-  <!-- ZONEN -->
-  <section class="zonen" id="zonen">
-    <div class="container">
-      <div class="section-label">Die Welt von Saltino</div>
-      <h2 class="section-title">Fünf Zonen.<br /><em>Ein Erlebnis.</em></h2>
+  const { pass } = state;
 
-      <div class="zone-cards">
+  /* ---- booking logic ---- */
+  const bookingFor = (sid)=> state.bookings.find(b=>b.id===sid);
+  const occupancy = (s)=>{
+    const base = seed(s.id) % (s.cap+1);
+    const b = bookingFor(s.id);
+    const mineConfirmed = b && b.status==="confirmed" ? 1 : 0;
+    const occupied = Math.min(s.cap, base + mineConfirmed);
+    return { base, occupied, left: s.cap-occupied, full: base>=s.cap };
+  };
 
-        <div class="zone-card zone-card--hero">
-          <div class="zone-card__tag">Zone 01</div>
-          <div class="zone-card__deco">
-            <div class="salt-floor">
-              <div class="salt-mountain sm-1"></div>
-              <div class="salt-mountain sm-2"></div>
-              <div class="dino-footprint fp-1">·</div>
-              <div class="dino-footprint fp-2">·</div>
-              <div class="dino-footprint fp-3">·</div>
+  function book(s){
+    const dt = sessionDate(s.dateISO,s.time);
+    if(hoursUntil(dt)<0){ fireToast("Termin liegt in der Vergangenheit","warn"); return; }
+    if(bookingFor(s.id)){ fireToast("Bereits gebucht","warn"); return; }
+    const { full } = occupancy(s);
+    if(full){
+      const b = { id:s.id, courseId:s.courseId, title:s.title, cat:s.cat, dateISO:s.dateISO, time:s.time, end:s.end, status:"waitlist", usedBlock:false };
+      save({...state, bookings:[...state.bookings,b]});
+      fireToast("Auf die Warteliste gesetzt","wait"); return;
+    }
+    if(!pass.aboActive && pass.blockRemaining<=0){ setSheet("buy"); fireToast("Kein Guthaben – bitte aufladen","warn"); return; }
+    const usedBlock = !pass.aboActive;
+    const b = { id:s.id, courseId:s.courseId, title:s.title, cat:s.cat, dateISO:s.dateISO, time:s.time, end:s.end, status:"confirmed", usedBlock };
+    save({ ...state, bookings:[...state.bookings,b], pass:{...pass, blockRemaining: usedBlock?pass.blockRemaining-1:pass.blockRemaining} });
+    fireToast(s.cat==="Personal"?"1:1 Termin gesichert":"Platz gesichert","ok");
+  }
+
+  function doCancel(b){
+    const dt = sessionDate(b.dateISO,b.time);
+    const refund = b.status==="confirmed" && b.usedBlock && hoursUntil(dt)>=24;
+    save({ ...state, bookings: state.bookings.filter(x=>x.id!==b.id),
+      pass:{...pass, blockRemaining: refund?pass.blockRemaining+1:pass.blockRemaining} });
+    setSheet(null);
+    fireToast(refund?"Storniert · Einheit gutgeschrieben":(b.status==="waitlist"?"Von Warteliste entfernt":"Storniert · <24h, keine Gutschrift"), refund?"ok":"warn");
+  }
+
+  function buyBlock(){ save({...state, pass:{...pass, blockRemaining:pass.blockRemaining+10, blockTotal:10}}); setSheet(null); fireToast("10er-Block aktiviert","ok"); }
+  function activateAbo(){ save({...state, pass:{...pass, aboActive:true, aboType:"Flat"}}); setSheet(null); fireToast("Membership aktiviert","ok"); }
+
+  const upcoming = useMemo(()=> state.bookings
+    .map(b=>({...b,dt:sessionDate(b.dateISO,b.time)}))
+    .filter(b=>b.dt.getTime()>=Date.now()-3600000)
+    .sort((a,b)=>a.dt-b.dt), [state.bookings]);
+
+  return (
+    <div className="fit-root" style={{minHeight:"100vh",background:"radial-gradient(120% 80% at 50% -10%, var(--green-800), var(--green-950) 70%)"}}>
+      <style>{CSS}</style>
+      <div style={{maxWidth:440,margin:"0 auto",minHeight:"100vh",position:"relative",overflow:"hidden",
+        boxShadow:"0 0 80px rgba(0,0,0,.35)",background:"linear-gradient(180deg, var(--green-900), var(--green-950))"}}>
+        <div className="grain"/>
+        <TopBar pass={pass} now={now}/>
+        <div className="noscroll" style={{padding:"0 18px 130px",overflowY:"auto",position:"relative",zIndex:1}}>
+          {tab==="home"   && <HomeView state={state} upcoming={upcoming} now={now} go={setTab} openBuy={()=>setSheet("buy")}/>}
+          {tab==="kurse"  && <KurseView now={now} occupancy={occupancy} bookingFor={bookingFor} book={book}/>}
+          {tab==="buchungen" && <BookingsView upcoming={upcoming} all={state.bookings} onCancel={(b)=>setSheet({type:"confirm",b})} go={setTab}/>}
+          {tab==="pass"   && <PassView pass={pass} name={state.name} openBuy={()=>setSheet("buy")} bookings={state.bookings}/>}
+        </div>
+
+        <TabBar tab={tab} setTab={setTab} pending={upcoming.length}/>
+
+        {toast && <Toast toast={toast}/>}
+        {sheet==="buy" && <BuySheet pass={pass} onBlock={buyBlock} onAbo={activateAbo} onClose={()=>setSheet(null)}/>}
+        {sheet && sheet.type==="confirm" && <ConfirmSheet b={sheet.b} onYes={()=>doCancel(sheet.b)} onClose={()=>setSheet(null)}/>}
+      </div>
+    </div>
+  );
+}
+
+/* ============================== WORDMARK ============================== */
+function Wordmark({size=22,light=true}){
+  return (
+    <div className="disp" style={{fontSize:size,display:"inline-flex",alignItems:"center",gap:1,color:light?"var(--cream)":"var(--ink)"}}>
+      <span>FIT</span>
+      <span style={{display:"inline-block",transform:"skewX(-16deg)",color:"var(--cream)",margin:"0 -1px"}}>/</span>
+      <span>ARY</span>
+    </div>
+  );
+}
+
+/* ============================== TOP BAR ============================== */
+function TopBar({pass,now}){
+  const d = now;
+  return (
+    <div style={{position:"sticky",top:0,zIndex:5,padding:"16px 18px 14px",
+      background:"linear-gradient(180deg, rgba(12,34,25,.96), rgba(12,34,25,.7) 70%, transparent)",backdropFilter:"blur(6px)"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <Wordmark size={22}/>
+        <div style={{display:"flex",alignItems:"center",gap:6,padding:"6px 11px",borderRadius:999,
+          border:"1px solid rgba(243,240,231,.16)",background:"rgba(243,240,231,.05)"}}>
+          {pass.aboActive
+            ? <><Crown size={13} style={{color:"var(--lime)"}}/><span className="mono" style={{fontSize:11,letterSpacing:".05em"}}>FLAT</span></>
+            : <><Wallet size={13} style={{color:"var(--mint)"}}/><span className="mono" style={{fontSize:11,letterSpacing:".05em"}}>{pass.blockRemaining}/{pass.blockTotal}</span></>}
+        </div>
+      </div>
+      <div className="mono" style={{marginTop:6,fontSize:10.5,letterSpacing:".22em",color:"var(--cream-3)"}}>
+        {WD_LONG[d.getDay()].toUpperCase()} · {d.getDate()}. {MONTHS[d.getMonth()].toUpperCase()} · WELS
+      </div>
+    </div>
+  );
+}
+
+/* ============================== HOME ============================== */
+function HomeView({state,upcoming,now,go,openBuy}){
+  const next = upcoming.find(b=>b.status==="confirmed");
+  const hello = now.getHours()<11?"Guten Morgen":now.getHours()<17?"Servus":"Guten Abend";
+  return (
+    <div style={{paddingTop:8}}>
+      <div className="fade-up" style={{margin:"6px 0 18px"}}>
+        <div className="mono" style={{fontSize:11,letterSpacing:".24em",color:"var(--rust-2)"}}>{hello.toUpperCase()}</div>
+        <h1 className="disp" style={{fontSize:40,margin:"6px 0 0"}}>Bereit für<br/><span style={{color:"var(--mint)"}}>deine Einheit?</span></h1>
+      </div>
+
+      {/* next booking */}
+      <div className="fade-up" style={{animationDelay:".06s"}}>
+        {next ? <NextCard b={next} now={now} go={go}/> :
+          <button onClick={()=>go("kurse")} className="tap" style={{width:"100%",textAlign:"left",borderRadius:22,padding:"22px",
+            border:"1px dashed rgba(203,230,173,.4)",background:"rgba(203,230,173,.06)"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div>
+                <div style={{fontWeight:800,fontSize:17}}>Noch nichts gebucht</div>
+                <div style={{fontSize:13,color:"var(--cream-2)",marginTop:3}}>Sichere dir deinen Platz im Kursplan.</div>
+              </div>
+              <div style={{width:42,height:42,borderRadius:999,background:"var(--lime)",display:"grid",placeItems:"center"}}>
+                <ArrowRight size={20} style={{color:"var(--ink)"}}/>
+              </div>
             </div>
-          </div>
-          <h3>Salzspielraum</h3>
-          <p>Der Held des Projekts. Weißer Salzboden, kleine Salzberge, Holzrutschen und Kletterparcours — alles in warmem Licht. Dino-Fußspuren führen durch das weiße Abenteuer.</p>
-          <ul class="zone-features">
-            <li>Weißer Salzboden & Salzberge</li>
-            <li>Holzrutschen & Kletterelemente</li>
-            <li>Indirekte Wandbeleuchtung</li>
-            <li>Dino-Fußspuren im Salz</li>
-            <li>Wolken-Deckenoptik</li>
-          </ul>
-        </div>
-
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 02</div>
-          <div class="zone-card__icon">☕</div>
-          <h3>Soft Lounge Café</h3>
-          <p>Modernes Boutique-Café für Eltern. Matcha, Cappuccino, gesunde Snacks, WLAN — und volle Sicht auf die spielenden Kinder.</p>
-          <ul class="zone-features">
-            <li>Specialty Coffee & Matcha Bar</li>
-            <li>Gesunde Snacks & Kuchen</li>
-            <li>WLAN & Ladestationen</li>
-            <li>Ruhige Ambientmusik</li>
-          </ul>
-        </div>
-
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 03</div>
-          <div class="zone-card__icon">🌿</div>
-          <h3>Baby Corner</h3>
-          <p>Speziell für 0–3 Jahre. Weiche Materialien, ruhigere Atmosphäre, perfekte Salzkonzentration für die Kleinsten.</p>
-          <ul class="zone-features">
-            <li>Altersgerechte Spielelemente</li>
-            <li>Extra-weiche Böden</li>
-            <li>Angepasstes Raumklima</li>
-            <li>Windeln & Pflegestation</li>
-          </ul>
-        </div>
-
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 04</div>
-          <div class="zone-card__icon">🎂</div>
-          <h3>Birthday & Events</h3>
-          <p>Exklusive Geburtstagsfeiern und Gruppenevents. Private Buchung, Deko-Package, unvergessliche Momente — mit der besten Marge.</p>
-          <ul class="zone-features">
-            <li>Private Buchung möglich</li>
-            <li>Dino Birthday Packages</li>
-            <li>Catering-Option</li>
-            <li>Bis 20 Kinder</li>
-          </ul>
-        </div>
-
-        <div class="zone-card">
-          <div class="zone-card__tag">Zone 05</div>
-          <div class="zone-card__icon">✨</div>
-          <h3>Retail Wall</h3>
-          <p>Kuratierte Produkte zum Mitnehmen: Salzlampen, Dino-Merch, Atemwegsprodukte, Kinderprodukte — alles in der Saltino-Ästhetik.</p>
-          <ul class="zone-features">
-            <li>Saltino Dino Merch</li>
-            <li>Salzlampen & Dekoration</li>
-            <li>Atemwegs- & Kinderprodukte</li>
-            <li>Limitierte Editionen</li>
-          </ul>
-        </div>
-
+          </button>}
       </div>
-    </div>
-  </section>
 
-  <!-- INSTAGRAMMABLE SPOTS -->
-  <section class="erlebnis" id="erlebnis">
-    <div class="container">
-      <div class="section-label">Instagrammable Spots</div>
-      <h2 class="section-title">Gebaut um geteilt<br /><em>zu werden.</em></h2>
-      <p class="section-sub">Jeder Spot ist ein organischer Content-Creator. Eure Gäste machen die Reichweite.</p>
+      {/* guthaben snapshot */}
+      <div className="fade-up" style={{animationDelay:".12s",marginTop:14}}>
+        <GuthabenBar pass={state.pass} onTop={openBuy}/>
+      </div>
 
-      <div class="spots-grid">
-        <div class="spot">
-          <div class="spot__visual spot__visual--egg">
-            <div class="egg-shape">
-              <span class="egg-dino">🦕</span>
-            </div>
-          </div>
-          <h4>Das Dino-Ei</h4>
-          <p>Riesiges begehbares Ei — perfekte Story. Kinder lieben es. Eltern posten es.</p>
-        </div>
-
-        <div class="spot">
-          <div class="spot__visual spot__visual--volcano">
-            <div class="volcano-shape">
-              <div class="volcano-smoke s1"></div>
-              <div class="volcano-smoke s2"></div>
-              <div class="volcano-smoke s3"></div>
-            </div>
-          </div>
-          <h4>Salz-Vulkan</h4>
-          <p>Puffende Salzkristalle, indirektes Glühen — ein Wow-Moment für jeden Besucher.</p>
-        </div>
-
-        <div class="spot">
-          <div class="spot__visual spot__visual--cave">
-            <div class="cave-shape">
-              <div class="cave-glow"></div>
-            </div>
-          </div>
-          <h4>Kristall-Höhle</h4>
-          <p>Eine kleine Höhle aus Salzwänden mit blauem Ambienzlicht. Magisch und ruhig.</p>
-        </div>
-
-        <div class="spot spot--neon">
-          <div class="spot__visual spot__visual--neon">
-            <div class="neon-sign">
-              Spielend<br />gesund atmen.
-            </div>
-          </div>
-          <h4>Neon-Schild</h4>
-          <p>Das Haupt-Statement als Neon — jeder fotografiert es. Gratis Marketing.</p>
-        </div>
-
-        <div class="spot">
-          <div class="spot__visual spot__visual--cloud">
-            <div class="cloud-wall">
-              <div class="cloud c1"></div>
-              <div class="cloud c2"></div>
-              <div class="cloud c3"></div>
-            </div>
-          </div>
-          <h4>Wolkenwand</h4>
-          <p>Weiche 3D-Wolken mit sanftem Licht. Ein Kindheitstraum zum Anfassen.</p>
+      {/* quick actions */}
+      <div className="fade-up" style={{animationDelay:".18s",marginTop:22}}>
+        <SectionLabel>Schnellzugriff</SectionLabel>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginTop:12}}>
+          <Quick icon={CalendarDays} label="Kurs buchen" hint="Kleingruppe & Boxing" onClick={()=>go("kurse")} accent="var(--mint)"/>
+          <Quick icon={Sparkles} label="1:1 Coaching" hint="Private Session" onClick={()=>go("kurse")} accent="var(--rust-2)"/>
+          <Quick icon={Tag} label="Meine Termine" hint={`${upcoming.length} anstehend`} onClick={()=>go("buchungen")} accent="var(--lime)"/>
+          <Quick icon={Wallet} label="Mein Pass" hint="Guthaben & Card" onClick={()=>go("pass")} accent="var(--cream)"/>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- DESIGN LANGUAGE -->
-  <section class="design-lang">
-    <div class="container">
-      <div class="section-label">Designsprache</div>
-      <h2 class="section-title">Modern Organic<br /><em>Family Wellness.</em></h2>
-
-      <div class="design-grid">
-        <div class="color-story">
-          <h4>Farbwelt</h4>
-          <div class="swatches">
-            <div class="swatch" style="background:#FAF7F2" data-name="Soft White"></div>
-            <div class="swatch" style="background:#F0E6CF" data-name="Warm Beige"></div>
-            <div class="swatch" style="background:#D9C4A3" data-name="Sand"></div>
-            <div class="swatch" style="background:#C8A97A" data-name="Light Oak"></div>
-            <div class="swatch" style="background:#B5835A" data-name="Clay"></div>
-            <div class="swatch" style="background:#C96B44" data-name="Terracotta"></div>
-            <div class="swatch" style="background:#CC6633" data-name="Burnt Orange"></div>
-            <div class="swatch" style="background:#8FA88A" data-name="Sage Green"></div>
-          </div>
-        </div>
-
-        <div class="material-story">
-          <h4>Materialien</h4>
-          <div class="materials">
-            <div class="material-chip">Helles Holz</div>
-            <div class="material-chip">Naturstein</div>
-            <div class="material-chip">Leinentextilien</div>
-            <div class="material-chip">Matte Oberflächen</div>
-            <div class="material-chip">Organische Formen</div>
-            <div class="material-chip">Indirekte Beleuchtung</div>
-            <div class="material-chip">Salzwände</div>
-            <div class="material-chip">Kork</div>
-          </div>
-        </div>
-
-        <div class="feel-story">
-          <h4>Atmosphäre</h4>
-          <div class="feel-words">
-            <span class="feel-word">Ruhig</span>
-            <span class="feel-word">Warm</span>
-            <span class="feel-word">Clean</span>
-            <span class="feel-word">Hochwertig</span>
-            <span class="feel-word">Einladend</span>
-            <span class="feel-word">Modern</span>
-            <span class="feel-word">Spielend</span>
-            <span class="feel-word">Gesund</span>
+      {/* studio line */}
+      <div className="fade-up" style={{animationDelay:".24s",marginTop:22,borderRadius:18,overflow:"hidden",
+        border:"1px solid rgba(243,240,231,.1)",background:"linear-gradient(135deg, var(--green-800), var(--green-700))"}}>
+        <div style={{padding:"18px 18px 16px"}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:".22em",color:"var(--mint)"}}>DAS ERSTE BOUTIQUE PT STUDIO IN WELS</div>
+          <div className="disp" style={{fontSize:24,marginTop:8}}>Haltung ist <span style={{color:"var(--rust-2)"}}>kein Zufall.</span></div>
+          <div style={{display:"flex",gap:16,marginTop:14,fontSize:12.5,color:"var(--cream-2)"}}>
+            <span style={{display:"flex",alignItems:"center",gap:6}}><MapPin size={14}/> Plobergerstraße 7</span>
+            <span style={{display:"flex",alignItems:"center",gap:6}}><Phone size={14}/> 0670 3565006</span>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  );
+}
 
-  <!-- DINO MASCOT -->
-  <section class="mascot">
-    <div class="container">
-      <div class="mascot__inner">
-        <div class="mascot__dinos">
-          <div class="mascot-dino md-1">
-            <div class="md-body">
-              <div class="md-eye"></div>
-            </div>
-          </div>
-          <div class="mascot-dino md-2">
-            <div class="md-body">
-              <div class="md-eye"></div>
-              <div class="md-blush"></div>
-            </div>
-          </div>
-          <div class="mascot-dino md-3">
-            <div class="md-body">
-              <div class="md-eye"></div>
-            </div>
+function NextCard({b,now,go}){
+  const dt = sessionDate(b.dateISO,b.time);
+  const today = sameISO(dt,now), tomorrow = sameISO(dt,addDays(now,1));
+  const when = today?"HEUTE":tomorrow?"MORGEN":`${WD_SHORT[dt.getDay()].toUpperCase()} ${dt.getDate()}.${dt.getMonth()+1}.`;
+  return (
+    <button onClick={()=>go("buchungen")} className="tap" style={{width:"100%",textAlign:"left",borderRadius:22,padding:0,overflow:"hidden",
+      background:"var(--cream)",color:"var(--ink)",boxShadow:"0 18px 40px rgba(0,0,0,.3)"}}>
+      <div style={{padding:"18px 20px 16px",position:"relative"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <div className="mono" style={{fontSize:11,letterSpacing:".2em",color:"var(--rust)"}}>NÄCHSTER TERMIN · {when}</div>
+          <div style={{padding:"3px 9px",borderRadius:999,background:b.cat==="Personal"?"var(--rust)":"var(--green-800)",
+            color:"var(--cream)",fontSize:10,fontWeight:800,letterSpacing:".05em"}}>{b.cat==="Personal"?"1:1":"KLEINGRUPPE"}</div>
+        </div>
+        <div className="disp" style={{fontSize:28,margin:"8px 0 2px"}}>{b.title}</div>
+        <div style={{display:"flex",alignItems:"center",gap:14,marginTop:8,fontSize:13,fontWeight:600,color:"#3a463f"}}>
+          <span style={{display:"flex",alignItems:"center",gap:6}}><Clock size={15}/> {b.time}–{b.end} Uhr</span>
+          <span style={{display:"flex",alignItems:"center",gap:6}}><Users size={15}/> {TRAINER.split(" ")[0]}</span>
+        </div>
+      </div>
+      <div style={{height:5,background:"linear-gradient(90deg, var(--rust), var(--lime))"}}/>
+    </button>
+  );
+}
+
+function GuthabenBar({pass,onTop}){
+  if(pass.aboActive){
+    return (
+      <div style={{borderRadius:18,padding:"16px 18px",border:"1px solid rgba(199,255,60,.3)",
+        background:"linear-gradient(135deg, rgba(199,255,60,.12), rgba(199,255,60,.03))"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <Crown size={20} style={{color:"var(--lime)"}}/>
+          <div>
+            <div style={{fontWeight:800}}>Flat-Membership aktiv</div>
+            <div style={{fontSize:12.5,color:"var(--cream-2)"}}>Unbegrenzte Kleingruppen-Einheiten</div>
           </div>
         </div>
-        <div class="mascot__text">
-          <div class="section-label">Das Maskottchen</div>
-          <h2>Dino trifft<br /><em>Wellness.</em></h2>
-          <p>Clean, soft, modern, emotional — wie eine moderne Kinderbuchmarke. Kleine runde Formen, minimalistische Augen, sanfte Farben. Kein billiger Cartoon — ein emotionaler Markencharakter.</p>
-          <p>Dino begleitet Kinder durch das Salzabenteuer und taucht auf jeder Kommunikation auf.</p>
+      </div>
+    );
+  }
+  const pct = Math.max(0,Math.min(100,(pass.blockRemaining/pass.blockTotal)*100));
+  const low = pass.blockRemaining<=2;
+  return (
+    <div style={{borderRadius:18,padding:"16px 18px",border:"1px solid rgba(243,240,231,.12)",background:"rgba(243,240,231,.04)"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <div className="mono" style={{fontSize:11,letterSpacing:".18em",color:"var(--cream-2)"}}>10ER-BLOCK</div>
+        <div style={{fontWeight:800,fontSize:15}}>{pass.blockRemaining}<span style={{color:"var(--cream-3)"}}> / {pass.blockTotal} Einheiten</span></div>
+      </div>
+      <div style={{height:9,borderRadius:999,background:"rgba(0,0,0,.3)",marginTop:11,overflow:"hidden"}}>
+        <div style={{height:"100%",width:`${pct}%`,borderRadius:999,transition:"width .5s ease",
+          background:low?"linear-gradient(90deg,var(--rust),var(--rust-2))":"linear-gradient(90deg,var(--mint),var(--lime))"}}/>
+      </div>
+      {low && <button onClick={onTop} className="tap" style={{marginTop:12,width:"100%",padding:"11px",borderRadius:12,
+        background:"var(--rust)",color:"var(--cream)",fontWeight:800,fontSize:13.5,display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+        <Plus size={16}/> Guthaben aufladen</button>}
+    </div>
+  );
+}
+
+function Quick({icon:Icon,label,hint,onClick,accent}){
+  return (
+    <button onClick={onClick} className="tap" style={{textAlign:"left",borderRadius:18,padding:"16px",
+      border:"1px solid rgba(243,240,231,.1)",background:"rgba(243,240,231,.04)"}}>
+      <div style={{width:38,height:38,borderRadius:11,display:"grid",placeItems:"center",
+        background:"rgba(0,0,0,.25)",border:`1px solid ${accent==="var(--cream)"?"rgba(243,240,231,.2)":accent}`}}>
+        <Icon size={19} style={{color:accent}}/>
+      </div>
+      <div style={{fontWeight:800,fontSize:14.5,marginTop:12}}>{label}</div>
+      <div style={{fontSize:11.5,color:"var(--cream-3)",marginTop:2}}>{hint}</div>
+    </button>
+  );
+}
+
+/* ============================== KURSE ============================== */
+function KurseView({now,occupancy,bookingFor,book}){
+  const [weekOffset,setWeekOffset] = useState(0);
+  const week0 = useMemo(()=>startOfWeek(now),[now]);
+  const weekStart = addDays(week0, weekOffset*7);
+  const days = useMemo(()=>Array.from({length:7},(_,i)=>addDays(weekStart,i)),[weekStart]);
+  const todayIdx = days.findIndex(d=>sameISO(d,now));
+  const [sel,setSel] = useState(todayIdx>=0?todayIdx:0);
+  useEffect(()=>{ setSel(todayIdx>=0?todayIdx:0); },[weekOffset]); // eslint-disable-line
+
+  const selDate = days[sel];
+  const sessions = sessionsForDay(selDate);
+  const label = `${weekStart.getDate()}.${weekStart.getMonth()+1}. – ${addDays(weekStart,6).getDate()}.${addDays(weekStart,6).getMonth()+1}.`;
+
+  return (
+    <div style={{paddingTop:6}}>
+      <div className="fade-up" style={{display:"flex",alignItems:"center",justifyContent:"space-between",margin:"4px 0 16px"}}>
+        <h1 className="disp" style={{fontSize:34}}>Kursplan</h1>
+        <div style={{display:"flex",alignItems:"center",gap:4}}>
+          <IconBtn onClick={()=>setWeekOffset(w=>Math.max(0,w-1))} disabled={weekOffset===0}><ChevronLeft size={18}/></IconBtn>
+          <span className="mono" style={{fontSize:11,minWidth:104,textAlign:"center",color:"var(--cream-2)"}}>{label}</span>
+          <IconBtn onClick={()=>setWeekOffset(w=>Math.min(6,w+1))}><ChevronRight size={18}/></IconBtn>
+        </div>
+      </div>
+
+      {/* day pills */}
+      <div className="noscroll fade-up" style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,animationDelay:".05s"}}>
+        {days.map((d,i)=>{
+          const active=i===sel, isToday=sameISO(d,now);
+          const has = sessionsForDay(d).length>0;
+          return (
+            <button key={i} onClick={()=>setSel(i)} className="tap" style={{flex:"0 0 auto",width:50,padding:"9px 0",borderRadius:14,textAlign:"center",
+              background:active?"var(--cream)":"rgba(243,240,231,.05)",color:active?"var(--ink)":"var(--cream)",
+              border:`1px solid ${active?"var(--cream)":"rgba(243,240,231,.1)"}`,opacity:has?1:.45}}>
+              <div className="mono" style={{fontSize:10,letterSpacing:".05em",opacity:.7}}>{WD_SHORT[d.getDay()].toUpperCase()}</div>
+              <div className="disp" style={{fontSize:19,marginTop:2}}>{d.getDate()}</div>
+              {isToday && <div style={{width:5,height:5,borderRadius:999,background:active?"var(--rust)":"var(--lime)",margin:"4px auto 0"}}/>}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* sessions */}
+      <div style={{marginTop:14}}>
+        {sessions.length===0 ? (
+          <div style={{textAlign:"center",padding:"48px 0",color:"var(--cream-3)"}}>
+            <Ban size={26} style={{opacity:.4}}/><div style={{marginTop:10,fontSize:14}}>Heute keine Kurse</div>
+          </div>
+        ) : sessions.map((s,i)=>(
+          <div key={s.id} className="fade-up" style={{animationDelay:`${.06+i*.05}s`}}>
+            <CourseCard s={s} occ={occupancy(s)} booking={bookingFor(s.id)} onBook={()=>book(s)} now={now}/>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CourseCard({s,occ,booking,onBook,now}){
+  const dt = sessionDate(s.dateISO,s.time);
+  const past = hoursUntil(dt)<0;
+  const isPT = s.cat==="Personal";
+  const booked = booking && booking.status==="confirmed";
+  const waitlisted = booking && booking.status==="waitlist";
+  const accent = isPT?"var(--rust-2)":occ.full?"var(--cream-3)":"var(--mint)";
+
+  let btn;
+  if(past) btn = <State label="Vorbei" muted/>;
+  else if(booked) btn = <State label="Gebucht" icon={Check} good/>;
+  else if(waitlisted) btn = <State label="Warteliste" icon={Clock} wait/>;
+  else if(occ.full) btn = <BookBtn label="Warteliste" onClick={onBook} ghost/>;
+  else btn = <BookBtn label="Buchen" onClick={onBook}/>;
+
+  return (
+    <div style={{display:"flex",gap:14,padding:"15px 16px",borderRadius:18,marginBottom:10,position:"relative",overflow:"hidden",
+      border:`1px solid ${booked?"rgba(199,255,60,.35)":"rgba(243,240,231,.1)"}`,
+      background:booked?"rgba(199,255,60,.06)":"rgba(243,240,231,.04)",opacity:past?.55:1}}>
+      <div style={{width:3,borderRadius:999,background:accent,flex:"0 0 auto"}}/>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{display:"flex",alignItems:"center",gap:7}}>
+          <span className="mono" style={{fontSize:10,letterSpacing:".12em",padding:"2px 7px",borderRadius:6,
+            background:isPT?"var(--rust)":"rgba(203,230,173,.14)",color:isPT?"var(--cream)":"var(--mint)"}}>{s.tag}</span>
+          <span className="mono" style={{fontSize:11.5,color:"var(--cream)"}}>{s.time}–{s.end}</span>
+        </div>
+        <div style={{fontWeight:800,fontSize:16.5,marginTop:7}}>{s.title}</div>
+        <div style={{fontSize:12.5,color:"var(--cream-3)",marginTop:1}}>{s.sub}</div>
+        <div style={{marginTop:10,display:"flex",alignItems:"center",gap:6}}>
+          {isPT
+            ? <span style={{fontSize:11.5,color:"var(--cream-2)",display:"flex",alignItems:"center",gap:5}}><Sparkles size={13}/> Private 1:1 Session</span>
+            : <Spots left={occ.left} cap={s.cap} full={occ.full}/>}
+        </div>
+      </div>
+      <div style={{display:"flex",alignItems:"center"}}>{btn}</div>
+    </div>
+  );
+}
+
+function Spots({left,cap,full}){
+  return (
+    <span style={{display:"flex",alignItems:"center",gap:6,fontSize:11.5,color:full?"var(--rust-2)":"var(--cream-2)"}}>
+      <span style={{display:"flex",gap:3}}>
+        {Array.from({length:cap}).map((_,i)=>(
+          <span key={i} style={{width:6,height:6,borderRadius:999,background:i<(cap-left)?"rgba(243,240,231,.25)":"var(--lime)"}}/>
+        ))}
+      </span>
+      {full?"Ausgebucht":`${left} von ${cap} frei`}
+    </span>
+  );
+}
+
+function BookBtn({label,onClick,ghost}){
+  return (
+    <button onClick={onClick} className="tap" style={{padding:"10px 16px",borderRadius:12,fontWeight:800,fontSize:13.5,whiteSpace:"nowrap",
+      background:ghost?"transparent":"var(--lime)",color:ghost?"var(--cream)":"var(--ink)",
+      border:ghost?"1px solid rgba(243,240,231,.3)":"none"}}>{label}</button>
+  );
+}
+function State({label,icon:Icon,good,wait,muted}){
+  const c = good?"var(--lime)":wait?"var(--rust-2)":"var(--cream-3)";
+  return (
+    <div style={{display:"flex",alignItems:"center",gap:6,padding:"10px 14px",borderRadius:12,fontWeight:800,fontSize:13.5,
+      color:c,border:`1px solid ${muted?"rgba(243,240,231,.12)":c}`,background:good?"rgba(199,255,60,.1)":"transparent"}}>
+      {Icon && <Icon size={15}/>}{label}
+    </div>
+  );
+}
+
+/* ============================== BUCHUNGEN ============================== */
+function BookingsView({upcoming,all,onCancel,go}){
+  const past = useMemo(()=> all.map(b=>({...b,dt:sessionDate(b.dateISO,b.time)}))
+    .filter(b=>b.dt.getTime()<Date.now()-3600000).sort((a,b)=>b.dt-a.dt),[all]);
+  return (
+    <div style={{paddingTop:6}}>
+      <h1 className="disp fade-up" style={{fontSize:34,margin:"4px 0 18px"}}>Meine Termine</h1>
+      {upcoming.length===0 && past.length===0 && (
+        <div className="fade-up" style={{textAlign:"center",padding:"40px 20px"}}>
+          <CalendarDays size={28} style={{color:"var(--cream-3)"}}/>
+          <div style={{marginTop:12,fontWeight:700}}>Noch keine Buchungen</div>
+          <button onClick={()=>go("kurse")} className="tap" style={{marginTop:16,padding:"12px 22px",borderRadius:12,background:"var(--lime)",color:"var(--ink)",fontWeight:800}}>Zum Kursplan</button>
+        </div>
+      )}
+      {upcoming.length>0 && <>
+        <SectionLabel>Anstehend</SectionLabel>
+        <div style={{marginTop:12,marginBottom:24}}>
+          {upcoming.map((b,i)=><div key={b.id} className="fade-up" style={{animationDelay:`${i*.05}s`}}><BookingRow b={b} onCancel={()=>onCancel(b)}/></div>)}
+        </div>
+      </>}
+      {past.length>0 && <>
+        <SectionLabel>Vergangen</SectionLabel>
+        <div style={{marginTop:12}}>
+          {past.slice(0,8).map(b=><div key={b.id+"p"}><BookingRow b={b} past/></div>)}
+        </div>
+      </>}
+    </div>
+  );
+}
+
+function BookingRow({b,onCancel,past}){
+  const dt = sessionDate(b.dateISO,b.time);
+  const wl = b.status==="waitlist";
+  const canRefund = b.usedBlock && hoursUntil(dt)>=24;
+  return (
+    <div style={{display:"flex",alignItems:"center",gap:13,padding:"13px 14px",borderRadius:16,marginBottom:9,
+      border:"1px solid rgba(243,240,231,.1)",background:"rgba(243,240,231,.04)",opacity:past?.5:1}}>
+      <div style={{flex:"0 0 auto",width:50,textAlign:"center",borderRight:"1px solid rgba(243,240,231,.12)",paddingRight:13}}>
+        <div className="mono" style={{fontSize:10,color:"var(--cream-3)"}}>{WD_SHORT[dt.getDay()].toUpperCase()}</div>
+        <div className="disp" style={{fontSize:22}}>{dt.getDate()}</div>
+        <div className="mono" style={{fontSize:9,color:"var(--cream-3)"}}>{MONTHS[dt.getMonth()].toUpperCase()}</div>
+      </div>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{display:"flex",alignItems:"center",gap:7}}>
+          <span style={{fontWeight:800,fontSize:15}}>{b.title}</span>
+          {wl && <span style={{fontSize:9,fontWeight:800,padding:"2px 6px",borderRadius:5,background:"rgba(212,99,63,.2)",color:"var(--rust-2)"}}>WARTELISTE</span>}
+        </div>
+        <div className="mono" style={{fontSize:11.5,color:"var(--cream-2)",marginTop:3}}>{b.time}–{b.end} · {TRAINER.split(" ")[0]}</div>
+      </div>
+      {!past && <button onClick={onCancel} className="tap" title="Stornieren" style={{flex:"0 0 auto",width:34,height:34,borderRadius:10,display:"grid",placeItems:"center",
+        background:"rgba(0,0,0,.2)",border:"1px solid rgba(243,240,231,.12)"}}>
+        <X size={16} style={{color:canRefund?"var(--cream-2)":"var(--rust-2)"}}/>
+      </button>}
+    </div>
+  );
+}
+
+/* ============================== PASS ============================== */
+function PassView({pass,name,openBuy,bookings}){
+  const used = bookings.filter(b=>b.usedBlock).length;
+  return (
+    <div style={{paddingTop:6}}>
+      <h1 className="disp fade-up" style={{fontSize:34,margin:"4px 0 18px"}}>Mein Pass</h1>
+
+      {/* member card */}
+      <div className="fade-up pop" style={{borderRadius:24,padding:"22px 22px 20px",position:"relative",overflow:"hidden",
+        background:"linear-gradient(145deg, var(--green-700), var(--green-900))",border:"1px solid rgba(243,240,231,.14)",
+        boxShadow:"0 22px 50px rgba(0,0,0,.4)"}}>
+        <div style={{position:"absolute",right:-30,top:-30,width:160,height:160,borderRadius:999,background:"radial-gradient(circle, rgba(199,255,60,.16), transparent 70%)"}}/>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <Wordmark size={20}/>
+          {pass.aboActive
+            ? <span style={{display:"flex",alignItems:"center",gap:5,fontSize:10,fontWeight:800,letterSpacing:".05em",color:"var(--lime)"}}><Crown size={13}/> FLAT</span>
+            : <span className="mono" style={{fontSize:10,letterSpacing:".15em",color:"var(--mint)"}}>10ER-BLOCK</span>}
+        </div>
+        <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",marginTop:22}}>
+          <div>
+            <div style={{fontSize:12,color:"var(--cream-3)"}}>Mitglied</div>
+            <div className="disp" style={{fontSize:24,marginTop:2}}>{name}</div>
+            <div className="mono" style={{fontSize:11,letterSpacing:".18em",color:"var(--cream-2)",marginTop:6}}>{pass.memberNr} · seit {pass.memberSince}</div>
+          </div>
+          <FauxQR seedStr={pass.memberNr}/>
+        </div>
+      </div>
+
+      {/* balance */}
+      <div className="fade-up" style={{animationDelay:".08s",marginTop:16}}>
+        <GuthabenBar pass={pass} onTop={openBuy}/>
+      </div>
+
+      {/* stats */}
+      <div className="fade-up" style={{animationDelay:".14s",display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginTop:12}}>
+        <Stat big={used} label="Einheiten genutzt" icon={Zap} accent="var(--lime)"/>
+        <Stat big={pass.aboActive?"∞":pass.blockRemaining} label="verfügbar" icon={Wallet} accent="var(--mint)"/>
+      </div>
+
+      {/* upgrade / buy */}
+      {!pass.aboActive && (
+        <button onClick={openBuy} className="fade-up tap" style={{animationDelay:".2s",width:"100%",marginTop:14,padding:"16px",borderRadius:18,
+          background:"var(--rust)",color:"var(--cream)",fontWeight:800,fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:9}}>
+          <Plus size={18}/> Guthaben aufladen / Membership
+        </button>
+      )}
+
+      <div className="fade-up" style={{animationDelay:".26s",marginTop:18,display:"flex",gap:9,alignItems:"flex-start",
+        padding:"13px 15px",borderRadius:14,background:"rgba(243,240,231,.04)",border:"1px solid rgba(243,240,231,.08)"}}>
+        <ShieldCheck size={16} style={{color:"var(--mint)",flex:"0 0 auto",marginTop:1}}/>
+        <div style={{fontSize:11.5,color:"var(--cream-2)",lineHeight:1.5}}>
+          <b style={{color:"var(--cream)"}}>Demo-Prototyp.</b> In der Live-Version: Zahlung via Stripe / SEPA, automatische RKSV-konforme Rechnung & DSGVO-konforme Datenhaltung über das FITARY-Backend.
         </div>
       </div>
     </div>
-  </section>
+  );
+}
 
-  <!-- CTA / KONTAKT -->
-  <section class="kontakt" id="kontakt">
-    <div class="container">
-      <div class="kontakt__card">
-        <div class="section-label">Bereit für das Erlebnis?</div>
-        <h2>Dein Saltino-Abenteuer<br /><em>beginnt hier.</em></h2>
-        <p>Buche jetzt deine Session für die ganze Familie. Begrenzte Plätze pro Tag für beste Qualität.</p>
+function FauxQR({seedStr}){
+  const n=9; const s=seed(seedStr);
+  const cells = Array.from({length:n*n},(_,i)=>((s>>(i%30))^(i*2654435761))%5===0);
+  return (
+    <div style={{width:74,height:74,padding:6,borderRadius:12,background:"var(--cream)",display:"grid",
+      gridTemplateColumns:`repeat(${n},1fr)`,gap:1.5}}>
+      {cells.map((on,i)=><div key={i} style={{background:on?"var(--ink)":"transparent",borderRadius:1}}/>)}
+    </div>
+  );
+}
+function Stat({big,label,icon:Icon,accent}){
+  return (
+    <div style={{borderRadius:16,padding:"15px 16px",border:"1px solid rgba(243,240,231,.1)",background:"rgba(243,240,231,.04)"}}>
+      <Icon size={17} style={{color:accent}}/>
+      <div className="disp" style={{fontSize:30,marginTop:8}}>{big}</div>
+      <div style={{fontSize:11.5,color:"var(--cream-3)",marginTop:1}}>{label}</div>
+    </div>
+  );
+}
 
-        <form class="booking-form" id="bookingForm">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" placeholder="Vorname Nachname" required />
-            </div>
-            <div class="form-group">
-              <label for="email">E-Mail</label>
-              <input type="email" id="email" placeholder="deine@email.de" required />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="datum">Wunschdatum</label>
-              <input type="date" id="datum" required />
-            </div>
-            <div class="form-group">
-              <label for="kinder">Anzahl Kinder</label>
-              <select id="kinder">
-                <option value="1">1 Kind</option>
-                <option value="2">2 Kinder</option>
-                <option value="3">3 Kinder</option>
-                <option value="4+">4+ Kinder</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="paket">Paket</label>
-            <select id="paket">
-              <option value="standard">Standard Session (45 Min) — €24 / Kind</option>
-              <option value="family">Family Package (2 Kinder + 1 Elternteil) — €54</option>
-              <option value="birthday">Birthday Package (Gruppe bis 15) — ab €199</option>
-              <option value="monthly">Monatsabo (8 Sessions) — €79 / Kind</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn--primary btn--full">
-            Anfrage senden →
-          </button>
-        </form>
-
-        <div class="kontakt__info">
-          <div class="info-item">
-            <span class="info-icon">📍</span>
-            <span>Musterstraße 42, 10115 Berlin</span>
-          </div>
-          <div class="info-item">
-            <span class="info-icon">🕐</span>
-            <span>Mo–Fr 9–20 Uhr · Sa–So 9–18 Uhr</span>
-          </div>
-          <div class="info-item">
-            <span class="info-icon">📞</span>
-            <span>+49 30 123 456 789</span>
-          </div>
+/* ============================== TAB BAR ============================== */
+function TabBar({tab,setTab,pending}){
+  const items=[
+    {k:"home",icon:Home,label:"Start"},
+    {k:"kurse",icon:CalendarDays,label:"Kurse"},
+    {k:"buchungen",icon:Tag,label:"Termine",badge:pending},
+    {k:"pass",icon:Wallet,label:"Pass"},
+  ];
+  return (
+    <div style={{position:"fixed",left:0,right:0,bottom:0,zIndex:20}}>
+      <div style={{maxWidth:440,margin:"0 auto",padding:"10px 16px calc(14px + env(safe-area-inset-bottom))",
+        background:"linear-gradient(180deg, transparent, var(--green-950) 38%)"}}>
+        <div style={{display:"flex",justifyContent:"space-around",alignItems:"center",padding:"8px 6px",borderRadius:20,
+          background:"rgba(8,24,17,.92)",backdropFilter:"blur(12px)",border:"1px solid rgba(243,240,231,.1)",
+          boxShadow:"0 12px 34px rgba(0,0,0,.45)"}}>
+          {items.map(it=>{
+            const a=tab===it.k;
+            return (
+              <button key={it.k} onClick={()=>setTab(it.k)} className="tap" style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,padding:"6px 0",position:"relative"}}>
+                <div style={{position:"relative"}}>
+                  <it.icon size={21} style={{color:a?"var(--lime)":"var(--cream-3)"}} strokeWidth={a?2.5:2}/>
+                  {it.badge>0 && <span style={{position:"absolute",top:-5,right:-8,minWidth:15,height:15,padding:"0 3px",borderRadius:999,
+                    background:"var(--rust)",color:"#fff",fontSize:9,fontWeight:800,display:"grid",placeItems:"center"}}>{it.badge}</span>}
+                </div>
+                <span style={{fontSize:10,fontWeight:a?800:600,color:a?"var(--cream)":"var(--cream-3)"}}>{it.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
-  </section>
+  );
+}
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__inner">
-        <div class="footer__brand">
-          <span class="logo-dino">🦕</span>
-          <span class="logo-text">Saltino</span>
-          <p>Premium Familien-Salzwelt.<br />Spielend gesund atmen.</p>
-        </div>
-        <div class="footer__links">
-          <div class="footer__col">
-            <h5>Angebote</h5>
-            <a href="#">Einzelsession</a>
-            <a href="#">Family Package</a>
-            <a href="#">Geburtstag</a>
-            <a href="#">Monatsabo</a>
-          </div>
-          <div class="footer__col">
-            <h5>Saltino</h5>
-            <a href="#">Über uns</a>
-            <a href="#">Halotherapie</a>
-            <a href="#">FAQ</a>
-            <a href="#">Kontakt</a>
-          </div>
-          <div class="footer__col">
-            <h5>Social</h5>
-            <a href="#">Instagram</a>
-            <a href="#">TikTok</a>
-            <a href="#">Facebook</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer__bottom">
-        <span>© 2025 Saltino. Alle Rechte vorbehalten.</span>
-        <span>Datenschutz · Impressum · AGB</span>
-      </div>
+/* ============================== SHEETS / TOAST ============================== */
+function Backdrop({onClose,children}){
+  return (
+    <div onClick={onClose} style={{position:"fixed",inset:0,zIndex:40,background:"rgba(5,16,11,.66)",backdropFilter:"blur(3px)",
+      display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+      <div onClick={e=>e.stopPropagation()} className="sheet-in" style={{width:"100%",maxWidth:440}}>{children}</div>
     </div>
-  </footer>
+  );
+}
 
-  <script src="script.js"></script>
+function BuySheet({pass,onBlock,onAbo,onClose}){
+  return (
+    <Backdrop onClose={onClose}>
+      <div style={{background:"var(--green-900)",borderRadius:"26px 26px 0 0",padding:"22px 20px calc(26px + env(safe-area-inset-bottom))",
+        border:"1px solid rgba(243,240,231,.12)"}}>
+        <div style={{width:42,height:5,borderRadius:999,background:"rgba(243,240,231,.2)",margin:"0 auto 18px"}}/>
+        <h2 className="disp" style={{fontSize:26}}>Dein Zugang</h2>
+        <p style={{fontSize:13,color:"var(--cream-2)",marginTop:4,marginBottom:18}}>FITARY rechnet nicht über Preis ab – sondern über Ergebnis & Betreuung.</p>
+
+        <Offer onClick={onBlock} tag="FLEXIBEL" title="10er-Block" price="Premium-Paket"
+          points={["10 Einheiten · prepaid","App-Zugang inklusive","Verschenkbar & übertragbar"]} accent="var(--mint)" cta="10er-Block sichern"/>
+        <div style={{height:12}}/>
+        <Offer onClick={onAbo} tag="BELIEBT" title="Flat-Membership" price="Recurring"
+          points={["Unbegrenzte Kleingruppen","Priority Booking","Body-Analyse & Check-ins"]} accent="var(--lime)" cta="Membership aktivieren" highlight/>
+
+        <div style={{display:"flex",gap:8,alignItems:"flex-start",marginTop:16,fontSize:11,color:"var(--cream-3)"}}>
+          <AlertCircle size={14} style={{flex:"0 0 auto",marginTop:1}}/>
+          <span>Prototyp – keine echte Zahlung. Live: Stripe / SEPA-Lastschrift + automatische Rechnung.</span>
+        </div>
+      </div>
+    </Backdrop>
+  );
+}
+function Offer({tag,title,price,points,accent,cta,onClick,highlight}){
+  return (
+    <div style={{borderRadius:20,padding:"18px",position:"relative",
+      border:`1px solid ${highlight?"rgba(199,255,60,.4)":"rgba(243,240,231,.12)"}`,
+      background:highlight?"linear-gradient(135deg, rgba(199,255,60,.1), rgba(199,255,60,.02))":"rgba(243,240,231,.04)"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span className="mono" style={{fontSize:10,letterSpacing:".14em",color:accent}}>{tag}</span>
+        <span style={{fontSize:11,color:"var(--cream-3)"}}>{price}</span>
+      </div>
+      <div className="disp" style={{fontSize:24,marginTop:6}}>{title}</div>
+      <div style={{marginTop:10,display:"flex",flexDirection:"column",gap:7}}>
+        {points.map(p=><div key={p} style={{display:"flex",alignItems:"center",gap:8,fontSize:13,color:"var(--cream-2)"}}>
+          <Check size={15} style={{color:accent,flex:"0 0 auto"}}/>{p}</div>)}
+      </div>
+      <button onClick={onClick} className="tap" style={{width:"100%",marginTop:15,padding:"13px",borderRadius:12,fontWeight:800,fontSize:14,
+        background:highlight?"var(--lime)":"var(--cream)",color:"var(--ink)"}}>{cta}</button>
+    </div>
+  );
+}
+
+function ConfirmSheet({b,onYes,onClose}){
+  const dt = sessionDate(b.dateISO,b.time);
+  const refund = b.usedBlock && hoursUntil(dt)>=24;
+  return (
+    <Backdrop onClose={onClose}>
+      <div style={{background:"var(--green-900)",borderRadius:"26px 26px 0 0",padding:"22px 20px calc(26px + env(safe-area-inset-bottom))",border:"1px solid rgba(243,240,231,.12)"}}>
+        <div style={{width:42,height:5,borderRadius:999,background:"rgba(243,240,231,.2)",margin:"0 auto 18px"}}/>
+        <h2 className="disp" style={{fontSize:24}}>Termin stornieren?</h2>
+        <div style={{fontSize:14,color:"var(--cream-2)",marginTop:8}}>{b.title} · {WD_LONG[dt.getDay()]} {dt.getDate()}.{dt.getMonth()+1}. · {b.time} Uhr</div>
+        <div style={{marginTop:14,padding:"12px 14px",borderRadius:12,fontSize:12.5,
+          background:refund?"rgba(199,255,60,.08)":"rgba(212,99,63,.1)",color:refund?"var(--lime)":"var(--rust-2)",
+          border:`1px solid ${refund?"rgba(199,255,60,.25)":"rgba(212,99,63,.3)"}`}}>
+          {b.status==="waitlist" ? "Du wirst von der Warteliste entfernt."
+            : refund ? "Mehr als 24 h vorher – die Einheit wird deinem Block gutgeschrieben."
+            : "Weniger als 24 h vorher – die Einheit verfällt (Boutique-Stornoregel)."}
+        </div>
+        <div style={{display:"flex",gap:10,marginTop:18}}>
+          <button onClick={onClose} className="tap" style={{flex:1,padding:"13px",borderRadius:12,fontWeight:800,background:"rgba(243,240,231,.08)",color:"var(--cream)",border:"1px solid rgba(243,240,231,.14)"}}>Behalten</button>
+          <button onClick={onYes} className="tap" style={{flex:1,padding:"13px",borderRadius:12,fontWeight:800,background:"var(--rust)",color:"var(--cream)"}}>Stornieren</button>
+        </div>
+      </div>
+    </Backdrop>
+  );
+}
+
+function Toast({toast}){
+  const map={ ok:{c:"var(--lime)",I:Check}, warn:{c:"var(--rust-2)",I:AlertCircle}, wait:{c:"var(--mint)",I:Clock} };
+  const {c,I}=map[toast.kind]||map.ok;
+  return (
+    <div className="toast-in" style={{position:"fixed",bottom:104,left:"50%",zIndex:60,display:"flex",alignItems:"center",gap:9,
+      padding:"12px 18px",borderRadius:14,background:"var(--ink)",border:`1px solid ${c}`,boxShadow:"0 14px 34px rgba(0,0,0,.5)"}}>
+      <I size={17} style={{color:c}}/><span style={{fontWeight:700,fontSize:13.5,color:"var(--cream)"}}>{toast.msg}</span>
+    </div>
+  );
+}
+
+/* ============================== SMALL ============================== */
+function SectionLabel({children}){
+  return <div className="mono" style={{fontSize:11,letterSpacing:".22em",color:"var(--cream-3)"}}>{String(children).toUpperCase()}</div>;
+}
+function IconBtn({children,onClick,disabled}){
+  return <button onClick={onClick} disabled={disabled} className="tap" style={{width:34,height:34,borderRadius:10,display:"grid",placeItems:"center",
+    background:"rgba(243,240,231,.05)",border:"1px solid rgba(243,240,231,.12)",color:"var(--cream)",opacity:disabled?.35:1}}>{children}</button>;
+}
+
+/* ============================== MOUNT ============================== */
+createRoot(document.getElementById("root")).render(<FitaryApp/>);
+  </script>
 </body>
 </html>
