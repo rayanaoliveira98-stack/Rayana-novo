@@ -2178,6 +2178,11 @@
   /* Correção mínima: em telas pequenas os botões de reserva empilham em
      largura total para o texto "Kalender & Buchung öffnen" não ser cortado.
      Nenhum texto/conteúdo é alterado. */
+  @media (max-width: 700px){
+    /* Transformações (antes/depois): 1 card por linha no celular em vez de
+       3 colunas de ~45px — a prova social fica legível. Desktop inalterado. */
+    .ba-grid{ grid-template-columns: 1fr !important; gap: 16px !important; }
+  }
   @media (max-width: 640px){
     .bookhub-cta{ flex-direction: column; align-items: stretch; }
     .bookhub-cta .btn{
