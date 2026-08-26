@@ -50,6 +50,40 @@ HTML) é possível colar o conteúdo, mas **não é recomendado** para esta pág
 ela é um documento completo (com `<head>` próprio) e o CSS do tema entraria em
 conflito. Prefira a Opção A.
 
+## SEO local (já embutido na página)
+
+- `<title>` e meta description otimizados para **"Personal Training Wels"** e
+  região (Oberösterreich).
+- Dados estruturados Schema.org:
+  - **LocalBusiness / HealthClub** — nome, endereço (Plobergerstraße 7, 4600
+    Wels), telefone, e-mail, fundador, faixa de preços, ofertas (€79 / €790 /
+    €100), Instagram e Facebook → habilita o painel de empresa local no Google.
+  - **FAQPage** — as 8 perguntas reais da seção FAQ → elegível para rich results
+    de FAQ na busca.
+- Open Graph + Twitter Card (compartilhamento bonito no WhatsApp/Instagram/
+  Facebook), `og:locale de_AT`, meta geo (AT-4, Wels), `robots index,follow`.
+- **Após publicar, ajuste 2 URLs no `<head>`** (marcadas com comentários):
+  1. `canonical` e `og:url` → URL final da página.
+  2. `og:image` → envie uma foto 1200×630 do estúdio para a Biblioteca de Mídia
+     e cole a URL.
+- Dica: cadastre/atualize o Google Business Profile com o mesmo endereço e
+  telefone — é o fator nº 1 de venda local, e o schema da página reforça isso.
+
+## Como editar a página depois
+
+A página é um Page Template independente, então o editor visual de blocos do
+WordPress (Gutenberg/Elementor) **não** se aplica a ela. Formas de editar:
+
+1. **Textos, preços e links** — abra `fitary-homepage.html` em
+   **Aparência → Editor de arquivos do tema** (ou via FTP) e edite direto: todo
+   o conteúdo é HTML legível (seções marcadas com comentários `<!-- HERO -->`,
+   `<!-- PRICING -->` etc.).
+2. **Design visual** — o projeto continua editável no Claude Design
+   (claude.ai/design). Edite lá e peça ao Claude para re-gerar e re-publicar
+   esta página — o processo é repetível.
+3. **Trocar fotos** — substitua o valor `src="data:image/..."` da imagem
+   correspondente, ou peça ao Claude para trocar e re-gerar.
+
 ## Observações
 
 - O arquivo tem ~2,1 MB porque carrega tudo embutido. Se quiser otimizar depois,
