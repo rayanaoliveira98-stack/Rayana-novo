@@ -50,6 +50,29 @@ HTML) é possível colar o conteúdo, mas **não é recomendado** para esta pág
 ela é um documento completo (com `<head>` próprio) e o CSS do tema entraria em
 conflito. Prefira a Opção A.
 
+## Passo a passo 100% pelo Chrome (sem FTP) — criar como RASCUNHO
+
+Fluxo seguro: nada vai ao ar (a página fica como rascunho "fitary claude code 4")
+e nenhuma outra página do site é alterada.
+
+1. **Baixe os 2 arquivos** deste repositório (`fitary-homepage.html` e
+   `page-fitary.php`) para o computador.
+2. **Descubra o tema ativo**: wp-admin → Aparência → Temas (o primeiro, marcado
+   como "Ativo"). Anote o nome da pasta.
+3. **Instale um gerenciador de arquivos**: Plugins → Adicionar novo → busque
+   **"File Manager"** (mndpsingh287) → Instalar → Ativar.
+4. **Envie os arquivos**: menu "WP File Manager" → navegue até
+   `wp-content/themes/PASTA-DO-TEMA-ATIVO/` → botão Upload → envie os 2 arquivos.
+   Não sobrescreva nada — são arquivos novos.
+5. **Crie a página**: Páginas → Adicionar nova → título `fitary claude code 4` →
+   painel lateral "Página" → **Modelo/Template = "FITARY Homepage"** →
+   **Salvar rascunho** (NÃO clique em Publicar).
+6. **Revise**: botão "Visualizar" (Preview). Só quem está logado vê.
+7. **Segurança**: por fim, desative/exclua o plugin File Manager
+   (Plugins → File Manager → Desativar → Excluir). Os arquivos enviados permanecem.
+
+Quando aprovar: abra o rascunho → Publicar (e renomeie o título/slug se quiser).
+
 ## SEO local (já embutido na página)
 
 - `<title>` e meta description otimizados para **"Personal Training Wels"** e
