@@ -41,7 +41,7 @@
       "typ": "pruefungsfrage",
       "regel": "rechtsregel-grundfall",
       "frage_amtlich": "Der Vorrang an einer Kreuzung ist weder durch Straßenverkehrszeichen noch durch Lichtzeichen geregelt. Welchem Fahrzeug kommt der Vorrang zu?",
-      "frage_einfach": "Kein Schild, keine Ampel. Wer fährt zuerst?",
+      "frage_einfach": "Kein Schild, keine Ampel. Wer fährt zuerst? Mehrere Antworten stimmen.",
       "optionen": [
         {
           "text": "Jenem Fahrzeug, welches sich von rechts nähert.",
@@ -49,14 +49,14 @@
           "feedback": "Richtig. Rechts fährt zuerst."
         },
         {
+          "text": "Einem Schienenfahrzeug auch dann, wenn es sich von links nähert.",
+          "richtig": true,
+          "feedback": "Richtig. Die Straßenbahn ist die Ausnahme."
+        },
+        {
           "text": "Jenem Fahrzeug, welches die Kreuzung zuerst erreicht.",
           "richtig": false,
           "feedback": "Falsch. Wer zuerst da war, zählt nicht."
-        },
-        {
-          "text": "Jenem Fahrzeug, welches geradeaus weiterfährt.",
-          "richtig": false,
-          "feedback": "Falsch. Die Richtung zählt nicht."
         }
       ]
     },
@@ -67,7 +67,7 @@
       "frage_einfach": "Wo fährst du ohne Linien auf der Straße?",
       "optionen": [
         {
-          "text": "So weit rechts, wie es die Verkehrssicherheit zulässt.",
+          "text": "So weit rechts, wie es mir zumutbar und ohne Gefährdung anderer möglich ist.",
           "richtig": true,
           "feedback": "Richtig. Rechts ist dein Platz."
         },

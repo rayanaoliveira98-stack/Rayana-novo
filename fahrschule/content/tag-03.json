@@ -17,8 +17,8 @@
     },
     {
       "typ": "erklaerung",
-      "text_einfach": "Kein Schild und keine Ampel? Dann gilt die Rechtsregel. Das Auto von rechts hat Vorrang. Du musst warten.",
-      "text_amtlich": "Sofern die Vorrangverhältnisse an einer Kreuzung weder durch Straßenverkehrszeichen noch durch Lichtzeichen geregelt sind, kommt jenem Fahrzeug der Vorrang zu, welches sich von rechts nähert.",
+      "text_einfach": "Kein Schild und keine Ampel? Dann gilt die Rechtsregel. Das Auto von rechts hat Vorrang. Du musst warten. Eine Ausnahme ist die Straßenbahn. Sie fährt auch von links zuerst.",
+      "text_amtlich": "Sofern die Vorrangverhältnisse an einer Kreuzung weder durch Straßenverkehrszeichen noch durch Lichtzeichen geregelt sind, kommt jenem Fahrzeug der Vorrang zu, welches sich von rechts nähert; Schienenfahrzeugen jedoch auch dann, wenn sie sich von links nähern.",
       "vokabeln": [
         {
           "de": "Rechtsregel",
@@ -33,6 +33,11 @@
         {
           "de": "Kreuzung",
           "einfach": "Eine Kreuzung ist die Stelle, wo zwei Straßen sich treffen.",
+          "audio": true
+        },
+        {
+          "de": "Straßenbahn",
+          "einfach": "Die Straßenbahn fährt auf Schienen. Sie hat fast immer Vorrang.",
           "audio": true
         }
       ]

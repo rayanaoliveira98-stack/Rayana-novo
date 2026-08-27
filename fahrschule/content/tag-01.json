@@ -143,7 +143,7 @@
       "frage_einfach": "Wo fährst du auf einer Straße ohne Linien?",
       "optionen": [
         {
-          "text": "So weit rechts, wie es die Verkehrssicherheit zulässt.",
+          "text": "So weit rechts, wie es mir zumutbar und ohne Gefährdung anderer möglich ist.",
           "richtig": true,
           "feedback": "Richtig. Rechts fahren ist die Grundregel."
         },

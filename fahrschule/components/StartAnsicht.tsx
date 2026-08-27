@@ -75,6 +75,15 @@ export default function StartAnsicht({
         </BigLink>
       )}
 
+      {/* Ehrlich bleiben: der Pilot ist ein Ausschnitt, keine ganze Prüfung. */}
+      <section className="mt-8 rounded-2xl border-2 border-achtung-voll bg-achtung-hell p-5">
+        <h2 className="text-lg font-extrabold">Das lernst du hier</h2>
+        <p className="mt-1 font-medium leading-relaxed">
+          Woche 1 erklärt vier Themen. Vorrang, Ampel, Schutzweg und Schilder.
+          Die Prüfung fragt noch mehr ab. Lerne auch in der Fahrschule.
+        </p>
+      </section>
+
       <section className="mt-8">
         <h2 className="text-lg font-extrabold">Dein Weg</h2>
         <p className="font-medium text-tinte-2">
