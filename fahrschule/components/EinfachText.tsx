@@ -60,7 +60,7 @@ export default function EinfachText({
   return (
     <div className={klasse}>
       <div className="flex items-start gap-3">
-        <p className="flex-1 text-[1.1rem] font-medium leading-relaxed">
+        <p className="min-w-0 flex-1 text-[1.1rem] font-medium leading-relaxed">
           {stuecke.map((s, i) =>
             typeof s === "string" ? (
               <span key={i}>{s}</span>

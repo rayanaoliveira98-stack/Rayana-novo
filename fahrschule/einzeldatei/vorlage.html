@@ -51,6 +51,8 @@ body {
   line-height: 1.55;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  /* "Straßenverkehrszeichen" darf umbrechen statt die Seite breit zu machen. */
+  overflow-wrap: break-word;
 }
 
 #app {
@@ -126,6 +128,10 @@ button {
 .hoerknopf svg { display: block; }
 
 .zeile { display: flex; align-items: flex-start; gap: 12px; }
+/* Flex-Kinder schrumpfen sonst nicht unter ihr längstes Wort — und deutsche
+   Komposita sind lang. Ohne das wird auf 320px-Handys der Hörknopf aus dem
+   Bild geschoben. */
+.zeile > * { min-width: 0; }
 .stapel { display: flex; flex-direction: column; gap: 20px; }
 .stapel--eng { display: flex; flex-direction: column; gap: 12px; }
 

@@ -38,7 +38,9 @@ export default function StartAnsicht({
     <div className="flex min-h-dvh flex-col px-4 pb-8 pt-6">
       <header className="flex items-start gap-3">
         <Guide groesse={64} />
-        <div className="flex-1">
+        {/* min-w-0: sonst schrumpft der Titelblock nicht unter sein längstes
+            Wort und schiebt auf 320px-Handys den Hörknopf aus dem Bild. */}
+        <div className="min-w-0 flex-1">
           <h1 className="text-[1.75rem] font-extrabold leading-tight">
             Führerschein B
           </h1>

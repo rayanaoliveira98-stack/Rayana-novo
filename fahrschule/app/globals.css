@@ -35,6 +35,8 @@ body {
   color: var(--color-tinte);
   font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
+  /* "Straßenverkehrszeichen" darf umbrechen statt die Seite breit zu machen. */
+  overflow-wrap: break-word;
 }
 
 /* Alles lebt in einer schmalen mobilen Spalte; Desktop zentriert nur. */
