@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/*
+ * Design-Tokens.
+ * Semantische Farben sind Bedeutungsträger, nie Dekoration:
+ * rot = Gefahr/verboten, gelb = Achtung, grün = sicher/erlaubt, blau = Information.
+ */
+@theme {
+  --color-gefahr: #c62828;
+  --color-gefahr-hell: #fdecea;
+  --color-achtung: #b58900;
+  --color-achtung-voll: #f9a825;
+  --color-achtung-hell: #fdf6e3;
+  --color-sicher: #1b7d34;
+  --color-sicher-hell: #e8f5ec;
+  --color-info: #1258a8;
+  --color-info-hell: #e8f0fb;
+
+  --color-tinte: #16181c;
+  --color-tinte-2: #3c4046;
+  --color-papier: #ffffff;
+  --color-papier-2: #f2f3f5;
+  --color-linie: #d3d6db;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans",
+    sans-serif;
+}
+
+html {
+  font-size: 18px;
+}
+
+body {
+  background: var(--color-papier-2);
+  color: var(--color-tinte);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Alles lebt in einer schmalen mobilen Spalte; Desktop zentriert nur. */
+.app-spalte {
+  margin: 0 auto;
+  max-width: 430px;
+  min-height: 100dvh;
+  background: var(--color-papier);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes puls-sanft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.animiert-puls {
+  animation: puls-sanft 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

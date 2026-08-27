@@ -1,0 +1,409 @@
+{
+  "id": "tag-05",
+  "tag": 5,
+  "titel": "Wiederholung und Prüfung",
+  "dauerMinuten": 30,
+  "zusammenfassung": [
+    "Du hast 15 Fragen in Prüfungssprache gelöst.",
+    "Du kennst jetzt die Reihenfolge: Ampel, Schild, Rechtsregel.",
+    "Erkläre eine Regel laut. Dann sitzt sie wirklich."
+  ],
+  "schritte": [
+    {
+      "typ": "szene",
+      "audio": true,
+      "text_einfach": "Heute kommen 15 Fragen. Sie klingen wie in der Prüfung. Du darfst jede Frage einfach lesen lassen.",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"60\" y=\"30\" width=\"280\" height=\"240\" rx=\"14\" fill=\"#ffffff\" stroke=\"#16181c\" stroke-width=\"5\"/><rect x=\"88\" y=\"64\" width=\"224\" height=\"14\" rx=\"7\" fill=\"#16181c\"/><rect x=\"88\" y=\"92\" width=\"180\" height=\"14\" rx=\"7\" fill=\"#8a8f97\"/><rect x=\"88\" y=\"134\" width=\"224\" height=\"40\" rx=\"10\" fill=\"#e8f0fb\" stroke=\"#1258a8\" stroke-width=\"4\"/><rect x=\"88\" y=\"186\" width=\"224\" height=\"40\" rx=\"10\" fill=\"#ffffff\" stroke=\"#d3d6db\" stroke-width=\"4\"/><circle cx=\"112\" cy=\"154\" r=\"11\" fill=\"#1258a8\"/><path d=\"M106 154 l4 5 8 -9\" stroke=\"#ffffff\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"112\" cy=\"206\" r=\"11\" fill=\"none\" stroke=\"#d3d6db\" stroke-width=\"4\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"200\" y=\"258\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#16181c\">15 Fragen</text></svg>"
+    },
+    {
+      "typ": "erklaerung",
+      "text_einfach": "Diese Sprache ist schwer. Das ist normal. Drücke auf den Knopf für die einfache Frage. So lernst du beide Sprachen.",
+      "text_amtlich": "Die Fragestellungen der theoretischen Fahrprüfung sind in einem förmlichen Register abgefasst; das Verständnis dieser Formulierungen ist Voraussetzung für die richtige Beantwortung.",
+      "vokabeln": [
+        {
+          "de": "Lenker",
+          "einfach": "Lenker heißt in der Prüfung: die Person am Steuer.",
+          "audio": true
+        },
+        {
+          "de": "einzuräumen",
+          "einfach": "Vorrang einräumen heißt: den anderen zuerst fahren lassen.",
+          "audio": true
+        },
+        {
+          "de": "Fahrzeug",
+          "einfach": "Ein Fahrzeug ist ein Auto, ein Rad oder ein Bus.",
+          "audio": true
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "rechtsregel-grundfall",
+      "frage_amtlich": "Der Vorrang an einer Kreuzung ist weder durch Straßenverkehrszeichen noch durch Lichtzeichen geregelt. Welchem Fahrzeug kommt der Vorrang zu?",
+      "frage_einfach": "Kein Schild, keine Ampel. Wer fährt zuerst?",
+      "optionen": [
+        {
+          "text": "Jenem Fahrzeug, welches sich von rechts nähert.",
+          "richtig": true,
+          "feedback": "Richtig. Rechts fährt zuerst."
+        },
+        {
+          "text": "Jenem Fahrzeug, welches die Kreuzung zuerst erreicht.",
+          "richtig": false,
+          "feedback": "Falsch. Wer zuerst da war, zählt nicht."
+        },
+        {
+          "text": "Jenem Fahrzeug, welches geradeaus weiterfährt.",
+          "richtig": false,
+          "feedback": "Falsch. Die Richtung zählt nicht."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "rechtsfahrgebot",
+      "frage_amtlich": "Wo haben Sie Ihr Fahrzeug auf einer Fahrbahn ohne Fahrstreifenmarkierung einzuordnen?",
+      "frage_einfach": "Wo fährst du ohne Linien auf der Straße?",
+      "optionen": [
+        {
+          "text": "So weit rechts, wie es die Verkehrssicherheit zulässt.",
+          "richtig": true,
+          "feedback": "Richtig. Rechts ist dein Platz."
+        },
+        {
+          "text": "In der Fahrbahnmitte.",
+          "richtig": false,
+          "feedback": "Falsch. Dort kommt dir jemand entgegen."
+        },
+        {
+          "text": "Am linken Fahrbahnrand.",
+          "richtig": false,
+          "feedback": "Falsch. Links fährst du nie."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "ampel-rot",
+      "frage_amtlich": "Die für Ihre Fahrtrichtung geltende Lichtzeichenanlage zeigt rotes Licht. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Deine Ampel ist rot. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich halte vor der Haltelinie an.",
+          "richtig": true,
+          "feedback": "Richtig. Rot heißt anhalten."
+        },
+        {
+          "text": "Ich fahre bei freier Kreuzung weiter.",
+          "richtig": false,
+          "feedback": "Falsch. Rot gilt immer."
+        },
+        {
+          "text": "Ich fahre nach kurzem Anhalten weiter.",
+          "richtig": false,
+          "feedback": "Falsch. Du wartest auf Grün."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "stop-immer-anhalten",
+      "frage_amtlich": "Welche Verpflichtung ergibt sich aus dem Vorschriftszeichen „Halt. Vorrang geben.“?",
+      "frage_einfach": "Was musst du beim Stopp-Schild tun?",
+      "optionen": [
+        {
+          "text": "Ich habe jedenfalls bis zum Stillstand anzuhalten und Vorrang zu geben.",
+          "richtig": true,
+          "feedback": "Richtig. Stehen bleiben ist Pflicht."
+        },
+        {
+          "text": "Ich habe die Geschwindigkeit nur zu vermindern.",
+          "richtig": false,
+          "feedback": "Falsch. Langsamer werden genügt nicht."
+        },
+        {
+          "text": "Ich habe nur bei erkennbarem Querverkehr anzuhalten.",
+          "richtig": false,
+          "feedback": "Falsch. Du hältst auch auf leerer Straße."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "schutzweg-fussgaenger",
+      "frage_amtlich": "Ein Fußgänger gibt an einem nicht geregelten Schutzweg erkennbar zu verstehen, dass er die Fahrbahn überqueren will. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Jemand will über den Zebrastreifen. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich ermögliche das ungehinderte Überqueren und halte erforderlichenfalls an.",
+          "richtig": true,
+          "feedback": "Richtig. Du lässt die Person gehen."
+        },
+        {
+          "text": "Ich fahre weiter, solange der Fußgänger die Fahrbahn nicht betreten hat.",
+          "richtig": false,
+          "feedback": "Falsch. Der erkennbare Wille genügt."
+        },
+        {
+          "text": "Ich gebe Schallzeichen und fahre weiter.",
+          "richtig": false,
+          "feedback": "Falsch. Hupen ist keine Lösung."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "vorrangstrasse-gelbe-raute",
+      "frage_amtlich": "Sie befahren eine Vorrangstraße. Aus einer rechts einmündenden Nebenstraße nähert sich ein Fahrzeug. Wie ist der Vorrang zu beurteilen?",
+      "frage_einfach": "Du bist auf der Vorrangstraße. Rechts kommt ein Auto. Wer fährt?",
+      "optionen": [
+        {
+          "text": "Mir kommt der Vorrang zu.",
+          "richtig": true,
+          "feedback": "Richtig. Die gelbe Raute schlägt die Rechtsregel."
+        },
+        {
+          "text": "Dem von rechts kommenden Fahrzeug kommt der Vorrang zu.",
+          "richtig": false,
+          "feedback": "Falsch. Hier gilt die Rechtsregel nicht."
+        },
+        {
+          "text": "Beide Fahrzeuge haben anzuhalten.",
+          "richtig": false,
+          "feedback": "Falsch. Nur die Nebenstraße wartet."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "ampel-gelb",
+      "frage_amtlich": "Die Lichtzeichenanlage schaltet auf gelbes Dauerlicht. Ein Anhalten ist gefahrlos möglich. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Gelb kommt. Du kannst sicher stehen. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich halte vor der Haltelinie an.",
+          "richtig": true,
+          "feedback": "Richtig. Gelb heißt anhalten."
+        },
+        {
+          "text": "Ich beschleunige, um noch vor Rot zu passieren.",
+          "richtig": false,
+          "feedback": "Falsch. Gelb ist kein Startsignal."
+        },
+        {
+          "text": "Ich fahre mit unveränderter Geschwindigkeit weiter.",
+          "richtig": false,
+          "feedback": "Falsch. Gelb bedeutet anhalten."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "rechtsregel-beim-linksabbiegen",
+      "frage_amtlich": "Sie wollen an einer ungeregelten Kreuzung nach links einbiegen. Von rechts nähert sich ein Fahrzeug. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Du willst links abbiegen. Rechts kommt ein Auto. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich lasse das von rechts kommende Fahrzeug zuerst fahren.",
+          "richtig": true,
+          "feedback": "Richtig. Abbiegen ändert nichts."
+        },
+        {
+          "text": "Ich biege ein, weil ich die Kreuzung nicht zur Gänze überquere.",
+          "richtig": false,
+          "feedback": "Falsch. Auch dann gilt rechts vor links."
+        },
+        {
+          "text": "Ich biege ein, sobald ich den Blinker gesetzt habe.",
+          "richtig": false,
+          "feedback": "Falsch. Blinken gibt keinen Vorrang."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "kinder-am-strassenrand",
+      "frage_amtlich": "Sie nähern sich einer Stelle, an der Kinder am Fahrbahnrand spielen. Welche Fahrweise ist geboten?",
+      "frage_einfach": "Kinder spielen am Rand. Wie fährst du?",
+      "optionen": [
+        {
+          "text": "Ich vermindere die Geschwindigkeit und bin jederzeit bremsbereit.",
+          "richtig": true,
+          "feedback": "Richtig. Bei Kindern immer langsam."
+        },
+        {
+          "text": "Ich behalte die Geschwindigkeit bei und beobachte die Kinder.",
+          "richtig": false,
+          "feedback": "Falsch. Schauen allein genügt nicht."
+        },
+        {
+          "text": "Ich verlasse mich darauf, dass die Kinder aufmerksam sind.",
+          "richtig": false,
+          "feedback": "Falsch. Auf Kinder darfst du nicht vertrauen."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "schild-schlaegt-rechtsregel",
+      "frage_amtlich": "Für Ihre Fahrtrichtung ist das Vorschriftszeichen „Vorrang geben“ angebracht. Welche Bedeutung hat dies für die Anwendung der Rechtsregel?",
+      "frage_einfach": "Bei dir steht das Dreieck. Gilt dann rechts vor links?",
+      "optionen": [
+        {
+          "text": "Die Regelung durch das Vorrangzeichen geht der Rechtsregel vor.",
+          "richtig": true,
+          "feedback": "Richtig. Das Schild ist stärker."
+        },
+        {
+          "text": "Die Rechtsregel bleibt weiterhin maßgeblich.",
+          "richtig": false,
+          "feedback": "Falsch. Mit Schild gilt das Schild."
+        },
+        {
+          "text": "Beide Regelungen gelten gleichrangig nebeneinander.",
+          "richtig": false,
+          "feedback": "Falsch. Es gilt nur das Schild."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "ampel-gruen-kreuzung-frei",
+      "frage_amtlich": "Die Lichtzeichenanlage zeigt grünes Licht. Der Kreuzungsbereich ist durch stehende Fahrzeuge blockiert. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Du hast Grün. Die Kreuzung ist voll. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich warte, bis ich die Kreuzung ungehindert überqueren kann.",
+          "richtig": true,
+          "feedback": "Richtig. Erst fahren, wenn du durchkommst."
+        },
+        {
+          "text": "Ich fahre ein, weil grünes Licht die Weiterfahrt gestattet.",
+          "richtig": false,
+          "feedback": "Falsch. Sonst blockierst du die Kreuzung."
+        },
+        {
+          "text": "Ich fahre bis zur Kreuzungsmitte vor.",
+          "richtig": false,
+          "feedback": "Falsch. Dort stehst du im Weg."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "vorrang-geben-bedeutung",
+      "frage_amtlich": "Was ist unter dem Einräumen des Vorranges zu verstehen?",
+      "frage_einfach": "Was heißt Vorrang geben? Wähle alles, was stimmt.",
+      "optionen": [
+        {
+          "text": "Der Vorrangberechtigte darf weder zum Bremsen noch zum Auslenken genötigt werden.",
+          "richtig": true,
+          "feedback": "Richtig. Der andere fährt ungestört."
+        },
+        {
+          "text": "Ich warte, bis ich ohne Behinderung anderer weiterfahren kann.",
+          "richtig": true,
+          "feedback": "Richtig. Du wartest auf eine freie Lücke."
+        },
+        {
+          "text": "Ich fahre so weit vor, dass der Vorrangberechtigte ausweichen muss.",
+          "richtig": false,
+          "feedback": "Falsch. Das ist genau der Fehler."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "radfahrer-ueberholen",
+      "frage_amtlich": "Sie wollen einen Radfahrer überholen. Der erforderliche Seitenabstand kann wegen Gegenverkehrs nicht eingehalten werden. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Du willst ein Rad überholen. Es ist zu eng. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich unterlasse das Überholen vorerst.",
+          "richtig": true,
+          "feedback": "Richtig. Ohne Platz wird nicht überholt."
+        },
+        {
+          "text": "Ich überhole mit geringem Seitenabstand.",
+          "richtig": false,
+          "feedback": "Falsch. Zu knapp ist lebensgefährlich."
+        },
+        {
+          "text": "Ich fahre knapp auf und gebe Schallzeichen.",
+          "richtig": false,
+          "feedback": "Falsch. Drängeln ist verboten."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "rechtsregel-wann-gilt-sie",
+      "frage_amtlich": "Unter welchen Voraussetzungen ist der Vorrang nach der Rechtsregel zu beurteilen?",
+      "frage_einfach": "Wann gilt rechts vor links? Wähle alles, was stimmt.",
+      "optionen": [
+        {
+          "text": "Wenn keine Vorrangzeichen angebracht sind.",
+          "richtig": true,
+          "feedback": "Richtig. Ohne Schild gilt die Rechtsregel."
+        },
+        {
+          "text": "Wenn keine Lichtzeichenanlage den Vorrang regelt.",
+          "richtig": true,
+          "feedback": "Richtig. Ohne Ampel gilt die Rechtsregel."
+        },
+        {
+          "text": "Wenn ein Organ der Straßenaufsicht den Verkehr regelt.",
+          "richtig": false,
+          "feedback": "Falsch. Die Polizei ist immer stärker."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "gehsteig-nutzung",
+      "frage_amtlich": "Welchem Verkehr ist der Gehsteig gewidmet?",
+      "frage_einfach": "Für wen ist der Gehsteig?",
+      "optionen": [
+        {
+          "text": "Dem Fußgängerverkehr.",
+          "richtig": true,
+          "feedback": "Richtig. Der Gehsteig ist für Menschen zu Fuß."
+        },
+        {
+          "text": "Dem Fahrzeugverkehr bei Stau auf der Fahrbahn.",
+          "richtig": false,
+          "feedback": "Falsch. Nie mit dem Auto darauf."
+        },
+        {
+          "text": "Dem Parken von Kraftfahrzeugen.",
+          "richtig": false,
+          "feedback": "Falsch. Dort parkst du nicht."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "vorrang-reihenfolge",
+      "frage_amtlich": "Welche Regelung ist bei der Beurteilung des Vorranges vorrangig zu beachten?",
+      "frage_einfach": "Was ist am stärksten? Wähle alles, was stimmt.",
+      "optionen": [
+        {
+          "text": "Zeichen eines Organs der Straßenaufsicht.",
+          "richtig": true,
+          "feedback": "Richtig. Die Polizei kommt zuerst."
+        },
+        {
+          "text": "Lichtzeichen einer Verkehrsampel.",
+          "richtig": true,
+          "feedback": "Richtig. Die Ampel steht über dem Schild."
+        },
+        {
+          "text": "Die Rechtsregel.",
+          "richtig": false,
+          "feedback": "Falsch. Die Rechtsregel kommt zuletzt."
+        }
+      ]
+    }
+  ]
+}
