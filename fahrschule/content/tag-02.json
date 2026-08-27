@@ -1,0 +1,255 @@
+{
+  "id": "tag-02",
+  "tag": 2,
+  "titel": "Die Ampel und der Schutzweg",
+  "dauerMinuten": 25,
+  "zusammenfassung": [
+    "Rot heißt: anhalten. Grün heißt: fahren, wenn frei ist.",
+    "Gelb heißt: anhalten, wenn du noch sicher stehen kannst.",
+    "Am Schutzweg lässt du Menschen zu Fuß gehen."
+  ],
+  "schritte": [
+    {
+      "typ": "szene",
+      "audio": true,
+      "text_einfach": "Du fährst auf eine Ampel zu. Sie ist rot. Vor der Ampel ist ein Schutzweg.",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"110\" y=\"0\" width=\"180\" height=\"300\" fill=\"#6f747c\"/><rect x=\"84\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><rect x=\"290\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><line x1=\"200\" y1=\"0\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"24 20\"/><g fill=\"#ffffff\"><rect x=\"114\" y=\"96\" width=\"20\" height=\"44\"/><rect x=\"144\" y=\"96\" width=\"20\" height=\"44\"/><rect x=\"174\" y=\"96\" width=\"20\" height=\"44\"/><rect x=\"204\" y=\"96\" width=\"20\" height=\"44\"/><rect x=\"234\" y=\"96\" width=\"20\" height=\"44\"/><rect x=\"264\" y=\"96\" width=\"20\" height=\"44\"/></g><rect x=\"114\" y=\"152\" width=\"172\" height=\"8\" fill=\"#ffffff\"/><g><rect x=\"318\" y=\"120\" width=\"34\" height=\"84\" rx=\"8\" fill=\"#16181c\"/><circle cx=\"335\" cy=\"142\" r=\"11\" fill=\"#c62828\"/><circle cx=\"335\" cy=\"166\" r=\"11\" fill=\"#4a4d52\"/><circle cx=\"335\" cy=\"190\" r=\"11\" fill=\"#4a4d52\"/><rect x=\"330\" y=\"204\" width=\"10\" height=\"56\" fill=\"#16181c\"/></g><g><rect x=\"228\" y=\"212\" width=\"30\" height=\"50\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"233\" y=\"220\" width=\"20\" height=\"13\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"243\" y=\"254\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><circle cx=\"97\" cy=\"110\" r=\"8\" fill=\"#16181c\"/><rect x=\"92\" y=\"120\" width=\"10\" height=\"20\" rx=\"5\" fill=\"#16181c\"/></g></svg>"
+    },
+    {
+      "typ": "erklaerung",
+      "text_einfach": "Rot heißt: du musst anhalten. Grün heißt: du darfst fahren. Aber nur, wenn die Kreuzung frei ist. Gelb heißt: anhalten, wenn du noch sicher stehen kannst.",
+      "text_amtlich": "Bei rotem Licht ist vor der Haltelinie anzuhalten; grünes Licht gestattet die Weiterfahrt, sofern der Kreuzungsbereich frei ist; bei gelbem Dauerlicht ist anzuhalten, es sei denn, ein gefahrloses Anhalten ist nicht mehr möglich.",
+      "vokabeln": [
+        {
+          "de": "anhalten",
+          "einfach": "Anhalten heißt: Du stoppst dein Auto. Du stehst still.",
+          "audio": true
+        },
+        {
+          "de": "Haltelinie",
+          "einfach": "Die Haltelinie ist der weiße Balken auf der Straße.",
+          "audio": true
+        },
+        {
+          "de": "Schutzweg",
+          "einfach": "Der Schutzweg ist der Zebrastreifen für Menschen zu Fuß.",
+          "audio": true
+        }
+      ]
+    },
+    {
+      "typ": "warum",
+      "text_einfach": "An einer Kreuzung kreuzen sich viele Wege. Die Ampel gibt jedem eine eigene Zeit. Ohne diese Zeit fahren alle gleichzeitig. Dann gibt es Tote."
+    },
+    {
+      "typ": "folge",
+      "text_einfach": "Du fährst bei Rot. Von der Seite kommt ein Auto bei Grün. Es rechnet nicht mit dir.",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g transform=\"rotate(-14 218 150)\"><rect x=\"204\" y=\"128\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"218\" y=\"168\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(12 258 128)\"><rect x=\"234\" y=\"114\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/></g><path d=\"M234 132 l18 -12 -7 17 20 -4 -14 19 16 6 -22 8 7 15 -20 -10 -6 17 -6 -19 -16 8 9 -17 -18 -4 16 -11 -12 -13z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><g><rect x=\"40\" y=\"30\" width=\"34\" height=\"84\" rx=\"8\" fill=\"#16181c\"/><circle cx=\"57\" cy=\"52\" r=\"11\" fill=\"#c62828\"/><circle cx=\"57\" cy=\"76\" r=\"11\" fill=\"#4a4d52\"/><circle cx=\"57\" cy=\"100\" r=\"11\" fill=\"#4a4d52\"/></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"88\" y=\"72\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Du bist bei Rot gefahren</text></svg>"
+    },
+    {
+      "typ": "entscheidung",
+      "frage": "Was machst du jetzt?",
+      "regel": "ampel-gelb",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"110\" y=\"0\" width=\"180\" height=\"300\" fill=\"#6f747c\"/><rect x=\"84\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><rect x=\"290\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><line x1=\"200\" y1=\"0\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"24 20\"/><rect x=\"114\" y=\"120\" width=\"172\" height=\"8\" fill=\"#ffffff\"/><g><rect x=\"318\" y=\"96\" width=\"34\" height=\"84\" rx=\"8\" fill=\"#16181c\"/><circle cx=\"335\" cy=\"118\" r=\"11\" fill=\"#4a4d52\"/><circle cx=\"335\" cy=\"142\" r=\"11\" fill=\"#f9a825\"/><circle cx=\"335\" cy=\"166\" r=\"11\" fill=\"#4a4d52\"/><rect x=\"330\" y=\"180\" width=\"10\" height=\"80\" fill=\"#16181c\"/></g><g><rect x=\"228\" y=\"240\" width=\"30\" height=\"50\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"233\" y=\"248\" width=\"20\" height=\"13\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"243\" y=\"282\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"40\" font-size=\"17\" font-weight=\"700\" fill=\"#16181c\">Die Ampel wird gelb.</text><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"64\" font-size=\"16\" font-weight=\"600\" fill=\"#16181c\">Du bist noch weit weg.</text></svg>",
+      "optionen": [
+        {
+          "id": "a",
+          "text": "Ich halte an. Ich kann sicher stehen bleiben.",
+          "richtig": true,
+          "feedback_einfach": "Richtig. Gelb heißt anhalten. Du hattest genug Platz dafür."
+        },
+        {
+          "id": "b",
+          "text": "Ich gebe Gas. Ich schaffe es noch bei Gelb.",
+          "richtig": false,
+          "feedback_einfach": "Gelb ist kein Startsignal. Du bist zu schnell. Die Ampel wird rot.",
+          "neu_erklaert": "Frage dich immer: Kann ich sicher anhalten? Wenn ja, hältst du an.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g transform=\"rotate(-12 218 150)\"><rect x=\"204\" y=\"128\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"218\" y=\"168\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(10 256 128)\"><rect x=\"232\" y=\"114\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/></g><path d=\"M232 132 l18 -12 -7 17 20 -4 -14 19 16 6 -22 8 7 15 -20 -10 -6 17 -6 -19 -16 8 9 -17 -18 -4 16 -11 -12 -13z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><g><rect x=\"40\" y=\"30\" width=\"34\" height=\"84\" rx=\"8\" fill=\"#16181c\"/><circle cx=\"57\" cy=\"52\" r=\"11\" fill=\"#c62828\"/><circle cx=\"57\" cy=\"76\" r=\"11\" fill=\"#4a4d52\"/><circle cx=\"57\" cy=\"100\" r=\"11\" fill=\"#4a4d52\"/></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"88\" y=\"76\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Gelb wurde Rot</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "Ich bleibe mitten auf der Kreuzung stehen.",
+          "richtig": false,
+          "feedback_einfach": "In der Kreuzung stehen ist gefährlich. Die anderen kommen nicht durch.",
+          "neu_erklaert": "Du hältst vor der weißen Linie. Nie mitten in der Kreuzung.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g><rect x=\"206\" y=\"126\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"220\" y=\"166\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><rect x=\"296\" y=\"110\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/></g><g><rect x=\"56\" y=\"162\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#1b7d34\"/></g><path d=\"M120 60 q16 12 0 24 M140 50 q26 22 0 44\" stroke=\"#c62828\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"20\" y=\"46\" font-size=\"16\" font-weight=\"700\" fill=\"#c62828\">Du blockierst alle</text></svg>"
+        }
+      ]
+    },
+    {
+      "typ": "entscheidung",
+      "frage": "Was machst du jetzt?",
+      "regel": "schutzweg-fussgaenger",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"110\" y=\"0\" width=\"180\" height=\"300\" fill=\"#6f747c\"/><rect x=\"84\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><rect x=\"290\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><line x1=\"200\" y1=\"0\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"24 20\"/><g fill=\"#ffffff\"><rect x=\"114\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"144\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"174\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"204\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"234\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"264\" y=\"110\" width=\"20\" height=\"44\"/></g><g><circle cx=\"99\" cy=\"122\" r=\"9\" fill=\"#16181c\"/><rect x=\"93\" y=\"133\" width=\"12\" height=\"22\" rx=\"6\" fill=\"#16181c\"/></g><path d=\"M112 132 H140 M132 124 L140 132 L132 140\" stroke=\"#16181c\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><g><rect x=\"228\" y=\"212\" width=\"30\" height=\"50\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"233\" y=\"220\" width=\"20\" height=\"13\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"243\" y=\"254\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"40\" font-size=\"16\" font-weight=\"700\" fill=\"#16181c\">Keine Ampel. Nur Schutzweg.</text></svg>",
+      "optionen": [
+        {
+          "id": "a",
+          "text": "Ich halte an. Die Person geht über die Straße.",
+          "richtig": true,
+          "feedback_einfach": "Richtig. Am Schutzweg haben Menschen zu Fuß Vorrang."
+        },
+        {
+          "id": "b",
+          "text": "Ich fahre schnell durch. Sie ist noch am Rand.",
+          "richtig": false,
+          "feedback_einfach": "Sie will klar über die Straße. Du musst sie gehen lassen. Sonst fährst du sie an.",
+          "neu_erklaert": "Schau auf die Füße und die Augen. Will jemand gehen? Dann hältst du an.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"110\" y=\"0\" width=\"180\" height=\"300\" fill=\"#6f747c\"/><rect x=\"84\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><rect x=\"290\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><g fill=\"#ffffff\"><rect x=\"114\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"144\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"174\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"204\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"234\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"264\" y=\"110\" width=\"20\" height=\"44\"/></g><g><rect x=\"228\" y=\"150\" width=\"30\" height=\"50\" rx=\"7\" fill=\"#1258a8\"/><text x=\"243\" y=\"192\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(80 240 132)\"><circle cx=\"240\" cy=\"122\" r=\"9\" fill=\"#16181c\"/><rect x=\"234\" y=\"133\" width=\"12\" height=\"22\" rx=\"6\" fill=\"#16181c\"/></g><path d=\"M242 140 l16 -11 -6 15 18 -3 -13 17 15 5 -20 7 6 14 -18 -9 -5 15 -6 -17 -15 7 8 -15 -16 -4 15 -10 -11 -12z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><circle cx=\"56\" cy=\"60\" r=\"22\" fill=\"#c62828\"/><path d=\"M56 48 v14 M56 68 v1\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-linecap=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"260\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Person angefahren</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "Ich halte mitten auf dem Schutzweg.",
+          "richtig": false,
+          "feedback_einfach": "Dann steht dein Auto im Weg. Die Person muss außen herum gehen.",
+          "neu_erklaert": "Du hältst immer vor dem Schutzweg. Nie darauf.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"110\" y=\"0\" width=\"180\" height=\"300\" fill=\"#6f747c\"/><rect x=\"84\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><rect x=\"290\" y=\"0\" width=\"26\" height=\"300\" fill=\"#cfd4cc\"/><g fill=\"#ffffff\"><rect x=\"114\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"144\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"174\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"204\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"234\" y=\"110\" width=\"20\" height=\"44\"/><rect x=\"264\" y=\"110\" width=\"20\" height=\"44\"/></g><g><rect x=\"228\" y=\"108\" width=\"30\" height=\"50\" rx=\"7\" fill=\"#1258a8\"/><text x=\"243\" y=\"150\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><circle cx=\"160\" cy=\"180\" r=\"9\" fill=\"#16181c\"/><rect x=\"154\" y=\"191\" width=\"12\" height=\"22\" rx=\"6\" fill=\"#16181c\"/></g><path d=\"M150 168 q-10 26 10 40\" stroke=\"#c62828\" stroke-width=\"4\" fill=\"none\" stroke-dasharray=\"8 6\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"250\" font-size=\"16\" font-weight=\"700\" fill=\"#c62828\">Umweg auf der Fahrbahn</text></svg>"
+        }
+      ]
+    },
+    {
+      "typ": "entscheidung",
+      "frage": "Was machst du jetzt?",
+      "regel": "ampel-gruen-kreuzung-frei",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><line x1=\"200\" y1=\"208\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><g><rect x=\"206\" y=\"228\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"211\" y=\"236\" width=\"18\" height=\"12\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"220\" y=\"268\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><rect x=\"186\" y=\"120\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#8a8f97\"/></g><g><rect x=\"268\" y=\"212\" width=\"34\" height=\"84\" rx=\"8\" fill=\"#16181c\"/><circle cx=\"285\" cy=\"234\" r=\"11\" fill=\"#4a4d52\"/><circle cx=\"285\" cy=\"258\" r=\"11\" fill=\"#4a4d52\"/><circle cx=\"285\" cy=\"282\" r=\"11\" fill=\"#1b7d34\"/></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"14\" y=\"40\" font-size=\"17\" font-weight=\"700\" fill=\"#16181c\">Du hast Grün.</text><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"14\" y=\"64\" font-size=\"16\" font-weight=\"600\" fill=\"#16181c\">Aber die Kreuzung ist voll.</text></svg>",
+      "optionen": [
+        {
+          "id": "a",
+          "text": "Ich warte. Die Kreuzung ist noch nicht frei.",
+          "richtig": true,
+          "feedback_einfach": "Richtig. Grün heißt nur: du darfst. Frei muss es auch sein."
+        },
+        {
+          "id": "b",
+          "text": "Ich fahre. Ich habe ja Grün.",
+          "richtig": false,
+          "feedback_einfach": "Dann stehst du mitten in der Kreuzung. Die anderen kommen nicht durch.",
+          "neu_erklaert": "Fahre erst los, wenn du auch durchkommst. Sonst blockierst du die Kreuzung.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g><rect x=\"206\" y=\"126\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"220\" y=\"166\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><rect x=\"186\" y=\"70\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#8a8f97\"/><rect x=\"300\" y=\"110\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/><rect x=\"52\" y=\"162\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#1b7d34\"/><path d=\"M120 46 q16 12 0 24 M140 36 q26 22 0 44\" stroke=\"#c62828\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"262\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Kreuzung blockiert</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "Ich fahre bis zur Mitte und warte dort.",
+          "richtig": false,
+          "feedback_einfach": "In der Mitte stehst du im Weg. Von der Seite kommt gleich Grün.",
+          "neu_erklaert": "Warte hinter der Linie. Dort bist du sicher und im Weg von niemandem.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g transform=\"rotate(-10 220 150)\"><rect x=\"206\" y=\"128\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"220\" y=\"168\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(10 258 128)\"><rect x=\"234\" y=\"114\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/></g><path d=\"M234 132 l18 -12 -7 17 20 -4 -14 19 16 6 -22 8 7 15 -20 -10 -6 17 -6 -19 -16 8 9 -17 -18 -4 16 -11 -12 -13z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"60\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Seitlicher Aufprall</text></svg>"
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "ampel-rot",
+      "frage_amtlich": "Sie nähern sich einer Lichtzeichenanlage, welche rotes Licht zeigt. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Die Ampel ist rot. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich habe vor der Haltelinie anzuhalten.",
+          "richtig": true,
+          "feedback": "Richtig. Rot heißt immer anhalten."
+        },
+        {
+          "text": "Ich darf weiterfahren, sofern kein Querverkehr erkennbar ist.",
+          "richtig": false,
+          "feedback": "Falsch. Rot gilt auch auf leeren Kreuzungen."
+        },
+        {
+          "text": "Ich darf nach kurzem Anhalten in den Kreuzungsbereich einfahren.",
+          "richtig": false,
+          "feedback": "Falsch. Du wartest, bis es grün wird."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "ampel-gelb",
+      "frage_amtlich": "Die Lichtzeichenanlage schaltet auf gelbes Dauerlicht, während Sie sich der Kreuzung nähern. Ein gefahrloses Anhalten ist möglich. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Die Ampel wird gelb. Du kannst noch sicher anhalten. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich halte vor der Haltelinie an.",
+          "richtig": true,
+          "feedback": "Richtig. Gelb heißt anhalten, wenn es sicher geht."
+        },
+        {
+          "text": "Ich beschleunige, um die Kreuzung noch vor Rot zu überqueren.",
+          "richtig": false,
+          "feedback": "Falsch. Gelb ist kein Grund für Gas."
+        },
+        {
+          "text": "Ich fahre unverändert weiter, weil Gelb keine Bedeutung hat.",
+          "richtig": false,
+          "feedback": "Falsch. Gelb hat eine klare Bedeutung."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "ampel-gruen-kreuzung-frei",
+      "frage_amtlich": "Die Lichtzeichenanlage zeigt grünes Licht, der Kreuzungsbereich ist jedoch durch stehende Fahrzeuge blockiert. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Du hast Grün. Die Kreuzung ist voll. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich warte vor der Kreuzung, bis ich diese ungehindert überqueren kann.",
+          "richtig": true,
+          "feedback": "Richtig. Erst losfahren, wenn du durchkommst."
+        },
+        {
+          "text": "Ich fahre ein, weil mir grünes Licht die Weiterfahrt gestattet.",
+          "richtig": false,
+          "feedback": "Falsch. Grün gilt nur bei freier Kreuzung."
+        },
+        {
+          "text": "Ich fahre bis zur Kreuzungsmitte vor und warte dort.",
+          "richtig": false,
+          "feedback": "Falsch. In der Mitte stehst du im Weg."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "schutzweg-fussgaenger",
+      "frage_amtlich": "Sie nähern sich einem nicht durch Lichtzeichen geregelten Schutzweg. Eine Fußgängerin gibt erkennbar zu verstehen, dass sie den Schutzweg benützen will. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Eine Frau will über den Zebrastreifen gehen. Keine Ampel. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich ermögliche ihr das ungehinderte Überqueren und halte erforderlichenfalls an.",
+          "richtig": true,
+          "feedback": "Richtig. Du lässt sie in Ruhe gehen."
+        },
+        {
+          "text": "Ich fahre weiter, weil sie die Fahrbahn noch nicht betreten hat.",
+          "richtig": false,
+          "feedback": "Falsch. Der Wille zu gehen genügt."
+        },
+        {
+          "text": "Ich gebe Schallzeichen, damit sie stehen bleibt.",
+          "richtig": false,
+          "feedback": "Falsch. Du hupst sie nicht weg."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "schutzweg-halten-verboten",
+      "frage_amtlich": "Welche Aussagen über das Verhalten auf einem Schutzweg treffen zu?",
+      "frage_einfach": "Was gilt am Zebrastreifen? Wähle alles, was stimmt.",
+      "optionen": [
+        {
+          "text": "Das Anhalten auf dem Schutzweg selbst ist zu vermeiden.",
+          "richtig": true,
+          "feedback": "Richtig. Du hältst davor, nie darauf."
+        },
+        {
+          "text": "Fußgänger dürfen den Schutzweg ungehindert überqueren.",
+          "richtig": true,
+          "feedback": "Richtig. Dafür ist der Schutzweg da."
+        },
+        {
+          "text": "Der Schutzweg berechtigt zum kurzen Abstellen des Fahrzeuges.",
+          "richtig": false,
+          "feedback": "Falsch. Dort parkst du nie."
+        }
+      ]
+    }
+  ]
+}
