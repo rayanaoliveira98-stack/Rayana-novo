@@ -1,0 +1,3517 @@
+
+<script>window.LUMI_SINGLE_FILE = true;</script>
+<title>LumiLínguas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<style>
+/* LumiLínguas — Sistema visual.
+ * Alegre, acolhedor e acessível: elementos grandes, alto contraste,
+ * pouco texto na área infantil, animações que explicam a atividade.
+ * Identidade por idioma via --lang-color / --lang-soft (personagem + cor,
+ * nunca só cor — acessível para daltonismo).
+ */
+
+:root {
+  --ink: #2E2A45;
+  --paper: #FFF9F2;
+  --card: #FFFFFF;
+  --accent: #8E6CF0;
+  --accent-soft: #EAE3FC;
+  --good: #2BB673;
+  --danger: #E2574C;
+  --radius-l: 28px;
+  --radius-m: 18px;
+  --shadow: 0 6px 24px rgba(46, 42, 69, .12);
+  --lang-color: #8E6CF0;
+  --lang-soft: #EAE3FC;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Nunito', 'Comic Sans MS', -apple-system, 'Segoe UI', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------- telas ---------- */
+
+.screen {
+  position: fixed; inset: 0;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+.screen.active { display: flex; }
+.parent-ui { overflow-y: auto; user-select: text; -webkit-user-select: text; }
+
+.screen-top {
+  display: flex; align-items: center; gap: 12px;
+  padding: max(12px, env(safe-area-inset-top)) 16px 8px;
+}
+
+/* ---------- botões básicos ---------- */
+
+button { font-family: inherit; border: 0; cursor: pointer; color: var(--ink); }
+
+.btn-round {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: var(--card); box-shadow: var(--shadow);
+  font-size: 34px; display: inline-flex; align-items: center; justify-content: center;
+  transition: transform .15s ease;
+}
+.btn-round:active { transform: scale(.92); }
+.btn-round.small { width: 48px; height: 48px; font-size: 20px; }
+
+.btn-primary {
+  background: var(--accent); color: #fff;
+  font-size: 18px; font-weight: 700;
+  padding: 14px 28px; border-radius: var(--radius-m);
+  box-shadow: var(--shadow);
+}
+.btn-primary:disabled { opacity: .4; cursor: default; }
+.btn-ghost {
+  background: var(--accent-soft); color: var(--ink);
+  font-size: 15px; font-weight: 600; padding: 10px 18px; border-radius: var(--radius-m);
+  margin: 4px 6px 4px 0;
+}
+.btn-danger { background: #FBE3E1; color: var(--danger); font-weight: 700; padding: 12px 20px; border-radius: var(--radius-m); margin-top: 10px; display: block; }
+
+/* ---------- splash ---------- */
+
+.splash-inner {
+  margin: auto; text-align: center; padding: 24px; max-width: 480px; width: 100%;
+}
+.logo h1 { font-size: 42px; letter-spacing: -1px; background: linear-gradient(90deg, #8E6CF0, #E2574C, #F4B400); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.logo-star { font-size: 40px; }
+.tagline { color: #6B6584; margin-top: 6px; font-size: 15px; }
+.profile-list { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin: 36px 0; }
+.profile-bubble {
+  background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  padding: 20px 26px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transition: transform .15s ease;
+}
+.profile-bubble:active { transform: scale(.94); }
+.pb-emoji { font-size: 64px; }
+.pb-name { font-size: 20px; font-weight: 800; }
+.splash-empty { margin: 30px 0; color: #6B6584; font-size: 15px; }
+.btn-parent-link { background: none; color: #6B6584; font-size: 14px; text-decoration: underline; margin-top: 16px; }
+
+/* ---------- casa da criança ---------- */
+
+.home-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: max(14px, env(safe-area-inset-top)) 18px 0;
+}
+.day-pill { background: var(--card); border-radius: 999px; padding: 8px 18px; font-size: 16px; box-shadow: var(--shadow); }
+.home-center { margin: auto; text-align: center; }
+.home-char-wrap {
+  width: 210px; height: 210px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 30px; box-shadow: var(--shadow);
+}
+.home-char { font-size: 120px; animation: floaty 3s ease-in-out infinite; }
+.btn-play {
+  width: 120px; height: 120px; border-radius: 50%;
+  background: linear-gradient(135deg, #2BB673, #37cf87); color: #fff;
+  font-size: 52px; box-shadow: 0 10px 30px rgba(43, 182, 115, .45);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+.home-nav { display: flex; gap: 26px; justify-content: center; padding-bottom: 14px; }
+.home-nav-btn { width: 84px; height: 84px; border-radius: 26px; background: var(--card); box-shadow: var(--shadow); font-size: 40px; }
+.stickers-preview { text-align: center; font-size: 26px; padding-bottom: max(18px, env(safe-area-inset-bottom)); min-height: 40px; }
+
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+/* ---------- mapa ---------- */
+
+.map-path {
+  flex: 1; overflow-y: auto; padding: 20px 28px 60px;
+  display: flex; flex-wrap: wrap; gap: 14px; align-content: flex-start; justify-content: center;
+}
+.map-dot {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #fff; border: 4px solid var(--wk-color, #ccc);
+  display: flex; align-items: center; justify-content: center; font-size: 26px;
+  opacity: .55;
+}
+.map-dot.done { opacity: 1; background: var(--wk-color); }
+.map-dot.current { opacity: 1; animation: pulse 1.6s ease-in-out infinite; border-width: 5px; }
+.map-week-badge { width: 100%; text-align: center; font-size: 34px; padding: 6px 0; }
+
+/* ---------- adesivos ---------- */
+
+.sticker-grid { flex: 1; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 24px; justify-content: center; align-content: flex-start; }
+.sticker {
+  width: 96px; height: 96px; border-radius: 24px; background: var(--card); box-shadow: var(--shadow);
+  display: flex; align-items: center; justify-content: center; font-size: 54px;
+  animation: pop .4s ease;
+}
+.sticker.ghost { opacity: .25; }
+@keyframes pop { from { transform: scale(.4); } to { transform: scale(1); } }
+
+/* ---------- sessão ---------- */
+
+.session-top { display: flex; align-items: center; gap: 14px; padding: max(12px, env(safe-area-inset-top)) 16px 4px; }
+.progress-track { flex: 1; height: 12px; background: #EDE7DE; border-radius: 999px; overflow: hidden; }
+.progress-track.ob { margin: max(14px, env(safe-area-inset-top)) 20px 0; flex: none; }
+.progress-fill { height: 100%; width: 0; background: var(--lang-color, var(--accent)); border-radius: 999px; transition: width .5s ease; }
+
+.session-stage {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; padding: 12px 18px calc(24px + env(safe-area-inset-bottom)); overflow: hidden;
+}
+
+.stage-card {
+  background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  padding: 28px 34px; text-align: center; max-width: 420px; width: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative;
+}
+.hero-emoji { font-size: 110px; line-height: 1.15; }
+.hero-emoji.hero-small { font-size: 72px; }
+.bounce { animation: bounceIn .6s ease; }
+@keyframes bounceIn { 0% { transform: scale(.3); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+.word-label { font-size: 26px; font-weight: 800; color: var(--lang-color); }
+.task-hint { font-size: 40px; animation: floaty 2.4s ease-in-out infinite; }
+
+.alt-dots { display: flex; gap: 10px; }
+.alt-dot {
+  width: 52px; height: 52px; border-radius: 14px; background: #F4F0FB; font-size: 26px;
+  border: 3px solid transparent;
+}
+.alt-dot.active { border-color: var(--lang-color); background: #fff; }
+
+.replay-bar { display: flex; gap: 16px; }
+.btn-replay, .btn-slow { background: var(--lang-soft); }
+
+.btn-next {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: var(--lang-color); color: #fff; font-size: 44px;
+  box-shadow: var(--shadow); animation: pulse 2s ease-in-out infinite;
+}
+
+.options { display: grid; gap: 18px; width: 100%; max-width: 460px; }
+.options-2 { grid-template-columns: 1fr 1fr; }
+.options-3 { grid-template-columns: 1fr 1fr 1fr; }
+.options-4 { grid-template-columns: 1fr 1fr; }
+.option-card {
+  background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  border: 4px solid transparent; padding: 18px 8px; min-height: 110px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  transition: transform .15s ease, opacity .3s ease;
+}
+.option-card:active { transform: scale(.94); }
+.opt-emoji { font-size: 64px; }
+.option-card.correct { border-color: var(--good); animation: pop .35s ease; }
+.option-card.faded { opacity: .35; }
+.option-card.reveal { border-color: var(--good); animation: pulse 1s ease-in-out 2; }
+.char-card .char-name { font-size: 18px; font-weight: 800; }
+.char-name.big { font-size: 26px; font-weight: 800; }
+
+/* cena "encontre o objeto" */
+.scene {
+  position: relative; width: min(92vw, 440px); height: 320px;
+  background: linear-gradient(#DCEFFB 60%, #DFF5EA 60%); border-radius: var(--radius-l); box-shadow: var(--shadow);
+}
+.scene-bg { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; font-size: 130px; opacity: .28; }
+.scene-item {
+  position: absolute; background: none; font-size: 52px; transition: opacity .3s ease, transform .15s ease;
+}
+.scene-item:active { transform: scale(1.15); }
+.scene-item.correct { animation: pop .4s ease; }
+.scene-item.faded { opacity: .3; }
+.pos-0 { left: 8%; top: 10%; } .pos-1 { right: 10%; top: 14%; }
+.pos-2 { left: 14%; bottom: 14%; } .pos-3 { right: 16%; bottom: 10%; }
+.pos-4 { left: 42%; top: 6%; } .pos-5 { left: 44%; bottom: 6%; }
+
+/* memória / desapareceu */
+.memory-row { display: flex; gap: 16px; }
+.memory-card {
+  width: 96px; height: 96px; border-radius: 20px; background: var(--card); box-shadow: var(--shadow);
+  display: flex; align-items: center; justify-content: center; font-size: 54px;
+  transition: transform .4s ease;
+}
+.memory-card.covered { background: var(--lang-soft); }
+
+/* arrastar */
+.drop-zone {
+  width: 150px; height: 150px; border: 5px dashed var(--lang-color); border-radius: var(--radius-l);
+  display: flex; align-items: center; justify-content: center; background: #fff;
+}
+.drop-zone .ghost { font-size: 72px; opacity: .22; }
+.drop-zone .landed { font-size: 84px; animation: pop .4s ease; }
+.drag-row { display: flex; gap: 22px; }
+.drag-item {
+  width: 96px; height: 96px; border-radius: 24px; background: var(--card); box-shadow: var(--shadow);
+  font-size: 56px; touch-action: none; position: relative; z-index: 5;
+}
+.drag-item.dragging { z-index: 10; box-shadow: 0 14px 30px rgba(46,42,69,.25); }
+.drag-item.faded { opacity: .35; }
+
+/* microfone */
+.btn-mic {
+  width: 104px; height: 104px; border-radius: 50%;
+  background: var(--lang-color); color: #fff; font-size: 46px; box-shadow: var(--shadow);
+}
+.btn-mic.listening { animation: pulse 1s ease-in-out infinite; box-shadow: 0 0 0 12px var(--lang-soft); }
+.btn-mic:disabled { opacity: .5; }
+.btn-said {
+  width: 104px; height: 104px; border-radius: 50%;
+  background: var(--good); color: #fff; font-size: 46px; box-shadow: var(--shadow);
+}
+.mic-status { font-size: 22px; min-height: 28px; }
+
+/* elogio */
+.praise-overlay {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 249, 242, .6); opacity: 0; transition: opacity .25s ease; pointer-events: none; z-index: 50;
+}
+.praise-overlay.show { opacity: 1; }
+.praise-star { font-size: 130px; animation: pop .5s ease; }
+
+/* celebração */
+.celebrate-card { overflow: hidden; min-height: 260px; justify-content: center; }
+.confetti {
+  position: absolute; top: -12px; width: 12px; height: 12px; border-radius: 3px;
+  animation: fall 1.8s linear infinite;
+}
+@keyframes fall { to { transform: translateY(320px) rotate(540deg); } }
+.welcome-card, .lang-intro { min-width: 260px; }
+
+/* ---------- onboarding / painel ---------- */
+
+.onboarding-body { max-width: 560px; width: 100%; margin: 0 auto; padding: 26px 22px 60px; }
+.onboarding-body h2 { font-size: 26px; margin-bottom: 14px; }
+.onboarding-body label { display: block; margin: 18px 0 8px; font-weight: 700; font-size: 15px; }
+.ob-input {
+  width: 100%; font-size: 18px; padding: 14px 16px; border-radius: var(--radius-m);
+  border: 2px solid #E3DCD2; background: #fff; font-family: inherit;
+}
+.ob-note { color: #6B6584; font-size: 14px; line-height: 1.55; margin: 10px 0; }
+.ob-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 28px; }
+.ob-nav .btn-primary { margin-left: auto; }
+
+.chip-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.chip-row.chip-col { flex-direction: column; align-items: flex-start; }
+.chip {
+  background: #fff; border: 2px solid #E3DCD2; border-radius: 999px;
+  padding: 10px 18px; font-size: 15px; font-weight: 700;
+}
+.chip.sel { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip.chip-emoji { font-size: 24px; padding: 8px 14px; }
+.chip.toggle { display: block; margin: 8px 0; text-align: left; border-radius: var(--radius-m); width: 100%; }
+
+.lang-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 8px; }
+.lang-card {
+  background: #fff; border: 3px solid #E3DCD2; border-radius: var(--radius-m);
+  padding: 14px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-size: 15px; font-weight: 700;
+}
+.lang-card.sel { border-color: var(--lang-color, var(--accent)); background: #FBF8FF; }
+.lang-card.disabled { opacity: .45; cursor: default; }
+.lc-flag { font-size: 30px; }
+.lc-char { font-size: 13px; color: #6B6584; }
+.lc-soon { font-size: 11px; color: var(--danger); font-weight: 800; text-transform: uppercase; }
+
+.minitest-area { margin: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+.parent-title { font-size: 20px; }
+.parent-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 8px 16px; }
+.ptab {
+  background: #fff; border: 2px solid #E3DCD2; border-radius: 999px;
+  padding: 8px 16px; font-size: 14px; font-weight: 700; white-space: nowrap;
+}
+.ptab.sel { background: var(--accent); border-color: var(--accent); color: #fff; }
+.parent-body { padding: 12px 16px 60px; max-width: 640px; margin: 0 auto; width: 100%; }
+.pcard {
+  background: #fff; border-radius: var(--radius-m); box-shadow: var(--shadow);
+  padding: 18px; margin-bottom: 14px;
+}
+.pcard h3 { margin-bottom: 10px; font-size: 17px; }
+.pcard p { font-size: 14px; line-height: 1.6; margin: 4px 0; }
+.pcard.tip { font-size: 15px; }
+.state-line { color: #6B6584; }
+.voice-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; flex-wrap: wrap; }
+.voice-word { flex: 1; font-size: 15px; min-width: 140px; }
+
+/* ---------- portão parental ---------- */
+
+.gate-modal {
+  position: fixed; inset: 0; background: rgba(46, 42, 69, .5);
+  display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+}
+.gate-modal.open { display: flex; }
+.gate-card {
+  background: #fff; border-radius: var(--radius-l); padding: 30px; max-width: 360px; width: 100%;
+  position: relative; text-align: center;
+}
+.gate-card p { margin: 8px 0; }
+.gate-title { font-size: 20px; font-weight: 800; }
+.gate-input {
+  font-size: 28px; text-align: center; letter-spacing: 8px; width: 180px;
+  padding: 10px; border-radius: var(--radius-m); border: 2px solid #E3DCD2; margin: 12px 0; font-family: inherit;
+}
+.gate-msg { color: var(--danger); min-height: 20px; font-size: 14px; }
+.gate-x { position: absolute; top: 12px; right: 12px; }
+.gate-card .btn-primary { margin-top: 8px; }
+
+/* ---------- acessibilidade ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+@media (min-width: 700px) {
+  .session-stage { padding-bottom: 40px; }
+  .hero-emoji { font-size: 140px; }
+}
+
+</style>
+
+
+  <!-- Seleção de perfil / primeira visita -->
+  <section id="screen-splash" class="screen active">
+    <div class="splash-inner">
+      <div class="logo">
+        <span class="logo-star">✨</span>
+        <h1>LumiLínguas</h1>
+        <p class="tagline">Uma base real em até 4 idiomas — jornada de 60 dias</p>
+      </div>
+      <div id="profile-list" class="profile-list"></div>
+      <div id="splash-empty" class="splash-empty">
+        <p>Antes da primeira aventura, um adulto configura tudo em 2 minutos.</p>
+      </div>
+      <button id="btn-splash-setup" class="btn-parent-link">👨‍👩‍👧 Área dos responsáveis</button>
+    </div>
+  </section>
+
+  <!-- Casa da criança -->
+  <section id="screen-home" class="screen">
+    <header class="home-top">
+      <button id="btn-home-profiles" class="btn-round small" aria-label="Trocar criança">🧒</button>
+      <span class="day-pill">Dia <b id="home-day-count">1</b></span>
+      <button id="btn-home-parent" class="btn-round small" aria-label="Área dos responsáveis">⚙️</button>
+    </header>
+    <div class="home-center">
+      <div id="home-char-wrap" class="home-char-wrap"><span id="home-char" class="home-char">🦊</span></div>
+      <button id="btn-play" class="btn-play" aria-label="Brincar">▶</button>
+    </div>
+    <nav class="home-nav">
+      <button id="btn-map" class="home-nav-btn" aria-label="Mapa da jornada">🗺️</button>
+      <button id="btn-stickers" class="home-nav-btn" aria-label="Meus adesivos">⭐</button>
+    </nav>
+    <div id="home-stickers-preview" class="stickers-preview"></div>
+  </section>
+
+  <!-- Mapa da jornada -->
+  <section id="screen-map" class="screen">
+    <header class="screen-top">
+      <button id="btn-map-back" class="btn-round small" aria-label="Voltar">←</button>
+    </header>
+    <div id="map-path" class="map-path"></div>
+  </section>
+
+  <!-- Coleção de adesivos -->
+  <section id="screen-stickers" class="screen">
+    <header class="screen-top">
+      <button id="btn-stickers-back" class="btn-round small" aria-label="Voltar">←</button>
+    </header>
+    <div id="sticker-grid" class="sticker-grid"></div>
+  </section>
+
+  <!-- Sessão diária -->
+  <section id="screen-session" class="screen">
+    <header class="session-top">
+      <div class="progress-track"><div id="session-progress" class="progress-fill"></div></div>
+      <button id="btn-session-exit" class="btn-round small" aria-label="Sair">✕</button>
+    </header>
+    <div id="session-stage" class="session-stage"></div>
+  </section>
+
+  <!-- Onboarding dos responsáveis -->
+  <section id="screen-onboarding" class="screen parent-ui">
+    <div class="progress-track ob"><div id="ob-progress" class="progress-fill"></div></div>
+    <div id="onboarding-body" class="onboarding-body"></div>
+  </section>
+
+  <!-- Painel dos responsáveis -->
+  <section id="screen-parent" class="screen parent-ui">
+    <header class="screen-top">
+      <button id="btn-parent-back" class="btn-round small" aria-label="Voltar">←</button>
+      <h2 class="parent-title">Painel dos responsáveis</h2>
+    </header>
+    <nav id="parent-tabs" class="parent-tabs"></nav>
+    <div id="parent-body" class="parent-body"></div>
+  </section>
+
+  <!-- Portão parental -->
+  <div id="gate-modal" class="gate-modal">
+    <div class="gate-card">
+      <button id="gate-close" class="btn-round small gate-x" aria-label="Fechar">✕</button>
+      <div id="gate-body"></div>
+    </div>
+  </div>
+
+  <!-- Conteúdo e módulos (sem build step: funciona offline e em aparelhos antigos) -->
+  <script>
+/* LumiLínguas — Registro de idiomas.
+ * Cada idioma tem cor, personagem-guia, identidade sonora e variações regionais.
+ * Bandeiras aparecem SOMENTE na área dos responsáveis (flag), nunca na área infantil.
+ * available=false → pack de conteúdo ainda não instalado; o onboarding mostra
+ * o idioma desabilitado com aviso claro (nada de botão falso).
+ */
+(function (g) {
+  'use strict';
+
+  var LANGS = {
+    'pt': {
+      code: 'pt', name: 'Português (Brasil)', childName: 'Português',
+      color: '#2BB673', colorSoft: '#DFF5EA',
+      character: { name: 'Tuca', emoji: '🦜', species: 'tucano' },
+      tts: ['pt-BR'], flag: '🇧🇷',
+      jingle: [523, 659, 784], // identidade sonora curta (Hz)
+      variants: null
+    },
+    'de': {
+      code: 'de', name: 'Alemão', childName: 'Deutsch',
+      color: '#F4B400', colorSoft: '#FCF0CC',
+      character: { name: 'Bruno', emoji: '🐻', species: 'urso' },
+      tts: ['de-DE', 'de-AT'], flag: '🇩🇪',
+      jingle: [392, 494, 587],
+      variants: [
+        { id: 'de-DE', label: 'Alemão padrão' },
+        { id: 'de-AT', label: 'Alemão austríaco' }
+      ]
+    },
+    'en': {
+      code: 'en', name: 'Inglês', childName: 'English',
+      color: '#4A6CF7', colorSoft: '#E2E8FE',
+      character: { name: 'Finn', emoji: '🦊', species: 'raposa' },
+      tts: ['en-GB', 'en-US'], flag: '🇬🇧',
+      jingle: [440, 554, 659],
+      variants: [
+        { id: 'en-GB', label: 'Inglês britânico' },
+        { id: 'en-US', label: 'Inglês americano' }
+      ]
+    },
+    'es': {
+      code: 'es', name: 'Espanhol', childName: 'Español',
+      color: '#E2574C', colorSoft: '#FBE3E1',
+      character: { name: 'Lola', emoji: '🦙', species: 'lhama' },
+      tts: ['es-ES', 'es-419', 'es-MX'], flag: '🇪🇸',
+      jingle: [494, 587, 740],
+      variants: [
+        { id: 'es-ES', label: 'Espanhol europeu' },
+        { id: 'es-419', label: 'Espanhol latino-americano' }
+      ]
+    },
+    'tr': {
+      code: 'tr', name: 'Turco', childName: 'Türkçe',
+      color: '#00A3A3', colorSoft: '#D6F2F2',
+      character: { name: 'Kaya', emoji: '🐰', species: 'coelho' },
+      tts: ['tr-TR'], flag: '🇹🇷',
+      jingle: [415, 523, 622],
+      variants: null
+    },
+    'fr': {
+      code: 'fr', name: 'Francês', childName: 'Français',
+      color: '#8E6CF0', colorSoft: '#EAE3FC',
+      character: { name: 'Coco', emoji: '🐓', species: 'galo' },
+      tts: ['fr-FR'], flag: '🇫🇷',
+      jingle: [466, 587, 698],
+      variants: null
+    },
+    'it': {
+      code: 'it', name: 'Italiano', childName: 'Italiano',
+      color: '#3AAE5C', colorSoft: '#DFF2E5',
+      character: { name: 'Gigi', emoji: '🦉', species: 'coruja' },
+      tts: ['it-IT'], flag: '🇮🇹',
+      jingle: [523, 622, 784],
+      variants: null
+    },
+    'zh': {
+      code: 'zh', name: 'Mandarim', childName: '中文',
+      color: '#E58B2F', colorSoft: '#FBEBD9',
+      character: { name: 'Panpan', emoji: '🐼', species: 'panda' },
+      tts: ['zh-CN'], flag: '🇨🇳',
+      jingle: [440, 523, 659],
+      variants: null,
+      romanization: 'pinyin'
+    },
+    'ja': {
+      code: 'ja', name: 'Japonês', childName: 'にほんご',
+      color: '#E2648F', colorSoft: '#FBE2EC',
+      character: { name: 'Momo', emoji: '🦝', species: 'tanuki' },
+      tts: ['ja-JP'], flag: '🇯🇵',
+      jingle: [494, 622, 740],
+      variants: null,
+      romanization: 'romaji'
+    }
+  };
+
+  var api = {
+    all: LANGS,
+    codes: Object.keys(LANGS),
+    get: function (code) { return LANGS[code] || null; },
+    /* Um idioma está disponível quando seu pack de conteúdo está carregado. */
+    isAvailable: function (code) {
+      var packs = g.LUMI_PACKS || {};
+      return !!(LANGS[code] && packs[code] && packs[code].concepts);
+    },
+    availableCodes: function () {
+      return api.codes.filter(api.isAvailable);
+    }
+  };
+
+  g.LUMI_LANGS = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Currículo de 60 dias.
+ * Define os conceitos (independentes de idioma) e a jornada semanal.
+ * Cada conceito tem imagem principal + imagens alternativas (a criança
+ * aprende o CONCEITO, não uma única foto).
+ * As traduções ficam nos packs de idioma (content/pack-XX.js).
+ */
+(function (g) {
+  'use strict';
+
+  var WEEKS = [
+    { days: [1, 7],   themeId: 'home',     title: 'Objetos da casa e rotina' },
+    { days: [8, 14],  themeId: 'family',   title: 'Família, corpo e sentidos' },
+    { days: [15, 21], themeId: 'food',     title: 'Alimentos, bebidas, cores e números' },
+    { days: [22, 28], themeId: 'animals',  title: 'Animais e natureza' },
+    { days: [29, 35], themeId: 'clothes',  title: 'Roupas, clima e estações' },
+    { days: [36, 42], themeId: 'places',   title: 'Veículos, lugares e segurança' },
+    { days: [43, 49], themeId: 'actions',  title: 'Ações, emoções, posições e opostos' },
+    { days: [50, 56], themeId: 'dialogs',  title: 'Perguntas, respostas e pequenos diálogos' },
+    { days: [57, 60], themeId: 'review',   title: 'Revisão geral, desafios e apresentação final' }
+  ];
+
+  /* type: noun | color | number | action | emotion
+   * scene: emoji do cenário usado em "encontre o objeto". */
+  var CONCEPTS = [
+    // ——— Semana 1: casa e rotina ———
+    { id: 'bed',    theme: 'home', day: 1, type: 'noun', emoji: '🛏️', alts: ['🛌', '🏕️'], scene: '🏠' },
+    { id: 'chair',  theme: 'home', day: 1, type: 'noun', emoji: '🪑', alts: ['💺', '🛋️'], scene: '🏠' },
+    { id: 'door',   theme: 'home', day: 2, type: 'noun', emoji: '🚪', alts: ['🏠', '🔓'], scene: '🏠' },
+    { id: 'key',    theme: 'home', day: 3, type: 'noun', emoji: '🔑', alts: ['🗝️', '🔐'], scene: '🏠' },
+    { id: 'spoon',  theme: 'home', day: 4, type: 'noun', emoji: '🥄', alts: ['🍽️', '🍲'], scene: '🍽️' },
+    { id: 'ball',   theme: 'home', day: 5, type: 'noun', emoji: '⚽', alts: ['🏀', '🎾'], scene: '🧸' },
+    { id: 'book',   theme: 'home', day: 6, type: 'noun', emoji: '📖', alts: ['📚', '📕'], scene: '🛏️' },
+    { id: 'soap',   theme: 'home', day: 7, type: 'noun', emoji: '🧼', alts: ['🫧', '🛁'], scene: '🛁' },
+
+    // ——— Semana 2: família, corpo e sentidos ———
+    { id: 'mom',    theme: 'family', day: 8,  type: 'noun', emoji: '👩', alts: ['👩🏽', '👩🏿'], scene: '👨‍👩‍👧' },
+    { id: 'dad',    theme: 'family', day: 9,  type: 'noun', emoji: '👨', alts: ['👨🏽', '👨🏿'], scene: '👨‍👩‍👧' },
+    { id: 'baby',   theme: 'family', day: 10, type: 'noun', emoji: '👶', alts: ['👶🏽', '🍼'], scene: '👨‍👩‍👧' },
+    { id: 'hand',   theme: 'family', day: 11, type: 'noun', emoji: '✋', alts: ['🤚', '👏'], scene: '🧒' },
+    { id: 'nose',   theme: 'family', day: 12, type: 'noun', emoji: '👃', alts: ['👃🏽', '🤧'], scene: '🧒' },
+    { id: 'eyes',   theme: 'family', day: 13, type: 'noun', emoji: '👀', alts: ['👁️', '😊'], scene: '🧒' },
+
+    // ——— Semana 3: alimentos, cores e números ———
+    { id: 'apple',  theme: 'food', day: 15, type: 'noun', emoji: '🍎', alts: ['🍏', '🍎'], scene: '🍽️' },
+    { id: 'banana', theme: 'food', day: 16, type: 'noun', emoji: '🍌', alts: ['🍌', '🐒'], scene: '🍽️' },
+    { id: 'water',  theme: 'food', day: 17, type: 'noun', emoji: '💧', alts: ['🚰', '🌊'], scene: '🍽️' },
+    { id: 'milk',   theme: 'food', day: 18, type: 'noun', emoji: '🥛', alts: ['🍼', '🐄'], scene: '🍽️' },
+    { id: 'bread',  theme: 'food', day: 19, type: 'noun', emoji: '🍞', alts: ['🥖', '🥐'], scene: '🍽️' },
+    { id: 'red',    theme: 'food', day: 20, type: 'color', emoji: '🔴', alts: ['🍎', '🚗'], scene: '🎨' },
+    { id: 'blue',   theme: 'food', day: 20, type: 'color', emoji: '🔵', alts: ['💙', '🐳'], scene: '🎨' },
+    { id: 'three',  theme: 'food', day: 21, type: 'number', emoji: '3️⃣', alts: ['🍎🍎🍎', '🎈🎈🎈'], scene: '🎨' },
+
+    // ——— Semana 4: animais e natureza ———
+    { id: 'dog',    theme: 'animals', day: 22, type: 'noun', emoji: '🐶', alts: ['🐕', '🦮'], scene: '🌳' },
+    { id: 'cat',    theme: 'animals', day: 23, type: 'noun', emoji: '🐱', alts: ['🐈', '🐈‍⬛'], scene: '🏠' },
+    { id: 'bird',   theme: 'animals', day: 24, type: 'noun', emoji: '🐦', alts: ['🦜', '🐤'], scene: '🌳' },
+    { id: 'fish',   theme: 'animals', day: 25, type: 'noun', emoji: '🐟', alts: ['🐠', '🐡'], scene: '🌊' },
+    { id: 'tree',   theme: 'animals', day: 26, type: 'noun', emoji: '🌳', alts: ['🌲', '🌴'], scene: '🌳' },
+    { id: 'flower', theme: 'animals', day: 27, type: 'noun', emoji: '🌸', alts: ['🌻', '🌷'], scene: '🌳' },
+
+    // ——— Semana 5: roupas e clima ———
+    { id: 'shoe',   theme: 'clothes', day: 29, type: 'noun', emoji: '👟', alts: ['👞', '🥾'], scene: '🧒' },
+    { id: 'hat',    theme: 'clothes', day: 30, type: 'noun', emoji: '🧢', alts: ['👒', '🎩'], scene: '🧒' },
+    { id: 'sun',    theme: 'clothes', day: 31, type: 'noun', emoji: '☀️', alts: ['🌞', '🌅'], scene: '🌳' },
+    { id: 'rain',   theme: 'clothes', day: 32, type: 'noun', emoji: '🌧️', alts: ['☔', '💦'], scene: '🌳' },
+
+    // ——— Semana 6: veículos e lugares ———
+    { id: 'car',    theme: 'places', day: 36, type: 'noun', emoji: '🚗', alts: ['🚙', '🚕'], scene: '🛣️' },
+    { id: 'bus',    theme: 'places', day: 37, type: 'noun', emoji: '🚌', alts: ['🚍', '🚏'], scene: '🛣️' },
+
+    // ——— Semana 7: ações e emoções ———
+    { id: 'sleep',  theme: 'actions', day: 43, type: 'action',  emoji: '😴', alts: ['🛌', '🌙'], scene: '🛏️' },
+    { id: 'happy',  theme: 'actions', day: 44, type: 'emotion', emoji: '😊', alts: ['😄', '🥳'], scene: '🧒' }
+  ];
+
+  var byId = {};
+  CONCEPTS.forEach(function (c) { byId[c.id] = c; });
+
+  var api = {
+    weeks: WEEKS,
+    concepts: CONCEPTS,
+    get: function (id) { return byId[id] || null; },
+    /* Conceitos programados até um dia da jornada (inclusive), em ordem. */
+    upToDay: function (day) {
+      return CONCEPTS.filter(function (c) { return c.day <= day; });
+    },
+    forDay: function (day) {
+      return CONCEPTS.filter(function (c) { return c.day === day; });
+    },
+    weekForDay: function (day) {
+      for (var i = 0; i < WEEKS.length; i++) {
+        if (day >= WEEKS[i].days[0] && day <= WEEKS[i].days[1]) return WEEKS[i];
+      }
+      return WEEKS[WEEKS.length - 1];
+    }
+  };
+
+  g.LUMI_CURRICULUM = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Pack de conteúdo: Português (Brasil).
+ * Chaves: word=palavra, art=com artigo, pl=plural, adj=frase adjetiva,
+ * act=ação/verbo, sen=frase simples, q=pergunta, a=resposta,
+ * syn=sinônimo infantil, var=variações regionais, rom=romanização.
+ * Campos null = não se aplica neste idioma (nunca inventar).
+ */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['pt'] = { lang: 'pt', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'cama', art: 'a cama', pl: 'as camas', adj: 'cama quentinha', act: 'dormir na cama', sen: 'Eu quero ir para a cama.', q: 'Onde está a cama?', a: 'A cama está aqui!', syn: 'caminha', var: null },
+    chair:  { word: 'cadeira', art: 'a cadeira', pl: 'as cadeiras', adj: 'cadeira grande', act: 'sentar na cadeira', sen: 'Eu sento na cadeira.', q: 'Onde está a cadeira?', a: 'A cadeira está aqui!', syn: 'cadeirinha', var: null },
+    door:   { word: 'porta', art: 'a porta', pl: 'as portas', adj: 'porta aberta', act: 'abrir a porta', sen: 'Vamos abrir a porta.', q: 'Onde está a porta?', a: 'A porta está ali!', syn: null, var: null },
+    key:    { word: 'chave', art: 'a chave', pl: 'as chaves', adj: 'chave pequena', act: 'girar a chave', sen: 'A chave abre a porta.', q: 'Onde está a chave?', a: 'A chave está aqui!', syn: null, var: null },
+    spoon:  { word: 'colher', art: 'a colher', pl: 'as colheres', adj: 'colher grande', act: 'comer com a colher', sen: 'Eu como com a colher.', q: 'Onde está a colher?', a: 'A colher está na mesa!', syn: null, var: null },
+    ball:   { word: 'bola', art: 'a bola', pl: 'as bolas', adj: 'bola vermelha', act: 'jogar bola', sen: 'Eu quero jogar bola.', q: 'Onde está a bola?', a: 'A bola está aqui!', syn: null, var: null },
+    book:   { word: 'livro', art: 'o livro', pl: 'os livros', adj: 'livro colorido', act: 'ler um livro', sen: 'Vamos ler um livro.', q: 'Onde está o livro?', a: 'O livro está aqui!', syn: 'livrinho', var: null },
+    soap:   { word: 'sabonete', art: 'o sabonete', pl: 'os sabonetes', adj: 'sabonete cheiroso', act: 'lavar as mãos', sen: 'Eu lavo as mãos com sabonete.', q: 'Onde está o sabonete?', a: 'O sabonete está no banheiro!', syn: null, var: null },
+    mom:    { word: 'mamãe', art: 'a mamãe', pl: null, adj: 'mamãe querida', act: 'abraçar a mamãe', sen: 'Eu amo a mamãe.', q: 'Onde está a mamãe?', a: 'A mamãe está aqui!', syn: 'mãe', var: null },
+    dad:    { word: 'papai', art: 'o papai', pl: null, adj: 'papai querido', act: 'abraçar o papai', sen: 'Eu amo o papai.', q: 'Onde está o papai?', a: 'O papai está aqui!', syn: 'pai', var: null },
+    baby:   { word: 'bebê', art: 'o bebê', pl: 'os bebês', adj: 'bebê pequenino', act: 'ninar o bebê', sen: 'O bebê está dormindo.', q: 'Onde está o bebê?', a: 'O bebê está aqui!', syn: 'neném', var: null },
+    hand:   { word: 'mão', art: 'a mão', pl: 'as mãos', adj: 'mão limpa', act: 'bater palmas', sen: 'Eu lavo as mãos.', q: 'Cadê a sua mão?', a: 'Minha mão está aqui!', syn: 'mãozinha', var: null },
+    nose:   { word: 'nariz', art: 'o nariz', pl: 'os narizes', adj: 'nariz pequeno', act: 'tocar o nariz', sen: 'Este é o meu nariz.', q: 'Cadê o seu nariz?', a: 'Meu nariz está aqui!', syn: 'narizinho', var: null },
+    eyes:   { word: 'olho', art: 'o olho', pl: 'os olhos', adj: 'olhos abertos', act: 'fechar os olhos', sen: 'Eu fecho os olhos.', q: 'Cadê os seus olhos?', a: 'Meus olhos estão aqui!', syn: null, var: null },
+    apple:  { word: 'maçã', art: 'a maçã', pl: 'as maçãs', adj: 'maçã vermelha', act: 'comer uma maçã', sen: 'Eu quero uma maçã.', q: 'Onde está a maçã?', a: 'A maçã está aqui!', syn: null, var: null },
+    banana: { word: 'banana', art: 'a banana', pl: 'as bananas', adj: 'banana amarela', act: 'descascar a banana', sen: 'Eu gosto de banana.', q: 'Onde está a banana?', a: 'A banana está aqui!', syn: null, var: null },
+    water:  { word: 'água', art: 'a água', pl: null, adj: 'água fresquinha', act: 'beber água', sen: 'Eu quero beber água.', q: 'Onde está a água?', a: 'A água está no copo!', syn: null, var: null },
+    milk:   { word: 'leite', art: 'o leite', pl: null, adj: 'leite quentinho', act: 'beber leite', sen: 'Eu bebo leite de manhã.', q: 'Onde está o leite?', a: 'O leite está no copo!', syn: null, var: null },
+    bread:  { word: 'pão', art: 'o pão', pl: 'os pães', adj: 'pão quentinho', act: 'comer pão', sen: 'Eu quero pão com manteiga.', q: 'Onde está o pão?', a: 'O pão está na mesa!', syn: 'pãozinho', var: null },
+    red:    { word: 'vermelho', art: null, pl: null, adj: 'bola vermelha', act: 'pintar de vermelho', sen: 'A maçã é vermelha.', q: 'O que é vermelho?', a: 'A maçã é vermelha!', syn: null, var: null },
+    blue:   { word: 'azul', art: null, pl: null, adj: 'céu azul', act: 'pintar de azul', sen: 'O céu é azul.', q: 'O que é azul?', a: 'O céu é azul!', syn: null, var: null },
+    three:  { word: 'três', art: null, pl: null, adj: 'três maçãs', act: 'contar até três', sen: 'Um, dois, três!', q: 'Quantos são?', a: 'São três!', syn: null, var: null },
+    dog:    { word: 'cachorro', art: 'o cachorro', pl: 'os cachorros', adj: 'cachorro fofo', act: 'fazer carinho no cachorro', sen: 'O cachorro faz au-au.', q: 'Onde está o cachorro?', a: 'O cachorro está aqui!', syn: 'au-au', var: null },
+    cat:    { word: 'gato', art: 'o gato', pl: 'os gatos', adj: 'gato fofinho', act: 'fazer carinho no gato', sen: 'O gato faz miau.', q: 'Onde está o gato?', a: 'O gato está aqui!', syn: 'gatinho', var: null },
+    bird:   { word: 'passarinho', art: 'o passarinho', pl: 'os passarinhos', adj: 'passarinho azul', act: 'ouvir o passarinho', sen: 'O passarinho canta.', q: 'Onde está o passarinho?', a: 'O passarinho está na árvore!', syn: 'pássaro', var: null },
+    fish:   { word: 'peixe', art: 'o peixe', pl: 'os peixes', adj: 'peixe colorido', act: 'ver o peixe nadar', sen: 'O peixe nada na água.', q: 'Onde está o peixe?', a: 'O peixe está na água!', syn: 'peixinho', var: null },
+    tree:   { word: 'árvore', art: 'a árvore', pl: 'as árvores', adj: 'árvore grande', act: 'olhar a árvore', sen: 'A árvore é grande.', q: 'Onde está a árvore?', a: 'A árvore está no parque!', syn: null, var: null },
+    flower: { word: 'flor', art: 'a flor', pl: 'as flores', adj: 'flor bonita', act: 'cheirar a flor', sen: 'A flor é bonita.', q: 'Onde está a flor?', a: 'A flor está no jardim!', syn: 'florzinha', var: null },
+    shoe:   { word: 'sapato', art: 'o sapato', pl: 'os sapatos', adj: 'sapato novo', act: 'calçar o sapato', sen: 'Eu calço o sapato.', q: 'Onde está o sapato?', a: 'O sapato está aqui!', syn: 'sapatinho', var: null },
+    hat:    { word: 'chapéu', art: 'o chapéu', pl: 'os chapéus', adj: 'chapéu de sol', act: 'colocar o chapéu', sen: 'Eu coloco o chapéu.', q: 'Onde está o chapéu?', a: 'O chapéu está na cabeça!', syn: 'boné', var: null },
+    sun:    { word: 'sol', art: 'o sol', pl: null, adj: 'sol quente', act: 'brincar no sol', sen: 'O sol está brilhando.', q: 'Onde está o sol?', a: 'O sol está no céu!', syn: null, var: null },
+    rain:   { word: 'chuva', art: 'a chuva', pl: null, adj: 'chuva fininha', act: 'ouvir a chuva', sen: 'Está chovendo!', q: 'O que cai do céu?', a: 'A chuva!', syn: null, var: null },
+    car:    { word: 'carro', art: 'o carro', pl: 'os carros', adj: 'carro vermelho', act: 'andar de carro', sen: 'Vamos passear de carro.', q: 'Onde está o carro?', a: 'O carro está aqui!', syn: 'carrinho', var: null },
+    bus:    { word: 'ônibus', art: 'o ônibus', pl: 'os ônibus', adj: 'ônibus grande', act: 'andar de ônibus', sen: 'O ônibus é grande.', q: 'Onde está o ônibus?', a: 'Lá vem o ônibus!', syn: null, var: null },
+    sleep:  { word: 'dormir', art: null, pl: null, adj: 'dormir gostoso', act: 'hora de dormir', sen: 'Eu vou dormir.', q: 'Quem está dormindo?', a: 'O bebê está dormindo!', syn: 'nanar', var: null },
+    happy:  { word: 'feliz', art: null, pl: null, adj: 'criança feliz', act: 'ficar feliz', sen: 'Eu estou feliz!', q: 'Você está feliz?', a: 'Sim, eu estou feliz!', syn: 'contente', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['pt'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: English (variantes en-GB / en-US no campo var). */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['en'] = { lang: 'en', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'bed', art: 'the bed', pl: 'beds', adj: 'a cozy bed', act: 'go to bed', sen: 'I go to bed.', q: 'Where is the bed?', a: 'Here is the bed!', syn: null, var: null },
+    chair:  { word: 'chair', art: 'the chair', pl: 'chairs', adj: 'a big chair', act: 'sit on the chair', sen: 'I sit on the chair.', q: 'Where is the chair?', a: 'Here is the chair!', syn: null, var: null },
+    door:   { word: 'door', art: 'the door', pl: 'doors', adj: 'an open door', act: 'open the door', sen: "Let's open the door.", q: 'Where is the door?', a: 'There is the door!', syn: null, var: null },
+    key:    { word: 'key', art: 'the key', pl: 'keys', adj: 'a little key', act: 'turn the key', sen: 'The key opens the door.', q: 'Where is the key?', a: 'Here is the key!', syn: null, var: null },
+    spoon:  { word: 'spoon', art: 'the spoon', pl: 'spoons', adj: 'a big spoon', act: 'eat with a spoon', sen: 'I eat with a spoon.', q: 'Where is the spoon?', a: 'The spoon is on the table!', syn: null, var: null },
+    ball:   { word: 'ball', art: 'the ball', pl: 'balls', adj: 'a red ball', act: 'play ball', sen: 'I want to play ball.', q: 'Where is the ball?', a: 'Here is the ball!', syn: null, var: null },
+    book:   { word: 'book', art: 'the book', pl: 'books', adj: 'a picture book', act: 'read a book', sen: "Let's read a book.", q: 'Where is the book?', a: 'Here is the book!', syn: null, var: null },
+    soap:   { word: 'soap', art: 'the soap', pl: null, adj: 'bubbly soap', act: 'wash your hands', sen: 'I wash my hands with soap.', q: 'Where is the soap?', a: 'The soap is in the bathroom!', syn: null, var: null },
+    mom:    { word: 'mom', art: null, pl: null, adj: 'dear mom', act: 'hug mom', sen: 'I love my mom.', q: 'Where is mom?', a: 'Mom is here!', syn: 'mommy', var: { 'en-GB': 'mum', 'en-US': 'mom' } },
+    dad:    { word: 'dad', art: null, pl: null, adj: 'dear dad', act: 'hug dad', sen: 'I love my dad.', q: 'Where is dad?', a: 'Dad is here!', syn: 'daddy', var: null },
+    baby:   { word: 'baby', art: 'the baby', pl: 'babies', adj: 'a little baby', act: 'rock the baby', sen: 'The baby is sleeping.', q: 'Where is the baby?', a: 'The baby is here!', syn: null, var: null },
+    hand:   { word: 'hand', art: 'the hand', pl: 'hands', adj: 'a clean hand', act: 'clap your hands', sen: 'I wash my hands.', q: 'Where is your hand?', a: 'Here is my hand!', syn: null, var: null },
+    nose:   { word: 'nose', art: 'the nose', pl: 'noses', adj: 'a little nose', act: 'touch your nose', sen: 'This is my nose.', q: 'Where is your nose?', a: 'Here is my nose!', syn: null, var: null },
+    eyes:   { word: 'eye', art: 'the eye', pl: 'eyes', adj: 'big eyes', act: 'close your eyes', sen: 'I close my eyes.', q: 'Where are your eyes?', a: 'Here are my eyes!', syn: null, var: null },
+    apple:  { word: 'apple', art: 'an apple', pl: 'apples', adj: 'a red apple', act: 'eat an apple', sen: 'I want an apple.', q: 'Where is the apple?', a: 'Here is the apple!', syn: null, var: null },
+    banana: { word: 'banana', art: 'a banana', pl: 'bananas', adj: 'a yellow banana', act: 'peel the banana', sen: 'I like bananas.', q: 'Where is the banana?', a: 'Here is the banana!', syn: null, var: null },
+    water:  { word: 'water', art: 'the water', pl: null, adj: 'fresh water', act: 'drink water', sen: 'I want to drink water.', q: 'Where is the water?', a: 'The water is in the cup!', syn: null, var: null },
+    milk:   { word: 'milk', art: 'the milk', pl: null, adj: 'warm milk', act: 'drink milk', sen: 'I drink milk in the morning.', q: 'Where is the milk?', a: 'The milk is in the cup!', syn: null, var: null },
+    bread:  { word: 'bread', art: 'the bread', pl: null, adj: 'warm bread', act: 'eat bread', sen: 'I want bread with butter.', q: 'Where is the bread?', a: 'The bread is on the table!', syn: null, var: null },
+    red:    { word: 'red', art: null, pl: null, adj: 'a red ball', act: 'paint it red', sen: 'The apple is red.', q: 'What is red?', a: 'The apple is red!', syn: null, var: null },
+    blue:   { word: 'blue', art: null, pl: null, adj: 'the blue sky', act: 'paint it blue', sen: 'The sky is blue.', q: 'What is blue?', a: 'The sky is blue!', syn: null, var: null },
+    three:  { word: 'three', art: null, pl: null, adj: 'three apples', act: 'count to three', sen: 'One, two, three!', q: 'How many?', a: 'Three!', syn: null, var: null },
+    dog:    { word: 'dog', art: 'the dog', pl: 'dogs', adj: 'a fluffy dog', act: 'pet the dog', sen: 'The dog says woof.', q: 'Where is the dog?', a: 'Here is the dog!', syn: 'doggy', var: null },
+    cat:    { word: 'cat', art: 'the cat', pl: 'cats', adj: 'a soft cat', act: 'pet the cat', sen: 'The cat says meow.', q: 'Where is the cat?', a: 'Here is the cat!', syn: 'kitty', var: null },
+    bird:   { word: 'bird', art: 'the bird', pl: 'birds', adj: 'a blue bird', act: 'listen to the bird', sen: 'The bird sings.', q: 'Where is the bird?', a: 'The bird is in the tree!', syn: 'birdie', var: null },
+    fish:   { word: 'fish', art: 'the fish', pl: 'fish', adj: 'a colorful fish', act: 'watch the fish', sen: 'The fish swims in the water.', q: 'Where is the fish?', a: 'The fish is in the water!', syn: null, var: null },
+    tree:   { word: 'tree', art: 'the tree', pl: 'trees', adj: 'a big tree', act: 'look at the tree', sen: 'The tree is big.', q: 'Where is the tree?', a: 'The tree is in the park!', syn: null, var: null },
+    flower: { word: 'flower', art: 'the flower', pl: 'flowers', adj: 'a pretty flower', act: 'smell the flower', sen: 'The flower is pretty.', q: 'Where is the flower?', a: 'The flower is in the garden!', syn: null, var: null },
+    shoe:   { word: 'shoe', art: 'the shoe', pl: 'shoes', adj: 'new shoes', act: 'put on your shoes', sen: 'I put on my shoes.', q: 'Where is the shoe?', a: 'Here is the shoe!', syn: null, var: null },
+    hat:    { word: 'hat', art: 'the hat', pl: 'hats', adj: 'a sun hat', act: 'put on the hat', sen: 'I put on my hat.', q: 'Where is the hat?', a: 'The hat is on my head!', syn: 'cap', var: null },
+    sun:    { word: 'sun', art: 'the sun', pl: null, adj: 'the warm sun', act: 'play in the sun', sen: 'The sun is shining.', q: 'Where is the sun?', a: 'The sun is in the sky!', syn: null, var: null },
+    rain:   { word: 'rain', art: 'the rain', pl: null, adj: 'soft rain', act: 'listen to the rain', sen: 'It is raining!', q: 'What falls from the sky?', a: 'The rain!', syn: null, var: null },
+    car:    { word: 'car', art: 'the car', pl: 'cars', adj: 'a red car', act: 'ride in the car', sen: "Let's go in the car.", q: 'Where is the car?', a: 'Here is the car!', syn: null, var: null },
+    bus:    { word: 'bus', art: 'the bus', pl: 'buses', adj: 'a big bus', act: 'ride the bus', sen: 'The bus is big.', q: 'Where is the bus?', a: 'Here comes the bus!', syn: null, var: null },
+    sleep:  { word: 'sleep', art: null, pl: null, adj: 'a good sleep', act: 'time to sleep', sen: 'I go to sleep.', q: 'Who is sleeping?', a: 'The baby is sleeping!', syn: null, var: null },
+    happy:  { word: 'happy', art: null, pl: null, adj: 'a happy child', act: 'feel happy', sen: 'I am happy!', q: 'Are you happy?', a: 'Yes, I am happy!', syn: 'glad', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['en'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: Deutsch (variante austríaca de-AT no campo var). */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['de'] = { lang: 'de', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'Bett', art: 'das Bett', pl: 'die Betten', adj: 'ein kuscheliges Bett', act: 'ins Bett gehen', sen: 'Ich gehe ins Bett.', q: 'Wo ist das Bett?', a: 'Hier ist das Bett!', syn: null, var: null },
+    chair:  { word: 'Stuhl', art: 'der Stuhl', pl: 'die Stühle', adj: 'ein großer Stuhl', act: 'auf dem Stuhl sitzen', sen: 'Ich sitze auf dem Stuhl.', q: 'Wo ist der Stuhl?', a: 'Hier ist der Stuhl!', syn: null, var: { 'de-AT': 'Sessel' } },
+    door:   { word: 'Tür', art: 'die Tür', pl: 'die Türen', adj: 'eine offene Tür', act: 'die Tür öffnen', sen: 'Wir öffnen die Tür.', q: 'Wo ist die Tür?', a: 'Da ist die Tür!', syn: null, var: null },
+    key:    { word: 'Schlüssel', art: 'der Schlüssel', pl: 'die Schlüssel', adj: 'ein kleiner Schlüssel', act: 'den Schlüssel drehen', sen: 'Der Schlüssel öffnet die Tür.', q: 'Wo ist der Schlüssel?', a: 'Hier ist der Schlüssel!', syn: null, var: null },
+    spoon:  { word: 'Löffel', art: 'der Löffel', pl: 'die Löffel', adj: 'ein großer Löffel', act: 'mit dem Löffel essen', sen: 'Ich esse mit dem Löffel.', q: 'Wo ist der Löffel?', a: 'Der Löffel ist auf dem Tisch!', syn: null, var: null },
+    ball:   { word: 'Ball', art: 'der Ball', pl: 'die Bälle', adj: 'ein roter Ball', act: 'Ball spielen', sen: 'Ich möchte Ball spielen.', q: 'Wo ist der Ball?', a: 'Hier ist der Ball!', syn: null, var: null },
+    book:   { word: 'Buch', art: 'das Buch', pl: 'die Bücher', adj: 'ein buntes Buch', act: 'ein Buch lesen', sen: 'Wir lesen ein Buch.', q: 'Wo ist das Buch?', a: 'Hier ist das Buch!', syn: null, var: null },
+    soap:   { word: 'Seife', art: 'die Seife', pl: 'die Seifen', adj: 'duftende Seife', act: 'Hände waschen', sen: 'Ich wasche meine Hände mit Seife.', q: 'Wo ist die Seife?', a: 'Die Seife ist im Bad!', syn: null, var: null },
+    mom:    { word: 'Mama', art: 'die Mama', pl: null, adj: 'liebe Mama', act: 'Mama umarmen', sen: 'Ich liebe meine Mama.', q: 'Wo ist Mama?', a: 'Mama ist hier!', syn: 'Mutti', var: null },
+    dad:    { word: 'Papa', art: 'der Papa', pl: null, adj: 'lieber Papa', act: 'Papa umarmen', sen: 'Ich liebe meinen Papa.', q: 'Wo ist Papa?', a: 'Papa ist hier!', syn: 'Vati', var: null },
+    baby:   { word: 'Baby', art: 'das Baby', pl: 'die Babys', adj: 'ein kleines Baby', act: 'das Baby wiegen', sen: 'Das Baby schläft.', q: 'Wo ist das Baby?', a: 'Das Baby ist hier!', syn: null, var: null },
+    hand:   { word: 'Hand', art: 'die Hand', pl: 'die Hände', adj: 'eine saubere Hand', act: 'in die Hände klatschen', sen: 'Ich wasche meine Hände.', q: 'Wo ist deine Hand?', a: 'Hier ist meine Hand!', syn: null, var: null },
+    nose:   { word: 'Nase', art: 'die Nase', pl: 'die Nasen', adj: 'eine kleine Nase', act: 'die Nase berühren', sen: 'Das ist meine Nase.', q: 'Wo ist deine Nase?', a: 'Hier ist meine Nase!', syn: null, var: null },
+    eyes:   { word: 'Auge', art: 'das Auge', pl: 'die Augen', adj: 'große Augen', act: 'die Augen schließen', sen: 'Ich schließe die Augen.', q: 'Wo sind deine Augen?', a: 'Hier sind meine Augen!', syn: null, var: null },
+    apple:  { word: 'Apfel', art: 'der Apfel', pl: 'die Äpfel', adj: 'ein roter Apfel', act: 'einen Apfel essen', sen: 'Ich möchte einen Apfel.', q: 'Wo ist der Apfel?', a: 'Hier ist der Apfel!', syn: null, var: null },
+    banana: { word: 'Banane', art: 'die Banane', pl: 'die Bananen', adj: 'eine gelbe Banane', act: 'die Banane schälen', sen: 'Ich mag Bananen.', q: 'Wo ist die Banane?', a: 'Hier ist die Banane!', syn: null, var: null },
+    water:  { word: 'Wasser', art: 'das Wasser', pl: null, adj: 'frisches Wasser', act: 'Wasser trinken', sen: 'Ich möchte Wasser trinken.', q: 'Wo ist das Wasser?', a: 'Das Wasser ist im Becher!', syn: null, var: null },
+    milk:   { word: 'Milch', art: 'die Milch', pl: null, adj: 'warme Milch', act: 'Milch trinken', sen: 'Ich trinke morgens Milch.', q: 'Wo ist die Milch?', a: 'Die Milch ist im Becher!', syn: null, var: null },
+    bread:  { word: 'Brot', art: 'das Brot', pl: 'die Brote', adj: 'warmes Brot', act: 'Brot essen', sen: 'Ich möchte Brot mit Butter.', q: 'Wo ist das Brot?', a: 'Das Brot ist auf dem Tisch!', syn: null, var: null },
+    red:    { word: 'rot', art: null, pl: null, adj: 'ein roter Ball', act: 'rot malen', sen: 'Der Apfel ist rot.', q: 'Was ist rot?', a: 'Der Apfel ist rot!', syn: null, var: null },
+    blue:   { word: 'blau', art: null, pl: null, adj: 'der blaue Himmel', act: 'blau malen', sen: 'Der Himmel ist blau.', q: 'Was ist blau?', a: 'Der Himmel ist blau!', syn: null, var: null },
+    three:  { word: 'drei', art: null, pl: null, adj: 'drei Äpfel', act: 'bis drei zählen', sen: 'Eins, zwei, drei!', q: 'Wie viele?', a: 'Drei!', syn: null, var: null },
+    dog:    { word: 'Hund', art: 'der Hund', pl: 'die Hunde', adj: 'ein flauschiger Hund', act: 'den Hund streicheln', sen: 'Der Hund macht wau-wau.', q: 'Wo ist der Hund?', a: 'Hier ist der Hund!', syn: 'Wauwau', var: null },
+    cat:    { word: 'Katze', art: 'die Katze', pl: 'die Katzen', adj: 'eine weiche Katze', act: 'die Katze streicheln', sen: 'Die Katze macht miau.', q: 'Wo ist die Katze?', a: 'Hier ist die Katze!', syn: 'Mieze', var: null },
+    bird:   { word: 'Vogel', art: 'der Vogel', pl: 'die Vögel', adj: 'ein blauer Vogel', act: 'dem Vogel zuhören', sen: 'Der Vogel singt.', q: 'Wo ist der Vogel?', a: 'Der Vogel ist im Baum!', syn: null, var: null },
+    fish:   { word: 'Fisch', art: 'der Fisch', pl: 'die Fische', adj: 'ein bunter Fisch', act: 'dem Fisch zuschauen', sen: 'Der Fisch schwimmt im Wasser.', q: 'Wo ist der Fisch?', a: 'Der Fisch ist im Wasser!', syn: null, var: null },
+    tree:   { word: 'Baum', art: 'der Baum', pl: 'die Bäume', adj: 'ein großer Baum', act: 'den Baum anschauen', sen: 'Der Baum ist groß.', q: 'Wo ist der Baum?', a: 'Der Baum ist im Park!', syn: null, var: null },
+    flower: { word: 'Blume', art: 'die Blume', pl: 'die Blumen', adj: 'eine schöne Blume', act: 'an der Blume riechen', sen: 'Die Blume ist schön.', q: 'Wo ist die Blume?', a: 'Die Blume ist im Garten!', syn: null, var: null },
+    shoe:   { word: 'Schuh', art: 'der Schuh', pl: 'die Schuhe', adj: 'neue Schuhe', act: 'die Schuhe anziehen', sen: 'Ich ziehe meine Schuhe an.', q: 'Wo ist der Schuh?', a: 'Hier ist der Schuh!', syn: null, var: null },
+    hat:    { word: 'Hut', art: 'der Hut', pl: 'die Hüte', adj: 'ein Sonnenhut', act: 'den Hut aufsetzen', sen: 'Ich setze meinen Hut auf.', q: 'Wo ist der Hut?', a: 'Der Hut ist auf dem Kopf!', syn: 'Kappe', var: { 'de-AT': 'Kapperl (boné)' } },
+    sun:    { word: 'Sonne', art: 'die Sonne', pl: null, adj: 'die warme Sonne', act: 'in der Sonne spielen', sen: 'Die Sonne scheint.', q: 'Wo ist die Sonne?', a: 'Die Sonne ist am Himmel!', syn: null, var: null },
+    rain:   { word: 'Regen', art: 'der Regen', pl: null, adj: 'leiser Regen', act: 'dem Regen zuhören', sen: 'Es regnet!', q: 'Was fällt vom Himmel?', a: 'Der Regen!', syn: null, var: null },
+    car:    { word: 'Auto', art: 'das Auto', pl: 'die Autos', adj: 'ein rotes Auto', act: 'Auto fahren', sen: 'Wir fahren mit dem Auto.', q: 'Wo ist das Auto?', a: 'Hier ist das Auto!', syn: null, var: null },
+    bus:    { word: 'Bus', art: 'der Bus', pl: 'die Busse', adj: 'ein großer Bus', act: 'mit dem Bus fahren', sen: 'Der Bus ist groß.', q: 'Wo ist der Bus?', a: 'Da kommt der Bus!', syn: null, var: null },
+    sleep:  { word: 'schlafen', art: null, pl: null, adj: 'gut schlafen', act: 'Zeit zum Schlafen', sen: 'Ich gehe schlafen.', q: 'Wer schläft?', a: 'Das Baby schläft!', syn: null, var: null },
+    happy:  { word: 'fröhlich', art: null, pl: null, adj: 'ein fröhliches Kind', act: 'fröhlich sein', sen: 'Ich bin fröhlich!', q: 'Bist du fröhlich?', a: 'Ja, ich bin fröhlich!', syn: 'glücklich', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['de'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: Español (variantes es-ES / es-419 no campo var). */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['es'] = { lang: 'es', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'cama', art: 'la cama', pl: 'las camas', adj: 'una cama blandita', act: 'ir a la cama', sen: 'Me voy a la cama.', q: '¿Dónde está la cama?', a: '¡Aquí está la cama!', syn: null, var: null },
+    chair:  { word: 'silla', art: 'la silla', pl: 'las sillas', adj: 'una silla grande', act: 'sentarse en la silla', sen: 'Me siento en la silla.', q: '¿Dónde está la silla?', a: '¡Aquí está la silla!', syn: null, var: null },
+    door:   { word: 'puerta', art: 'la puerta', pl: 'las puertas', adj: 'una puerta abierta', act: 'abrir la puerta', sen: 'Vamos a abrir la puerta.', q: '¿Dónde está la puerta?', a: '¡Allí está la puerta!', syn: null, var: null },
+    key:    { word: 'llave', art: 'la llave', pl: 'las llaves', adj: 'una llave pequeña', act: 'girar la llave', sen: 'La llave abre la puerta.', q: '¿Dónde está la llave?', a: '¡Aquí está la llave!', syn: null, var: null },
+    spoon:  { word: 'cuchara', art: 'la cuchara', pl: 'las cucharas', adj: 'una cuchara grande', act: 'comer con la cuchara', sen: 'Como con la cuchara.', q: '¿Dónde está la cuchara?', a: '¡La cuchara está en la mesa!', syn: null, var: null },
+    ball:   { word: 'pelota', art: 'la pelota', pl: 'las pelotas', adj: 'una pelota roja', act: 'jugar a la pelota', sen: 'Quiero jugar a la pelota.', q: '¿Dónde está la pelota?', a: '¡Aquí está la pelota!', syn: 'balón', var: null },
+    book:   { word: 'libro', art: 'el libro', pl: 'los libros', adj: 'un libro de colores', act: 'leer un libro', sen: 'Vamos a leer un libro.', q: '¿Dónde está el libro?', a: '¡Aquí está el libro!', syn: null, var: null },
+    soap:   { word: 'jabón', art: 'el jabón', pl: 'los jabones', adj: 'un jabón espumoso', act: 'lavarse las manos', sen: 'Me lavo las manos con jabón.', q: '¿Dónde está el jabón?', a: '¡El jabón está en el baño!', syn: null, var: null },
+    mom:    { word: 'mamá', art: 'la mamá', pl: null, adj: 'mamá querida', act: 'abrazar a mamá', sen: 'Quiero mucho a mi mamá.', q: '¿Dónde está mamá?', a: '¡Mamá está aquí!', syn: 'mami', var: null },
+    dad:    { word: 'papá', art: 'el papá', pl: null, adj: 'papá querido', act: 'abrazar a papá', sen: 'Quiero mucho a mi papá.', q: '¿Dónde está papá?', a: '¡Papá está aquí!', syn: 'papi', var: null },
+    baby:   { word: 'bebé', art: 'el bebé', pl: 'los bebés', adj: 'un bebé pequeñito', act: 'arrullar al bebé', sen: 'El bebé está durmiendo.', q: '¿Dónde está el bebé?', a: '¡El bebé está aquí!', syn: null, var: null },
+    hand:   { word: 'mano', art: 'la mano', pl: 'las manos', adj: 'una mano limpia', act: 'aplaudir con las manos', sen: 'Me lavo las manos.', q: '¿Dónde está tu mano?', a: '¡Aquí está mi mano!', syn: 'manita', var: null },
+    nose:   { word: 'nariz', art: 'la nariz', pl: 'las narices', adj: 'una nariz pequeña', act: 'tocarse la nariz', sen: 'Esta es mi nariz.', q: '¿Dónde está tu nariz?', a: '¡Aquí está mi nariz!', syn: null, var: null },
+    eyes:   { word: 'ojo', art: 'el ojo', pl: 'los ojos', adj: 'ojos grandes', act: 'cerrar los ojos', sen: 'Cierro los ojos.', q: '¿Dónde están tus ojos?', a: '¡Aquí están mis ojos!', syn: null, var: null },
+    apple:  { word: 'manzana', art: 'la manzana', pl: 'las manzanas', adj: 'una manzana roja', act: 'comer una manzana', sen: 'Quiero una manzana.', q: '¿Dónde está la manzana?', a: '¡Aquí está la manzana!', syn: null, var: null },
+    banana: { word: 'plátano', art: 'el plátano', pl: 'los plátanos', adj: 'un plátano amarillo', act: 'pelar el plátano', sen: 'Me gustan los plátanos.', q: '¿Dónde está el plátano?', a: '¡Aquí está el plátano!', syn: null, var: { 'es-ES': 'plátano', 'es-419': 'banana' } },
+    water:  { word: 'agua', art: 'el agua', pl: null, adj: 'agua fresquita', act: 'beber agua', sen: 'Quiero beber agua.', q: '¿Dónde está el agua?', a: '¡El agua está en el vaso!', syn: null, var: null },
+    milk:   { word: 'leche', art: 'la leche', pl: null, adj: 'leche calentita', act: 'beber leche', sen: 'Bebo leche por la mañana.', q: '¿Dónde está la leche?', a: '¡La leche está en el vaso!', syn: null, var: null },
+    bread:  { word: 'pan', art: 'el pan', pl: 'los panes', adj: 'pan calentito', act: 'comer pan', sen: 'Quiero pan con mantequilla.', q: '¿Dónde está el pan?', a: '¡El pan está en la mesa!', syn: null, var: null },
+    red:    { word: 'rojo', art: null, pl: null, adj: 'una pelota roja', act: 'pintar de rojo', sen: 'La manzana es roja.', q: '¿Qué es rojo?', a: '¡La manzana es roja!', syn: null, var: null },
+    blue:   { word: 'azul', art: null, pl: null, adj: 'el cielo azul', act: 'pintar de azul', sen: 'El cielo es azul.', q: '¿Qué es azul?', a: '¡El cielo es azul!', syn: null, var: null },
+    three:  { word: 'tres', art: null, pl: null, adj: 'tres manzanas', act: 'contar hasta tres', sen: '¡Uno, dos, tres!', q: '¿Cuántos hay?', a: '¡Hay tres!', syn: null, var: null },
+    dog:    { word: 'perro', art: 'el perro', pl: 'los perros', adj: 'un perro suave', act: 'acariciar al perro', sen: 'El perro hace guau-guau.', q: '¿Dónde está el perro?', a: '¡Aquí está el perro!', syn: 'perrito', var: null },
+    cat:    { word: 'gato', art: 'el gato', pl: 'los gatos', adj: 'un gato suave', act: 'acariciar al gato', sen: 'El gato hace miau.', q: '¿Dónde está el gato?', a: '¡Aquí está el gato!', syn: 'gatito', var: null },
+    bird:   { word: 'pájaro', art: 'el pájaro', pl: 'los pájaros', adj: 'un pájaro azul', act: 'escuchar al pájaro', sen: 'El pájaro canta.', q: '¿Dónde está el pájaro?', a: '¡El pájaro está en el árbol!', syn: 'pajarito', var: null },
+    fish:   { word: 'pez', art: 'el pez', pl: 'los peces', adj: 'un pez de colores', act: 'mirar al pez', sen: 'El pez nada en el agua.', q: '¿Dónde está el pez?', a: '¡El pez está en el agua!', syn: 'pececito', var: null },
+    tree:   { word: 'árbol', art: 'el árbol', pl: 'los árboles', adj: 'un árbol grande', act: 'mirar el árbol', sen: 'El árbol es grande.', q: '¿Dónde está el árbol?', a: '¡El árbol está en el parque!', syn: null, var: null },
+    flower: { word: 'flor', art: 'la flor', pl: 'las flores', adj: 'una flor bonita', act: 'oler la flor', sen: 'La flor es bonita.', q: '¿Dónde está la flor?', a: '¡La flor está en el jardín!', syn: 'florecita', var: null },
+    shoe:   { word: 'zapato', art: 'el zapato', pl: 'los zapatos', adj: 'zapatos nuevos', act: 'ponerse los zapatos', sen: 'Me pongo los zapatos.', q: '¿Dónde está el zapato?', a: '¡Aquí está el zapato!', syn: null, var: null },
+    hat:    { word: 'sombrero', art: 'el sombrero', pl: 'los sombreros', adj: 'un sombrero de sol', act: 'ponerse el sombrero', sen: 'Me pongo el sombrero.', q: '¿Dónde está el sombrero?', a: '¡El sombrero está en la cabeza!', syn: 'gorra', var: null },
+    sun:    { word: 'sol', art: 'el sol', pl: null, adj: 'el sol calentito', act: 'jugar al sol', sen: 'El sol brilla.', q: '¿Dónde está el sol?', a: '¡El sol está en el cielo!', syn: null, var: null },
+    rain:   { word: 'lluvia', art: 'la lluvia', pl: null, adj: 'lluvia suave', act: 'escuchar la lluvia', sen: '¡Está lloviendo!', q: '¿Qué cae del cielo?', a: '¡La lluvia!', syn: null, var: null },
+    car:    { word: 'coche', art: 'el coche', pl: 'los coches', adj: 'un coche rojo', act: 'pasear en coche', sen: 'Vamos en coche.', q: '¿Dónde está el coche?', a: '¡Aquí está el coche!', syn: null, var: { 'es-ES': 'coche', 'es-419': 'carro / auto' } },
+    bus:    { word: 'autobús', art: 'el autobús', pl: 'los autobuses', adj: 'un autobús grande', act: 'viajar en autobús', sen: 'El autobús es grande.', q: '¿Dónde está el autobús?', a: '¡Ahí viene el autobús!', syn: null, var: { 'es-419': 'camión (MX) / colectivo (AR)' } },
+    sleep:  { word: 'dormir', art: null, pl: null, adj: 'dormir rico', act: 'hora de dormir', sen: 'Me voy a dormir.', q: '¿Quién duerme?', a: '¡El bebé duerme!', syn: null, var: null },
+    happy:  { word: 'feliz', art: null, pl: null, adj: 'muy feliz', act: 'estar feliz', sen: '¡Estoy feliz!', q: '¿Estás feliz?', a: '¡Sí, estoy feliz!', syn: 'contento', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['es'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: Français. */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['fr'] = { lang: 'fr', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'lit', art: 'le lit', pl: 'les lits', adj: 'un lit douillet', act: 'aller au lit', sen: 'Je vais au lit.', q: 'Où est le lit ?', a: 'Voici le lit !', syn: null, var: null },
+    chair:  { word: 'chaise', art: 'la chaise', pl: 'les chaises', adj: 'une grande chaise', act: "s'asseoir sur la chaise", sen: "Je m'assieds sur la chaise.", q: 'Où est la chaise ?', a: 'Voici la chaise !', syn: null, var: null },
+    door:   { word: 'porte', art: 'la porte', pl: 'les portes', adj: 'une porte ouverte', act: 'ouvrir la porte', sen: 'On ouvre la porte.', q: 'Où est la porte ?', a: 'Voilà la porte !', syn: null, var: null },
+    key:    { word: 'clé', art: 'la clé', pl: 'les clés', adj: 'une petite clé', act: 'tourner la clé', sen: 'La clé ouvre la porte.', q: 'Où est la clé ?', a: 'Voici la clé !', syn: null, var: null },
+    spoon:  { word: 'cuillère', art: 'la cuillère', pl: 'les cuillères', adj: 'une grande cuillère', act: 'manger avec la cuillère', sen: 'Je mange avec la cuillère.', q: 'Où est la cuillère ?', a: 'La cuillère est sur la table !', syn: null, var: null },
+    ball:   { word: 'ballon', art: 'le ballon', pl: 'les ballons', adj: 'un ballon rouge', act: 'jouer au ballon', sen: 'Je veux jouer au ballon.', q: 'Où est le ballon ?', a: 'Voici le ballon !', syn: 'balle', var: null },
+    book:   { word: 'livre', art: 'le livre', pl: 'les livres', adj: "un livre d'images", act: 'lire un livre', sen: 'On lit un livre.', q: 'Où est le livre ?', a: 'Voici le livre !', syn: null, var: null },
+    soap:   { word: 'savon', art: 'le savon', pl: 'les savons', adj: 'un savon qui mousse', act: 'se laver les mains', sen: 'Je me lave les mains avec du savon.', q: 'Où est le savon ?', a: 'Le savon est dans la salle de bain !', syn: null, var: null },
+    mom:    { word: 'maman', art: 'la maman', pl: null, adj: 'maman chérie', act: 'faire un câlin à maman', sen: "J'aime ma maman.", q: 'Où est maman ?', a: 'Maman est là !', syn: null, var: null },
+    dad:    { word: 'papa', art: 'le papa', pl: null, adj: 'papa chéri', act: 'faire un câlin à papa', sen: "J'aime mon papa.", q: 'Où est papa ?', a: 'Papa est là !', syn: null, var: null },
+    baby:   { word: 'bébé', art: 'le bébé', pl: 'les bébés', adj: 'un petit bébé', act: 'bercer le bébé', sen: 'Le bébé dort.', q: 'Où est le bébé ?', a: 'Le bébé est là !', syn: null, var: null },
+    hand:   { word: 'main', art: 'la main', pl: 'les mains', adj: 'une main propre', act: 'taper des mains', sen: 'Je me lave les mains.', q: 'Où est ta main ?', a: 'Voici ma main !', syn: null, var: null },
+    nose:   { word: 'nez', art: 'le nez', pl: 'les nez', adj: 'un petit nez', act: 'toucher son nez', sen: "C'est mon nez.", q: 'Où est ton nez ?', a: 'Voici mon nez !', syn: null, var: null },
+    eyes:   { word: 'œil', art: "l'œil", pl: 'les yeux', adj: 'de grands yeux', act: 'fermer les yeux', sen: 'Je ferme les yeux.', q: 'Où sont tes yeux ?', a: 'Voici mes yeux !', syn: null, var: null },
+    apple:  { word: 'pomme', art: 'la pomme', pl: 'les pommes', adj: 'une pomme rouge', act: 'manger une pomme', sen: 'Je veux une pomme.', q: 'Où est la pomme ?', a: 'Voici la pomme !', syn: null, var: null },
+    banana: { word: 'banane', art: 'la banane', pl: 'les bananes', adj: 'une banane jaune', act: 'éplucher la banane', sen: "J'aime les bananes.", q: 'Où est la banane ?', a: 'Voici la banane !', syn: null, var: null },
+    water:  { word: 'eau', art: "l'eau", pl: null, adj: "de l'eau fraîche", act: "boire de l'eau", sen: "Je veux boire de l'eau.", q: "Où est l'eau ?", a: "L'eau est dans le verre !", syn: null, var: null },
+    milk:   { word: 'lait', art: 'le lait', pl: null, adj: 'du lait chaud', act: 'boire du lait', sen: 'Je bois du lait le matin.', q: 'Où est le lait ?', a: 'Le lait est dans le verre !', syn: null, var: null },
+    bread:  { word: 'pain', art: 'le pain', pl: 'les pains', adj: 'du pain chaud', act: 'manger du pain', sen: 'Je veux du pain avec du beurre.', q: 'Où est le pain ?', a: 'Le pain est sur la table !', syn: null, var: null },
+    red:    { word: 'rouge', art: null, pl: null, adj: 'un ballon rouge', act: 'peindre en rouge', sen: 'La pomme est rouge.', q: "Qu'est-ce qui est rouge ?", a: 'La pomme est rouge !', syn: null, var: null },
+    blue:   { word: 'bleu', art: null, pl: null, adj: 'le ciel bleu', act: 'peindre en bleu', sen: 'Le ciel est bleu.', q: "Qu'est-ce qui est bleu ?", a: 'Le ciel est bleu !', syn: null, var: null },
+    three:  { word: 'trois', art: null, pl: null, adj: 'trois pommes', act: "compter jusqu'à trois", sen: 'Un, deux, trois !', q: "Il y en a combien ?", a: 'Il y en a trois !', syn: null, var: null },
+    dog:    { word: 'chien', art: 'le chien', pl: 'les chiens', adj: 'un chien tout doux', act: 'caresser le chien', sen: 'Le chien fait ouaf-ouaf.', q: 'Où est le chien ?', a: 'Voici le chien !', syn: 'toutou', var: null },
+    cat:    { word: 'chat', art: 'le chat', pl: 'les chats', adj: 'un chat tout doux', act: 'caresser le chat', sen: 'Le chat fait miaou.', q: 'Où est le chat ?', a: 'Voici le chat !', syn: 'minou', var: null },
+    bird:   { word: 'oiseau', art: "l'oiseau", pl: 'les oiseaux', adj: 'un oiseau bleu', act: "écouter l'oiseau", sen: "L'oiseau chante.", q: "Où est l'oiseau ?", a: "L'oiseau est dans l'arbre !", syn: null, var: null },
+    fish:   { word: 'poisson', art: 'le poisson', pl: 'les poissons', adj: 'un poisson coloré', act: 'regarder le poisson', sen: "Le poisson nage dans l'eau.", q: 'Où est le poisson ?', a: "Le poisson est dans l'eau !", syn: null, var: null },
+    tree:   { word: 'arbre', art: "l'arbre", pl: 'les arbres', adj: 'un grand arbre', act: "regarder l'arbre", sen: "L'arbre est grand.", q: "Où est l'arbre ?", a: "L'arbre est dans le parc !", syn: null, var: null },
+    flower: { word: 'fleur', art: 'la fleur', pl: 'les fleurs', adj: 'une jolie fleur', act: 'sentir la fleur', sen: 'La fleur est jolie.', q: 'Où est la fleur ?', a: 'La fleur est dans le jardin !', syn: null, var: null },
+    shoe:   { word: 'chaussure', art: 'la chaussure', pl: 'les chaussures', adj: 'des chaussures neuves', act: 'mettre ses chaussures', sen: 'Je mets mes chaussures.', q: 'Où est la chaussure ?', a: 'Voici la chaussure !', syn: 'basket', var: null },
+    hat:    { word: 'chapeau', art: 'le chapeau', pl: 'les chapeaux', adj: 'un chapeau de soleil', act: 'mettre le chapeau', sen: 'Je mets mon chapeau.', q: 'Où est le chapeau ?', a: 'Le chapeau est sur la tête !', syn: 'casquette', var: null },
+    sun:    { word: 'soleil', art: 'le soleil', pl: null, adj: 'le soleil chaud', act: 'jouer au soleil', sen: 'Le soleil brille.', q: 'Où est le soleil ?', a: 'Le soleil est dans le ciel !', syn: null, var: null },
+    rain:   { word: 'pluie', art: 'la pluie', pl: null, adj: 'une petite pluie', act: 'écouter la pluie', sen: 'Il pleut !', q: "Qu'est-ce qui tombe du ciel ?", a: 'La pluie !', syn: null, var: null },
+    car:    { word: 'voiture', art: 'la voiture', pl: 'les voitures', adj: 'une voiture rouge', act: 'rouler en voiture', sen: 'On part en voiture.', q: 'Où est la voiture ?', a: 'Voici la voiture !', syn: 'auto', var: null },
+    bus:    { word: 'bus', art: 'le bus', pl: 'les bus', adj: 'un grand bus', act: 'prendre le bus', sen: 'Le bus est grand.', q: 'Où est le bus ?', a: 'Voilà le bus !', syn: null, var: null },
+    sleep:  { word: 'dormir', art: null, pl: null, adj: 'bien dormir', act: "l'heure de dormir", sen: 'Je vais dormir.', q: 'Qui dort ?', a: 'Le bébé dort !', syn: 'faire dodo', var: null },
+    happy:  { word: 'content', art: null, pl: null, adj: 'un enfant content', act: 'être content', sen: 'Je suis content !', q: 'Tu es content ?', a: 'Oui, je suis content !', syn: 'joyeux', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['fr'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: Italiano. */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['it'] = { lang: 'it', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'letto', art: 'il letto', pl: 'i letti', adj: 'un letto morbido', act: 'andare a letto', sen: 'Vado a letto.', q: "Dov'è il letto?", a: 'Ecco il letto!', syn: 'lettino', var: null },
+    chair:  { word: 'sedia', art: 'la sedia', pl: 'le sedie', adj: 'una sedia grande', act: 'sedersi sulla sedia', sen: 'Mi siedo sulla sedia.', q: "Dov'è la sedia?", a: 'Ecco la sedia!', syn: null, var: null },
+    door:   { word: 'porta', art: 'la porta', pl: 'le porte', adj: 'una porta aperta', act: 'aprire la porta', sen: 'Apriamo la porta.', q: "Dov'è la porta?", a: 'Ecco la porta!', syn: null, var: null },
+    key:    { word: 'chiave', art: 'la chiave', pl: 'le chiavi', adj: 'una piccola chiave', act: 'girare la chiave', sen: 'La chiave apre la porta.', q: "Dov'è la chiave?", a: 'Ecco la chiave!', syn: null, var: null },
+    spoon:  { word: 'cucchiaio', art: 'il cucchiaio', pl: 'i cucchiai', adj: 'un cucchiaio grande', act: 'mangiare col cucchiaio', sen: 'Mangio col cucchiaio.', q: "Dov'è il cucchiaio?", a: 'Il cucchiaio è sul tavolo!', syn: null, var: null },
+    ball:   { word: 'palla', art: 'la palla', pl: 'le palle', adj: 'una palla rossa', act: 'giocare a palla', sen: 'Voglio giocare a palla.', q: "Dov'è la palla?", a: 'Ecco la palla!', syn: 'pallone', var: null },
+    book:   { word: 'libro', art: 'il libro', pl: 'i libri', adj: 'un libro colorato', act: 'leggere un libro', sen: 'Leggiamo un libro.', q: "Dov'è il libro?", a: 'Ecco il libro!', syn: null, var: null },
+    soap:   { word: 'sapone', art: 'il sapone', pl: 'i saponi', adj: 'un sapone profumato', act: 'lavarsi le mani', sen: 'Mi lavo le mani con il sapone.', q: "Dov'è il sapone?", a: 'Il sapone è in bagno!', syn: null, var: null },
+    mom:    { word: 'mamma', art: 'la mamma', pl: null, adj: 'mamma cara', act: 'abbracciare la mamma', sen: 'Amo la mia mamma.', q: "Dov'è la mamma?", a: 'La mamma è qui!', syn: null, var: null },
+    dad:    { word: 'papà', art: 'il papà', pl: null, adj: 'papà caro', act: 'abbracciare il papà', sen: 'Amo il mio papà.', q: "Dov'è il papà?", a: 'Il papà è qui!', syn: null, var: null },
+    baby:   { word: 'bebè', art: 'il bebè', pl: 'i bebè', adj: 'un bebè piccolino', act: 'cullare il bebè', sen: 'Il bebè dorme.', q: "Dov'è il bebè?", a: 'Il bebè è qui!', syn: 'bimbo', var: null },
+    hand:   { word: 'mano', art: 'la mano', pl: 'le mani', adj: 'una mano pulita', act: 'battere le mani', sen: 'Mi lavo le mani.', q: "Dov'è la tua mano?", a: 'Ecco la mia mano!', syn: 'manina', var: null },
+    nose:   { word: 'naso', art: 'il naso', pl: 'i nasi', adj: 'un naso piccolo', act: 'toccarsi il naso', sen: 'Questo è il mio naso.', q: "Dov'è il tuo naso?", a: 'Ecco il mio naso!', syn: 'nasino', var: null },
+    eyes:   { word: 'occhio', art: "l'occhio", pl: 'gli occhi', adj: 'occhi grandi', act: 'chiudere gli occhi', sen: 'Chiudo gli occhi.', q: 'Dove sono i tuoi occhi?', a: 'Ecco i miei occhi!', syn: null, var: null },
+    apple:  { word: 'mela', art: 'la mela', pl: 'le mele', adj: 'una mela rossa', act: 'mangiare una mela', sen: 'Voglio una mela.', q: "Dov'è la mela?", a: 'Ecco la mela!', syn: null, var: null },
+    banana: { word: 'banana', art: 'la banana', pl: 'le banane', adj: 'una banana gialla', act: 'sbucciare la banana', sen: 'Mi piacciono le banane.', q: "Dov'è la banana?", a: 'Ecco la banana!', syn: null, var: null },
+    water:  { word: 'acqua', art: "l'acqua", pl: null, adj: 'acqua fresca', act: 'bere acqua', sen: "Voglio bere l'acqua.", q: "Dov'è l'acqua?", a: "L'acqua è nel bicchiere!", syn: null, var: null },
+    milk:   { word: 'latte', art: 'il latte', pl: null, adj: 'latte caldo', act: 'bere il latte', sen: 'Bevo il latte al mattino.', q: "Dov'è il latte?", a: 'Il latte è nel bicchiere!', syn: null, var: null },
+    bread:  { word: 'pane', art: 'il pane', pl: null, adj: 'pane caldo', act: 'mangiare il pane', sen: 'Voglio pane e burro.', q: "Dov'è il pane?", a: 'Il pane è sul tavolo!', syn: 'panino', var: null },
+    red:    { word: 'rosso', art: null, pl: null, adj: 'una palla rossa', act: 'colorare di rosso', sen: 'La mela è rossa.', q: "Cos'è rosso?", a: 'La mela è rossa!', syn: null, var: null },
+    blue:   { word: 'blu', art: null, pl: null, adj: 'il cielo blu', act: 'colorare di blu', sen: 'Il cielo è blu.', q: "Cos'è blu?", a: 'Il cielo è blu!', syn: 'azzurro', var: null },
+    three:  { word: 'tre', art: null, pl: null, adj: 'tre mele', act: 'contare fino a tre', sen: 'Uno, due, tre!', q: 'Quanti sono?', a: 'Sono tre!', syn: null, var: null },
+    dog:    { word: 'cane', art: 'il cane', pl: 'i cani', adj: 'un cane morbido', act: 'accarezzare il cane', sen: 'Il cane fa bau-bau.', q: "Dov'è il cane?", a: 'Ecco il cane!', syn: 'cagnolino', var: null },
+    cat:    { word: 'gatto', art: 'il gatto', pl: 'i gatti', adj: 'un gatto morbido', act: 'accarezzare il gatto', sen: 'Il gatto fa miao.', q: "Dov'è il gatto?", a: 'Ecco il gatto!', syn: 'micio', var: null },
+    bird:   { word: 'uccellino', art: "l'uccellino", pl: 'gli uccellini', adj: 'un uccellino blu', act: "ascoltare l'uccellino", sen: "L'uccellino canta.", q: "Dov'è l'uccellino?", a: "L'uccellino è sull'albero!", syn: null, var: null },
+    fish:   { word: 'pesce', art: 'il pesce', pl: 'i pesci', adj: 'un pesce colorato', act: 'guardare il pesce', sen: "Il pesce nuota nell'acqua.", q: "Dov'è il pesce?", a: "Il pesce è nell'acqua!", syn: 'pesciolino', var: null },
+    tree:   { word: 'albero', art: "l'albero", pl: 'gli alberi', adj: 'un albero grande', act: "guardare l'albero", sen: "L'albero è grande.", q: "Dov'è l'albero?", a: "L'albero è nel parco!", syn: null, var: null },
+    flower: { word: 'fiore', art: 'il fiore', pl: 'i fiori', adj: 'un bel fiore', act: 'annusare il fiore', sen: 'Il fiore è bello.', q: "Dov'è il fiore?", a: 'Il fiore è in giardino!', syn: 'fiorellino', var: null },
+    shoe:   { word: 'scarpa', art: 'la scarpa', pl: 'le scarpe', adj: 'scarpe nuove', act: 'mettersi le scarpe', sen: 'Mi metto le scarpe.', q: "Dov'è la scarpa?", a: 'Ecco la scarpa!', syn: 'scarpina', var: null },
+    hat:    { word: 'cappello', art: 'il cappello', pl: 'i cappelli', adj: 'un cappello da sole', act: 'mettersi il cappello', sen: 'Mi metto il cappello.', q: "Dov'è il cappello?", a: 'Il cappello è sulla testa!', syn: 'cappellino', var: null },
+    sun:    { word: 'sole', art: 'il sole', pl: null, adj: 'il sole caldo', act: 'giocare al sole', sen: 'Il sole splende.', q: "Dov'è il sole?", a: 'Il sole è nel cielo!', syn: null, var: null },
+    rain:   { word: 'pioggia', art: 'la pioggia', pl: null, adj: 'una pioggia leggera', act: 'ascoltare la pioggia', sen: 'Piove!', q: 'Cosa cade dal cielo?', a: 'La pioggia!', syn: null, var: null },
+    car:    { word: 'macchina', art: 'la macchina', pl: 'le macchine', adj: 'una macchina rossa', act: 'andare in macchina', sen: 'Andiamo in macchina.', q: "Dov'è la macchina?", a: 'Ecco la macchina!', syn: 'auto', var: null },
+    bus:    { word: 'autobus', art: "l'autobus", pl: 'gli autobus', adj: 'un autobus grande', act: "prendere l'autobus", sen: "L'autobus è grande.", q: "Dov'è l'autobus?", a: "Ecco l'autobus!", syn: null, var: null },
+    sleep:  { word: 'dormire', art: null, pl: null, adj: 'dormire bene', act: 'ora di dormire', sen: 'Vado a dormire.', q: 'Chi dorme?', a: 'Il bebè dorme!', syn: 'fare la nanna', var: null },
+    happy:  { word: 'felice', art: null, pl: null, adj: 'un bambino felice', act: 'essere felice', sen: 'Sono felice!', q: 'Sei felice?', a: 'Sì, sono felice!', syn: 'contento', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['it'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: Türkçe (sem artigos; plural regular -lar/-ler). */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['tr'] = { lang: 'tr', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'yatak', art: null, pl: 'yataklar', adj: 'yumuşak yatak', act: 'yatağa gitmek', sen: 'Yatağa gidiyorum.', q: 'Yatak nerede?', a: 'Yatak burada!', syn: null, var: null },
+    chair:  { word: 'sandalye', art: null, pl: 'sandalyeler', adj: 'büyük sandalye', act: 'sandalyeye oturmak', sen: 'Sandalyeye oturuyorum.', q: 'Sandalye nerede?', a: 'Sandalye burada!', syn: null, var: null },
+    door:   { word: 'kapı', art: null, pl: 'kapılar', adj: 'açık kapı', act: 'kapıyı açmak', sen: 'Kapıyı açalım.', q: 'Kapı nerede?', a: 'Kapı orada!', syn: null, var: null },
+    key:    { word: 'anahtar', art: null, pl: 'anahtarlar', adj: 'küçük anahtar', act: 'anahtarı çevirmek', sen: 'Anahtar kapıyı açar.', q: 'Anahtar nerede?', a: 'Anahtar burada!', syn: null, var: null },
+    spoon:  { word: 'kaşık', art: null, pl: 'kaşıklar', adj: 'büyük kaşık', act: 'kaşıkla yemek', sen: 'Kaşıkla yiyorum.', q: 'Kaşık nerede?', a: 'Kaşık masada!', syn: null, var: null },
+    ball:   { word: 'top', art: null, pl: 'toplar', adj: 'kırmızı top', act: 'top oynamak', sen: 'Top oynamak istiyorum.', q: 'Top nerede?', a: 'Top burada!', syn: null, var: null },
+    book:   { word: 'kitap', art: null, pl: 'kitaplar', adj: 'renkli kitap', act: 'kitap okumak', sen: 'Kitap okuyalım.', q: 'Kitap nerede?', a: 'Kitap burada!', syn: null, var: null },
+    soap:   { word: 'sabun', art: null, pl: 'sabunlar', adj: 'köpüklü sabun', act: 'elleri yıkamak', sen: 'Ellerimi sabunla yıkıyorum.', q: 'Sabun nerede?', a: 'Sabun banyoda!', syn: null, var: null },
+    mom:    { word: 'anne', art: null, pl: 'anneler', adj: 'canım anne', act: 'anneye sarılmak', sen: 'Annemi çok seviyorum.', q: 'Anne nerede?', a: 'Anne burada!', syn: 'anneciğim', var: null },
+    dad:    { word: 'baba', art: null, pl: 'babalar', adj: 'canım baba', act: 'babaya sarılmak', sen: 'Babamı çok seviyorum.', q: 'Baba nerede?', a: 'Baba burada!', syn: 'babacığım', var: null },
+    baby:   { word: 'bebek', art: null, pl: 'bebekler', adj: 'küçük bebek', act: 'bebeği sallamak', sen: 'Bebek uyuyor.', q: 'Bebek nerede?', a: 'Bebek burada!', syn: null, var: null },
+    hand:   { word: 'el', art: null, pl: 'eller', adj: 'temiz el', act: 'el çırpmak', sen: 'Ellerimi yıkıyorum.', q: 'Elin nerede?', a: 'Elim burada!', syn: null, var: null },
+    nose:   { word: 'burun', art: null, pl: 'burunlar', adj: 'küçük burun', act: 'burnuna dokunmak', sen: 'Bu benim burnum.', q: 'Burnun nerede?', a: 'Burnum burada!', syn: null, var: null },
+    eyes:   { word: 'göz', art: null, pl: 'gözler', adj: 'büyük gözler', act: 'gözleri kapatmak', sen: 'Gözlerimi kapatıyorum.', q: 'Gözlerin nerede?', a: 'Gözlerim burada!', syn: null, var: null },
+    apple:  { word: 'elma', art: null, pl: 'elmalar', adj: 'kırmızı elma', act: 'elma yemek', sen: 'Bir elma istiyorum.', q: 'Elma nerede?', a: 'Elma burada!', syn: null, var: null },
+    banana: { word: 'muz', art: null, pl: 'muzlar', adj: 'sarı muz', act: 'muzu soymak', sen: 'Muz severim.', q: 'Muz nerede?', a: 'Muz burada!', syn: null, var: null },
+    water:  { word: 'su', art: null, pl: 'sular', adj: 'serin su', act: 'su içmek', sen: 'Su içmek istiyorum.', q: 'Su nerede?', a: 'Su bardakta!', syn: null, var: null },
+    milk:   { word: 'süt', art: null, pl: null, adj: 'sıcak süt', act: 'süt içmek', sen: 'Sabahları süt içerim.', q: 'Süt nerede?', a: 'Süt bardakta!', syn: null, var: null },
+    bread:  { word: 'ekmek', art: null, pl: 'ekmekler', adj: 'sıcak ekmek', act: 'ekmek yemek', sen: 'Tereyağlı ekmek istiyorum.', q: 'Ekmek nerede?', a: 'Ekmek masada!', syn: null, var: null },
+    red:    { word: 'kırmızı', art: null, pl: null, adj: 'kırmızı top', act: 'kırmızıya boyamak', sen: 'Elma kırmızı.', q: 'Ne kırmızı?', a: 'Elma kırmızı!', syn: null, var: null },
+    blue:   { word: 'mavi', art: null, pl: null, adj: 'mavi gökyüzü', act: 'maviye boyamak', sen: 'Gökyüzü mavi.', q: 'Ne mavi?', a: 'Gökyüzü mavi!', syn: null, var: null },
+    three:  { word: 'üç', art: null, pl: null, adj: 'üç elma', act: 'üçe kadar saymak', sen: 'Bir, iki, üç!', q: 'Kaç tane?', a: 'Üç tane!', syn: null, var: null },
+    dog:    { word: 'köpek', art: null, pl: 'köpekler', adj: 'tüylü köpek', act: 'köpeği sevmek', sen: 'Köpek hav hav der.', q: 'Köpek nerede?', a: 'Köpek burada!', syn: null, var: null },
+    cat:    { word: 'kedi', art: null, pl: 'kediler', adj: 'yumuşak kedi', act: 'kediyi sevmek', sen: 'Kedi miyav der.', q: 'Kedi nerede?', a: 'Kedi burada!', syn: null, var: null },
+    bird:   { word: 'kuş', art: null, pl: 'kuşlar', adj: 'mavi kuş', act: 'kuşu dinlemek', sen: 'Kuş şarkı söylüyor.', q: 'Kuş nerede?', a: 'Kuş ağaçta!', syn: null, var: null },
+    fish:   { word: 'balık', art: null, pl: 'balıklar', adj: 'renkli balık', act: 'balığa bakmak', sen: 'Balık suda yüzüyor.', q: 'Balık nerede?', a: 'Balık suda!', syn: null, var: null },
+    tree:   { word: 'ağaç', art: null, pl: 'ağaçlar', adj: 'büyük ağaç', act: 'ağaca bakmak', sen: 'Ağaç büyük.', q: 'Ağaç nerede?', a: 'Ağaç parkta!', syn: null, var: null },
+    flower: { word: 'çiçek', art: null, pl: 'çiçekler', adj: 'güzel çiçek', act: 'çiçeği koklamak', sen: 'Çiçek çok güzel.', q: 'Çiçek nerede?', a: 'Çiçek bahçede!', syn: null, var: null },
+    shoe:   { word: 'ayakkabı', art: null, pl: 'ayakkabılar', adj: 'yeni ayakkabı', act: 'ayakkabı giymek', sen: 'Ayakkabılarımı giyiyorum.', q: 'Ayakkabı nerede?', a: 'Ayakkabı burada!', syn: null, var: null },
+    hat:    { word: 'şapka', art: null, pl: 'şapkalar', adj: 'güneş şapkası', act: 'şapka takmak', sen: 'Şapkamı takıyorum.', q: 'Şapka nerede?', a: 'Şapka kafamda!', syn: null, var: null },
+    sun:    { word: 'güneş', art: null, pl: null, adj: 'sıcak güneş', act: 'güneşte oynamak', sen: 'Güneş parlıyor.', q: 'Güneş nerede?', a: 'Güneş gökyüzünde!', syn: null, var: null },
+    rain:   { word: 'yağmur', art: null, pl: null, adj: 'ince yağmur', act: 'yağmuru dinlemek', sen: 'Yağmur yağıyor!', q: 'Gökten ne yağıyor?', a: 'Yağmur!', syn: null, var: null },
+    car:    { word: 'araba', art: null, pl: 'arabalar', adj: 'kırmızı araba', act: 'arabaya binmek', sen: 'Arabayla gidiyoruz.', q: 'Araba nerede?', a: 'Araba burada!', syn: null, var: null },
+    bus:    { word: 'otobüs', art: null, pl: 'otobüsler', adj: 'büyük otobüs', act: 'otobüse binmek', sen: 'Otobüs çok büyük.', q: 'Otobüs nerede?', a: 'Otobüs geliyor!', syn: null, var: null },
+    sleep:  { word: 'uyumak', art: null, pl: null, adj: 'mışıl mışıl uyumak', act: 'uyku zamanı', sen: 'Uyumaya gidiyorum.', q: 'Kim uyuyor?', a: 'Bebek uyuyor!', syn: null, var: null },
+    happy:  { word: 'mutlu', art: null, pl: null, adj: 'mutlu çocuk', act: 'mutlu olmak', sen: 'Mutluyum!', q: 'Mutlu musun?', a: 'Evet, mutluyum!', syn: 'neşeli', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['tr'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: 中文 (mandarim simplificado).
+ * Sem artigos/plural gramatical: art = forma com classificador; rom = pinyin. */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['zh'] = { lang: 'zh', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: '床', rom: 'chuáng', art: '一张床', pl: null, adj: '软软的床', act: '上床睡觉', sen: '我要上床睡觉。', q: '床在哪里？', a: '床在这里！', syn: null, var: null },
+    chair:  { word: '椅子', rom: 'yǐzi', art: '一把椅子', pl: null, adj: '大椅子', act: '坐在椅子上', sen: '我坐在椅子上。', q: '椅子在哪里？', a: '椅子在这里！', syn: null, var: null },
+    door:   { word: '门', rom: 'mén', art: '一扇门', pl: null, adj: '开着的门', act: '开门', sen: '我们开门吧。', q: '门在哪里？', a: '门在那里！', syn: null, var: null },
+    key:    { word: '钥匙', rom: 'yàoshi', art: '一把钥匙', pl: null, adj: '小钥匙', act: '转动钥匙', sen: '钥匙能开门。', q: '钥匙在哪里？', a: '钥匙在这里！', syn: null, var: null },
+    spoon:  { word: '勺子', rom: 'sháozi', art: '一把勺子', pl: null, adj: '大勺子', act: '用勺子吃饭', sen: '我用勺子吃饭。', q: '勺子在哪里？', a: '勺子在桌子上！', syn: null, var: null },
+    ball:   { word: '球', rom: 'qiú', art: '一个球', pl: null, adj: '红色的球', act: '玩球', sen: '我想玩球。', q: '球在哪里？', a: '球在这里！', syn: null, var: null },
+    book:   { word: '书', rom: 'shū', art: '一本书', pl: null, adj: '彩色的书', act: '看书', sen: '我们一起看书吧。', q: '书在哪里？', a: '书在这里！', syn: null, var: null },
+    soap:   { word: '香皂', rom: 'xiāngzào', art: '一块香皂', pl: null, adj: '香香的香皂', act: '洗手', sen: '我用香皂洗手。', q: '香皂在哪里？', a: '香皂在浴室里！', syn: '肥皂 (féizào)', var: null },
+    mom:    { word: '妈妈', rom: 'māma', art: '我的妈妈', pl: null, adj: '亲爱的妈妈', act: '抱抱妈妈', sen: '我爱妈妈。', q: '妈妈在哪里？', a: '妈妈在这里！', syn: null, var: null },
+    dad:    { word: '爸爸', rom: 'bàba', art: '我的爸爸', pl: null, adj: '亲爱的爸爸', act: '抱抱爸爸', sen: '我爱爸爸。', q: '爸爸在哪里？', a: '爸爸在这里！', syn: null, var: null },
+    baby:   { word: '宝宝', rom: 'bǎobao', art: '一个宝宝', pl: null, adj: '小宝宝', act: '哄宝宝', sen: '宝宝在睡觉。', q: '宝宝在哪里？', a: '宝宝在这里！', syn: '婴儿 (yīng’ér)', var: null },
+    hand:   { word: '手', rom: 'shǒu', art: '一只手', pl: null, adj: '干净的小手', act: '拍拍手', sen: '我洗手。', q: '你的手在哪里？', a: '我的手在这里！', syn: null, var: null },
+    nose:   { word: '鼻子', rom: 'bízi', art: '一个鼻子', pl: null, adj: '小鼻子', act: '摸摸鼻子', sen: '这是我的鼻子。', q: '你的鼻子在哪里？', a: '我的鼻子在这里！', syn: null, var: null },
+    eyes:   { word: '眼睛', rom: 'yǎnjing', art: '一双眼睛', pl: null, adj: '大眼睛', act: '闭上眼睛', sen: '我闭上眼睛。', q: '你的眼睛在哪里？', a: '我的眼睛在这里！', syn: null, var: null },
+    apple:  { word: '苹果', rom: 'píngguǒ', art: '一个苹果', pl: null, adj: '红苹果', act: '吃苹果', sen: '我想要一个苹果。', q: '苹果在哪里？', a: '苹果在这里！', syn: null, var: null },
+    banana: { word: '香蕉', rom: 'xiāngjiāo', art: '一根香蕉', pl: null, adj: '黄香蕉', act: '剥香蕉', sen: '我喜欢香蕉。', q: '香蕉在哪里？', a: '香蕉在这里！', syn: null, var: null },
+    water:  { word: '水', rom: 'shuǐ', art: '一杯水', pl: null, adj: '凉凉的水', act: '喝水', sen: '我想喝水。', q: '水在哪里？', a: '水在杯子里！', syn: null, var: null },
+    milk:   { word: '牛奶', rom: 'niúnǎi', art: '一杯牛奶', pl: null, adj: '热牛奶', act: '喝牛奶', sen: '我早上喝牛奶。', q: '牛奶在哪里？', a: '牛奶在杯子里！', syn: null, var: null },
+    bread:  { word: '面包', rom: 'miànbāo', art: '一块面包', pl: null, adj: '热面包', act: '吃面包', sen: '我想吃面包。', q: '面包在哪里？', a: '面包在桌子上！', syn: null, var: null },
+    red:    { word: '红色', rom: 'hóngsè', art: null, pl: null, adj: '红色的球', act: '涂红色', sen: '苹果是红色的。', q: '什么是红色的？', a: '苹果是红色的！', syn: null, var: null },
+    blue:   { word: '蓝色', rom: 'lánsè', art: null, pl: null, adj: '蓝色的天空', act: '涂蓝色', sen: '天空是蓝色的。', q: '什么是蓝色的？', a: '天空是蓝色的！', syn: null, var: null },
+    three:  { word: '三', rom: 'sān', art: null, pl: null, adj: '三个苹果', act: '数到三', sen: '一、二、三！', q: '有几个？', a: '有三个！', syn: null, var: null },
+    dog:    { word: '狗', rom: 'gǒu', art: '一只狗', pl: null, adj: '毛茸茸的狗', act: '摸摸狗', sen: '狗汪汪叫。', q: '狗在哪里？', a: '狗在这里！', syn: '小狗 (xiǎogǒu)', var: null },
+    cat:    { word: '猫', rom: 'māo', art: '一只猫', pl: null, adj: '软软的猫', act: '摸摸猫', sen: '猫喵喵叫。', q: '猫在哪里？', a: '猫在这里！', syn: '小猫 (xiǎomāo)', var: null },
+    bird:   { word: '鸟', rom: 'niǎo', art: '一只鸟', pl: null, adj: '蓝色的鸟', act: '听鸟唱歌', sen: '鸟在唱歌。', q: '鸟在哪里？', a: '鸟在树上！', syn: '小鸟 (xiǎoniǎo)', var: null },
+    fish:   { word: '鱼', rom: 'yú', art: '一条鱼', pl: null, adj: '彩色的鱼', act: '看鱼游泳', sen: '鱼在水里游。', q: '鱼在哪里？', a: '鱼在水里！', syn: '小鱼 (xiǎoyú)', var: null },
+    tree:   { word: '树', rom: 'shù', art: '一棵树', pl: null, adj: '大树', act: '看大树', sen: '树很大。', q: '树在哪里？', a: '树在公园里！', syn: null, var: null },
+    flower: { word: '花', rom: 'huā', art: '一朵花', pl: null, adj: '漂亮的花', act: '闻闻花', sen: '花很漂亮。', q: '花在哪里？', a: '花在花园里！', syn: '小花 (xiǎohuā)', var: null },
+    shoe:   { word: '鞋子', rom: 'xiézi', art: '一双鞋子', pl: null, adj: '新鞋子', act: '穿鞋子', sen: '我穿鞋子。', q: '鞋子在哪里？', a: '鞋子在这里！', syn: null, var: null },
+    hat:    { word: '帽子', rom: 'màozi', art: '一顶帽子', pl: null, adj: '太阳帽', act: '戴帽子', sen: '我戴帽子。', q: '帽子在哪里？', a: '帽子在头上！', syn: null, var: null },
+    sun:    { word: '太阳', rom: 'tàiyáng', art: '一个太阳', pl: null, adj: '暖暖的太阳', act: '在太阳下玩', sen: '太阳在发光。', q: '太阳在哪里？', a: '太阳在天上！', syn: null, var: null },
+    rain:   { word: '雨', rom: 'yǔ', art: '一场雨', pl: null, adj: '小雨', act: '听雨声', sen: '下雨了！', q: '天上落下什么？', a: '是雨！', syn: null, var: null },
+    car:    { word: '汽车', rom: 'qìchē', art: '一辆汽车', pl: null, adj: '红色的汽车', act: '坐汽车', sen: '我们坐汽车去。', q: '汽车在哪里？', a: '汽车在这里！', syn: '车车 (chēchē)', var: null },
+    bus:    { word: '公共汽车', rom: 'gōnggòng qìchē', art: '一辆公共汽车', pl: null, adj: '大大的公共汽车', act: '坐公共汽车', sen: '公共汽车很大。', q: '公共汽车在哪里？', a: '公共汽车来了！', syn: '巴士 (bāshì)', var: null },
+    sleep:  { word: '睡觉', rom: 'shuìjiào', art: null, pl: null, adj: '好好睡觉', act: '该睡觉了', sen: '我去睡觉。', q: '谁在睡觉？', a: '宝宝在睡觉！', syn: null, var: null },
+    happy:  { word: '开心', rom: 'kāixīn', art: null, pl: null, adj: '开心的孩子', act: '很开心', sen: '我很开心！', q: '你开心吗？', a: '我很开心！', syn: '高兴 (gāoxìng)', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['zh'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Content pack: にほんご (japonês, escrita infantil kana; rom = rōmaji).
+ * Sem artigos/plural gramatical. */
+(function (g) {
+  'use strict';
+  g.LUMI_PACKS = g.LUMI_PACKS || {};
+  g.LUMI_PACKS['ja'] = { lang: 'ja', version: 1, source: 'Pack de demonstração LumiLínguas', concepts: {
+    bed:    { word: 'ベッド', rom: 'beddo', art: null, pl: null, adj: 'ふかふかのベッド', act: 'ベッドにいく', sen: 'ベッドにいくよ。', q: 'ベッドはどこ？', a: 'ベッドはここ！', syn: 'おふとん (o-futon)', var: null },
+    chair:  { word: 'いす', rom: 'isu', art: null, pl: null, adj: 'おおきいいす', act: 'いすにすわる', sen: 'いすにすわるよ。', q: 'いすはどこ？', a: 'いすはここ！', syn: null, var: null },
+    door:   { word: 'ドア', rom: 'doa', art: null, pl: null, adj: 'あいているドア', act: 'ドアをあける', sen: 'ドアをあけよう。', q: 'ドアはどこ？', a: 'ドアはあそこ！', syn: 'とびら (tobira)', var: null },
+    key:    { word: 'かぎ', rom: 'kagi', art: null, pl: null, adj: 'ちいさいかぎ', act: 'かぎをまわす', sen: 'かぎでドアがあくよ。', q: 'かぎはどこ？', a: 'かぎはここ！', syn: null, var: null },
+    spoon:  { word: 'スプーン', rom: 'supūn', art: null, pl: null, adj: 'おおきいスプーン', act: 'スプーンでたべる', sen: 'スプーンでたべるよ。', q: 'スプーンはどこ？', a: 'スプーンはテーブルのうえ！', syn: null, var: null },
+    ball:   { word: 'ボール', rom: 'bōru', art: null, pl: null, adj: 'あかいボール', act: 'ボールであそぶ', sen: 'ボールであそびたい！', q: 'ボールはどこ？', a: 'ボールはここ！', syn: null, var: null },
+    book:   { word: 'ほん', rom: 'hon', art: null, pl: null, adj: 'カラフルなほん', act: 'ほんをよむ', sen: 'ほんをよもう。', q: 'ほんはどこ？', a: 'ほんはここ！', syn: 'えほん (ehon)', var: null },
+    soap:   { word: 'せっけん', rom: 'sekken', art: null, pl: null, adj: 'あわあわのせっけん', act: 'てをあらう', sen: 'せっけんでてをあらうよ。', q: 'せっけんはどこ？', a: 'せっけんはおふろば！', syn: null, var: null },
+    mom:    { word: 'ママ', rom: 'mama', art: null, pl: null, adj: 'だいすきなママ', act: 'ママにぎゅっとする', sen: 'ママがだいすき。', q: 'ママはどこ？', a: 'ママはここ！', syn: 'おかあさん (okāsan)', var: null },
+    dad:    { word: 'パパ', rom: 'papa', art: null, pl: null, adj: 'だいすきなパパ', act: 'パパにぎゅっとする', sen: 'パパがだいすき。', q: 'パパはどこ？', a: 'パパはここ！', syn: 'おとうさん (otōsan)', var: null },
+    baby:   { word: 'あかちゃん', rom: 'akachan', art: null, pl: null, adj: 'ちいさいあかちゃん', act: 'あかちゃんをだっこする', sen: 'あかちゃんがねている。', q: 'あかちゃんはどこ？', a: 'あかちゃんはここ！', syn: null, var: null },
+    hand:   { word: 'て', rom: 'te', art: null, pl: null, adj: 'きれいなて', act: 'パチパチする', sen: 'てをあらうよ。', q: 'てはどこ？', a: 'てはここ！', syn: 'おてて (otete)', var: null },
+    nose:   { word: 'はな', rom: 'hana', art: null, pl: null, adj: 'ちいさいはな', act: 'はなをさわる', sen: 'これはわたしのはな。', q: 'はなはどこ？', a: 'はなはここ！', syn: 'おはな (ohana)', var: null },
+    eyes:   { word: 'め', rom: 'me', art: null, pl: null, adj: 'おおきいめ', act: 'めをつぶる', sen: 'めをつぶるよ。', q: 'めはどこ？', a: 'めはここ！', syn: 'おめめ (omeme)', var: null },
+    apple:  { word: 'りんご', rom: 'ringo', art: null, pl: null, adj: 'あかいりんご', act: 'りんごをたべる', sen: 'りんごがほしい。', q: 'りんごはどこ？', a: 'りんごはここ！', syn: null, var: null },
+    banana: { word: 'バナナ', rom: 'banana', art: null, pl: null, adj: 'きいろいバナナ', act: 'バナナをむく', sen: 'バナナがすき。', q: 'バナナはどこ？', a: 'バナナはここ！', syn: null, var: null },
+    water:  { word: 'おみず', rom: 'omizu', art: null, pl: null, adj: 'つめたいおみず', act: 'おみずをのむ', sen: 'おみずがのみたい。', q: 'おみずはどこ？', a: 'おみずはコップのなか！', syn: null, var: null },
+    milk:   { word: 'ぎゅうにゅう', rom: 'gyūnyū', art: null, pl: null, adj: 'あたたかいぎゅうにゅう', act: 'ぎゅうにゅうをのむ', sen: 'あさ、ぎゅうにゅうをのむよ。', q: 'ぎゅうにゅうはどこ？', a: 'ぎゅうにゅうはコップのなか！', syn: 'ミルク (miruku)', var: null },
+    bread:  { word: 'パン', rom: 'pan', art: null, pl: null, adj: 'あたたかいパン', act: 'パンをたべる', sen: 'バターパンがたべたい。', q: 'パンはどこ？', a: 'パンはテーブルのうえ！', syn: null, var: null },
+    red:    { word: 'あか', rom: 'aka', art: null, pl: null, adj: 'あかいボール', act: 'あかくぬる', sen: 'りんごはあかいよ。', q: 'あかいのはどれ？', a: 'りんごがあかい！', syn: null, var: null },
+    blue:   { word: 'あお', rom: 'ao', art: null, pl: null, adj: 'あおいそら', act: 'あおくぬる', sen: 'そらはあおいよ。', q: 'あおいのはどれ？', a: 'そらがあおい！', syn: null, var: null },
+    three:  { word: 'さん', rom: 'san', art: null, pl: null, adj: 'りんごがみっつ', act: 'さんまでかぞえる', sen: 'いち、に、さん！', q: 'いくつある？', a: 'みっつある！', syn: 'みっつ (mittsu)', var: null },
+    dog:    { word: 'いぬ', rom: 'inu', art: null, pl: null, adj: 'ふわふわのいぬ', act: 'いぬをなでる', sen: 'いぬはワンワン。', q: 'いぬはどこ？', a: 'いぬはここ！', syn: 'ワンワン (wanwan)', var: null },
+    cat:    { word: 'ねこ', rom: 'neko', art: null, pl: null, adj: 'やわらかいねこ', act: 'ねこをなでる', sen: 'ねこはニャーニャー。', q: 'ねこはどこ？', a: 'ねこはここ！', syn: 'ニャンニャン (nyannyan)', var: null },
+    bird:   { word: 'とり', rom: 'tori', art: null, pl: null, adj: 'あおいとり', act: 'とりのうたをきく', sen: 'とりがうたっているよ。', q: 'とりはどこ？', a: 'とりはきのうえ！', syn: 'ことり (kotori)', var: null },
+    fish:   { word: 'さかな', rom: 'sakana', art: null, pl: null, adj: 'カラフルなさかな', act: 'さかなをみる', sen: 'さかながみずのなかでおよぐよ。', q: 'さかなはどこ？', a: 'さかなはみずのなか！', syn: 'おさかな (osakana)', var: null },
+    tree:   { word: 'き', rom: 'ki', art: null, pl: null, adj: 'おおきいき', act: 'きをみる', sen: 'きはおおきいね。', q: 'きはどこ？', a: 'きはこうえん！', syn: null, var: null },
+    flower: { word: 'おはな', rom: 'ohana', art: null, pl: null, adj: 'きれいなおはな', act: 'おはなのにおいをかぐ', sen: 'おはなはきれいだね。', q: 'おはなはどこ？', a: 'おはなはおにわ！', syn: null, var: null },
+    shoe:   { word: 'くつ', rom: 'kutsu', art: null, pl: null, adj: 'あたらしいくつ', act: 'くつをはく', sen: 'くつをはくよ。', q: 'くつはどこ？', a: 'くつはここ！', syn: null, var: null },
+    hat:    { word: 'ぼうし', rom: 'bōshi', art: null, pl: null, adj: 'かわいいぼうし', act: 'ぼうしをかぶる', sen: 'ぼうしをかぶるよ。', q: 'ぼうしはどこ？', a: 'ぼうしはあたまのうえ！', syn: null, var: null },
+    sun:    { word: 'たいよう', rom: 'taiyō', art: null, pl: null, adj: 'あたたかいたいよう', act: 'おひさまのしたであそぶ', sen: 'たいようがピカピカ！', q: 'たいようはどこ？', a: 'たいようはおそら！', syn: 'おひさま (ohisama)', var: null },
+    rain:   { word: 'あめ', rom: 'ame', art: null, pl: null, adj: 'しとしとのあめ', act: 'あめのおとをきく', sen: 'あめがふっているよ！', q: 'そらからなにがふる？', a: 'あめ！', syn: null, var: null },
+    car:    { word: 'くるま', rom: 'kuruma', art: null, pl: null, adj: 'あかいくるま', act: 'くるまにのる', sen: 'くるまでおでかけしよう。', q: 'くるまはどこ？', a: 'くるまはここ！', syn: 'ブーブー (būbū)', var: null },
+    bus:    { word: 'バス', rom: 'basu', art: null, pl: null, adj: 'おおきいバス', act: 'バスにのる', sen: 'バスはおおきいね。', q: 'バスはどこ？', a: 'バスがきたよ！', syn: null, var: null },
+    sleep:  { word: 'ねる', rom: 'neru', art: null, pl: null, adj: 'ぐっすりねる', act: 'ねんねのじかん', sen: 'ねんねするよ。', q: 'だれがねているの？', a: 'あかちゃんがねているよ！', syn: 'ねんね (nenne)', var: null },
+    happy:  { word: 'うれしい', rom: 'ureshii', art: null, pl: null, adj: 'にこにこのこども', act: 'うれしくなる', sen: 'うれしい！', q: 'うれしい？', a: 'うん、うれしい！', syn: 'ハッピー (happī)', var: null }
+  } };
+  if (typeof module !== 'undefined' && module.exports) module.exports = g.LUMI_PACKS['ja'];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Motor de repetição espaçada (SRS).
+ * Módulo puro, sem DOM: roda no navegador e no Node (testes).
+ *
+ * Cada combinação criança+conceito+idioma tem um registro:
+ * {
+ *   state: 'new'|'presented'|'recognized'|'repeated_helped'|'spoken'|'mastered'|'review',
+ *   introducedAt, lastSeenAt, dueAt        — timestamps (ms)
+ *   intervalIndex                          — posição em INTERVALS
+ *   streak, struggles                      — acertos seguidos / dificuldades acumuladas
+ *   struggleDays                           — dias distintos com dificuldade (>=3 → simplificar)
+ *   lastResult: 'ok'|'hard'|null
+ * }
+ * Regras implementadas (ver docs/ARCHITECTURE.md):
+ * — revisões após 1, 3, 7, 14 e 30 dias;
+ * — dificuldade nunca é punida: apenas reagenda mais cedo e marca para revisão;
+ * — após 3 dias de dificuldade, sinaliza simplificação (voltar de fala p/ reconhecimento);
+ * — máximo de conceitos novos por dia depende de idade e nº de idiomas.
+ */
+(function (g) {
+  'use strict';
+
+  var DAY = 24 * 60 * 60 * 1000;
+  var INTERVALS = [1, 3, 7, 14, 30]; // dias
+
+  var STATES = ['new', 'presented', 'recognized', 'repeated_helped', 'spoken', 'mastered', 'review'];
+
+  function freshRecord(now) {
+    return {
+      state: 'new', introducedAt: null, lastSeenAt: null, dueAt: null,
+      intervalIndex: 0, streak: 0, struggles: 0, struggleDays: 0,
+      lastStruggleDay: null, lastResult: null, createdAt: now || 0
+    };
+  }
+
+  function dayKey(ts) { return Math.floor(ts / DAY); }
+
+  /* Marca a primeira apresentação de um conceito novo. */
+  function introduce(rec, now) {
+    rec.state = 'presented';
+    rec.introducedAt = now;
+    rec.lastSeenAt = now;
+    rec.intervalIndex = 0;
+    rec.dueAt = now + INTERVALS[0] * DAY;
+    return rec;
+  }
+
+  /* Registra o resultado de uma atividade.
+   * kind: 'listen' (reconhecimento auditivo/visual) | 'speak' (repetição oral)
+   * result: 'ok' | 'helped' | 'hard'  (nunca "errado")
+   */
+  function record(rec, kind, result, now) {
+    rec.lastSeenAt = now;
+    rec.lastResult = result === 'hard' ? 'hard' : 'ok';
+
+    if (result === 'hard') {
+      rec.streak = 0;
+      rec.struggles++;
+      var dk = dayKey(now);
+      if (rec.lastStruggleDay !== dk) {
+        rec.struggleDays++;
+        rec.lastStruggleDay = dk;
+      }
+      rec.state = 'review';
+      // Reagenda cedo (mesmo dia +1) sem zerar todo o histórico de intervalos.
+      rec.intervalIndex = Math.max(0, rec.intervalIndex - 1);
+      rec.dueAt = now + 1 * DAY;
+      return rec;
+    }
+
+    rec.streak++;
+    if (result !== 'helped') rec.struggles = Math.max(0, rec.struggles - 1);
+
+    // Progressão de estados
+    if (kind === 'listen') {
+      if (rec.state === 'presented' || rec.state === 'new' || rec.state === 'review') {
+        rec.state = 'recognized';
+      }
+    } else if (kind === 'speak') {
+      if (result === 'helped') {
+        if (rec.state !== 'spoken' && rec.state !== 'mastered') rec.state = 'repeated_helped';
+      } else {
+        rec.state = 'spoken';
+      }
+    }
+
+    // Dominado: falou sozinho e completou o ciclo de 30 dias com acertos.
+    if (rec.state === 'spoken' && rec.intervalIndex >= INTERVALS.length - 1 && rec.streak >= 2) {
+      rec.state = 'mastered';
+    }
+
+    // Avança o intervalo de revisão.
+    if (rec.intervalIndex < INTERVALS.length - 1) rec.intervalIndex++;
+    rec.dueAt = now + INTERVALS[rec.intervalIndex] * DAY;
+    return rec;
+  }
+
+  /* Conceitos vencidos para revisão, mais atrasados primeiro. */
+  function dueList(records, now) {
+    return Object.keys(records)
+      .filter(function (k) {
+        var r = records[k];
+        return r.state !== 'new' && r.dueAt !== null && r.dueAt <= now;
+      })
+      .sort(function (a, b) { return records[a].dueAt - records[b].dueAt; });
+  }
+
+  /* Dificuldades de ontem/hoje para abrir a sessão. */
+  function struggleList(records, now) {
+    var twoDays = 2 * DAY;
+    return Object.keys(records)
+      .filter(function (k) {
+        var r = records[k];
+        return r.lastResult === 'hard' && r.lastSeenAt !== null && (now - r.lastSeenAt) <= twoDays;
+      })
+      .sort(function (a, b) { return records[b].struggles - records[a].struggles; });
+  }
+
+  /* Após 3 dias distintos de dificuldade → simplificar a atividade
+   * (voltar do exercício de fala para reconhecimento visual). */
+  function needsSimplification(rec) {
+    return rec.struggleDays >= 3;
+  }
+
+  /* Quantos conceitos novos hoje: 2 a 6, conforme idade, nº de idiomas e desempenho.
+   * Em 4 idiomas reduz novos e aumenta repetição (regra da especificação). */
+  function newConceptBudget(age, numLangs, recentHardRatio) {
+    var base = age <= 4 ? 3 : 6;
+    if (numLangs >= 3) base -= 1;
+    if (numLangs >= 4) base -= 1;
+    if (recentHardRatio > 0.4) base -= 1; // muita dificuldade recente → menos novidade
+    return Math.max(2, Math.min(6, base));
+  }
+
+  /* Retenção medida: % de revisões respondidas com sucesso num intervalo. */
+  function retentionAt(records, intervalDays) {
+    var idx = INTERVALS.indexOf(intervalDays);
+    if (idx < 0) return null;
+    var seen = 0, ok = 0;
+    Object.keys(records).forEach(function (k) {
+      var r = records[k];
+      if (r.state === 'new') return;
+      if (r.intervalIndex > idx) { seen++; ok++; }
+      else if (r.intervalIndex === idx && r.lastResult === 'hard') { seen++; }
+    });
+    if (!seen) return null;
+    return ok / seen;
+  }
+
+  var api = {
+    DAY: DAY,
+    INTERVALS: INTERVALS,
+    STATES: STATES,
+    freshRecord: freshRecord,
+    introduce: introduce,
+    record: record,
+    dueList: dueList,
+    struggleList: struggleList,
+    needsSimplification: needsSimplification,
+    newConceptBudget: newConceptBudget,
+    retentionAt: retentionAt
+  };
+
+  g.LUMI_SRS = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Montador da sessão diária (~11 min), adaptativo.
+ * Módulo puro (sem DOM): recebe perfil + registros SRS e devolve a fila de
+ * passos que o app executa. Testável em Node.
+ *
+ * Ciclo diário implementado:
+ * 1 boas-vindas → 2 dificuldades de ontem → 3 revisão SRS → 4 conceitos novos
+ * → 5 compreensão → 6 repetição oral → 7 jogo → 8 desafio misto
+ * → 9 celebração → 10 dicas para os responsáveis.
+ *
+ * Crianças de 3-4 anos: um bloco por idioma (nunca misturar).
+ * Crianças de 5-7 anos: desafio final pode comparar idiomas.
+ */
+(function (g) {
+  'use strict';
+
+  var SRS = (typeof require === 'function' && typeof window === 'undefined')
+    ? require('./srs.js') : g.LUMI_SRS;
+  var CUR = (typeof require === 'function' && typeof window === 'undefined')
+    ? require('../content/curriculum.js') : g.LUMI_CURRICULUM;
+
+  /* Atividades de compreensão disponíveis, alternadas por dia para nunca
+   * repetir exatamente a mesma sequência em dias consecutivos. */
+  var GAME_POOL = ['find_in_scene', 'missing_image', 'drag_to_target', 'sound_match', 'follow_instruction'];
+
+  function rotate(arr, n) {
+    var a = arr.slice();
+    for (var i = 0; i < (n % a.length + a.length) % a.length; i++) a.push(a.shift());
+    return a;
+  }
+
+  function recentHardRatio(records, now) {
+    var seen = 0, hard = 0, twoDays = 2 * SRS.DAY;
+    Object.keys(records).forEach(function (k) {
+      var r = records[k];
+      if (r.lastSeenAt !== null && now - r.lastSeenAt <= twoDays) {
+        seen++;
+        if (r.lastResult === 'hard') hard++;
+      }
+    });
+    return seen ? hard / seen : 0;
+  }
+
+  /* Escolhe conceitos novos respeitando o dia da jornada e os interesses. */
+  function pickNewConcepts(records, journeyDay, budget, interests) {
+    var pool = CUR.upToDay(journeyDay).filter(function (c) {
+      var r = records[c.id];
+      return !r || r.state === 'new';
+    });
+    // Interesses primeiro, mantendo a ordem do currículo dentro de cada grupo.
+    pool.sort(function (a, b) {
+      var ai = interests && interests.indexOf(a.theme) >= 0 ? 0 : 1;
+      var bi = interests && interests.indexOf(b.theme) >= 0 ? 0 : 1;
+      if (ai !== bi) return ai - bi;
+      return a.day - b.day;
+    });
+    return pool.slice(0, budget).map(function (c) { return c.id; });
+  }
+
+  /* Monta o bloco de um idioma. */
+  function langBlock(lang, records, opts) {
+    var steps = [];
+    var now = opts.now;
+
+    // 2. Dificuldades do dia anterior (abrem a sessão, no máx. 2)
+    var struggles = SRS.struggleList(records, now).slice(0, 2);
+    struggles.forEach(function (id) {
+      var simplify = SRS.needsSimplification(records[id]);
+      steps.push({ type: 'review', lang: lang, concept: id, mode: simplify ? 'listen' : 'auto', why: 'struggle' });
+    });
+
+    // 3. Revisão programada (SRS), no máx. 4 por idioma
+    var due = SRS.dueList(records, now)
+      .filter(function (id) { return struggles.indexOf(id) < 0; })
+      .slice(0, opts.shortened ? 2 : 4);
+    due.forEach(function (id) {
+      steps.push({ type: 'review', lang: lang, concept: id, mode: 'auto', why: 'due' });
+    });
+
+    // 4-6. Conceitos novos: apresentar → compreender → repetir em voz alta
+    var news = pickNewConcepts(records, opts.journeyDay, opts.newBudget, opts.interests);
+    news.forEach(function (id, i) {
+      steps.push({ type: 'present', lang: lang, concept: id });
+      steps.push({ type: 'listen_tap', lang: lang, concept: id });
+      steps.push({ type: 'repeat', lang: lang, concept: id });
+      // Reapresentação discreta de um erro 3-5 atividades depois:
+      // o app injeta em tempo de execução (ver app.js/adaptive).
+      if (i === 0 && struggles.length) {
+        steps.push({ type: 'review', lang: lang, concept: struggles[0], mode: 'listen', why: 'gentle_recheck' });
+      }
+    });
+
+    // 7. Jogo rápido em contexto (com conteúdo já visto)
+    var seen = Object.keys(records).filter(function (k) { return records[k].state !== 'new'; });
+    var playable = seen.concat(news);
+    if (playable.length >= 3 && !opts.shortened) {
+      var game = rotate(GAME_POOL, opts.journeyDay + opts.langIndex)[0];
+      steps.push({ type: 'game', lang: lang, game: game, concepts: playable.slice(-6) });
+    }
+    return { steps: steps, newConcepts: news };
+  }
+
+  /* Monta a sessão completa. profile: {age, langs, journeyDay, interests,
+   * sessionMinutes}; recordsByLang: {en: {...}, de: {...}} */
+  function buildSession(profile, recordsByLang, now, opts) {
+    opts = opts || {};
+    var steps = [{ type: 'welcome' }];
+    var allNew = {};
+    var langs = rotate(profile.langs.slice(), profile.journeyDay); // idioma inicial alterna por dia
+
+    var hardRatio = 0;
+    langs.forEach(function (l) { hardRatio = Math.max(hardRatio, recentHardRatio(recordsByLang[l] || {}, now)); });
+
+    var budgetTotal = SRS.newConceptBudget(profile.age, langs.length, hardRatio);
+    var perLang = Math.max(1, Math.floor(budgetTotal / langs.length));
+
+    langs.forEach(function (l, idx) {
+      var block = langBlock(l, recordsByLang[l] || {}, {
+        now: now,
+        journeyDay: profile.journeyDay,
+        newBudget: perLang,
+        interests: profile.interests,
+        shortened: !!opts.shortened,
+        langIndex: idx
+      });
+      if (langs.length > 1) steps.push({ type: 'lang_intro', lang: l });
+      steps.push.apply(steps, block.steps);
+      allNew[l] = block.newConcepts;
+    });
+
+    // 8. Desafio misturando conteúdos dominados
+    if (!opts.shortened) {
+      if (profile.age >= 5 && langs.length > 1) {
+        steps.push({ type: 'compare', langs: langs.slice(0, 2) }); // mesmo conceito em 2 idiomas
+      } else {
+        var l0 = langs[0];
+        var mastered = Object.keys(recordsByLang[l0] || {}).filter(function (k) {
+          var s = (recordsByLang[l0][k] || {}).state;
+          return s === 'spoken' || s === 'mastered' || s === 'recognized';
+        });
+        if (mastered.length >= 3) steps.push({ type: 'game', lang: l0, game: 'missing_image', concepts: mastered.slice(-4), why: 'mixed_challenge' });
+      }
+    }
+
+    // 9. Celebração
+    steps.push({ type: 'celebrate' });
+
+    return { steps: steps, newConcepts: allNew, langOrder: langs, budgetTotal: budgetTotal };
+  }
+
+  /* 10. Dicas práticas do dia para os responsáveis (4, em português). */
+  var TIP_TEMPLATES = [
+    { ctx: 'No café da manhã', make: function (w, ln) { return 'pergunte onde está “' + w + '” em ' + ln + '.'; } },
+    { ctx: 'Ao sair de casa', make: function (w, ln) { return 'diga “' + w + '” em ' + ln + ' apontando para o objeto.'; } },
+    { ctx: 'No carro ou no caminho', make: function (w, ln) { return 'repitam juntos “' + w + '” em ' + ln + '.'; } },
+    { ctx: 'Antes de dormir', make: function (w, ln) { return 'peça que a criança mostre ou fale “' + w + '” em ' + ln + '.'; } }
+  ];
+
+  function parentTips(newConcepts, packs, langNames, journeyDay) {
+    var tips = [];
+    var pairs = [];
+    Object.keys(newConcepts).forEach(function (lang) {
+      (newConcepts[lang] || []).forEach(function (id) {
+        var pack = packs[lang];
+        if (pack && pack.concepts[id]) pairs.push({ lang: lang, word: pack.concepts[id].word });
+      });
+    });
+    if (!pairs.length) return tips;
+    for (var i = 0; i < 4; i++) {
+      var t = TIP_TEMPLATES[i % TIP_TEMPLATES.length];
+      var p = pairs[(journeyDay + i) % pairs.length];
+      tips.push(t.ctx + ', ' + t.make(p.word, langNames[p.lang] || p.lang));
+    }
+    return tips;
+  }
+
+  /* Adaptação em tempo real: encurtar a sessão se a criança demonstra
+   * cansaço (erros seguidos ou respostas muito lentas). */
+  function shouldShorten(stats) {
+    return (stats.consecutiveHard >= 3) || (stats.avgResponseMs > 15000 && stats.answered >= 3);
+  }
+
+  var api = {
+    buildSession: buildSession,
+    parentTips: parentTips,
+    shouldShorten: shouldShorten,
+    GAME_POOL: GAME_POOL,
+    _rotate: rotate
+  };
+
+  g.LUMI_SESSION = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Portão parental (área dos responsáveis).
+ * Barreira contra crianças, não fronteira criptográfica: os dados já são
+ * locais ao aparelho. PIN com hash+salt para não ficar legível em texto puro.
+ * Módulo puro, testável em Node.
+ */
+(function (g) {
+  'use strict';
+
+  /* FNV-1a 32 bits repetido — suficiente como barreira local infantil. */
+  function fnv1a(str) {
+    var h = 0x811c9dc5;
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+    }
+    return h >>> 0;
+  }
+
+  function hashPin(pin, salt) {
+    var s = String(salt || '') + '|' + String(pin);
+    var h = '';
+    for (var round = 0; round < 5; round++) {
+      s = fnv1a(s + round).toString(16) + s;
+      h = fnv1a(s).toString(16) + h;
+    }
+    return h;
+  }
+
+  function makeSalt(rand) {
+    rand = rand || Math.random;
+    return Math.floor(rand() * 0xffffffff).toString(16);
+  }
+
+  function setPin(pin, rand) {
+    if (!/^\d{4,6}$/.test(String(pin))) return null;
+    var salt = makeSalt(rand);
+    return { salt: salt, hash: hashPin(pin, salt) };
+  }
+
+  function verifyPin(stored, attempt) {
+    if (!stored || !stored.salt || !stored.hash) return false;
+    return hashPin(attempt, stored.salt) === stored.hash;
+  }
+
+  /* Desafio "gesto de adulto": conta de multiplicação que uma criança de
+   * 3-7 anos não resolve. rand injetável para testes. */
+  function mathChallenge(rand) {
+    rand = rand || Math.random;
+    var a = 6 + Math.floor(rand() * 4); // 6..9
+    var b = 6 + Math.floor(rand() * 4);
+    return { question: 'Quanto é ' + a + ' × ' + b + '?', answer: a * b };
+  }
+
+  var api = { hashPin: hashPin, setPin: setPin, verifyPin: verifyPin, mathChallenge: mathChallenge };
+  g.LUMI_GATE = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Persistência local (localStorage) com armazenamento injetável
+ * para testes. Coleta mínima: tudo fica no aparelho; exportação e exclusão
+ * total disponíveis na área dos responsáveis (GDPR-K).
+ */
+(function (g) {
+  'use strict';
+
+  var KEY = 'lumilinguas.v1';
+
+  function memoryStorage() {
+    var m = {};
+    return {
+      getItem: function (k) { return Object.prototype.hasOwnProperty.call(m, k) ? m[k] : null; },
+      setItem: function (k, v) { m[k] = String(v); },
+      removeItem: function (k) { delete m[k]; }
+    };
+  }
+
+  function createStore(storage) {
+    storage = storage || (typeof localStorage !== 'undefined' ? localStorage : memoryStorage());
+
+    function blank() {
+      return {
+        version: 1,
+        parent: { pin: null, consent: null },
+        profiles: {},
+        progress: {},   // profileId -> lang -> conceptId -> registro SRS
+        sessions: {},   // profileId -> [resumo de sessão]
+        activeProfile: null
+      };
+    }
+
+    function load() {
+      try {
+        var raw = storage.getItem(KEY);
+        if (!raw) return blank();
+        var data = JSON.parse(raw);
+        return data && data.version === 1 ? data : blank();
+      } catch (e) { return blank(); }
+    }
+
+    function save(data) {
+      storage.setItem(KEY, JSON.stringify(data));
+      return data;
+    }
+
+    var api = {
+      load: load,
+      save: save,
+
+      newProfileId: function (data) {
+        var n = Object.keys(data.profiles).length + 1;
+        var id;
+        do { id = 'p' + n; n++; } while (data.profiles[id]);
+        return id;
+      },
+
+      addProfile: function (data, profile) {
+        var id = api.newProfileId(data);
+        profile.id = id;
+        profile.createdAt = profile.createdAt || 0;
+        profile.journeyDay = profile.journeyDay || 1;
+        profile.stickers = profile.stickers || [];
+        profile.outfit = profile.outfit || [];
+        data.profiles[id] = profile;
+        data.progress[id] = data.progress[id] || {};
+        data.sessions[id] = data.sessions[id] || [];
+        if (!data.activeProfile) data.activeProfile = id;
+        return id;
+      },
+
+      records: function (data, profileId, lang) {
+        data.progress[profileId] = data.progress[profileId] || {};
+        data.progress[profileId][lang] = data.progress[profileId][lang] || {};
+        return data.progress[profileId][lang];
+      },
+
+      recordsByLang: function (data, profileId) {
+        var out = {};
+        var p = data.profiles[profileId];
+        if (!p) return out;
+        p.langs.forEach(function (l) { out[l] = api.records(data, profileId, l); });
+        return out;
+      },
+
+      logSession: function (data, profileId, summary) {
+        data.sessions[profileId] = data.sessions[profileId] || [];
+        data.sessions[profileId].push(summary);
+        // Guarda no máximo 90 sessões por perfil.
+        if (data.sessions[profileId].length > 90) data.sessions[profileId].shift();
+      },
+
+      /* Exportação completa dos dados de um perfil (direito de portabilidade). */
+      exportProfile: function (data, profileId) {
+        return JSON.stringify({
+          exportedAt: new Date().toISOString(),
+          profile: data.profiles[profileId] || null,
+          progress: data.progress[profileId] || {},
+          sessions: data.sessions[profileId] || []
+        }, null, 2);
+      },
+
+      /* Exclusão total de um perfil (direito ao esquecimento). */
+      deleteProfile: function (data, profileId) {
+        delete data.profiles[profileId];
+        delete data.progress[profileId];
+        delete data.sessions[profileId];
+        if (data.activeProfile === profileId) {
+          var rest = Object.keys(data.profiles);
+          data.activeProfile = rest.length ? rest[0] : null;
+        }
+      },
+
+      /* Apaga absolutamente tudo. */
+      wipeAll: function () { storage.removeItem(KEY); },
+
+      _storageKey: KEY
+    };
+    return api;
+  }
+
+  var api = { createStore: createStore, memoryStorage: memoryStorage };
+  g.LUMI_STORE = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Áudio: síntese de voz (TTS do sistema), identidade sonora,
+ * feedback positivo e gravações da voz da família (MediaRecorder → IndexedDB,
+ * sempre locais ao aparelho).
+ */
+(function (g) {
+  'use strict';
+
+  var synth = g.speechSynthesis || null;
+  var audioCtx = null;
+  var muted = false;
+
+  function ctx() {
+    if (!audioCtx && (g.AudioContext || g.webkitAudioContext)) {
+      audioCtx = new (g.AudioContext || g.webkitAudioContext)();
+    }
+    return audioCtx;
+  }
+
+  /* ---------- Síntese de voz ---------- */
+
+  var voiceCache = null;
+  function loadVoices() {
+    if (!synth) return [];
+    var v = synth.getVoices();
+    if (v && v.length) voiceCache = v;
+    return voiceCache || [];
+  }
+  if (synth && synth.onvoiceschanged !== undefined) {
+    synth.onvoiceschanged = loadVoices;
+  }
+
+  function pickVoice(langTag) {
+    var voices = loadVoices();
+    if (!voices.length) return null;
+    var exact = voices.filter(function (v) { return v.lang.replace('_', '-').toLowerCase() === langTag.toLowerCase(); });
+    if (exact.length) return exact[0];
+    var prefix = langTag.split('-')[0].toLowerCase();
+    var near = voices.filter(function (v) { return v.lang.toLowerCase().indexOf(prefix) === 0; });
+    return near.length ? near[0] : null;
+  }
+
+  function supportsTTS() { return !!synth; }
+
+  /* speak(texto, tag BCP-47, {slow, onend}) */
+  function speak(text, langTag, opts) {
+    opts = opts || {};
+    return new Promise(function (resolve) {
+      if (!synth || muted || !text) return resolve(false);
+      try { synth.cancel(); } catch (e) {}
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = langTag;
+      var v = pickVoice(langTag);
+      if (v) u.voice = v;
+      u.rate = opts.slow ? 0.62 : 0.85; // sempre um pouco mais lento p/ crianças
+      u.pitch = 1.05;
+      var done = false;
+      function finish() { if (!done) { done = true; resolve(true); } }
+      u.onend = finish;
+      u.onerror = finish;
+      synth.speak(u);
+      // proteção: alguns navegadores não disparam onend
+      setTimeout(finish, Math.max(2500, text.length * 220));
+    });
+  }
+
+  function stop() { if (synth) try { synth.cancel(); } catch (e) {} }
+
+  /* ---------- Sons curtos (WebAudio, sem arquivos) ---------- */
+
+  function tone(freq, t0, dur, type, gain) {
+    var c = ctx();
+    if (!c || muted) return;
+    var o = c.createOscillator();
+    var gn = c.createGain();
+    o.type = type || 'sine';
+    o.frequency.value = freq;
+    gn.gain.setValueAtTime(0.0001, c.currentTime + t0);
+    gn.gain.exponentialRampToValueAtTime(gain || 0.12, c.currentTime + t0 + 0.02);
+    gn.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t0 + dur);
+    o.connect(gn).connect(c.destination);
+    o.start(c.currentTime + t0);
+    o.stop(c.currentTime + t0 + dur + 0.05);
+  }
+
+  /* Identidade sonora do idioma: 3 notas suaves. */
+  function jingle(freqs) {
+    (freqs || [523, 659, 784]).forEach(function (f, i) { tone(f, i * 0.14, 0.22, 'sine', 0.1); });
+  }
+
+  /* Feedback positivo tranquilo (nunca sons negativos). */
+  function chimeGood() { tone(660, 0, 0.15, 'sine', 0.1); tone(880, 0.12, 0.25, 'sine', 0.1); }
+  function chimeSoft() { tone(440, 0, 0.2, 'sine', 0.07); } // "vamos ouvir de novo" — neutro e calmo
+
+  function setMuted(m) { muted = !!m; }
+
+  /* ---------- Gravações da família (IndexedDB local) ---------- */
+
+  var DB_NAME = 'lumilinguas-audio';
+  var DB_STORE = 'recordings';
+
+  function openDb() {
+    return new Promise(function (resolve, reject) {
+      if (!g.indexedDB) return reject(new Error('IndexedDB indisponível'));
+      var req = g.indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(DB_STORE); };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+    });
+  }
+
+  function recKey(profileId, lang, conceptId) { return profileId + ':' + lang + ':' + conceptId; }
+
+  function saveRecording(profileId, lang, conceptId, blob) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).put(blob, recKey(profileId, lang, conceptId));
+        tx.oncomplete = function () { resolve(true); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+
+  function getRecording(profileId, lang, conceptId) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve) {
+        var tx = db.transaction(DB_STORE, 'readonly');
+        var rq = tx.objectStore(DB_STORE).get(recKey(profileId, lang, conceptId));
+        rq.onsuccess = function () { resolve(rq.result || null); };
+        rq.onerror = function () { resolve(null); };
+      });
+    }).catch(function () { return null; });
+  }
+
+  function deleteRecordings(profileId) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve) {
+        var tx = db.transaction(DB_STORE, 'readwrite');
+        var store = tx.objectStore(DB_STORE);
+        var rq = store.openCursor();
+        rq.onsuccess = function () {
+          var cur = rq.result;
+          if (cur) {
+            if (String(cur.key).indexOf(profileId + ':') === 0) cur.delete();
+            cur.continue();
+          }
+        };
+        tx.oncomplete = function () { resolve(true); };
+      });
+    }).catch(function () { return false; });
+  }
+
+  var currentPlayer = null;
+  function playBlob(blob) {
+    return new Promise(function (resolve) {
+      if (muted) return resolve(false);
+      if (currentPlayer) { currentPlayer.pause(); currentPlayer = null; }
+      var url = URL.createObjectURL(blob);
+      var a = new Audio(url);
+      currentPlayer = a;
+      a.onended = function () { URL.revokeObjectURL(url); resolve(true); };
+      a.onerror = function () { URL.revokeObjectURL(url); resolve(false); };
+      a.play().catch(function () { resolve(false); });
+    });
+  }
+
+  /* Fala um item: usa a gravação da família quando existir, senão TTS. */
+  function speakConcept(text, langTag, opts) {
+    opts = opts || {};
+    if (opts.profileId && opts.lang && opts.conceptId && !opts.slow) {
+      return getRecording(opts.profileId, opts.lang, opts.conceptId).then(function (blob) {
+        if (blob) return playBlob(blob);
+        return speak(text, langTag, opts);
+      });
+    }
+    return speak(text, langTag, opts);
+  }
+
+  /* Gravador simples para a área dos responsáveis. */
+  function createRecorder() {
+    if (!g.navigator || !navigator.mediaDevices || !g.MediaRecorder) return null;
+    var mediaRecorder = null, chunks = [], stream = null;
+    return {
+      start: function () {
+        return navigator.mediaDevices.getUserMedia({ audio: true }).then(function (s) {
+          stream = s;
+          chunks = [];
+          mediaRecorder = new MediaRecorder(s);
+          mediaRecorder.ondataavailable = function (e) { chunks.push(e.data); };
+          mediaRecorder.start();
+        });
+      },
+      stop: function () {
+        return new Promise(function (resolve) {
+          if (!mediaRecorder) return resolve(null);
+          mediaRecorder.onstop = function () {
+            var blob = new Blob(chunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+            if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+            resolve(blob);
+          };
+          mediaRecorder.stop();
+        });
+      }
+    };
+  }
+
+  g.LUMI_AUDIO = {
+    supportsTTS: supportsTTS, speak: speak, speakConcept: speakConcept, stop: stop,
+    jingle: jingle, chimeGood: chimeGood, chimeSoft: chimeSoft, setMuted: setMuted,
+    saveRecording: saveRecording, getRecording: getRecording,
+    deleteRecordings: deleteRecordings, playBlob: playBlob, createRecorder: createRecorder
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Reconhecimento de fala adequado à voz infantil.
+ * Usa a Web Speech API quando o navegador oferece (Chrome/Edge/Safari);
+ * a avaliação aceita variações naturais da pronúncia infantil:
+ * — normaliza acentos e caixa;
+ * — compara por distância de edição contra palavra, sinônimo e variações;
+ * — distingue tentativa ('try'), aproximação ('close') e satisfatória ('good');
+ * — sem confiança suficiente, NUNCA penaliza a criança.
+ * A avaliação (assess) é pura e testável; a captura depende do navegador.
+ */
+(function (g) {
+  'use strict';
+
+  function available() {
+    return !!(g.SpeechRecognition || g.webkitSpeechRecognition);
+  }
+
+  function normalize(s) {
+    if (!s) return '';
+    s = s.toLowerCase().trim();
+    try { s = s.normalize('NFD').replace(/[̀-ͯ]/g, ''); } catch (e) {}
+    return s.replace(/[^\p{L}\p{N} ]/gu, '').replace(/\s+/g, ' ');
+  }
+
+  function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    var prev = [], cur = [];
+    for (var j = 0; j <= b.length; j++) prev[j] = j;
+    for (var i = 1; i <= a.length; i++) {
+      cur[0] = i;
+      for (var k = 1; k <= b.length; k++) {
+        cur[k] = Math.min(prev[k] + 1, cur[k - 1] + 1, prev[k - 1] + (a[i - 1] === b[k - 1] ? 0 : 1));
+      }
+      var t = prev; prev = cur; cur = t;
+    }
+    return prev[b.length];
+  }
+
+  /* Compara a fala com os alvos aceitos.
+   * Retorna 'good' | 'close' | 'try'. */
+  function assess(transcript, targets) {
+    var heard = normalize(transcript);
+    if (!heard) return 'try';
+    var best = 1;
+    (targets || []).forEach(function (t) {
+      var tgt = normalize(t);
+      if (!tgt) return;
+      // palavra contida na frase falada conta como acerto
+      if (heard === tgt || heard.indexOf(tgt) >= 0 || tgt.indexOf(heard) >= 0) { best = 0; return; }
+      var d = levenshtein(heard, tgt) / Math.max(tgt.length, 1);
+      if (d < best) best = d;
+    });
+    if (best <= 0.34) return 'good';   // tolerante à pronúncia infantil
+    if (best <= 0.6) return 'close';
+    return 'try';
+  }
+
+  /* Escuta uma tentativa. Resolve com:
+   * {status:'heard', transcript, confidence} | {status:'silent'} | {status:'unavailable'} */
+  function listen(langTag, opts) {
+    opts = opts || {};
+    return new Promise(function (resolve) {
+      var SR = g.SpeechRecognition || g.webkitSpeechRecognition;
+      if (!SR) return resolve({ status: 'unavailable' });
+      var rec;
+      try { rec = new SR(); } catch (e) { return resolve({ status: 'unavailable' }); }
+      rec.lang = langTag;
+      rec.interimResults = false;
+      rec.maxAlternatives = 4;
+      var settled = false;
+      function settle(v) { if (!settled) { settled = true; try { rec.stop(); } catch (e) {} resolve(v); } }
+      rec.onresult = function (e) {
+        var alts = [];
+        var conf = 0;
+        try {
+          var res = e.results[0];
+          for (var i = 0; i < res.length; i++) { alts.push(res[i].transcript); conf = Math.max(conf, res[i].confidence || 0); }
+        } catch (err) {}
+        settle(alts.length ? { status: 'heard', transcript: alts.join(' | '), alternatives: alts, confidence: conf } : { status: 'silent' });
+      };
+      rec.onerror = function (e) {
+        settle(e && (e.error === 'no-speech') ? { status: 'silent' } : { status: 'unavailable' });
+      };
+      rec.onend = function () { settle({ status: 'silent' }); };
+      try { rec.start(); } catch (e) { return settle({ status: 'unavailable' }); }
+      setTimeout(function () { settle({ status: 'silent' }); }, opts.timeoutMs || 6000);
+    });
+  }
+
+  var api = { available: available, listen: listen, assess: assess, _normalize: normalize, _levenshtein: levenshtein };
+  g.LUMI_SPEECH = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Atividades da criança.
+ * Cada atividade renderiza no container e resolve uma Promise com
+ * {kind: 'listen'|'speak'|null, result: 'ok'|'helped'|'hard'|null}.
+ * Regras: sem texto obrigatório, uma instrução por tela, botões grandes,
+ * feedback sempre positivo (nunca a palavra "errado", nunca som negativo).
+ */
+(function (g) {
+  'use strict';
+
+  var CUR = g.LUMI_CURRICULUM;
+  var LANGS = g.LUMI_LANGS;
+  var AUDIO = g.LUMI_AUDIO;
+  var SPEECH = g.LUMI_SPEECH;
+
+  var PRAISE = { pt: 'Muito bem!', en: 'Great job!', de: 'Super gemacht!', es: '¡Muy bien!', fr: 'Très bien !', it: 'Bravissimo!', tr: 'Aferin!', zh: '真棒！', ja: 'すごいね！' };
+  var LISTEN_AGAIN = { pt: 'Vamos ouvir de novo!', en: "Let's listen again!", de: 'Hören wir noch einmal!', es: '¡Vamos a escuchar otra vez!', fr: 'On écoute encore une fois !', it: 'Ascoltiamo ancora!', tr: 'Tekrar dinleyelim!', zh: '我们再听一次！', ja: 'もういちど きいてみよう！' };
+  var ALMOST = { pt: 'Quase! Boa tentativa!', en: 'Almost! Good try!', de: 'Fast! Guter Versuch!', es: '¡Casi! ¡Buen intento!', fr: 'Presque ! Bel essai !', it: 'Quasi! Bel tentativo!', tr: 'Az kaldı! Güzel deneme!', zh: '差一点！很棒的尝试！', ja: 'おしい！いいちょうせん！' };
+
+  /* ---------- utilidades ---------- */
+
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  function shuffle(arr, seed) {
+    // Fisher–Yates com seed simples p/ variar entre execuções
+    var a = arr.slice();
+    var s = seed || Math.floor(Math.random() * 1e9);
+    function rnd() { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; }
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function distractors(conceptId, n) {
+    var pool = CUR.concepts.filter(function (c) { return c.id !== conceptId; });
+    return shuffle(pool).slice(0, n).map(function (c) { return c.id; });
+  }
+
+  function entry(env, lang, conceptId) {
+    var pack = env.packs[lang];
+    return pack ? pack.concepts[conceptId] : null;
+  }
+
+  function speakField(env, lang, conceptId, field, opts) {
+    var e = entry(env, lang, conceptId);
+    if (!e) return Promise.resolve(false);
+    var text = e[field] || e.word;
+    opts = opts || {};
+    return AUDIO.speakConcept(text, env.ttsTag(lang), {
+      slow: opts.slow,
+      profileId: field === 'word' && !opts.slow ? env.profile.id : null,
+      lang: lang, conceptId: conceptId
+    });
+  }
+
+  function praiseOverlay(env, lang) {
+    AUDIO.chimeGood();
+    var o = el('div', 'praise-overlay', '<div class="praise-star">⭐</div>');
+    document.body.appendChild(o);
+    setTimeout(function () { o.classList.add('show'); }, 10);
+    var msg = PRAISE[lang] || PRAISE.pt;
+    return AUDIO.speak(msg, env.ttsTag(lang)).then(function () {
+      return new Promise(function (res) {
+        setTimeout(function () { o.remove(); res(); }, 400);
+      });
+    });
+  }
+
+  function encourage(env, lang) {
+    AUDIO.chimeSoft();
+    return AUDIO.speak(LISTEN_AGAIN[lang] || LISTEN_AGAIN.pt, env.ttsTag(lang));
+  }
+
+  function wordLabel(env, e) {
+    if (!env.textSupport || !e) return '';
+    var t = e.word + (e.rom ? ' · ' + e.rom : '');
+    return '<div class="word-label">' + t + '</div>';
+  }
+
+  function replayBar(env, lang, conceptId, field) {
+    var bar = el('div', 'replay-bar');
+    var again = el('button', 'btn-round btn-replay', '🔊');
+    again.setAttribute('aria-label', 'Ouvir de novo');
+    var slow = el('button', 'btn-round btn-slow', '🐢');
+    slow.setAttribute('aria-label', 'Ouvir devagar');
+    again.onclick = function () { speakField(env, lang, conceptId, field); };
+    slow.onclick = function () { speakField(env, lang, conceptId, field, { slow: true }); };
+    bar.appendChild(again); bar.appendChild(slow);
+    return bar;
+  }
+
+  function bigNext(onTap) {
+    var b = el('button', 'btn-next', '➜');
+    b.setAttribute('aria-label', 'Continuar');
+    b.onclick = onTap;
+    return b;
+  }
+
+  function optionCards(env, ids, correctId, onPick, count) {
+    var wrap = el('div', 'options options-' + count);
+    shuffle(ids).forEach(function (id) {
+      var c = CUR.get(id);
+      var card = el('button', 'option-card', '<span class="opt-emoji">' + c.emoji + '</span>');
+      card.dataset.id = id;
+      card.onclick = function () { onPick(id, card); };
+      wrap.appendChild(card);
+    });
+    return wrap;
+  }
+
+  /* Escolha por toque com 2 tentativas; na 2ª falha mostra a resposta
+   * com carinho e devolve 'hard'. */
+  function tapChoice(env, lang, conceptId, playPrompt, container, numOptions) {
+    return new Promise(function (resolve) {
+      var misses = 0;
+      var ids = [conceptId].concat(distractors(conceptId, numOptions - 1));
+      var locked = false;
+      var wrap = optionCards(env, ids, conceptId, function (id, card) {
+        if (locked) return;
+        if (id === conceptId) {
+          locked = true;
+          card.classList.add('correct');
+          praiseOverlay(env, lang).then(function () {
+            resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
+          });
+        } else {
+          card.classList.add('faded');
+          misses++;
+          if (misses >= 2) {
+            locked = true;
+            var right = wrap.querySelector('[data-id="' + conceptId + '"]');
+            if (right) right.classList.add('reveal');
+            speakField(env, lang, conceptId, 'word', { slow: true }).then(function () {
+              setTimeout(function () { resolve({ kind: 'listen', result: 'hard' }); }, 700);
+            });
+          } else {
+            encourage(env, lang).then(playPrompt);
+          }
+        }
+      }, numOptions);
+      container.appendChild(wrap);
+      playPrompt();
+    });
+  }
+
+  /* ---------- atividades ---------- */
+
+  /* Apresentação de conceito novo: imagem grande, áudio, imagens
+   * alternativas (aprender o conceito, não a foto), tartaruga = devagar. */
+  function present(env, step, container) {
+    return new Promise(function (resolve) {
+      var c = CUR.get(step.concept);
+      var e = entry(env, step.lang, step.concept);
+      var images = [c.emoji].concat(c.alts);
+      var idx = 0;
+
+      var card = el('div', 'stage-card');
+      var img = el('div', 'hero-emoji', images[0]);
+      card.appendChild(img);
+      card.appendChild(el('div', '', wordLabel(env, e)));
+      var dots = el('div', 'alt-dots');
+      images.forEach(function (im, i) {
+        var d = el('button', 'alt-dot' + (i === 0 ? ' active' : ''), im);
+        d.onclick = function () {
+          idx = i;
+          img.textContent = im;
+          dots.querySelectorAll('.alt-dot').forEach(function (x) { x.classList.remove('active'); });
+          d.classList.add('active');
+          speakField(env, step.lang, step.concept, 'word');
+        };
+        dots.appendChild(d);
+      });
+      card.appendChild(dots);
+      card.appendChild(replayBar(env, step.lang, step.concept, 'word'));
+      container.appendChild(card);
+
+      // artigo quando natural no idioma; senão a palavra
+      var field = e && e.art ? 'art' : 'word';
+      speakField(env, step.lang, step.concept, field).then(function () {
+        return speakField(env, step.lang, step.concept, 'sen');
+      }).then(function () {
+        container.appendChild(bigNext(function () {
+          resolve({ kind: null, result: null });
+        }));
+      });
+    });
+  }
+
+  /* Ouça e toque na imagem correta. */
+  function listenTap(env, step, container, numOptions) {
+    var n = numOptions || (env.profile.age <= 4 ? 3 : 4);
+    container.appendChild(el('div', 'task-hint', '👂'));
+    var play = function () { speakField(env, step.lang, step.concept, 'word'); };
+    return tapChoice(env, step.lang, step.concept, play, container, n);
+  }
+
+  /* Ligue o som à imagem: usa a frase, 4 opções. */
+  function soundMatch(env, step, container) {
+    container.appendChild(el('div', 'task-hint', '🎵'));
+    var play = function () { speakField(env, step.lang, step.concept, 'sen'); };
+    return tapChoice(env, step.lang, step.concept, play, container, 4);
+  }
+
+  /* Siga uma instrução simples (frase de ação). */
+  function followInstruction(env, step, container) {
+    container.appendChild(el('div', 'task-hint', '🫲'));
+    var play = function () { speakField(env, step.lang, step.concept, 'act'); };
+    return tapChoice(env, step.lang, step.concept, play, container, 3);
+  }
+
+  /* Encontre o objeto no cenário. */
+  function findInScene(env, step, container) {
+    return new Promise(function (resolve) {
+      var target = CUR.get(step.concept);
+      var others = distractors(step.concept, 5).map(function (id) { return CUR.get(id); });
+      var scene = el('div', 'scene');
+      scene.appendChild(el('div', 'scene-bg', target.scene));
+      var misses = 0, locked = false;
+      shuffle([target].concat(others)).forEach(function (c, i) {
+        var b = el('button', 'scene-item pos-' + i, c.emoji);
+        b.onclick = function () {
+          if (locked) return;
+          if (c.id === step.concept) {
+            locked = true;
+            b.classList.add('correct');
+            praiseOverlay(env, step.lang).then(function () {
+              resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
+            });
+          } else {
+            b.classList.add('faded');
+            misses++;
+            if (misses >= 3) {
+              locked = true;
+              speakField(env, step.lang, step.concept, 'word', { slow: true }).then(function () {
+                resolve({ kind: 'listen', result: 'hard' });
+              });
+            } else {
+              encourage(env, step.lang).then(function () { speakField(env, step.lang, step.concept, 'q'); });
+            }
+          }
+        };
+        scene.appendChild(b);
+      });
+      container.appendChild(el('div', 'task-hint', '🔍'));
+      container.appendChild(scene);
+      speakField(env, step.lang, step.concept, 'q'); // "Onde está …?"
+    });
+  }
+
+  /* Qual imagem desapareceu? */
+  function missingImage(env, step, container) {
+    return new Promise(function (resolve) {
+      var ids = (step.concepts && step.concepts.length >= 3 ? step.concepts.slice(-3) : [step.concept].concat(distractors(step.concept, 2)));
+      ids = shuffle(ids);
+      var gone = ids[Math.floor(Math.random() * ids.length)];
+      var row = el('div', 'memory-row');
+      ids.forEach(function (id) {
+        var c = CUR.get(id);
+        var card = el('div', 'memory-card', '<span>' + c.emoji + '</span>');
+        card.dataset.id = id;
+        row.appendChild(card);
+      });
+      container.appendChild(el('div', 'task-hint', '🙈'));
+      container.appendChild(row);
+
+      // fala os nomes, cobre, remove um e pergunta
+      var lang = step.lang;
+      var chain = Promise.resolve();
+      ids.forEach(function (id) {
+        chain = chain.then(function () { return speakField(env, lang, id, 'word'); });
+      });
+      chain.then(function () {
+        setTimeout(function () {
+          row.querySelectorAll('.memory-card').forEach(function (c) { c.classList.add('covered'); c.innerHTML = '❓'; });
+          setTimeout(function () {
+            var goneEl = row.querySelector('[data-id="' + gone + '"]');
+            if (goneEl) goneEl.remove();
+            row.querySelectorAll('.memory-card').forEach(function (c) {
+              c.classList.remove('covered');
+              c.innerHTML = '<span>' + CUR.get(c.dataset.id).emoji + '</span>';
+            });
+            tapChoice(env, lang, gone, function () {}, container, 3).then(resolve);
+          }, 900);
+        }, 1600);
+      });
+    });
+  }
+
+  /* Arraste o objeto para o lugar correto. */
+  function dragToTarget(env, step, container) {
+    return new Promise(function (resolve) {
+      var targetC = CUR.get(step.concept);
+      var pool = shuffle([step.concept].concat(distractors(step.concept, 2)));
+      container.appendChild(el('div', 'task-hint', '👉'));
+
+      var zone = el('div', 'drop-zone', '<span class="ghost">' + targetC.emoji + '</span>');
+      container.appendChild(zone);
+      var row = el('div', 'drag-row');
+      var misses = 0, done = false;
+
+      pool.forEach(function (id) {
+        var c = CUR.get(id);
+        var item = el('button', 'drag-item', c.emoji);
+        item.style.touchAction = 'none';
+        item.addEventListener('pointerdown', function (ev) {
+          if (done) return;
+          item.setPointerCapture(ev.pointerId);
+          var startX = ev.clientX, startY = ev.clientY;
+          item.classList.add('dragging');
+          function move(e2) {
+            item.style.transform = 'translate(' + (e2.clientX - startX) + 'px,' + (e2.clientY - startY) + 'px) scale(1.15)';
+          }
+          function up(e2) {
+            item.removeEventListener('pointermove', move);
+            item.removeEventListener('pointerup', up);
+            item.classList.remove('dragging');
+            var z = zone.getBoundingClientRect();
+            var inside = e2.clientX >= z.left && e2.clientX <= z.right && e2.clientY >= z.top && e2.clientY <= z.bottom;
+            item.style.transform = '';
+            if (!inside) return;
+            if (id === step.concept) {
+              done = true;
+              zone.innerHTML = '<span class="landed">' + c.emoji + '</span>';
+              praiseOverlay(env, step.lang).then(function () {
+                resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
+              });
+            } else {
+              misses++;
+              item.classList.add('faded');
+              if (misses >= 2) {
+                done = true;
+                speakField(env, step.lang, step.concept, 'word', { slow: true }).then(function () {
+                  resolve({ kind: 'listen', result: 'hard' });
+                });
+              } else {
+                encourage(env, step.lang).then(function () { speakField(env, step.lang, step.concept, 'word'); });
+              }
+            }
+          }
+          item.addEventListener('pointermove', move);
+          item.addEventListener('pointerup', up);
+        });
+        row.appendChild(item);
+      });
+      container.appendChild(row);
+      speakField(env, step.lang, step.concept, 'word');
+    });
+  }
+
+  /* Ouça e repita — com reconhecimento de voz quando permitido/possível.
+   * Sem reconhecimento: fluxo honesto de "repetir junto" (conta como
+   * 'repetido com ajuda', nunca como fala verificada). */
+  function repeatAloud(env, step, container) {
+    return new Promise(function (resolve) {
+      var c = CUR.get(step.concept);
+      var e = entry(env, step.lang, step.concept);
+      var card = el('div', 'stage-card');
+      card.appendChild(el('div', 'hero-emoji', c.emoji));
+      card.appendChild(el('div', '', wordLabel(env, e)));
+      card.appendChild(el('div', 'task-hint', '🗣️'));
+      card.appendChild(replayBar(env, step.lang, step.concept, 'word'));
+      container.appendChild(card);
+
+      var canListen = env.profile.allowSpeech && SPEECH.available();
+      var attempts = 0;
+
+      function finish(result) { resolve({ kind: 'speak', result: result }); }
+
+      function targets() {
+        var t = [e.word];
+        if (e.syn) t.push(e.syn.replace(/\s*\(.*\)/, ''));
+        if (e.rom) t.push(e.rom);
+        if (e.var) Object.keys(e.var).forEach(function (k) { t.push(e.var[k]); });
+        return t;
+      }
+
+      if (canListen) {
+        var mic = el('button', 'btn-mic', '🎤');
+        mic.setAttribute('aria-label', 'Falar');
+        var status = el('div', 'mic-status', '');
+        card.appendChild(mic); card.appendChild(status);
+
+        mic.onclick = function () {
+          mic.disabled = true;
+          mic.classList.add('listening');
+          status.textContent = '…';
+          SPEECH.listen(env.ttsTag(step.lang), { timeoutMs: 6000 }).then(function (r) {
+            mic.classList.remove('listening');
+            attempts++;
+            if (r.status === 'unavailable') {
+              // sem confiança/suporte: não penalizar — cai no fluxo assistido
+              fallbackFlow();
+              return;
+            }
+            var grade = r.status === 'heard' ? SPEECH.assess(r.transcript, targets()) : 'try';
+            if (grade === 'good') {
+              praiseOverlay(env, step.lang).then(function () { finish(attempts === 1 ? 'ok' : 'ok'); });
+            } else if (attempts >= 3) {
+              // marca silenciosamente para revisão, sem constranger
+              AUDIO.speak(ALMOST[step.lang] || ALMOST.pt, env.ttsTag(step.lang))
+                .then(function () { finish(grade === 'close' ? 'helped' : 'hard'); });
+            } else {
+              status.textContent = '';
+              AUDIO.speak(ALMOST[step.lang] || ALMOST.pt, env.ttsTag(step.lang))
+                .then(function () { return speakField(env, step.lang, step.concept, 'word', { slow: attempts >= 2 }); })
+                .then(function () { mic.disabled = false; });
+            }
+          });
+        };
+        speakField(env, step.lang, step.concept, 'word').then(function () { mic.disabled = false; });
+      } else {
+        fallbackFlow();
+      }
+
+      function fallbackFlow() {
+        // "Repita junto": personagem fala, criança repete em voz alta,
+        // um toque confirma que repetiu (sem verificação automática).
+        var old = card.querySelector('.btn-mic'); if (old) old.remove();
+        var oldS = card.querySelector('.mic-status'); if (oldS) oldS.remove();
+        var okBtn = el('button', 'btn-said', '✅');
+        okBtn.setAttribute('aria-label', 'Repeti!');
+        card.appendChild(okBtn);
+        speakField(env, step.lang, step.concept, 'word', { slow: false });
+        okBtn.onclick = function () {
+          praiseOverlay(env, step.lang).then(function () { finish('helped'); });
+        };
+      }
+    });
+  }
+
+  /* Desafio de comparação (5-7 anos): quem falou? */
+  function compare(env, step, container) {
+    return new Promise(function (resolve) {
+      var langs = step.langs;
+      var pool = CUR.concepts.filter(function (c) { return c.day <= env.profile.journeyDay; });
+      var c = pool.length ? shuffle(pool)[0] : CUR.concepts[0];
+      var spoken = langs[Math.floor(Math.random() * langs.length)];
+
+      container.appendChild(el('div', 'task-hint', '👂'));
+      container.appendChild(el('div', 'hero-emoji hero-small', c.emoji));
+      var row = el('div', 'options options-2');
+      var misses = 0, locked = false;
+      langs.forEach(function (l) {
+        var L = LANGS.get(l);
+        var card = el('button', 'option-card char-card',
+          '<span class="opt-emoji">' + L.character.emoji + '</span><span class="char-name">' + L.character.name + '</span>');
+        card.style.borderColor = L.color;
+        card.onclick = function () {
+          if (locked) return;
+          if (l === spoken) {
+            locked = true;
+            praiseOverlay(env, spoken).then(function () {
+              resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
+            });
+          } else {
+            misses++;
+            card.classList.add('faded');
+            if (misses >= 2) { locked = true; resolve({ kind: 'listen', result: 'hard' }); }
+            else encourage(env, spoken).then(play);
+          }
+        };
+        row.appendChild(card);
+      });
+      container.appendChild(row);
+      function play() { speakField(env, spoken, c.id, 'word'); }
+      play();
+    });
+  }
+
+  /* Vinhetas sem pontuação */
+  function welcome(env, step, container) {
+    return new Promise(function (resolve) {
+      var lang0 = env.profile.langs[0];
+      var L = LANGS.get(lang0);
+      var card = el('div', 'stage-card welcome-card');
+      card.appendChild(el('div', 'hero-emoji bounce', L.character.emoji));
+      container.appendChild(card);
+      AUDIO.jingle(L.jingle);
+      var hello = { pt: 'Olá! Vamos brincar?', en: 'Hello! Let’s play!', de: 'Hallo! Spielen wir!', es: '¡Hola! ¡A jugar!', fr: 'Bonjour ! On joue ?', it: 'Ciao! Giochiamo!', tr: 'Merhaba! Hadi oynayalım!', zh: '你好！我们一起玩吧！', ja: 'こんにちは！あそぼう！' };
+      AUDIO.speak(hello[lang0] || hello.pt, env.ttsTag(lang0)).then(function () {
+        setTimeout(function () { resolve({ kind: null, result: null }); }, 400);
+      });
+    });
+  }
+
+  function langIntro(env, step, container) {
+    return new Promise(function (resolve) {
+      var L = LANGS.get(step.lang);
+      var card = el('div', 'stage-card lang-intro');
+      card.style.background = L.colorSoft;
+      card.appendChild(el('div', 'hero-emoji bounce', L.character.emoji));
+      card.appendChild(el('div', 'char-name big', L.character.name));
+      container.appendChild(card);
+      AUDIO.jingle(L.jingle);
+      setTimeout(function () { resolve({ kind: null, result: null }); }, 1400);
+    });
+  }
+
+  function celebrate(env, step, container) {
+    return new Promise(function (resolve) {
+      var card = el('div', 'stage-card celebrate-card');
+      card.appendChild(el('div', 'hero-emoji bounce', '🎉'));
+      for (var i = 0; i < 14; i++) {
+        var cf = el('div', 'confetti');
+        cf.style.left = (5 + Math.random() * 90) + '%';
+        cf.style.animationDelay = (Math.random() * 0.8) + 's';
+        cf.style.background = ['#F4B400', '#4A6CF7', '#E2574C', '#2BB673', '#8E6CF0'][i % 5];
+        card.appendChild(cf);
+      }
+      container.appendChild(card);
+      AUDIO.chimeGood();
+      var lang0 = env.profile.langs[0];
+      AUDIO.speak(PRAISE[lang0] || PRAISE.pt, env.ttsTag(lang0)).then(function () {
+        setTimeout(function () { resolve({ kind: null, result: null }); }, 1200);
+      });
+    });
+  }
+
+  /* Dispatcher */
+  function run(step, env, container) {
+    container.innerHTML = '';
+    var L = step.lang ? LANGS.get(step.lang) : null;
+    container.parentElement.style.setProperty('--lang-color', L ? L.color : '#8E6CF0');
+    container.parentElement.style.setProperty('--lang-soft', L ? L.colorSoft : '#EAE3FC');
+
+    switch (step.type) {
+      case 'welcome': return welcome(env, step, container);
+      case 'lang_intro': return langIntro(env, step, container);
+      case 'present': return present(env, step, container);
+      case 'listen_tap': return listenTap(env, step, container);
+      case 'repeat': return repeatAloud(env, step, container);
+      case 'review':
+        // revisão simplificada volta para reconhecimento visual
+        if (step.mode === 'listen') return listenTap(env, step, container, 3);
+        return Math.random() < 0.5 ? listenTap(env, step, container) : repeatAloud(env, step, container);
+      case 'game':
+        switch (step.game) {
+          case 'find_in_scene': return findInScene(env, pickGameStep(step), container);
+          case 'missing_image': return missingImage(env, pickGameStep(step), container);
+          case 'drag_to_target': return dragToTarget(env, pickGameStep(step), container);
+          case 'sound_match': return soundMatch(env, pickGameStep(step), container);
+          case 'follow_instruction': return followInstruction(env, pickGameStep(step), container);
+          default: return listenTap(env, pickGameStep(step), container);
+        }
+      case 'compare': return compare(env, step, container);
+      case 'celebrate': return celebrate(env, step, container);
+      default: return Promise.resolve({ kind: null, result: null });
+    }
+  }
+
+  function pickGameStep(step) {
+    var ids = step.concepts && step.concepts.length ? step.concepts : [step.concept];
+    return { type: step.type, lang: step.lang, concept: ids[Math.floor(Math.random() * ids.length)], concepts: ids };
+  }
+
+  g.LUMI_ACT = { run: run, PRAISE: PRAISE };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* LumiLínguas — Área dos responsáveis: portão parental, onboarding com
+ * consentimento, painel de progresso, gravação de voz da família,
+ * configurações, exportação e exclusão de dados.
+ */
+(function (g) {
+  'use strict';
+
+  var LANGS = g.LUMI_LANGS, CUR = g.LUMI_CURRICULUM, SRS = g.LUMI_SRS,
+      GATE = g.LUMI_GATE, AUDIO = g.LUMI_AUDIO;
+
+  function APP() { return g.LUMI_APP; }
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+    $(id).classList.add('active');
+  }
+
+  var STATE_LABELS = {
+    'new': 'ainda não apresentado', presented: 'apresentado',
+    recognized: 'reconhece ao ouvir', repeated_helped: 'repete com ajuda',
+    spoken: 'fala sem ajuda', mastered: 'dominado', review: 'precisa de revisão'
+  };
+
+  /* ---------- Portão parental ---------- */
+
+  function openGate(target) {
+    var data = APP().data();
+    var modal = $('gate-modal');
+    var body = $('gate-body');
+    modal.classList.add('open');
+    body.innerHTML = '';
+
+    function done() {
+      modal.classList.remove('open');
+      if (target === 'onboarding') startOnboarding();
+      else renderDashboard();
+    }
+
+    if (data.parent.pin) {
+      body.appendChild(el('p', 'gate-title', 'Área dos responsáveis'));
+      body.appendChild(el('p', '', 'Digite o PIN:'));
+      var input = el('input', 'gate-input');
+      input.type = 'password'; input.inputMode = 'numeric'; input.maxLength = 6;
+      body.appendChild(input);
+      var msg = el('p', 'gate-msg', '');
+      body.appendChild(msg);
+      var ok = el('button', 'btn-primary', 'Entrar');
+      ok.onclick = function () {
+        if (GATE.verifyPin(data.parent.pin, input.value)) done();
+        else { msg.textContent = 'PIN incorreto.'; input.value = ''; }
+      };
+      body.appendChild(ok);
+      input.focus();
+    } else {
+      var ch = GATE.mathChallenge();
+      body.appendChild(el('p', 'gate-title', 'Confirmação de adulto'));
+      body.appendChild(el('p', '', ch.question));
+      var inp2 = el('input', 'gate-input');
+      inp2.type = 'number'; inp2.inputMode = 'numeric';
+      body.appendChild(inp2);
+      var msg2 = el('p', 'gate-msg', '');
+      body.appendChild(msg2);
+      var ok2 = el('button', 'btn-primary', 'Confirmar');
+      ok2.onclick = function () {
+        if (Number(inp2.value) === ch.answer) done();
+        else { msg2.textContent = 'Tente novamente.'; inp2.value = ''; ch = GATE.mathChallenge(); body.children[1].textContent = ch.question; }
+      };
+      body.appendChild(ok2);
+      inp2.focus();
+    }
+    $('gate-close').onclick = function () { modal.classList.remove('open'); };
+  }
+
+  /* ---------- Onboarding ---------- */
+
+  var draft = null;
+  var obStep = 0;
+
+  function startOnboarding() {
+    draft = {
+      name: '', age: 4, avatar: '🧒', homeLang: 'pt', langs: [], langVariants: {},
+      levels: {}, reading: 'no', interests: [], sessionMinutes: 11,
+      usualTime: '', allowSpeech: false, allowFamilyVoice: false, textSupport: false
+    };
+    obStep = 0;
+    show('screen-onboarding');
+    renderObStep();
+  }
+
+  var OB_STEPS = [
+    stepWelcome, stepChild, stepHomeLang, stepLangs, stepVariants, stepLevels,
+    stepReading, stepInterests, stepRoutine, stepConsent, stepPin, stepMiniTest, stepSummary
+  ];
+
+  function renderObStep() {
+    var wrap = $('onboarding-body');
+    wrap.innerHTML = '';
+    $('ob-progress').style.width = Math.round(100 * obStep / (OB_STEPS.length - 1)) + '%';
+    OB_STEPS[obStep](wrap);
+  }
+
+  function navRow(wrap, canNext, onNext) {
+    var row = el('div', 'ob-nav');
+    if (obStep > 0) {
+      var back = el('button', 'btn-ghost', '← Voltar');
+      back.onclick = function () { obStep--; renderObStep(); };
+      row.appendChild(back);
+    }
+    var next = el('button', 'btn-primary', obStep === OB_STEPS.length - 1 ? 'Concluir' : 'Continuar');
+    next.disabled = !canNext;
+    next.onclick = function () {
+      if (onNext && onNext() === false) return;
+      obStep++;
+      if (obStep >= OB_STEPS.length) finishOnboarding();
+      else renderObStep();
+    };
+    row.appendChild(next);
+    wrap.appendChild(row);
+    return next;
+  }
+
+  function stepWelcome(wrap) {
+    wrap.appendChild(el('h2', '', 'Bem-vindo ao LumiLínguas! ✨'));
+    wrap.appendChild(el('p', '', 'Construa uma base de compreensão, vocabulário e pronúncia em até quatro idiomas durante uma jornada de 60 dias.'));
+    wrap.appendChild(el('p', 'ob-note', 'Este aplicativo não promete fluência em dois meses: promete exposição estruturada, repetida e alegre, com revisões programadas e acompanhamento real do que a criança reconhece e fala.'));
+    navRow(wrap, true);
+  }
+
+  function stepChild(wrap) {
+    wrap.appendChild(el('h2', '', 'Quem vai aprender?'));
+    wrap.appendChild(el('label', '', 'Nome ou apelido da criança'));
+    var name = el('input', 'ob-input'); name.value = draft.name; name.maxLength = 24;
+    wrap.appendChild(name);
+    wrap.appendChild(el('label', '', 'Idade'));
+    var ageRow = el('div', 'chip-row');
+    [3, 4, 5, 6, 7].forEach(function (a) {
+      var c = el('button', 'chip' + (draft.age === a ? ' sel' : ''), String(a));
+      c.onclick = function () { draft.age = a; renderObStep(); };
+      ageRow.appendChild(c);
+    });
+    wrap.appendChild(ageRow);
+    wrap.appendChild(el('label', '', 'Avatar'));
+    var avRow = el('div', 'chip-row');
+    ['🧒', '👧', '👦', '🧒🏽', '👧🏽', '👦🏿', '🐣', '🦄'].forEach(function (a) {
+      var c = el('button', 'chip chip-emoji' + (draft.avatar === a ? ' sel' : ''), a);
+      c.onclick = function () { draft.avatar = a; renderObStep(); };
+      avRow.appendChild(c);
+    });
+    wrap.appendChild(avRow);
+    var next = navRow(wrap, !!draft.name.trim(), function () { draft.name = name.value.trim(); return !!draft.name; });
+    name.oninput = function () { draft.name = name.value.trim(); next.disabled = !draft.name; };
+  }
+
+  function stepHomeLang(wrap) {
+    wrap.appendChild(el('h2', '', 'Idioma principal falado em casa'));
+    var row = el('div', 'lang-grid');
+    LANGS.codes.forEach(function (code) {
+      var L = LANGS.get(code);
+      var c = el('button', 'lang-card' + (draft.homeLang === code ? ' sel' : ''),
+        '<span class="lc-flag">' + L.flag + '</span><span>' + L.name + '</span>');
+      c.onclick = function () { draft.homeLang = code; renderObStep(); };
+      row.appendChild(c);
+    });
+    wrap.appendChild(row);
+    navRow(wrap, true);
+  }
+
+  function stepLangs(wrap) {
+    wrap.appendChild(el('h2', '', 'Quais idiomas aprender? (1 a 4)'));
+    if (draft.age <= 4) {
+      wrap.appendChild(el('p', 'ob-note', 'Para ' + draft.age + ' anos recomendamos começar com 1 ou 2 idiomas. Cada idioma será apresentado em blocos separados para não confundir. Você pode escolher até 4.'));
+    }
+    var row = el('div', 'lang-grid');
+    LANGS.codes.forEach(function (code) {
+      var L = LANGS.get(code);
+      var avail = LANGS.isAvailable(code);
+      var selIdx = draft.langs.indexOf(code);
+      var c = el('button', 'lang-card' + (selIdx >= 0 ? ' sel' : '') + (avail ? '' : ' disabled'),
+        '<span class="lc-flag">' + L.flag + '</span><span>' + L.name + '</span>' +
+        '<span class="lc-char">' + L.character.emoji + ' ' + L.character.name + '</span>' +
+        (avail ? '' : '<span class="lc-soon">pack em breve</span>'));
+      c.style.setProperty('--lang-color', L.color);
+      if (avail) {
+        c.onclick = function () {
+          if (selIdx >= 0) draft.langs.splice(selIdx, 1);
+          else if (draft.langs.length < 4) draft.langs.push(code);
+          renderObStep();
+        };
+      }
+      row.appendChild(c);
+    });
+    wrap.appendChild(row);
+    navRow(wrap, draft.langs.length >= 1);
+  }
+
+  function stepVariants(wrap) {
+    var withVar = draft.langs.filter(function (c) { return LANGS.get(c).variants; });
+    wrap.appendChild(el('h2', '', 'Variação regional'));
+    if (!withVar.length) {
+      wrap.appendChild(el('p', '', 'Os idiomas escolhidos não têm variações a configurar.'));
+    }
+    withVar.forEach(function (code) {
+      var L = LANGS.get(code);
+      wrap.appendChild(el('label', '', L.name));
+      var row = el('div', 'chip-row');
+      L.variants.forEach(function (v) {
+        var cur = draft.langVariants[code] || L.variants[0].id;
+        var c = el('button', 'chip' + (cur === v.id ? ' sel' : ''), v.label);
+        c.onclick = function () { draft.langVariants[code] = v.id; renderObStep(); };
+        row.appendChild(c);
+      });
+      wrap.appendChild(row);
+    });
+    navRow(wrap, true, function () {
+      withVar.forEach(function (code) {
+        if (!draft.langVariants[code]) draft.langVariants[code] = LANGS.get(code).variants[0].id;
+      });
+    });
+  }
+
+  function stepLevels(wrap) {
+    wrap.appendChild(el('h2', '', 'Nível atual em cada idioma'));
+    draft.langs.forEach(function (code) {
+      var L = LANGS.get(code);
+      wrap.appendChild(el('label', '', L.name));
+      var row = el('div', 'chip-row');
+      [['none', 'Nunca ouviu'], ['some', 'Conhece algumas palavras'], ['understands', 'Entende bastante']].forEach(function (opt) {
+        var cur = draft.levels[code] || 'none';
+        var c = el('button', 'chip' + (cur === opt[0] ? ' sel' : ''), opt[1]);
+        c.onclick = function () { draft.levels[code] = opt[0]; renderObStep(); };
+        row.appendChild(c);
+      });
+      wrap.appendChild(row);
+    });
+    navRow(wrap, true);
+  }
+
+  function stepReading(wrap) {
+    wrap.appendChild(el('h2', '', 'A criança já lê?'));
+    var row = el('div', 'chip-row chip-col');
+    [['no', 'Ainda não lê'], ['starting', 'Começando a ler'], ['yes', 'Já lê']].forEach(function (opt) {
+      var c = el('button', 'chip' + (draft.reading === opt[0] ? ' sel' : ''), opt[1]);
+      c.onclick = function () { draft.reading = opt[0]; renderObStep(); };
+      row.appendChild(c);
+    });
+    wrap.appendChild(row);
+    if (draft.age >= 5 && draft.reading !== 'no') {
+      var t = el('button', 'chip toggle' + (draft.textSupport ? ' sel' : ''), (draft.textSupport ? '✓ ' : '') + 'Mostrar palavras escritas como apoio (opcional)');
+      t.onclick = function () { draft.textSupport = !draft.textSupport; renderObStep(); };
+      wrap.appendChild(t);
+      wrap.appendChild(el('p', 'ob-note', 'O texto nunca é o elemento principal: para 3-4 anos as atividades não mostram texto.'));
+    }
+    navRow(wrap, true);
+  }
+
+  function stepInterests(wrap) {
+    wrap.appendChild(el('h2', '', 'O que a criança adora?'));
+    var THEMES = [['animals', '🐶 Animais'], ['places', '🚗 Veículos'], ['home', '🏠 Casa'], ['food', '🍎 Comidas'], ['family', '👨‍👩‍👧 Família'], ['clothes', '👕 Roupas'], ['actions', '😊 Emoções'], ['dialogs', '💬 Conversas']];
+    var row = el('div', 'chip-row wrap');
+    THEMES.forEach(function (t) {
+      var idx = draft.interests.indexOf(t[0]);
+      var c = el('button', 'chip' + (idx >= 0 ? ' sel' : ''), t[1]);
+      c.onclick = function () {
+        if (idx >= 0) draft.interests.splice(idx, 1); else draft.interests.push(t[0]);
+        renderObStep();
+      };
+      row.appendChild(c);
+    });
+    wrap.appendChild(row);
+    navRow(wrap, true);
+  }
+
+  function stepRoutine(wrap) {
+    wrap.appendChild(el('h2', '', 'Rotina da sessão'));
+    wrap.appendChild(el('label', '', 'Duração desejada'));
+    var row = el('div', 'chip-row');
+    [[8, '8 min'], [11, '11 min'], [15, '15 min']].forEach(function (opt) {
+      var c = el('button', 'chip' + (draft.sessionMinutes === opt[0] ? ' sel' : ''), opt[1]);
+      c.onclick = function () { draft.sessionMinutes = opt[0]; renderObStep(); };
+      row.appendChild(c);
+    });
+    wrap.appendChild(row);
+    wrap.appendChild(el('label', '', 'Horário habitual (opcional)'));
+    var time = el('input', 'ob-input'); time.type = 'time'; time.value = draft.usualTime;
+    time.onchange = function () { draft.usualTime = time.value; };
+    wrap.appendChild(time);
+    wrap.appendChild(el('p', 'ob-note', 'A sessão se adapta sozinha: se a criança cansar, o aplicativo encurta o dia automaticamente.'));
+    navRow(wrap, true);
+  }
+
+  function stepConsent(wrap) {
+    wrap.appendChild(el('h2', '', 'Privacidade e permissões'));
+    wrap.appendChild(el('p', 'ob-note', 'Todos os dados ficam neste aparelho: progresso, perfis e gravações. Não há publicidade, chat, localização nem perfil público. O reconhecimento de voz usa o serviço de fala do navegador/celular — em alguns aparelhos o áudio é processado pelo sistema operacional; se você não permitir, a atividade de fala vira "repita junto", sem microfone.'));
+    var t1 = el('button', 'chip toggle' + (draft.allowSpeech ? ' sel' : ''), (draft.allowSpeech ? '✓ ' : '') + 'Permitir reconhecimento de voz nas atividades de fala');
+    t1.onclick = function () { draft.allowSpeech = !draft.allowSpeech; renderObStep(); };
+    wrap.appendChild(t1);
+    var t2 = el('button', 'chip toggle' + (draft.allowFamilyVoice ? ' sel' : ''), (draft.allowFamilyVoice ? '✓ ' : '') + 'Quero gravar palavras com a voz da família (fica só no aparelho)');
+    t2.onclick = function () { draft.allowFamilyVoice = !draft.allowFamilyVoice; renderObStep(); };
+    wrap.appendChild(t2);
+    var t3 = el('button', 'chip toggle' + (draft.consent ? ' sel' : ''), (draft.consent ? '✓ ' : '') + 'Sou responsável pela criança e autorizo o uso do aplicativo');
+    t3.onclick = function () { draft.consent = !draft.consent; renderObStep(); };
+    wrap.appendChild(t3);
+    navRow(wrap, !!draft.consent);
+  }
+
+  function stepPin(wrap) {
+    var data = APP().data();
+    wrap.appendChild(el('h2', '', 'PIN da área dos responsáveis'));
+    if (data.parent.pin) {
+      wrap.appendChild(el('p', '', 'Já existe um PIN configurado. Você pode mantê-lo.'));
+      navRow(wrap, true);
+      return;
+    }
+    wrap.appendChild(el('p', 'ob-note', 'De 4 a 6 números. Protege as configurações e os dados — a criança nunca precisa dele.'));
+    var pin = el('input', 'ob-input'); pin.type = 'password'; pin.inputMode = 'numeric'; pin.maxLength = 6; pin.placeholder = '••••';
+    wrap.appendChild(pin);
+    var next = navRow(wrap, false, function () {
+      var res = GATE.setPin(pin.value);
+      if (!res) return false;
+      data.parent.pin = res;
+      data.parent.consent = { at: new Date().toISOString(), allowSpeech: draft.allowSpeech, allowFamilyVoice: draft.allowFamilyVoice };
+      APP().save();
+    });
+    pin.oninput = function () { next.disabled = !/^\d{4,6}$/.test(pin.value); };
+  }
+
+  var miniResult = null;
+  function stepMiniTest(wrap) {
+    wrap.appendChild(el('h2', '', 'Teste inicial (curto e sem pressão)'));
+    wrap.appendChild(el('p', 'ob-note', 'Entregue o aparelho à criança: 3 perguntas visuais no primeiro idioma escolhido. Serve só para calibrar o começo. Você pode pular.'));
+    var area = el('div', 'minitest-area');
+    wrap.appendChild(area);
+    var lang = draft.langs[0];
+    var qs = ['apple', 'dog', 'water'];
+    var i = 0, hits = 0;
+
+    function ask() {
+      if (i >= qs.length) {
+        miniResult = hits;
+        area.innerHTML = '<p class="ob-note">Pronto! ⭐ Obrigado, ' + draft.name + '!</p>';
+        return;
+      }
+      area.innerHTML = '';
+      var target = qs[i];
+      var opts = [target].concat(CUR.concepts.filter(function (c) { return c.id !== target; }).slice(0, 8)
+        .sort(function () { return Math.random() - 0.5; }).slice(0, 2).map(function (c) { return c.id; }))
+        .sort(function () { return Math.random() - 0.5; });
+      var pack = g.LUMI_PACKS[lang];
+      AUDIO.speak(pack.concepts[target].word, APP_TAG(lang));
+      var row = el('div', 'options options-3');
+      opts.forEach(function (id) {
+        var b = el('button', 'option-card', '<span class="opt-emoji">' + CUR.get(id).emoji + '</span>');
+        b.onclick = function () {
+          if (id === target) hits++;
+          i++; ask();
+        };
+        row.appendChild(b);
+      });
+      area.appendChild(row);
+      var replay = el('button', 'btn-round btn-replay', '🔊');
+      replay.onclick = function () { AUDIO.speak(pack.concepts[target].word, APP_TAG(lang)); };
+      area.appendChild(replay);
+    }
+    function APP_TAG(l) {
+      return draft.langVariants[l] || LANGS.get(l).tts[0];
+    }
+    var startB = el('button', 'btn-primary', 'Começar o teste');
+    startB.onclick = function () { startB.remove(); ask(); };
+    wrap.appendChild(startB);
+    navRow(wrap, true);
+  }
+
+  function stepSummary(wrap) {
+    wrap.appendChild(el('h2', '', 'Tudo pronto! 🌟'));
+    var langsTxt = draft.langs.map(function (c) { return LANGS.get(c).name; }).join(', ');
+    wrap.appendChild(el('p', '', draft.name + ', ' + draft.age + ' anos — vai aprender: ' + langsTxt + '.'));
+    if (miniResult !== null) {
+      wrap.appendChild(el('p', 'ob-note', 'Teste inicial: ' + miniResult + ' de 3 no primeiro idioma. O ritmo inicial será ajustado.'));
+    }
+    wrap.appendChild(el('p', 'ob-note', 'Sessões de ~' + draft.sessionMinutes + ' minutos: ouvir → compreender → falar → revisar → usar no dia a dia.'));
+    navRow(wrap, true);
+  }
+
+  function finishOnboarding() {
+    var data = APP().data();
+    draft.createdAt = Date.now();
+    if (miniResult !== null && miniResult >= 2 && draft.langs.length) {
+      draft.levels[draft.langs[0]] = draft.levels[draft.langs[0]] === 'none' ? 'some' : draft.levels[draft.langs[0]];
+    }
+    var id = APP().store.addProfile(data, draft);
+    data.activeProfile = id;
+    APP().save();
+    miniResult = null;
+    APP().goHome();
+  }
+
+  /* ---------- Painel dos responsáveis ---------- */
+
+  function renderDashboard() {
+    show('screen-parent');
+    var tabs = $('parent-tabs');
+    tabs.innerHTML = '';
+    var TABS = [
+      ['progress', '📊 Progresso'], ['difficulties', '🧩 Dificuldades'], ['sessions', '🕒 Sessões'],
+      ['tips', '💡 Dicas de hoje'], ['voice', '🎙️ Voz da família'], ['settings', '⚙️ Configurações'], ['dataTab', '🔐 Dados']
+    ];
+    TABS.forEach(function (t, i) {
+      var b = el('button', 'ptab' + (i === 0 ? ' sel' : ''), t[1]);
+      b.onclick = function () {
+        tabs.querySelectorAll('.ptab').forEach(function (x) { x.classList.remove('sel'); });
+        b.classList.add('sel');
+        renderTab(t[0]);
+      };
+      tabs.appendChild(b);
+    });
+    $('btn-parent-back').onclick = function () { APP().goHome(); };
+    renderTab('progress');
+  }
+
+  function renderTab(tab) {
+    var body = $('parent-body');
+    body.innerHTML = '';
+    var data = APP().data();
+    var p = APP().profile();
+    if (!p) { body.appendChild(el('p', '', 'Nenhum perfil ativo.')); return; }
+
+    if (tab === 'progress') {
+      p.langs.forEach(function (lang) {
+        var L = LANGS.get(lang);
+        var recs = data.progress[p.id] && data.progress[p.id][lang] || {};
+        var counts = {};
+        Object.keys(recs).forEach(function (k) { counts[recs[k].state] = (counts[recs[k].state] || 0) + 1; });
+        var seen = Object.keys(recs).length;
+        var spoken = (counts.spoken || 0) + (counts.mastered || 0);
+        var card = el('div', 'pcard');
+        card.appendChild(el('h3', '', L.flag + ' ' + L.name));
+        var ret = [1, 3, 7, 14, 30].map(function (d) {
+          var r = SRS.retentionAt(recs, d);
+          return d + 'd: ' + (r === null ? '—' : Math.round(r * 100) + '%');
+        }).join(' · ');
+        card.appendChild(el('p', '', 'Conceitos vistos: <b>' + seen + '</b> de ' + CUR.concepts.length +
+          ' · reconhece ao ouvir: <b>' + ((counts.recognized || 0) + spoken + (counts.repeated_helped || 0)) + '</b>' +
+          ' · fala sem ajuda: <b>' + spoken + '</b>'));
+        card.appendChild(el('p', 'ob-note', 'Retenção estimada — ' + ret));
+        var states = el('p', 'state-line', Object.keys(counts).map(function (s) {
+          return STATE_LABELS[s] + ': ' + counts[s];
+        }).join(' · ') || 'Ainda sem atividades registradas.');
+        card.appendChild(states);
+        body.appendChild(card);
+      });
+      body.appendChild(el('p', 'ob-note', 'Dia da jornada: ' + p.journeyDay + ' de 60 — fase: ' + CUR.weekForDay(p.journeyDay).title));
+    }
+
+    if (tab === 'difficulties') {
+      p.langs.forEach(function (lang) {
+        var recs = data.progress[p.id] && data.progress[p.id][lang] || {};
+        var hard = Object.keys(recs).filter(function (k) { return recs[k].state === 'review' || recs[k].struggles > 0; })
+          .sort(function (a, b) { return recs[b].struggles - recs[a].struggles; });
+        var card = el('div', 'pcard');
+        card.appendChild(el('h3', '', LANGS.get(lang).flag + ' ' + LANGS.get(lang).name));
+        if (!hard.length) card.appendChild(el('p', '', 'Nenhuma dificuldade no momento. 🎉'));
+        hard.slice(0, 8).forEach(function (k) {
+          var c = CUR.get(k);
+          var e = g.LUMI_PACKS[lang].concepts[k];
+          var simplify = SRS.needsSimplification(recs[k]);
+          card.appendChild(el('p', '', c.emoji + ' <b>' + e.word + '</b> — ' + STATE_LABELS[recs[k].state] +
+            (simplify ? ' · atividade simplificada automaticamente' : '')));
+        });
+        body.appendChild(card);
+      });
+    }
+
+    if (tab === 'sessions') {
+      var sessions = (data.sessions[p.id] || []).slice().reverse();
+      if (!sessions.length) body.appendChild(el('p', '', 'Nenhuma sessão ainda.'));
+      var totalMs = 0;
+      sessions.forEach(function (s) { totalMs += s.durationMs || 0; });
+      body.appendChild(el('p', 'ob-note', 'Tempo total de uso: ' + Math.round(totalMs / 60000) + ' min em ' + sessions.length + ' sessões.'));
+      sessions.slice(0, 14).forEach(function (s) {
+        var d = new Date(s.date);
+        body.appendChild(el('div', 'pcard',
+          '<b>Dia ' + s.day + '</b> — ' + d.toLocaleDateString() + ' · ' + Math.round((s.durationMs || 0) / 60000) + ' min · ' +
+          s.answered + ' atividades' + (s.hard ? ' · ' + s.hard + ' com apoio extra' : '') + (s.shortened ? ' · sessão encurtada (cansaço)' : '')));
+      });
+    }
+
+    if (tab === 'tips') {
+      var last = (data.sessions[p.id] || []).slice(-1)[0];
+      if (!last || !last.tips || !last.tips.length) {
+        body.appendChild(el('p', '', 'As dicas do dia aparecem depois da primeira sessão.'));
+      } else {
+        body.appendChild(el('p', 'ob-note', 'Quatro momentos de hoje — sem virar professor, só brincando:'));
+        last.tips.forEach(function (t) { body.appendChild(el('div', 'pcard tip', '💡 ' + t)); });
+      }
+    }
+
+    if (tab === 'voice') {
+      renderVoiceTab(body, p);
+    }
+
+    if (tab === 'settings') {
+      renderSettingsTab(body, p);
+    }
+
+    if (tab === 'dataTab') {
+      var card = el('div', 'pcard');
+      card.appendChild(el('h3', '', 'Seus dados, suas regras'));
+      card.appendChild(el('p', 'ob-note', 'Tudo fica neste aparelho. Nenhum dado é enviado a servidores nesta versão de demonstração.'));
+      var exp = el('button', 'btn-primary', '⬇️ Exportar dados do perfil (JSON)');
+      exp.onclick = function () {
+        var json = APP().store.exportProfile(data, p.id);
+        if (g.LUMI_SINGLE_FILE) {
+          // demo em arquivo único (sem permissão de download): mostrar p/ copiar
+          var ta = el('textarea', 'ob-input');
+          ta.value = json; ta.rows = 10; ta.readOnly = true;
+          card.appendChild(ta);
+          ta.focus(); ta.select();
+        } else {
+          var blob = new Blob([json], { type: 'application/json' });
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'lumilinguas-' + p.name + '.json';
+          a.click();
+        }
+      };
+      card.appendChild(exp);
+      var del = el('button', 'btn-danger', '🗑️ Excluir este perfil e todos os dados');
+      del.onclick = function () {
+        if (!confirm('Excluir permanentemente o perfil "' + p.name + '", progresso e gravações?')) return;
+        AUDIO.deleteRecordings(p.id);
+        APP().store.deleteProfile(data, p.id);
+        APP().save();
+        APP().renderSplash();
+      };
+      card.appendChild(del);
+      body.appendChild(card);
+
+      var prof = el('div', 'pcard');
+      prof.appendChild(el('h3', '', 'Perfis'));
+      Object.keys(data.profiles).forEach(function (id) {
+        var pr = data.profiles[id];
+        var row = el('p', '', (pr.avatar || '🧒') + ' ' + pr.name + (id === data.activeProfile ? ' (ativo)' : ''));
+        prof.appendChild(row);
+      });
+      var add = el('button', 'btn-ghost', '+ Adicionar outra criança');
+      add.onclick = startOnboarding;
+      prof.appendChild(add);
+      body.appendChild(prof);
+    }
+  }
+
+  function renderVoiceTab(body, p) {
+    if (!p.allowFamilyVoice) {
+      body.appendChild(el('p', '', 'A gravação da voz da família está desativada. Ative nas Configurações.'));
+      return;
+    }
+    var rec = AUDIO.createRecorder();
+    if (!rec) {
+      body.appendChild(el('p', '', 'Este navegador não permite gravação de áudio.'));
+      return;
+    }
+    body.appendChild(el('p', 'ob-note', 'Grave palavras com a sua voz: quando existir gravação, a criança ouve a família em vez da voz sintética. Tudo fica salvo apenas neste aparelho.'));
+    p.langs.forEach(function (lang) {
+      var L = LANGS.get(lang);
+      var card = el('div', 'pcard');
+      card.appendChild(el('h3', '', L.flag + ' ' + L.name));
+      CUR.concepts.slice(0, 12).forEach(function (c) {
+        var e = g.LUMI_PACKS[lang].concepts[c.id];
+        var row = el('div', 'voice-row');
+        row.appendChild(el('span', 'voice-word', c.emoji + ' ' + e.word));
+        var b = el('button', 'btn-ghost', '⏺️ Gravar');
+        var playB = el('button', 'btn-ghost', '▶️');
+        playB.style.display = 'none';
+        AUDIO.getRecording(p.id, lang, c.id).then(function (blob) {
+          if (blob) playB.style.display = '';
+        });
+        var recording = false;
+        b.onclick = function () {
+          if (!recording) {
+            rec.start().then(function () { recording = true; b.textContent = '⏹️ Parar'; })
+              .catch(function () { b.textContent = 'Microfone negado'; });
+          } else {
+            rec.stop().then(function (blob) {
+              recording = false; b.textContent = '⏺️ Regravar';
+              if (blob) AUDIO.saveRecording(p.id, lang, c.id, blob).then(function () { playB.style.display = ''; });
+            });
+          }
+        };
+        playB.onclick = function () {
+          AUDIO.getRecording(p.id, lang, c.id).then(function (blob) { if (blob) AUDIO.playBlob(blob); });
+        };
+        row.appendChild(b); row.appendChild(playB);
+        card.appendChild(row);
+      });
+      body.appendChild(card);
+    });
+  }
+
+  function renderSettingsTab(body, p) {
+    var data = APP().data();
+    var card = el('div', 'pcard');
+    card.appendChild(el('h3', '', 'Idiomas de aprendizagem (1 a 4)'));
+    var row = el('div', 'lang-grid');
+    LANGS.codes.forEach(function (code) {
+      var L = LANGS.get(code);
+      var avail = LANGS.isAvailable(code);
+      var idx = p.langs.indexOf(code);
+      var c = el('button', 'lang-card' + (idx >= 0 ? ' sel' : '') + (avail ? '' : ' disabled'),
+        '<span class="lc-flag">' + L.flag + '</span><span>' + L.name + '</span>' + (avail ? '' : '<span class="lc-soon">pack em breve</span>'));
+      if (avail) c.onclick = function () {
+        if (idx >= 0) { if (p.langs.length > 1) p.langs.splice(idx, 1); }
+        else if (p.langs.length < 4) p.langs.push(code);
+        APP().save();
+        renderTab('settings');
+      };
+      row.appendChild(c);
+    });
+    card.appendChild(row);
+    body.appendChild(card);
+
+    var card2 = el('div', 'pcard');
+    card2.appendChild(el('h3', '', 'Preferências'));
+    [['allowSpeech', 'Reconhecimento de voz nas atividades de fala'],
+     ['allowFamilyVoice', 'Gravação da voz da família'],
+     ['textSupport', 'Palavras escritas como apoio (5-7 anos)']].forEach(function (opt) {
+      var t = el('button', 'chip toggle' + (p[opt[0]] ? ' sel' : ''), (p[opt[0]] ? '✓ ' : '') + opt[1]);
+      t.onclick = function () { p[opt[0]] = !p[opt[0]]; APP().save(); renderTab('settings'); };
+      card2.appendChild(t);
+    });
+    card2.appendChild(el('label', '', 'Duração da sessão'));
+    var dr = el('div', 'chip-row');
+    [[8, '8 min'], [11, '11 min'], [15, '15 min']].forEach(function (opt) {
+      var c = el('button', 'chip' + (p.sessionMinutes === opt[0] ? ' sel' : ''), opt[1]);
+      c.onclick = function () { p.sessionMinutes = opt[0]; APP().save(); renderTab('settings'); };
+      dr.appendChild(c);
+    });
+    card2.appendChild(dr);
+    body.appendChild(card2);
+
+    var card3 = el('div', 'pcard');
+    card3.appendChild(el('h3', '', 'Trocar PIN'));
+    var pin = el('input', 'ob-input'); pin.type = 'password'; pin.maxLength = 6; pin.placeholder = 'Novo PIN (4-6 números)';
+    var okB = el('button', 'btn-ghost', 'Salvar novo PIN');
+    okB.onclick = function () {
+      var res = GATE.setPin(pin.value);
+      if (res) { data.parent.pin = res; APP().save(); okB.textContent = '✓ PIN atualizado'; }
+      else okB.textContent = 'PIN inválido — use 4 a 6 números';
+    };
+    card3.appendChild(pin); card3.appendChild(okB);
+    body.appendChild(card3);
+  }
+
+  g.LUMI_PARENT = { openGate: openGate, startOnboarding: startOnboarding, renderDashboard: renderDashboard };
+})(window);
+
+</script>
+  <script>
+/* LumiLínguas — Shell do aplicativo: telas, perfis, sessão diária.
+ * A área infantil funciona sem leitura: imagens grandes, áudio e toque.
+ */
+(function (g) {
+  'use strict';
+
+  var CUR = g.LUMI_CURRICULUM, LANGS = g.LUMI_LANGS, SRS = g.LUMI_SRS,
+      SESSION = g.LUMI_SESSION, AUDIO = g.LUMI_AUDIO, STORE = g.LUMI_STORE,
+      ACT = g.LUMI_ACT;
+
+  var store = STORE.createStore();
+  var data = store.load();
+
+  function save() { store.save(data); }
+
+  function $(id) { return document.getElementById(id); }
+
+  function show(screenId) {
+    document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+    $(screenId).classList.add('active');
+  }
+
+  function profile() { return data.profiles[data.activeProfile] || null; }
+
+  function ttsTag(lang) {
+    var p = profile();
+    if (p && p.langVariants && p.langVariants[lang]) return p.langVariants[lang];
+    var L = LANGS.get(lang);
+    return L ? L.tts[0] : lang;
+  }
+
+  function todayKey() {
+    var d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+  }
+
+  /* ---------- Splash / seleção de perfil ---------- */
+
+  function renderSplash() {
+    var wrap = $('profile-list');
+    wrap.innerHTML = '';
+    var ids = Object.keys(data.profiles);
+    if (!ids.length) {
+      $('splash-empty').style.display = 'block';
+      wrap.style.display = 'none';
+    } else {
+      $('splash-empty').style.display = 'none';
+      wrap.style.display = 'flex';
+      ids.forEach(function (id) {
+        var p = data.profiles[id];
+        var b = document.createElement('button');
+        b.className = 'profile-bubble';
+        b.innerHTML = '<span class="pb-emoji">' + (p.avatar || '🧒') + '</span><span class="pb-name">' + p.name + '</span>';
+        b.onclick = function () {
+          data.activeProfile = id; save();
+          goHome();
+        };
+        wrap.appendChild(b);
+      });
+    }
+    show('screen-splash');
+  }
+
+  /* ---------- Casa da criança ---------- */
+
+  function goHome() {
+    var p = profile();
+    if (!p) return renderSplash();
+    var L = LANGS.get(p.langs[0]);
+    $('home-char').textContent = L.character.emoji;
+    $('home-char-wrap').style.background = L.colorSoft;
+    $('home-day-count').textContent = p.journeyDay;
+    // adesivos ganhos aparecem como decoração
+    $('home-stickers-preview').textContent = (p.stickers || []).slice(-4).map(function (s) { return s.emoji; }).join(' ');
+    show('screen-home');
+    AUDIO.jingle(L.jingle);
+  }
+
+  /* ---------- Mapa da jornada (60 dias) ---------- */
+
+  function renderMap() {
+    var p = profile();
+    var wrap = $('map-path');
+    wrap.innerHTML = '';
+    var weekColors = ['#2BB673', '#4A6CF7', '#E2574C', '#F4B400', '#8E6CF0', '#00A3A3', '#E58B2F', '#E2648F', '#3AAE5C'];
+    for (var day = 1; day <= 60; day++) {
+      var wk = CUR.weekForDay(day);
+      var i = CUR.weeks.indexOf(wk);
+      var dot = document.createElement('div');
+      dot.className = 'map-dot' + (day < p.journeyDay ? ' done' : day === p.journeyDay ? ' current' : '');
+      dot.style.setProperty('--wk-color', weekColors[i]);
+      if (day < p.journeyDay) dot.textContent = '⭐';
+      else if (day === p.journeyDay) dot.textContent = LANGS.get(p.langs[0]).character.emoji;
+      else dot.textContent = '';
+      wrap.appendChild(dot);
+      if (CUR.weeks[i].days[1] === day && day < 60) {
+        var badge = document.createElement('div');
+        badge.className = 'map-week-badge';
+        badge.textContent = ['🏠', '👨‍👩‍👧', '🍎', '🐶', '👕', '🚗', '😊', '💬', '🏆'][i + 1] || '🏆';
+        wrap.appendChild(badge);
+      }
+    }
+    show('screen-map');
+  }
+
+  /* ---------- Adesivos ---------- */
+
+  function renderStickers() {
+    var p = profile();
+    var wrap = $('sticker-grid');
+    wrap.innerHTML = '';
+    (p.stickers || []).forEach(function (s) {
+      var d = document.createElement('div');
+      d.className = 'sticker';
+      d.textContent = s.emoji;
+      wrap.appendChild(d);
+    });
+    if (!(p.stickers || []).length) {
+      wrap.innerHTML = '<div class="sticker ghost">⭐</div><div class="sticker ghost">🎈</div><div class="sticker ghost">🌟</div>';
+    }
+    show('screen-stickers');
+  }
+
+  /* ---------- Sessão diária ---------- */
+
+  var running = null;
+
+  function startSession() {
+    var p = profile();
+    if (!p) return;
+    var now = Date.now();
+    var recordsByLang = store.recordsByLang(data, p.id);
+    var plan = SESSION.buildSession(p, recordsByLang, now);
+
+    running = {
+      plan: plan,
+      idx: 0,
+      startedAt: now,
+      stats: { consecutiveHard: 0, answered: 0, hard: 0, totalMs: 0, avgResponseMs: 0 },
+      shortened: false,
+      results: []
+    };
+    show('screen-session');
+    nextStep();
+  }
+
+  function envForActivities() {
+    var p = profile();
+    return {
+      profile: p,
+      packs: g.LUMI_PACKS,
+      ttsTag: ttsTag,
+      textSupport: p.age >= 5 && !!p.textSupport
+    };
+  }
+
+  function trimForFatigue(steps, fromIdx) {
+    // Cansaço detectado: remove jogos/desafios restantes e novos conceitos
+    // extras, mantendo só revisões leves e a celebração.
+    var kept = steps.slice(0, fromIdx);
+    var newSeen = 0;
+    for (var i = fromIdx; i < steps.length; i++) {
+      var s = steps[i];
+      if (s.type === 'game' || s.type === 'compare') continue;
+      if (s.type === 'present') { newSeen++; if (newSeen > 1) { // pula o trio present/listen/repeat
+          while (i + 1 < steps.length && (steps[i + 1].type === 'listen_tap' || steps[i + 1].type === 'repeat')) i++;
+          continue; } }
+      kept.push(s);
+    }
+    if (kept[kept.length - 1].type !== 'celebrate') kept.push({ type: 'celebrate' });
+    return kept;
+  }
+
+  function nextStep() {
+    var r = running;
+    if (!r) return;
+    if (r.idx >= r.plan.steps.length) return finishSession();
+
+    var step = r.plan.steps[r.idx];
+    var t0 = Date.now();
+    ACT.run(step, envForActivities(), $('session-stage')).then(function (res) {
+      var dt = Date.now() - t0;
+      if (res && res.kind) {
+        r.stats.answered++;
+        r.stats.totalMs += dt;
+        r.stats.avgResponseMs = r.stats.totalMs / r.stats.answered;
+        if (res.result === 'hard') { r.stats.hard++; r.stats.consecutiveHard++; }
+        else r.stats.consecutiveHard = 0;
+        applyResult(step, res);
+        r.results.push({ step: step, result: res.result, ms: dt });
+      }
+      // barra de progresso suave (sem números que gerem ansiedade)
+      $('session-progress').style.width = Math.round(100 * (r.idx + 1) / r.plan.steps.length) + '%';
+
+      if (!r.shortened && SESSION.shouldShorten(r.stats)) {
+        r.shortened = true;
+        r.plan.steps = trimForFatigue(r.plan.steps, r.idx + 1);
+      }
+      r.idx++;
+      nextStep();
+    });
+  }
+
+  function applyResult(step, res) {
+    var p = profile();
+    if (!step.lang || !step.concept) return;
+    var recs = store.records(data, p.id, step.lang);
+    var now = Date.now();
+    if (!recs[step.concept]) recs[step.concept] = SRS.freshRecord(now);
+    var rec = recs[step.concept];
+    if (rec.state === 'new') SRS.introduce(rec, now);
+    if (res.result) {
+      SRS.record(rec, res.kind === 'speak' ? 'speak' : 'listen',
+        res.result === 'hard' ? 'hard' : (res.result === 'helped' ? 'helped' : 'ok'), now);
+    }
+    save();
+  }
+
+  function finishSession() {
+    var r = running; running = null;
+    var p = profile();
+    var langNames = {};
+    p.langs.forEach(function (l) { langNames[l] = LANGS.get(l).name.toLowerCase(); });
+    var tips = SESSION.parentTips(r.plan.newConcepts, g.LUMI_PACKS, langNames, p.journeyDay);
+
+    store.logSession(data, p.id, {
+      date: new Date().toISOString(),
+      day: p.journeyDay,
+      durationMs: Date.now() - r.startedAt,
+      answered: r.stats.answered,
+      hard: r.stats.hard,
+      shortened: r.shortened,
+      newConcepts: r.plan.newConcepts,
+      tips: tips
+    });
+
+    // adesivo do dia: o primeiro conceito novo aprendido (ou estrela)
+    var firstNew = null;
+    Object.keys(r.plan.newConcepts).some(function (l) {
+      if (r.plan.newConcepts[l].length) { firstNew = r.plan.newConcepts[l][0]; return true; }
+      return false;
+    });
+    var emoji = firstNew ? CUR.get(firstNew).emoji : '⭐';
+    p.stickers = p.stickers || [];
+    if (!p.stickers.some(function (s) { return s.day === p.journeyDay && s.emoji === emoji; })) {
+      p.stickers.push({ day: p.journeyDay, emoji: emoji });
+    }
+
+    // avança a jornada uma vez por dia de calendário
+    var tk = todayKey();
+    if (p.lastSessionDate !== tk) {
+      p.lastSessionDate = tk;
+      if (p.journeyDay < 60) p.journeyDay++;
+    }
+    save();
+    goHome();
+  }
+
+  /* ---------- inicialização ---------- */
+
+  function init() {
+    // packs personalizados importados pelo painel administrativo
+    try {
+      var custom = localStorage.getItem('lumilinguas.customPacks');
+      if (custom) {
+        var packs = JSON.parse(custom);
+        Object.keys(packs).forEach(function (code) {
+          var base = g.LUMI_PACKS[code] || { lang: code, version: 0, concepts: {} };
+          Object.keys(packs[code].concepts || {}).forEach(function (cid) {
+            base.concepts[cid] = packs[code].concepts[cid];
+          });
+          g.LUMI_PACKS[code] = base;
+        });
+      }
+    } catch (e) {}
+
+    if ('serviceWorker' in navigator && location.protocol !== 'file:' && !g.LUMI_SINGLE_FILE) {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    }
+
+    $('btn-play').onclick = startSession;
+    $('btn-map').onclick = renderMap;
+    $('btn-stickers').onclick = renderStickers;
+    $('btn-map-back').onclick = goHome;
+    $('btn-stickers-back').onclick = goHome;
+    $('btn-home-profiles').onclick = renderSplash;
+    $('btn-session-exit').onclick = function () {
+      AUDIO.stop();
+      // exigir gesto de adulto evitaria saídas acidentais; aqui: toque duplo
+      running = null;
+      goHome();
+    };
+    $('btn-splash-setup').onclick = function () { g.LUMI_PARENT.openGate('onboarding'); };
+    $('btn-home-parent').onclick = function () { g.LUMI_PARENT.openGate('dashboard'); };
+
+    if (!Object.keys(data.profiles).length) renderSplash();
+    else renderSplash();
+  }
+
+  g.LUMI_APP = {
+    init: init,
+    data: function () { return data; },
+    store: store,
+    save: save,
+    profile: profile,
+    renderSplash: renderSplash,
+    goHome: goHome,
+    ttsTag: ttsTag
+  };
+
+  document.addEventListener('DOMContentLoaded', init);
+})(window);
+
+</script>

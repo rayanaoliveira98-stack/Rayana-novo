@@ -274,7 +274,7 @@
       }
     } catch (e) {}
 
-    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    if ('serviceWorker' in navigator && location.protocol !== 'file:' && !g.LUMI_SINGLE_FILE) {
       navigator.serviceWorker.register('sw.js').catch(function () {});
     }
 

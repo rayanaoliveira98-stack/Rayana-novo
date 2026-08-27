@@ -515,11 +515,19 @@
       var exp = el('button', 'btn-primary', '⬇️ Exportar dados do perfil (JSON)');
       exp.onclick = function () {
         var json = APP().store.exportProfile(data, p.id);
-        var blob = new Blob([json], { type: 'application/json' });
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'lumilinguas-' + p.name + '.json';
-        a.click();
+        if (g.LUMI_SINGLE_FILE) {
+          // demo em arquivo único (sem permissão de download): mostrar p/ copiar
+          var ta = el('textarea', 'ob-input');
+          ta.value = json; ta.rows = 10; ta.readOnly = true;
+          card.appendChild(ta);
+          ta.focus(); ta.select();
+        } else {
+          var blob = new Blob([json], { type: 'application/json' });
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'lumilinguas-' + p.name + '.json';
+          a.click();
+        }
       };
       card.appendChild(exp);
       var del = el('button', 'btn-danger', '🗑️ Excluir este perfil e todos os dados');
