@@ -1,0 +1,373 @@
+<title>Fahrschul-Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap">
+
+<style>
+/*
+ * Fahrschul-Coach — Woche 1.
+ *
+ * Bewusst einthemig: Die Ampelfarben sind hier Bedeutung, nicht Dekoration
+ * (rot = Gefahr, gelb = Achtung, grün = sicher, blau = Information). Sie
+ * dürfen sich zwischen Themes nicht verschieben, und die Verkehrsszenen sind
+ * helle SVG-Bilder. Darum ist jede Farbe explizit gesetzt.
+ *
+ * Schrift: Atkinson Hyperlegible wurde für Menschen mit Sehschwäche
+ * entworfen — die Zielgruppe liest oft schwer. Der Amtsdeutsch-Block bekommt
+ * eine Serifenschrift, damit die Behördensprache sichtbar anders wirkt.
+ */
+:root {
+  --gefahr: #b3261e;
+  --gefahr-hell: #fdecea;
+  --achtung: #8a6100;
+  --achtung-voll: #f2a900;
+  --achtung-hell: #fdf4e0;
+  --sicher: #14682c;
+  --sicher-hell: #e6f3ea;
+  --info: #0f4f99;
+  --info-hell: #e7effa;
+
+  --tinte: #14161a;
+  --tinte-2: #4a4f57;
+  --papier: #ffffff;
+  --papier-2: #eef0f3;
+  --linie: #ccd1d8;
+
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+
+  --spalte: 430px;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 18px; }
+
+body {
+  margin: 0;
+  background: var(--papier-2);
+  color: var(--tinte);
+  font-family: var(--sans);
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+  margin: 0 auto;
+  max-width: var(--spalte);
+  min-height: 100dvh;
+  background: var(--papier);
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3 { margin: 0; text-wrap: balance; line-height: 1.2; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  /* Ohne das setzt der Browser 1px 6px und reißt eine Lücke zwischen
+     ein angetipptes Vokabel-Wort und den Satzpunkt dahinter. */
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--info);
+  outline-offset: 3px;
+}
+
+/* --- Bausteine ------------------------------------------------------- */
+
+.knopf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 64px;
+  padding: 0 20px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-align: center;
+  background: var(--info);
+  color: #fff;
+  transition: transform 0.12s ease;
+}
+.knopf:active { transform: scale(0.99); }
+.knopf--gross { min-height: 78px; font-size: 1.3rem; }
+.knopf--zweit {
+  background: var(--papier);
+  color: var(--tinte);
+  box-shadow: inset 0 0 0 2px var(--linie);
+}
+.knopf--sicher { background: var(--sicher); }
+
+.hoerknopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  height: 56px;
+  width: 56px;
+  border-radius: 999px;
+  background: var(--info-hell);
+  color: var(--info);
+  box-shadow: inset 0 0 0 2px var(--info);
+}
+.hoerknopf--breit { width: auto; padding: 0 20px; font-weight: 700; }
+.hoerknopf[aria-pressed="true"] { background: var(--info); color: #fff; }
+.hoerknopf svg { display: block; }
+
+.zeile { display: flex; align-items: flex-start; gap: 12px; }
+.stapel { display: flex; flex-direction: column; gap: 20px; }
+.stapel--eng { display: flex; flex-direction: column; gap: 12px; }
+
+.text { flex: 1; font-size: 1.1rem; line-height: 1.6; }
+
+.vokabel {
+  display: inline;
+  font-weight: 700;
+  color: var(--info);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.vokabelbox {
+  margin-top: 12px;
+  border-radius: 14px;
+  background: var(--info-hell);
+  box-shadow: inset 0 0 0 2px var(--info);
+  padding: 16px;
+}
+
+.etikett {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.szene {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 2px var(--linie);
+  background: #fff;
+}
+.szene svg { display: block; width: 100%; height: auto; }
+
+.karte { border-radius: 16px; padding: 20px; }
+.karte--info { background: var(--info-hell); }
+.karte--achtung { background: var(--achtung-hell); box-shadow: inset 0 0 0 2px var(--achtung-voll); }
+.karte--sicher { background: var(--sicher-hell); box-shadow: inset 0 0 0 2px var(--sicher); }
+.karte--gefahr { background: var(--gefahr-hell); box-shadow: inset 0 0 0 2px var(--gefahr); }
+
+.amtlich { border-radius: 14px; background: var(--papier-2); box-shadow: inset 0 0 0 2px var(--tinte-2); }
+.amtlich__kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  font-weight: 700;
+  color: var(--tinte-2);
+  text-align: left;
+}
+.amtlich__inhalt {
+  padding: 16px;
+  border-top: 2px dashed var(--linie);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--tinte-2);
+}
+
+.wahl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--papier);
+  box-shadow: inset 0 0 0 2px var(--linie);
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.35;
+}
+.wahl__kaestchen {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 2px var(--linie);
+  font-size: 0.9rem;
+}
+.wahl[aria-pressed="true"] { background: var(--info-hell); box-shadow: inset 0 0 0 2px var(--info); }
+.wahl[aria-pressed="true"] .wahl__kaestchen { background: var(--info); color: #fff; box-shadow: none; }
+.wahl--richtig { background: var(--sicher-hell); box-shadow: inset 0 0 0 2px var(--sicher); }
+.wahl--verpasst { background: var(--papier); box-shadow: inset 0 0 0 2px var(--sicher); }
+.wahl--falsch { background: var(--gefahr-hell); box-shadow: inset 0 0 0 2px var(--gefahr); }
+.wahl--aus { opacity: 0.55; }
+
+.frageblock {
+  border-radius: 16px;
+  background: var(--papier-2);
+  box-shadow: inset 0 0 0 2px var(--tinte-2);
+  padding: 20px;
+}
+.frageblock .text { font-family: var(--serif); font-style: normal; }
+
+.marke {
+  display: inline-block;
+  width: fit-content;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--tinte);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* --- Kopf, Fuß, Seiten ----------------------------------------------- */
+
+.kopf {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--papier);
+  border-bottom: 2px solid var(--linie);
+  padding: 16px 16px 12px;
+}
+
+.balken {
+  margin-top: 12px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--papier-2);
+  overflow: hidden;
+}
+.balken > i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--info);
+  transition: width 0.45s ease;
+}
+
+.rund {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 2px var(--linie);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--tinte-2);
+}
+
+.inhalt { flex: 1; padding: 24px 16px 32px; }
+
+.fuss {
+  position: sticky;
+  bottom: 0;
+  background: var(--papier);
+  border-top: 2px solid var(--linie);
+  padding: 12px 16px 20px;
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.wegnetz { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 16px; }
+.wegnetz span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  border-radius: 14px;
+  font-weight: 700;
+  background: var(--papier);
+  box-shadow: inset 0 0 0 2px var(--linie);
+}
+.wegnetz .zu { background: var(--papier-2); color: var(--linie); }
+.wegnetz .jetzt { background: var(--info-hell); color: var(--info); box-shadow: inset 0 0 0 2px var(--info); }
+.wegnetz .fertig { background: var(--sicher); color: #fff; box-shadow: none; }
+
+.tagzeile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: var(--papier);
+  box-shadow: inset 0 0 0 2px var(--linie);
+  text-align: left;
+}
+.tagzeile__nr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--papier-2);
+  color: var(--tinte-2);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.tagzeile__nr.fertig { background: var(--sicher); color: #fff; }
+
+.haken {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  background: var(--sicher-hell);
+  font-size: 3rem;
+  animation: puls 1.8s ease-in-out infinite;
+}
+
+@keyframes puls {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+
+<div id="app"></div>
+
+<script>
+const LEKTIONEN = __INHALT__;
+const GLOSSAR = __GLOSSAR__;
+</script>

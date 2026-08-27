@@ -61,7 +61,11 @@ export default function LektionPlayer({ lektion }: { lektion: Lektion }) {
     // Fehler merken (für "Meine Fehler") ...
     merkeFehler(fehlerAus(lektion, schritt));
 
-    // ... und die Frage vor dem Tagesende noch einmal stellen.
+    // ... und die Frage vor dem Tagesende noch einmal stellen — aber nur
+    // einmal. Sonst kommt jemand, der oft falsch liegt, nie ans Tagesende,
+    // und genau für den ist die App gebaut. Die Regel bleibt in "Meine
+    // Fehler" und lässt sich dort jederzeit wieder öffnen.
+    if (station.nochmal) return;
     setStationen((alt) => {
       const neu = [...alt];
       neu.splice(neu.length - 1, 0, {
