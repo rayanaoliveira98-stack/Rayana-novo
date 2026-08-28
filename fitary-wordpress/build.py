@@ -128,6 +128,7 @@ seo = f'''<title>{title}</title>
 <meta name="theme-color" content="#06302B">
 <meta name="geo.region" content="AT-4">
 <meta name="geo.placename" content="Wels, Oberösterreich">
+<link rel="icon" href="https://www.fitary.at/favicon.ico">
 <link rel="canonical" href="https://www.fitary.at/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FITARY">
