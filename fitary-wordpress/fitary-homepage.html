@@ -568,8 +568,9 @@
   /* ---------- LOGO ---------- */
   .logo{ display:flex; align-items:center; }
   .logo img{ display:block; height: 74px; width: auto; margin-left: 14px; }
-  .navlinks{ display:flex; gap: 30px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-2); }
-  .navlinks a:hover{ color: var(--fg); }
+  .navlinks{ display:flex; gap: 32px; font-family: var(--mono); font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-2); }
+  .navlinks a{ transition: color .18s ease; }
+  .navlinks a:hover{ color: var(--hi); }
   .nav .cta{ display:flex; gap: 10px; align-items:center; }
 
   /* Hamburger menu (hidden on desktop) */
@@ -714,7 +715,7 @@
   }
   .hero .top-meta{ display:flex; justify-content: space-between; align-items: center; margin-bottom: 36px; position: relative; z-index: 1; }
   .hero h1{
-    font-family: var(--display); font-size: clamp(56px, 8.5vw, 132px); line-height: .92;
+    font-family: var(--display); font-size: clamp(56px, 8.5vw, 132px); line-height: 1.06;
     text-transform: uppercase; margin: 0; letter-spacing: -0.005em;
     position: relative; z-index: 1;
   }
@@ -786,7 +787,7 @@
   .sec-head{ display:flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: 36px; flex-wrap: wrap; }
   .sec-head .label{ font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--hi); display:flex; align-items:center; gap:10px; margin-bottom: 16px; }
   .sec-head .label::before{ content:""; width: 24px; height: 1px; background: var(--hi); }
-  .sec-head h2{ font-family: var(--display); font-size: clamp(48px, 6vw, 88px); line-height: 1; margin: 0; max-width: 900px; text-transform: uppercase; }
+  .sec-head h2{ font-family: var(--display); font-size: clamp(48px, 6vw, 88px); line-height: 1.12; margin: 0; max-width: 900px; text-transform: uppercase; }
   .sec-head h2 em{ font-style: normal; color: var(--hi); }
   .sec-head p{ max-width: 380px; color: var(--fg-2); margin: 0; }
 
@@ -842,9 +843,10 @@
     font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
     box-shadow: 0 16px 40px rgba(0,0,0,.5);
   }
-  .coach h2{ font-family: var(--display); font-size: clamp(48px, 6vw, 96px); margin: 0 0 20px; line-height: 1; text-transform: uppercase; }
+  .coach h2{ font-family: var(--display); font-size: clamp(48px, 6vw, 96px); margin: 0 0 20px; line-height: 1.08; text-transform: uppercase; }
   .coach h2 .name{ display:block; }
-  .coach h2 .role{ font-size: .42em; color: var(--fg-3); display:block; letter-spacing: .14em; }
+  .coach h2 .name em{ color: var(--hi); font-style: normal; }
+  .coach h2 .role{ font-size: .42em; color: var(--fg-3); display:block; letter-spacing: .14em; line-height: 1.4; margin-top: .18em; }
   .coach .lede{ font-size: 19px; color: var(--fg); max-width: 580px; margin: 0 0 18px; line-height: 1.45; }
   .coach .body{ color: var(--fg-2); max-width: 560px; margin: 0 0 28px; }
   .coach .stats{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 24px; max-width: 560px; }
@@ -1395,8 +1397,8 @@
   }
   .manifesto .stamp::before{ content:""; width: 32px; height: 1px; background: var(--mint); display:inline-block; }
   .manifesto h2{
-    font-family: var(--display); font-size: clamp(48px, 6vw, 88px);
-    line-height: 1; margin: 0 0 24px; text-transform: uppercase;
+    font-family: var(--display); font-size: clamp(38px, 4.6vw, 68px);
+    line-height: 1.08; margin: 0 0 24px; text-transform: uppercase;
     color: #fff; max-width: 1200px; letter-spacing: -0.005em;
   }
   .manifesto h2 .outline{ -webkit-text-stroke: 2px #fff; color: transparent; }
@@ -1508,7 +1510,7 @@
   .bookhub-left h3{
     font-family: var(--display);
     font-size: clamp(40px, 5vw, 64px);
-    line-height: .92;
+    line-height: 1.08;
     margin: 4px 0 6px;
     text-transform: uppercase;
     color: var(--fg);
@@ -1858,7 +1860,7 @@
     .brand-divider .tag{ font-size: 11px; max-width: 180px; padding-left: 18px; }
     .sticky-cta{ left: 12px; right: 12px; transform: translateY(140%); }
     .sticky-cta.show{ transform: translateY(0); }
-    .manifesto h2{ font-size: clamp(40px, 11vw, 80px); }
+    .manifesto h2{ font-size: clamp(32px, 8.5vw, 60px); }
     .manifesto .grid{ grid-template-columns: 1fr; gap: 18px; }
     .manifesto .sig{ display:none; }
     .schedule .week{ grid-template-columns: 60px repeat(7, 1fr); }
@@ -1909,7 +1911,7 @@
     /* HERO — typography that actually fits */
     .hero{ padding: 32px 0 48px; }    .hero .top-meta{ margin-bottom: 20px; font-size: 10px; gap: 12px; }
     .hero .top-meta > span:last-child{ display: none; }
-    .hero h1{ font-size: clamp(40px, 13vw, 56px); line-height: .92; }
+    .hero h1{ font-size: clamp(40px, 13vw, 56px); line-height: 1.08; }
     .hero h1 .row1, .hero h1 .row2{ gap: 10px; }
     .hero h1 .num{ font-size: 11px; min-width: 32px; padding-top: 4px; }
     .hero h1 .outline{ -webkit-text-stroke-width: 1.5px; }
@@ -2128,29 +2130,7 @@
   }
   .svc:hover .book-cta{ gap: 12px; color: #fff; border-top-color: rgba(255,255,255,.25); }
 
-  /* Online-Pay CTA (services) */
-  .pay-cta{
-    display: inline-flex; align-items: center; gap: 8px;
-    margin-top: 10px;
-    font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--fg-3); text-decoration: none;
-    transition: color .2s ease;
-  }
-  .pay-cta:hover{ color: var(--mint); }
-  .svc:hover .pay-cta{ color: rgba(255,255,255,.85); }
-  .svc:hover .pay-cta:hover{ color: #fff; }
 
-  /* Online-Pay button (pricing cards) */
-  .pricing .card .pay-btn{
-    width: 100%;
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    margin-top: 8px;
-    border-color: color-mix(in oklab, var(--mint) 40%, var(--line-2));
-    color: var(--mint);
-  }
-  .pricing .card .pay-btn:hover{
-    background: var(--mint); color: var(--green-1); border-color: var(--mint);
-  }
   .svc:hover .book-cta::after{ transform: translateX(3px); }
 
   /* Hover state — adopt the orange "featured" look on any card */
@@ -2319,7 +2299,7 @@
   <div class="container" style="position: relative; z-index: 1;">
     <div class="stamp">Manifest · Was uns leitet</div>
     <h2>
-      Für Menschen, die <span class="mint">mehr vom Leben</span> wollen —<br><span class="outline">ohne Kompromisse</span>.
+      Für Menschen, die <span class="mint">mehr vom Leben</span> wollen<br><span class="outline">ohne Kompromisse</span>.
     </h2>
     <div class="grid">
       <p><b>Ehrlich.</b>Kein Überversprechen. Wir sagen dir, was geht — und was nicht.</p>
@@ -2380,7 +2360,6 @@
         <div class="bar"><i style="width:95%"></i></div>
         <div class="meta"><span>50 min · 1:1</span><span class="price">79€</span></div>
         <a class="book-cta" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1">Slot reservieren</a>
-        <a class="pay-cta" data-pay="einzel" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
       </div>
       <div class="svc" id="svc-functional">
         <a class="book-overlay" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" aria-label="Termin buchen — svc-functional"></a>
@@ -2391,7 +2370,6 @@
         <div class="bar"><i style="width:100%"></i></div>
         <div class="meta"><span>50 min</span><span class="price">79€</span></div>
         <a class="book-cta" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1">Termin buchen</a>
-        <a class="pay-cta" data-pay="einzel" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
       </div>
       <div class="svc" id="svc-athletic">
         <a class="book-overlay" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" aria-label="Termin buchen — svc-athletic"></a>
@@ -2402,7 +2380,6 @@
         <div class="bar"><i style="width:93%"></i></div>
         <div class="meta"><span>50 min · 1:1</span><span class="price">79€</span></div>
         <a class="book-cta" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1">Termin buchen</a>
-        <a class="pay-cta" data-pay="einzel" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
       </div>
       <div class="svc" id="svc-med">
         <a class="book-overlay" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" aria-label="Mehr Infos · Termin — svc-med"></a>
@@ -2413,7 +2390,6 @@
         <div class="bar"><i style="width:92%"></i></div>
         <div class="meta"><span>50 min</span><span class="price">79€</span></div>
         <a class="book-cta" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1">Mehr Infos · Termin</a>
-        <a class="pay-cta" data-pay="einzel" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
       </div>
       <div class="svc" id="svc-outdoor">
         <a class="book-overlay" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" aria-label="Termin buchen — svc-outdoor"></a>
@@ -2424,7 +2400,6 @@
         <div class="bar"><i style="width:93%"></i></div>
         <div class="meta"><span>50 min · vor Ort</span><span class="price">89€</span></div>
         <a class="book-cta" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1">Termin buchen</a>
-        <a class="pay-cta" data-pay="outdoor" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
       </div>
       <div class="svc" id="svc-mobility">
         <a class="book-overlay" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" aria-label="Anfrage · Termin — svc-mobility"></a>
@@ -2435,7 +2410,6 @@
         <div class="bar"><i style="width:84%"></i></div>
         <div class="meta"><span>50 min</span><span class="price">79€</span></div>
         <a class="book-cta" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1">Anfrage · Termin</a>
-        <a class="pay-cta" data-pay="einzel" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener" tabindex="-1"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
       </div>
     </div>
   </div>
@@ -2619,7 +2593,7 @@
       <div>
         <div class="label" style="font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--hi); display:flex; align-items:center; gap:10px; margin-bottom:16px;"><span style="width:24px; height:1px; background:var(--hi); display:inline-block;"></span> 03 · Dein Coach</div>
         <h2>
-          <span class="name">Yalcin<br>Arslan.</span>
+          <span class="name">Yalcin<br><em>Arslan.</em></span>
           <span class="role">Vom Boxring ins Studio.</span>
         </h2>
         <p class="lede">Yalcin begann seine sportliche Reise im Boxsport — und hat sich seitdem intensiv mit Erfolg, Disziplin, Ernährung und der Funktion der Muskulatur beschäftigt.</p>
@@ -2658,7 +2632,6 @@
         </ul>
         <div class="foot">
           <a class="btn" style="width:100%; border-color: var(--line-2);" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener">Einmalig buchen <span class="arrow">→</span></a>
-          <a class="btn pay-btn" data-pay="einzel" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
         </div>
       </div>
       <div class="card feature">
@@ -2673,7 +2646,6 @@
         </ul>
         <div class="foot">
           <a class="btn primary" style="width:100%; background:var(--mint); color: var(--green-1); border-color: var(--mint);" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener">Block sichern <span class="arrow">→</span></a>
-          <a class="btn pay-btn" data-pay="block10" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
           <span class="terms">Erhalte ein Training kostenlos &amp; spare €79</span>
         </div>
       </div>
@@ -2689,7 +2661,6 @@
         </ul>
         <div class="foot">
           <a class="btn" style="width:100%; border-color: var(--line-2);" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener">Gespräch anfragen <span class="arrow">→</span></a>
-          <a class="btn pay-btn" data-pay="individuell" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
           <span class="terms">individuelle Verrechnung</span>
         </div>
       </div>
@@ -2705,7 +2676,6 @@
         </ul>
         <div class="foot">
           <a class="btn" style="width:100%; border-color: var(--line-2);" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener">Platz sichern <span class="arrow">→</span></a>
-          <a class="btn pay-btn" data-pay="kleingruppe" href="https://buchen.offisy.at/booking/online/803ecb5e-24ee-4009-8c26-cd04b92d35a6" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg> Online bezahlen</a>
           <span class="terms">Pauschal €100 · bis zu 4 Personen</span>
         </div>
       </div>
@@ -2714,7 +2684,7 @@
     <div class="matrix">
       <div class="it accent"><b>Probetraining</b>1× gratis · unverbindlich</div>
       <a class="it matrix-link" href="#pkg-kleingruppe" data-hover-scroll="#pkg-kleingruppe"><b>Kleingruppe</b>3–4 Personen · Pauschal €100</a>
-      <div class="it"><b>Outdoor</b>+1€ pro gefahrenem km</div>
+      <div class="it"><b>Outdoor/Mobil</b>+1€ pro gefahrenem km</div>
       <div class="it"><b>Zahlung</b>SEPA · Karte · Bar</div>
     </div>
   </div>
@@ -3107,7 +3077,7 @@
           <li><a href="#svc-functional">Functional</a></li>
           <li><a href="#svc-athletic">Athletic</a></li>
           <li><a href="#svc-med">Med. Fitness</a></li>
-          <li><a href="#svc-outdoor">Outdoor</a></li>
+          <li><a href="#svc-outdoor">Outdoor/Mobil</a></li>
           <li><a href="#svc-mobility">Therapeutisches Boxen</a></li>
         </ul>
       </div>
@@ -3811,23 +3781,6 @@
     }
   })();
 
-  // ---------- STRIPE PAYMENT LINKS (zentral konfiguriert) ----------
-  // Pro Leistung einen Stripe Payment Link erstellen (dashboard.stripe.com → Payment Links)
-  // und NUR HIER eintragen — alle "Online bezahlen"-Buttons übernehmen ihn automatisch.
-  // Leere Einträge fallen auf Offisy zurück, bis der Link existiert.
-  (function(){
-    var STRIPE_LINKS = {
-      einzel:      'https://buy.stripe.com/test_aFa28q8lqfDIcNsbaYdQQ00', // Personal Training 79€  → z.B. 'https://buy.stripe.com/xxxx'
-      outdoor:     'https://buy.stripe.com/test_dRmdR80SY63828Oa6UdQQ01', // Outdoor & Mobil 89€
-      block10:     'https://buy.stripe.com/test_aFafZg0SYezE28O6UIdQQ02', // 10er-Block 790€ (1 Training gratis)
-      kleingruppe: 'https://buy.stripe.com/test_bJe4gy7hmezE4gW0wkdQQ03', // Kleingruppe pauschal 100€
-      individuell: ''  // Individuelle Verrechnung / Firmen
-    };
-    document.querySelectorAll('a[data-pay]').forEach(function(a){
-      var link = STRIPE_LINKS[a.getAttribute('data-pay')];
-      if (link) a.setAttribute('href', link);
-    });
-  })();
 
   // ---------- MOBILE NAV DRAWER ----------
   (function(){
