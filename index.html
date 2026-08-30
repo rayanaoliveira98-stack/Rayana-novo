@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>LumiLínguas — 4 idiomas em 60 dias</title>
+  <meta name="description" content="Construa uma base de compreensão, vocabulário e pronúncia em até quatro idiomas durante uma jornada de 60 dias." />
+  <meta name="theme-color" content="#8E6CF0" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+
+  <!-- Seleção de perfil / primeira visita -->
+  <section id="screen-splash" class="screen active">
+    <div class="splash-inner">
+      <div class="logo">
+        <span class="logo-star">✨</span>
+        <h1>LumiLínguas</h1>
+        <p class="tagline">Uma base real em até 4 idiomas — jornada de 60 dias</p>
+      </div>
+      <div id="profile-list" class="profile-list"></div>
+      <div id="splash-empty" class="splash-empty">
+        <p>Antes da primeira aventura, um adulto configura tudo em 2 minutos.</p>
+      </div>
+      <button id="btn-splash-setup" class="btn-parent-link">👨‍👩‍👧 Área dos responsáveis</button>
+    </div>
+  </section>
+
+  <!-- Casa da criança -->
+  <section id="screen-home" class="screen">
+    <header class="home-top">
+      <button id="btn-home-profiles" class="btn-round small" aria-label="Trocar criança">🧒</button>
+      <span class="day-pill">Dia <b id="home-day-count">1</b></span>
+      <button id="btn-home-parent" class="btn-round small" aria-label="Área dos responsáveis">⚙️</button>
+    </header>
+    <div class="home-center">
+      <div id="home-char-wrap" class="home-char-wrap"><span id="home-char" class="home-char">🦊</span></div>
+      <button id="btn-play" class="btn-play" aria-label="Brincar">▶</button>
+    </div>
+    <nav class="home-nav">
+      <button id="btn-map" class="home-nav-btn" aria-label="Mapa da jornada">🗺️</button>
+      <button id="btn-stickers" class="home-nav-btn" aria-label="Meus adesivos">⭐</button>
+    </nav>
+    <div id="home-stickers-preview" class="stickers-preview"></div>
+  </section>
+
+  <!-- Mapa da jornada -->
+  <section id="screen-map" class="screen">
+    <header class="screen-top">
+      <button id="btn-map-back" class="btn-round small" aria-label="Voltar">←</button>
+    </header>
+    <div id="map-path" class="map-path"></div>
+  </section>
+
+  <!-- Coleção de adesivos -->
+  <section id="screen-stickers" class="screen">
+    <header class="screen-top">
+      <button id="btn-stickers-back" class="btn-round small" aria-label="Voltar">←</button>
+    </header>
+    <div id="sticker-grid" class="sticker-grid"></div>
+  </section>
+
+  <!-- Sessão diária -->
+  <section id="screen-session" class="screen">
+    <header class="session-top">
+      <div class="progress-track"><div id="session-progress" class="progress-fill"></div></div>
+      <button id="btn-session-exit" class="btn-round small" aria-label="Sair">✕</button>
+    </header>
+    <div id="session-stage" class="session-stage"></div>
+  </section>
+
+  <!-- Onboarding dos responsáveis -->
+  <section id="screen-onboarding" class="screen parent-ui">
+    <div class="progress-track ob"><div id="ob-progress" class="progress-fill"></div></div>
+    <div id="onboarding-body" class="onboarding-body"></div>
+  </section>
+
+  <!-- Painel dos responsáveis -->
+  <section id="screen-parent" class="screen parent-ui">
+    <header class="screen-top">
+      <button id="btn-parent-back" class="btn-round small" aria-label="Voltar">←</button>
+      <h2 class="parent-title">Painel dos responsáveis</h2>
+    </header>
+    <nav id="parent-tabs" class="parent-tabs"></nav>
+    <div id="parent-body" class="parent-body"></div>
+  </section>
+
+  <!-- Portão parental -->
+  <div id="gate-modal" class="gate-modal">
+    <div class="gate-card">
+      <button id="gate-close" class="btn-round small gate-x" aria-label="Fechar">✕</button>
+      <div id="gate-body"></div>
+    </div>
+  </div>
+
+  <!-- Conteúdo e módulos (sem build step: funciona offline e em aparelhos antigos) -->
+  <script src="js/langs.js"></script>
+  <script src="content/curriculum.js"></script>
+  <script src="content/pack-pt.js"></script>
+  <script src="content/pack-en.js"></script>
+  <script src="content/pack-de.js"></script>
+  <script src="content/pack-es.js"></script>
+  <script src="content/pack-fr.js"></script>
+  <script src="content/pack-it.js"></script>
+  <script src="content/pack-tr.js"></script>
+  <script src="content/pack-zh.js"></script>
+  <script src="content/pack-ja.js"></script>
+  <script src="js/srs.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/gate.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/activities.js"></script>
+  <script src="js/parent.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
