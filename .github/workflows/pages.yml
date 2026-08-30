@@ -1,5 +1,9 @@
 name: Deploy LumiLínguas (GitHub Pages)
 
+# Publica a pasta lumilinguas/ no branch gh-pages (o GitHub Pages serve esse
+# branch). Método clássico: não exige a permissão de criação de site do Pages,
+# que o token padrão do workflow não possui neste repositório.
+
 on:
   push:
     branches:
@@ -11,9 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -33,19 +35,16 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Habilitar/configurar o GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - name: Empacotar a pasta do aplicativo
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: lumilinguas
-      - name: Publicar
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publicar no branch gh-pages
+        run: |
+          cd lumilinguas
+          rm -rf dist node_modules
+          touch .nojekyll
+          git init -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy LumiLínguas (${GITHUB_SHA})"
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
