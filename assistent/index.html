@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Büro-Assistent</title>
+<style>
+:root{
+  --akzent:#2563eb;
+  --akzent-weich:rgba(37,99,235,.10);
+  --bg:#f5f6f8;
+  --karte:#ffffff;
+  --text:#14171c;
+  --grau:#6a7280;
+  --linie:#e3e6ea;
+  --dunkel:#12151a;
+  --gut:#0f7a4f;
+  --warn:#b45309;
+  --stop:#b42318;
+  --r:12px;
+  --schatten:0 1px 2px rgba(16,24,40,.06), 0 8px 24px -12px rgba(16,24,40,.18);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
+h1{font-size:20px}
+h2{font-size:17px}
+h3{font-size:14px;color:var(--grau);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+p{margin:0}
+a{color:var(--akzent)}
+
+/* Kopf */
+.top{background:var(--dunkel);color:#fff;position:sticky;top:0;z-index:20}
+.top__row{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.02em}
+.brand__dot{width:10px;height:10px;border-radius:3px;background:var(--akzent);display:block}
+.top__spacer{flex:1}
+.switch{display:flex;align-items:center;gap:8px}
+.switch select{background:#1e232b;color:#fff;border:1px solid #2c333d;border-radius:8px;padding:7px 10px;font:inherit;font-size:14px;max-width:230px}
+.tabs{max-width:1200px;margin:0 auto;padding:0 12px;display:flex;gap:2px;overflow-x:auto}
+.tab{background:none;border:0;color:#9aa3af;padding:10px 14px;font:inherit;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:#fff}
+.tab.is-active{color:#fff;border-bottom-color:var(--akzent)}
+
+.wrap{max-width:1200px;margin:0 auto;padding:22px 20px 80px}
+.karte{background:var(--karte);border:1px solid var(--linie);border-radius:var(--r);box-shadow:var(--schatten)}
+.karte__kopf{padding:14px 18px;border-bottom:1px solid var(--linie);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.karte__leib{padding:18px}
+.stapel>*+*{margin-top:16px}
+.zeile{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rechts{margin-left:auto}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.split{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.grid2,.grid3,.grid4,.split{grid-template-columns:1fr}}
+
+/* Formulare */
+.feld{display:block;margin-bottom:14px}
+.feld>span{display:block;font-size:13px;color:var(--grau);margin-bottom:5px;font-weight:500}
+input,select,textarea{width:100%;border:1px solid var(--linie);border-radius:9px;padding:9px 11px;font:inherit;font-size:14px;background:#fff;color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--akzent);box-shadow:0 0 0 3px var(--akzent-weich)}
+textarea{min-height:96px;resize:vertical}
+.feld--eng{max-width:220px}
+.hilfe{font-size:12px;color:var(--grau);margin-top:4px}
+
+.btn{border:1px solid var(--linie);background:#fff;color:var(--text);border-radius:9px;padding:9px 14px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#c9cfd6;background:#fbfbfc}
+.btn--primar{background:var(--akzent);border-color:var(--akzent);color:#fff}
+.btn--primar:hover{filter:brightness(.94);background:var(--akzent)}
+.btn--klein{padding:6px 10px;font-size:13px}
+.btn--gefahr{color:var(--stop);border-color:#f0c8c4}
+.btn--geist{background:transparent;border-color:transparent;color:var(--grau)}
+.btn--geist:hover{background:#eceef1;border-color:transparent}
+
+/* Module */
+.modliste{display:flex;flex-direction:column;gap:3px}
+.modul{text-align:left;background:none;border:0;border-radius:9px;padding:9px 12px;font:inherit;font-size:14px;cursor:pointer;color:var(--text);display:flex;gap:9px;align-items:baseline}
+.modul:hover{background:#eceef1}
+.modul.is-active{background:var(--akzent-weich);color:var(--akzent);font-weight:600}
+.modul small{color:var(--grau);font-size:12px}
+.modul.is-active small{color:var(--akzent);opacity:.75}
+
+/* Ausgabe */
+.aus{border:1px solid var(--linie);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.aus__kopf{background:#fafbfc;border-bottom:1px solid var(--linie);padding:8px 12px;display:flex;align-items:center;gap:10px}
+.aus__kopf strong{font-size:13px;font-weight:600}
+.aus pre{margin:0;padding:14px;white-space:pre-wrap;word-wrap:break-word;font:inherit;font-size:14.5px;line-height:1.6}
+.hinweis{background:#fff8ed;border:1px solid #fce3bd;color:#7a4a08;border-radius:9px;padding:10px 12px;font-size:13.5px;margin-bottom:10px}
+.hinweis--rot{background:#fef3f2;border-color:#fbd3ce;color:#8a2018}
+
+/* Tabelle */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--grau);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--linie)}
+td{padding:10px;border-bottom:1px solid var(--linie);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.tabelle-scroll{overflow-x:auto}
+
+.kpi{padding:16px 18px}
+.kpi__zahl{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.kpi__text{font-size:13px;color:var(--grau);margin-top:4px}
+
+.marke{display:inline-block;font-size:12px;font-weight:600;padding:3px 8px;border-radius:20px;background:#eef0f3;color:var(--grau)}
+.marke--neu{background:#e8f0fe;color:#1a56db}
+.marke--angebot{background:#fff4e5;color:var(--warn)}
+.marke--kunde{background:#e6f4ee;color:var(--gut)}
+.marke--ruhend{background:#eef0f3;color:var(--grau)}
+.marke--faellig{background:#fdecea;color:var(--stop)}
+
+.leer{text-align:center;padding:36px 18px;color:var(--grau);font-size:14px}
+.fortschritt{height:6px;border-radius:99px;background:#e9ecf0;overflow:hidden}
+.fortschritt>div{height:100%;background:var(--akzent)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--dunkel);color:#fff;padding:11px 18px;border-radius:99px;font-size:14px;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.trenner{height:1px;background:var(--linie);margin:18px 0}
+.mini{font-size:12.5px;color:var(--grau)}
+@media print{.top,.tabs,.btn,.modliste,.hinweis{display:none!important}.wrap{padding:0}.karte{border:0;box-shadow:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top__row">
+    <div class="brand"><span class="brand__dot"></span><span id="markeName">Büro-Assistent</span></div>
+    <div class="top__spacer"></div>
+    <div class="switch">
+      <select id="betriebWahl" aria-label="Betrieb wählen"></select>
+      <button class="btn btn--klein" data-aktion="neuer-betrieb">+ Betrieb</button>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab is-active" data-ansicht="uebersicht">Übersicht</button>
+    <button class="tab" data-ansicht="assistent">Assistent</button>
+    <button class="tab" data-ansicht="kunden">Kunden</button>
+    <button class="tab" data-ansicht="profil">Betriebsprofil</button>
+    <button class="tab" data-ansicht="einstellungen">Einstellungen</button>
+  </nav>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<script>
+/* ============================================================
+   BÜRO-ASSISTENT — Daten, Vorlagen, Oberfläche
+   Alles läuft lokal im Browser. Keine Server, keine Cloud.
+   ============================================================ */
+
+/* ---------- 1. Speicher ---------- */
+var SCHLUESSEL = 'bueroassistent.v1';
+
+function uid(){ return Math.random().toString(36).slice(2,10); }
+
+function leeresProfil(){
+  return {
+    name:'', kurz:'', ort:'', branche:'', inhaber:'',
+    anrede:'sie', emojis:'nein', duBeiAngebot:false, ton:'',
+    leistungen:[], zuschlaege:'',
+    einstiegName:'', einstiegPreis:'',
+    buchungsweg:'', zeiten:'', vorlauf:'',
+    ustPflichtig:true, ustSatz:20, zahlungsziel:14, zahlungsarten:'Überweisung',
+    signaturMail:'', signaturWa:'',
+    insta:'', tabus:'', grenzen:'', verweis:''
+  };
+}
+
+function neuerBetrieb(name){
+  var p = leeresProfil();
+  p.name = name || 'Neuer Betrieb';
+  return { id:uid(), profil:p, kunden:[], verlauf:[] };
+}
+
+var Start = {
+  v:1,
+  einst:{ produkt:'Büro-Assistent', akzent:'#2563eb' },
+  aktivId:null,
+  betriebe:[]
+};
+
+var S = laden();
+
+function laden(){
+  try{
+    var roh = localStorage.getItem(SCHLUESSEL);
+    if(roh){
+      var d = JSON.parse(roh);
+      if(d && d.betriebe) return d;
+    }
+  }catch(e){}
+  var s = JSON.parse(JSON.stringify(Start));
+  var b = neuerBetrieb('Mein Betrieb');
+  s.betriebe.push(b);
+  s.aktivId = b.id;
+  return s;
+}
+
+function sichern(){
+  try{ localStorage.setItem(SCHLUESSEL, JSON.stringify(S)); }
+  catch(e){ meldung('Speichern nicht möglich (Browser-Speicher voll oder gesperrt).'); }
+}
+
+function aktiv(){
+  var b = S.betriebe.filter(function(x){ return x.id===S.aktivId; })[0];
+  if(!b){ b = S.betriebe[0]; if(b) S.aktivId = b.id; }
+  return b;
+}
+
+/* ---------- 2. Kleine Helfer ---------- */
+function esc(t){
+  return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function txt(v, platzhalter){
+  var s = (v==null?'':String(v)).trim();
+  return s ? s : (platzhalter||'');
+}
+function zahl(v){
+  if(v===''||v==null) return null;
+  var n = parseFloat(String(v).replace(/\./g,'').replace(',','.'));
+  return isNaN(n) ? null : n;
+}
+function euro(n){
+  var neg = n < 0; n = Math.abs(n);
+  var ganz = Math.floor(n).toString();
+  var rest = Math.round((n - Math.floor(n))*100); if(rest===100){ rest=0; ganz=(parseInt(ganz,10)+1).toString(); }
+  ganz = ganz.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return (neg?'-':'')+ganz+','+('0'+rest).slice(-2)+' Euro';
+}
+function heute(){ var d=new Date(); d.setHours(0,0,0,0); return d; }
+function plusTage(d,n){ var x=new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+function datumAT(d){ return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear(); }
+function isoDatum(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+function ausISO(s){ if(!s) return null; var t=new Date(s+'T00:00:00'); return isNaN(t.getTime())?null:t; }
+function vorname(voll){ return String(voll||'').trim().split(/\s+/)[0] || ''; }
+function duName(voll){
+  var v = String(voll||'').trim();
+  if(!v) return '';
+  if(/^(frau|herr|familie|fam\.|dr\.|mag\.|ing\.)/i.test(v)) return v;   /* höflich angesprochen bleibt höflich */
+  return vorname(v);
+}
+function slug(s){
+  return String(s||'').toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/[^a-z0-9]/g,'');
+}
+function zeilen(t){ return String(t||'').split('\n').filter(function(z){ return z.trim()!==''; }); }
+
+function meldung(t){
+  var alt = document.getElementById('toast');
+  if(alt) alt.remove();
+  var d = document.createElement('div');
+  d.className = 'toast'; d.id = 'toast'; d.textContent = t;
+  document.body.appendChild(d);
+  setTimeout(function(){ if(d.parentNode) d.remove(); }, 2600);
+}
+
+function kopieren(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ meldung('Kopiert.'); },function(){ notKopie(text); });
+  } else { notKopie(text); }
+}
+function notKopie(text){
+  var t = document.createElement('textarea');
+  t.value = text; t.style.position='fixed'; t.style.opacity='0';
+  document.body.appendChild(t); t.select();
+  try{ document.execCommand('copy'); meldung('Kopiert.'); }
+  catch(e){ meldung('Kopieren nicht möglich — bitte markieren und Strg+C.'); }
+  t.remove();
+}
+
+/* ---------- 3. Ton und Anrede ---------- */
+function sieForm(p, kanal){
+  if(p.anrede==='du') return false;
+  if(p.anrede==='sie') return true;
+  return kanal==='mail';   /* gemischt: Sie in der Mail, Du am Handy */
+}
+function anredeZeile(p, kanal, name){
+  var n = txt(name);
+  if(sieForm(p,kanal)) return n ? 'Guten Tag '+n+',' : 'Guten Tag,';
+  return n ? 'Hallo '+duName(n)+',' : 'Hallo,';
+}
+function grussFormel(p, kanal){
+  if(sieForm(p,kanal)) return 'Freundliche Grüße';
+  return 'Liebe Grüße';
+}
+function abschluss(p, kanal){
+  var g = grussFormel(p,kanal);
+  if(kanal==='mail'){
+    var sig = txt(p.signaturMail, '['+txt(p.inhaber,'NAME')+']\n['+txt(p.name,'BETRIEB')+']\n[TELEFON]');
+    return g+'\n'+sig;
+  }
+  var w = txt(p.signaturWa, vorname(p.inhaber));
+  return w ? g+'\n'+w : g;
+}
+function preisVon(p, leistungName){
+  var l = p.leistungen.filter(function(x){ return x.name===leistungName; })[0];
+  if(!l || zahl(l.preis)===null) return null;
+  return { preis: zahl(l.preis), einheit: txt(l.einheit) };
+}
+function preisText(p, leistungName){
+  var t = preisVon(p, leistungName);
+  if(!t) return '[PREIS?]';
+  return euro(t.preis) + (t.einheit ? ' pro '+t.einheit : '');
+}
+function terminWeg(p){
+  var w = txt(p.buchungsweg);
+  return w ? w : null;
+}
+
+/* ---------- 4. Prüfungen ---------- */
+var HEIKEL = [
+  {re:/\b[A-Z]{2}\d{2}[ ]?[\dA-Z]{4}[ ]?[\dA-Z]{4}/, was:'Bankdaten (IBAN)'},
+  {re:/\b\d{4}\s?\d{6}\b/, was:'Sozialversicherungsnummer'},
+  {re:/\b(diagnose|krank|krankheit|schmerz|medikament|therapie|operation|schwanger|allergie|befund)\b/i, was:'Gesundheitsdaten'},
+  {re:/\b(reisepass|personalausweis|ausweisnummer)\b/i, was:'Ausweisdaten'}
+];
+function heikelPruefen(text){
+  var t = String(text||''); var treffer = [];
+  HEIKEL.forEach(function(h){ if(h.re.test(t) && treffer.indexOf(h.was)<0) treffer.push(h.was); });
+  return treffer;
+}
+function zeilenPruefen(text, max){
+  return zeilen(text).length > (max||5);
+}
+
+/* ---------- 5. Anlass erkennen ---------- */
+function anlassErkennen(text){
+  var t = ' '+String(text||'').toLowerCase()+' ';
+  if(/(unzufrieden|beschwer|reklamation|leider nicht|ärgerlich|enttäusch|mangel|kaputt|falsch geliefert|zu spät)/.test(t)) return 'beschwerde';
+  if(/(was kostet|wie teuer|preis|kosten|angebot|kostenvoranschlag|honorar)/.test(t)) return 'preis';
+  if(/(termin|wann hätten|frei|verfügbar|zeitfenster|buchen|vorbeikommen)/.test(t)) return 'termin';
+  if(/(newsletter|werbung|kooperation|seo|backlink|reichweite steigern|sonderangebot für sie)/.test(t)) return 'spam';
+  if(/(neu hier|empfohlen|erstes mal|noch nie|kennenlernen)/.test(t)) return 'neukunde';
+  return 'frage';
+}
+
+/* ============================================================
+   6. VORLAGEN — hier steckt die Arbeit drin
+   Jede Vorlage liefert: {titel, bloecke:[{label,text}], hinweise:[]}
+   ============================================================ */
+
+function ds(p, kanal, sieText, duText){ return sieForm(p,kanal) ? sieText : duText; }
+
+var Gen = {};
+
+/* --- Kundenantwort --- */
+Gen.antwort = function(p, e){
+  var kanal = e.kanal==='mail' ? 'mail' : 'wa';
+  var hin = [];
+  var anrede = anredeZeile(p, kanal, e.name);
+  var leistung = txt(e.leistung, ds(p,kanal,'die gewünschte Leistung','das'));
+  var weg = terminWeg(p);
+  var betreff = '';
+  var koerper = '';
+
+  function schritt_termin(){
+    if(weg) return ds(p,kanal,'Termine können Sie direkt hier fixieren: '+weg, 'Termin kannst du dir direkt hier aussuchen: '+weg);
+    return ds(p,kanal,'Passt Ihnen diese Woche oder nächste besser?','Passt dir diese Woche oder nächste besser?');
+  }
+
+  if(e.anlass==='preis'){
+    var pt = txt(e.leistung) ? preisText(p, e.leistung) : '[PREIS?]';
+    if(pt.indexOf('[PREIS?]')>=0) hin.push('Preis für "'+txt(e.leistung,'diese Leistung')+'" fehlt im Betriebsprofil — bitte eintragen.');
+    betreff = 'Ihre Anfrage: '+txt(e.leistung,'Leistung');
+    koerper = anrede+'\n\n'
+      + ds(p,kanal,'danke für Ihre Nachricht. ','danke für deine Nachricht. ')
+      + leistung+' kostet '+pt+'.'
+      + (txt(p.zuschlaege) ? '\n\n'+txt(p.zuschlaege) : '')
+      + '\n\n'+schritt_termin();
+  }
+  else if(e.anlass==='neukunde'){
+    var eName = txt(p.einstiegName,'[EINSTIEGSANGEBOT?]');
+    var ePreis = txt(p.einstiegPreis) ? (zahl(p.einstiegPreis)!==null ? euro(zahl(p.einstiegPreis)) : txt(p.einstiegPreis)) : '[PREIS?]';
+    if(eName.indexOf('[')===0 || ePreis.indexOf('[')===0) hin.push('Einstiegsangebot oder dessen Preis fehlt im Betriebsprofil.');
+    betreff = 'Ihr Start bei '+txt(p.name,'uns');
+    koerper = anrede+'\n\n'
+      + ds(p,kanal,'danke für Ihr Interesse. ','danke für dein Interesse. ')
+      + ds(p,kanal,'Für den Start empfehle ich Ihnen ','Für den Start empfehle ich dir ')
+      + eName+' um '+ePreis+'.'
+      + '\n\n'+ds(p,kanal,'So sehen wir gemeinsam, was Sie wirklich brauchen, ohne dass Sie sich gleich auf ein großes Paket festlegen.',
+                          'So sehen wir gemeinsam, was du wirklich brauchst, ohne dass du dich gleich auf ein großes Paket festlegst.')
+      + '\n\n'+schritt_termin();
+  }
+  else if(e.anlass==='termin'){
+    betreff = 'Terminanfrage';
+    var satz2;
+    if(txt(p.vorlauf)){
+      satz2 = txt(e.leistung) ? 'Für '+leistung+' brauche ich aktuell rund '+txt(p.vorlauf)+' Vorlauf.'
+                              : 'Aktuell brauche ich rund '+txt(p.vorlauf)+' Vorlauf.';
+    } else {
+      satz2 = txt(e.leistung) ? 'Für '+leistung+' schaue ich, was sich am schnellsten ausgeht.'
+                              : 'Ich schaue, was sich am schnellsten ausgeht.';
+    }
+    koerper = anrede+'\n\n'
+      + ds(p,kanal,'danke für Ihre Nachricht. ','danke für deine Nachricht. ')
+      + satz2
+      + '\n\n'
+      + (weg ? ds(p,kanal,'Freie Termine sehen Sie hier und können direkt fixieren: '+weg,
+                          'Freie Termine siehst du hier und kannst direkt fixieren: '+weg)
+             : ds(p,kanal,'Ich melde mich heute noch mit zwei Terminvorschlägen. An welchen Tagen geht es bei Ihnen grundsätzlich?',
+                          'Ich melde mich heute noch mit zwei Terminvorschlägen. An welchen Tagen geht es bei dir grundsätzlich?'));
+  }
+  else if(e.anlass==='beschwerde'){
+    var problem = txt(e.detail,'[WAS GENAU WAR DAS PROBLEM?]');
+    var loesung = txt(e.loesung,'[LÖSUNG: was Sie konkret tun]');
+    if(problem.indexOf('[')===0) hin.push('Problem in einem Satz eintragen, sonst bleibt die Antwort hohl.');
+    if(loesung.indexOf('[')===0) hin.push('Konkrete Lösung eintragen — ohne Lösung wirkt die Antwort wie eine Ausrede.');
+    betreff = 'Ihre Rückmeldung';
+    koerper = anrede+'\n\n'
+      + 'dass '+problem+', ärgert mich.'
+      + '\n\n'+loesung+'.'
+      + '\n\n'+ds(p,kanal,'Ich rufe Sie morgen an, damit wir das direkt klären. Passt es Ihnen am Vormittag?',
+                           'Ich ruf dich morgen an, damit wir das direkt klären. Passt es dir am Vormittag?');
+  }
+  else if(e.anlass==='absage'){
+    betreff = 'Ihre Anfrage';
+    koerper = anrede+'\n\n'
+      + ds(p,kanal,'danke für Ihre Anfrage. ','danke für deine Anfrage. ')
+      + leistung+' bieten wir nicht an.'
+      + (txt(p.verweis) ? '\n\nDafür ist '+txt(p.verweis)+' die richtige Stelle.' : '')
+      + '\n\n'+ds(p,kanal,'Wenn Sie '+(p.leistungen.length ? p.leistungen.slice(0,2).map(function(l){return l.name;}).join(' oder ') : '[LEISTUNG]')+' brauchen, melden Sie sich jederzeit.',
+                           'Wenn du '+(p.leistungen.length ? p.leistungen.slice(0,2).map(function(l){return l.name;}).join(' oder ') : '[LEISTUNG]')+' brauchst, meld dich jederzeit.');
+  }
+  else if(e.anlass==='spam'){
+    return {
+      titel:'Einordnung',
+      bloecke:[{label:'Meine Einschätzung', text:'Das ist Werbung bzw. eine Kaltakquise-Nachricht, keine Kundenanfrage. Vorschlag: nicht antworten, Kontakt stummschalten.'}],
+      hinweise:['Soll ich trotzdem eine kurze, höfliche Absage schreiben?']
+    };
+  }
+  else {
+    betreff = 'Ihre Frage';
+    koerper = anrede+'\n\n'
+      + ds(p,kanal,'danke für Ihre Nachricht. ','danke für deine Nachricht. ')
+      + txt(e.detail,'[ANTWORT IN EINEM SATZ]')+'.'
+      + '\n\n'+ds(p,kanal,'Wenn noch etwas offen ist: Rufen Sie mich kurz an, dann klären wir es in zwei Minuten.',
+                           'Wenn noch etwas offen ist: Ruf mich kurz an, dann klären wir es in zwei Minuten.');
+    if(!txt(e.detail)) hin.push('Kernaussage der Antwort in das Feld "Inhalt" schreiben — der Rest steht.');
+  }
+
+  var bloecke = [];
+  if(kanal==='mail'){
+    bloecke.push({label:'Betreff', text:betreff});
+    bloecke.push({label:'E-Mail', text:koerper+'\n\n'+abschluss(p,'mail')});
+  } else {
+    var wa = koerper + (txt(p.signaturWa) ? '\n\n'+txt(p.signaturWa) : '');
+    bloecke.push({label:'WhatsApp / Instagram / SMS', text:wa});
+    if(zeilenPruefen(wa,5)) hin.push('Antwort ist länger als 5 Zeilen — für WhatsApp kürzen.');
+  }
+  var heikel = heikelPruefen(e.nachricht);
+  if(heikel.length) hin.push('Achtung: Die eingefügte Nachricht enthält '+heikel.join(' und ')+'. Solche Daten besser nicht in KI-Tools kopieren.');
+  return { titel:'Kundenantwort', bloecke:bloecke, hinweise:hin };
+};
+
+/* --- Angebot --- */
+Gen.angebot = function(p, e){
+  var hin = [];
+  var posRoh = (e.positionen||[]).filter(function(x){ return txt(x.leistung); });
+  if(!posRoh.length) hin.push('Mindestens eine Position wählen.');
+  var netto = 0, fehlt = false;
+  var breiten = [34,6,14,14];
+  var kopf = ['Position','Menge','Einzelpreis','Gesamt'];
+  function pad(s,n){ s=String(s); return s.length>=n ? s.slice(0,n) : s + new Array(n-s.length+1).join(' '); }
+  function padL(s,n){ s=String(s); return s.length>=n ? s : new Array(n-s.length+1).join(' ')+s; }
+  var tab = pad(kopf[0],breiten[0])+padL(kopf[1],breiten[1])+padL(kopf[2],breiten[2])+padL(kopf[3],breiten[3])+'\n';
+  tab += new Array(breiten[0]+breiten[1]+breiten[2]+breiten[3]+1).join('-')+'\n';
+  posRoh.forEach(function(x){
+    var menge = zahl(x.menge)===null ? 1 : zahl(x.menge);
+    var pr = preisVon(p, x.leistung);
+    var ep = pr ? pr.preis : null;
+    if(ep===null) fehlt = true;
+    var ges = ep===null ? null : ep*menge;
+    if(ges!==null) netto += ges;
+    tab += pad(x.leistung,breiten[0])
+        + padL(String(menge).replace('.',','),breiten[1])
+        + padL(ep===null?'[PREIS?]':euro(ep).replace(' Euro',''),breiten[2])
+        + padL(ges===null?'[PREIS?]':euro(ges).replace(' Euro',''),breiten[3])+'\n';
+  });
+  if(fehlt) hin.push('Für mindestens eine Position fehlt der Preis im Betriebsprofil.');
+
+  var summe = '';
+  if(p.ustPflichtig){
+    var satz = zahl(p.ustSatz)===null ? 20 : zahl(p.ustSatz);
+    var ust = netto*satz/100;
+    summe = 'Netto: '+euro(netto)+'\nUSt '+satz+' %: '+euro(ust)+'\nGesamt inkl. USt: '+euro(netto+ust);
+  } else {
+    summe = 'Gesamt: '+euro(netto)+'\nKleinunternehmer, keine USt.';
+  }
+  var gueltig = datumAT(plusTage(heute(),14));
+  var zz = zahl(p.zahlungsziel)===null ? 14 : zahl(p.zahlungsziel);
+  var sieAngebot = true; /* Angebote immer in der Sie-Form, außer das Profil sagt anders */
+  var kanalAngebot = p.duBeiAngebot ? 'wa' : 'mail';
+  var name = txt(e.name,'[KUNDENNAME]');
+
+  var text =
+    'Angebot'+(txt(e.nummer)?' Nr. '+txt(e.nummer):'')+'\n'
+    + txt(p.name,'[BETRIEB]')+(txt(p.ort)?', '+txt(p.ort):'')+'\n'
+    + 'Datum: '+datumAT(heute())+'\n\n'
+    + 'Für: '+name+'\n\n'
+    + (p.duBeiAngebot ? anredeZeile(p,'wa',e.name) : 'Guten Tag '+name+',')+'\n\n'
+    + (p.duBeiAngebot ? 'hier dein Angebot:' : 'hier Ihr Angebot:')+'\n\n'
+    + tab + '\n'
+    + summe + '\n\n'
+    + 'Gültig bis '+gueltig+' (14 Tage).\n'
+    + 'Zahlung: '+zz+' Tage nach Rechnung, '+txt(p.zahlungsarten,'[ZAHLUNGSARTEN?]')+'.\n'
+    + (txt(p.zuschlaege) ? txt(p.zuschlaege)+'\n' : '')
+    + (txt(e.notiz) ? '\n'+txt(e.notiz)+'\n' : '')
+    + '\n' + (p.duBeiAngebot ? 'Sag mir kurz Bescheid, ob das so passt.' : 'Sagen Sie mir kurz Bescheid, ob das so passt.')
+    + '\n\n' + abschluss(p, kanalAngebot);
+
+  var gesamt = p.ustPflichtig ? netto*(1+((zahl(p.ustSatz)===null?20:zahl(p.ustSatz))/100)) : netto;
+  var kurz =
+    (p.duBeiAngebot ? 'Hallo '+duName(name)+', ' : 'Guten Tag '+name+', ')
+    + 'hier kurz das Angebot: '+posRoh.map(function(x){ return (zahl(x.menge)||1)+'x '+x.leistung; }).join(', ')+'.\n'
+    + 'Gesamt '+(fehlt?'[PREIS?]':euro(gesamt))+(p.ustPflichtig?' inkl. USt':' (Kleinunternehmer, keine USt)')+', gültig bis '+gueltig+'.\n'
+    + (p.duBeiAngebot ? 'Passt das für dich?' : 'Passt das für Sie?');
+
+  return {
+    titel:'Angebot',
+    bloecke:[
+      {label:'Angebot (E-Mail oder Ausdruck)', text:text},
+      {label:'Kurzfassung für WhatsApp (3 Zeilen)', text:kurz}
+    ],
+    hinweise:hin
+  };
+};
+
+/* --- Rechnungstext --- */
+Gen.rechnung = function(p, e){
+  var hin = [];
+  var kanal = e.kanal==='mail'?'mail':'wa';
+  var betrag = zahl(e.betrag)===null ? '[BETRAG?]' : euro(zahl(e.betrag));
+  if(betrag==='[BETRAG?]') hin.push('Betrag eintragen.');
+  var zz = zahl(p.zahlungsziel)===null ? 14 : zahl(p.zahlungsziel);
+  var faellig = datumAT(plusTage(heute(), zz));
+  var name = txt(e.name);
+  var leistung = txt(e.leistung,'[LEISTUNG]');
+
+  var koerper = anredeZeile(p,kanal,name)+'\n\n'
+    + ds(p,kanal,'anbei die Rechnung für '+leistung+' über '+betrag+'.','anbei die Rechnung für '+leistung+' über '+betrag+'.')
+    + '\n\n'+'Zahlbar bis '+faellig+' auf [IBAN], '+txt(p.zahlungsarten,'Überweisung')+'.'
+    + '\n\n'+ds(p,kanal,'Danke für den Auftrag.','Danke für den Auftrag.');
+
+  var bloecke = [];
+  if(kanal==='mail'){
+    bloecke.push({label:'Betreff', text:'Rechnung '+txt(e.nummer,'[NR]')+' — '+leistung});
+    bloecke.push({label:'E-Mail', text:koerper+'\n\n'+abschluss(p,'mail')});
+  } else {
+    bloecke.push({label:'WhatsApp', text:koerper+(txt(p.signaturWa)?'\n\n'+txt(p.signaturWa):'')});
+  }
+  hin.push('Die Rechnung selbst erstellt das Programm nicht — nur den Text dazu.');
+  return { titel:'Rechnungstext', bloecke:bloecke, hinweise:hin };
+};
+
+/* --- Mahnung --- */
+Gen.mahnung = function(p, e){
+  var hin = [];
+  var betrag = zahl(e.betrag)===null ? '[BETRAG?]' : euro(zahl(e.betrag));
+  if(betrag==='[BETRAG?]') hin.push('Betrag eintragen.');
+  var rd = ausISO(e.datum);
+  var rdTxt = rd ? datumAT(rd) : '[RECHNUNGSDATUM]';
+  var neu = datumAT(plusTage(heute(),7));
+  var name = txt(e.name,'[KUNDENNAME]');
+  var nummer = txt(e.nummer,'[RECHNUNGSNUMMER]');
+  var text;
+
+  if(e.stufe==='2'){
+    text = 'Guten Tag '+name+',\n\n'
+      + 'die Rechnung '+nummer+' vom '+rdTxt+' über '+betrag+' ist weiterhin offen. Meine erste Erinnerung ist ohne Zahlung geblieben.\n\n'
+      + 'Ich ersuche Sie um Überweisung bis '+neu+' auf [IBAN].\n\n'
+      + 'Sollte bis dahin nichts eingehen, muss ich die Forderung weitergeben. Das möchte ich vermeiden — wenn etwas dazwischengekommen ist, melden Sie sich bitte, dann finden wir eine Lösung.\n\n'
+      + abschluss(p,'mail');
+  } else {
+    text = 'Guten Tag '+name+',\n\n'
+      + 'die Rechnung '+nummer+' vom '+rdTxt+' über '+betrag+' ist bei mir noch offen. Vermutlich ist sie im Alltag untergegangen.\n\n'
+      + 'Ich ersuche Sie um Überweisung bis '+neu+' auf [IBAN].\n\n'
+      + 'Falls die Zahlung inzwischen erfolgt ist, betrachten Sie diese Nachricht als gegenstandslos.\n\n'
+      + abschluss(p,'mail');
+  }
+  var kurz = 'Guten Tag '+name+', die Rechnung '+nummer+' über '+betrag+' ist noch offen. Ich ersuche um Überweisung bis '+neu+'. Falls schon bezahlt: bitte ignorieren.';
+  return {
+    titel: e.stufe==='2' ? '2. Mahnung' : 'Zahlungserinnerung',
+    bloecke:[{label:'E-Mail / Brief', text:text},{label:'Kurzfassung WhatsApp', text:kurz}],
+    hinweise:hin
+  };
+};
+
+/* --- Terminbestätigung --- */
+Gen.termin = function(p, e){
+  var hin = [];
+  var kanal = e.kanal==='mail'?'mail':'wa';
+  var d = ausISO(e.datum);
+  var dTxt = d ? datumAT(d) : '[DATUM]';
+  var wochentag = d ? ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'][d.getDay()] : '';
+  var uhr = txt(e.uhrzeit,'[UHRZEIT]');
+  var ort = txt(e.ort, txt(p.ort,'[ORT]'));
+  var leistung = txt(e.leistung,'[LEISTUNG]');
+  if(!d) hin.push('Datum eintragen.');
+
+  var text = anredeZeile(p,kanal,e.name)+'\n'
+    + 'Termin: '+leistung+'\n'
+    + 'Wann: '+(wochentag?wochentag+', ':'')+dTxt+' um '+uhr+'\n'
+    + 'Wo: '+ort+'\n'
+    + 'Bitte mitbringen: '+txt(e.mitbringen,'nichts Besonderes');
+
+  var erinnerung = ds(p,kanal,
+      'Kurze Erinnerung: morgen um '+uhr+' haben wir unseren Termin in '+ort+'.\nWenn etwas dazwischenkommt, sagen Sie mir bitte heute noch Bescheid.',
+      'Kurze Erinnerung: morgen um '+uhr+' haben wir unseren Termin in '+ort+'.\nWenn etwas dazwischenkommt, sag mir bitte heute noch Bescheid.');
+
+  return {
+    titel:'Terminbestätigung',
+    bloecke:[{label:'Bestätigung (heute senden)', text:text},{label:'Erinnerung (am Vortag senden)', text:erinnerung}],
+    hinweise:hin
+  };
+};
+
+/* --- Bewertungsantwort --- */
+Gen.bewertung = function(p, e){
+  var hin = [];
+  var name = txt(e.name);
+  var detail = txt(e.detail);
+  var text;
+  if(e.art==='negativ'){
+    if(!detail) hin.push('Ein Detail eintragen (worum ging es konkret?) — sonst klingt die Antwort nach Textbaustein.');
+    text = (name?name+', ':'')+'danke, dass Sie das ansprechen.\n'
+      + 'Dass '+txt(detail,'[WAS SCHIEFGELAUFEN IST]')+', entspricht nicht dem, wie wir arbeiten.\n'
+      + 'Ich schaue mir den Fall persönlich an und melde mich bei Ihnen.\n'
+      + 'Bitte melden Sie sich direkt bei mir, dann klären wir das ohne Umweg.';
+  } else {
+    if(!detail) hin.push('Ein konkretes Detail aus der Bewertung aufgreifen — "Danke für die tolle Bewertung" liest niemand.');
+    text = (name?name+', ':'')+'danke für die Rückmeldung.\n'
+      + 'Dass '+txt(detail,'[KONKRETES DETAIL AUS DER BEWERTUNG]')+', freut mich besonders.\n'
+      + 'Wir sehen uns beim nächsten Mal.';
+  }
+  return { titel:'Antwort auf die Bewertung', bloecke:[{label:'Öffentliche Antwort', text:text}], hinweise:hin };
+};
+
+/* --- Instagram-Post --- */
+var HOOKS = [
+  'Der Fehler, den fast alle bei {T} machen',
+  'Warum {T} bei den meisten zu teuer wird',
+  '{T} falsch geplant — das kostet dich Wochen',
+  'Das passiert, wenn {T} zu spät kommt',
+  '3 Dinge, die {T} sofort billiger machen',
+  'So läuft {T} in {O} wirklich ab'
+];
+Gen.post = function(p, e){
+  var hin = [];
+  var thema = txt(e.thema,'[THEMA]');
+  var ort = txt(p.ort,'[ORT]');
+  var br = slug(p.branche) || slug(thema) || 'betrieb';
+  var o = slug(p.ort) || 'ort';
+  var emojiOk = (p.emojis==='ja' || p.emojis==='insta');
+  var hooks = HOOKS.map(function(h){ return h.replace('{T}', thema).replace('{O}', ort); }).slice(0,3);
+
+  var cta = txt(p.buchungsweg) ? 'Termin direkt über den Link in der Bio.' : 'Schreib mir "'+(thema.split(' ')[0]||'INFO').toUpperCase()+'" als DM, dann melde ich mich.';
+  var caption = hooks[0]+'\n\n'
+    + txt(e.problem,'[Das Problem in einem Satz — was der Kunde falsch macht oder befürchtet.]')+'\n\n'
+    + txt(e.loesung,'[Wie ihr das löst — konkret, ein Beispiel aus dieser Woche.]')+'\n\n'
+    + (txt(p.kurz) ? txt(p.kurz)+(ort?' in '+ort+'.':'') : '[Was euch unterscheidet, in einem Satz.]')+'\n\n'
+    + cta;
+
+  var tags = ['#'+o, '#'+br+o, '#'+br, '#'+o+'tipps', '#'+br+'oesterreich'];
+  var bild = txt(e.foto) ? 'Zu sehen: '+txt(e.foto)+'. Nah dran, echtes Licht, keine Stockfotos.'
+                         : 'Zu sehen: eine echte Situation aus dem Betrieb, die das Thema zeigt — Hände bei der Arbeit, Vorher/Nachher, kein gestelltes Porträt.';
+  var onScreen = (thema.split(' ').slice(0,3).join(' ') || 'Achtung').toUpperCase();
+  if(onScreen.split(' ').length>5) onScreen = onScreen.split(' ').slice(0,5).join(' ');
+  if(!emojiOk) hin.push('Emojis sind im Profil nicht erlaubt — Caption ist bewusst ohne.');
+
+  return {
+    titel:'Instagram-Post',
+    bloecke:[
+      {label:'Hook-Varianten (A/B testen)', text:hooks.map(function(h,i){ return (i+1)+'. '+h; }).join('\n')},
+      {label:'Caption', text:caption},
+      {label:'Hashtags (lokal)', text:tags.join(' ')},
+      {label:'Bild / Video', text:bild+'\n\nText on Screen: '+onScreen}
+    ],
+    hinweise:hin
+  };
+};
+
+/* --- Wochenplan --- */
+Gen.woche = function(p, e){
+  var roh = zeilen(e.aufgaben);
+  if(!roh.length) return { titel:'Wochenplan', bloecke:[{label:'Wochenplan', text:'Keine Aufgaben eingegeben.'}], hinweise:['Aufgaben eintragen — eine pro Zeile.'] };
+  var tage = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag'];
+  var bewertet = roh.map(function(z){
+    var t = z.toLowerCase(); var punkte = 0; var gruende = [];
+    var dm = t.match(/(\d{1,2})\.(\d{1,2})\.?/);
+    if(dm){ punkte += 3; gruende.push('Fixtermin'); }
+    if(/(heute|morgen|dringend|sofort|deadline|frist|spätestens)/.test(t)){ punkte += 3; gruende.push('Frist'); }
+    if(/(kunde|kundin|auftrag|termin|rechnung|angebot|mahnung|liefer|baustelle|montage)/.test(t)){ punkte += 2; gruende.push('Kundenbezug'); }
+    if(/(anruf|rückruf|mail|antworten|nachfassen)/.test(t)){ punkte += 1; }
+    if(/(irgendwann|vielleicht|idee|später|website|instagram|aufräumen|ablage|recherche|überlegen)/.test(t)){ punkte -= 2; gruende.push('kein Kundenbezug, kein Termin'); }
+    return { text:z.trim(), punkte:punkte, gruende:gruende };
+  });
+  var muss = bewertet.filter(function(a){ return a.punkte>=3; });
+  var kann = bewertet.filter(function(a){ return a.punkte>=1 && a.punkte<3; });
+  var warten = bewertet.filter(function(a){ return a.punkte<1; });
+
+  var text = 'MUSS DIESE WOCHE\n'+(muss.length?muss.map(function(a){return '- '+a.text;}).join('\n'):'- nichts')
+    + '\n\nKANN DIESE WOCHE\n'+(kann.length?kann.map(function(a){return '- '+a.text;}).join('\n'):'- nichts')
+    + '\n\nKANN WARTEN\n'+(warten.length?warten.map(function(a){return '- '+a.text+'  ('+(a.gruende.join(', ')||'kein Termin, kein Kunde')+')';}).join('\n'):'- nichts');
+
+  var offen = kann.slice();
+  var plan = '';
+  var i = 0;
+  tage.forEach(function(tag){
+    var heutePunkte = muss.slice(i, i+3);
+    if(!heutePunkte.length && !offen.length) return;
+    var fuell = heutePunkte.slice();
+    while(fuell.length<3 && i+heutePunkte.length>=muss.length && offen.length){ fuell.push(offen.shift()); }
+    if(!fuell.length) return;
+    plan += tag+'\n' + fuell.map(function(a){ return '  - '+a.text; }).join('\n') + '\n\n';
+    i += heutePunkte.length;
+  });
+  if(i<muss.length){
+    plan += 'Noch offen (passt in keine Woche mit 3 Punkten pro Tag):\n' + muss.slice(i).map(function(a){ return '  - '+a.text; }).join('\n')+'\n\n';
+  }
+  return {
+    titel:'Wochenplan',
+    bloecke:[{label:'Sortierung', text:text},{label:'Verteilt auf die Tage (max. 3 pro Tag)', text:plan.trim()||'—'}],
+    hinweise:['Verschoben wurde alles ohne Frist und ohne Kundenbezug.']
+  };
+};
+
+/* --- Lange Nachricht zusammenfassen --- */
+Gen.zusammen = function(p, e){
+  var t = String(e.text||'').replace(/\s+/g,' ').trim();
+  if(!t) return { titel:'Zusammenfassung', bloecke:[{label:'Ergebnis', text:'Kein Text eingefügt.'}], hinweise:['Nachricht einfügen.'] };
+  var saetze = t.replace(/([.!?])\s+/g,'$1|').split('|').filter(function(s){ return s.length>3; });
+  var worum = saetze.slice(0,2).join(' ');
+  var will = saetze.filter(function(s){ return /\?|bitte|können sie|könnten sie|brauche|benötige|bräuchte|ersuche|schicken sie|senden sie|angebot|termin/i.test(s); })[0] || '[unklar — nachfragen]';
+  var frist = (t.match(/\b\d{1,2}\.\s?\d{1,2}\.(\s?\d{2,4})?/) || t.match(/\b(heute|morgen|diese woche|nächste woche|bis \w+)\b/i) || [])[0] || 'keine Frist genannt';
+  var heikel = heikelPruefen(t);
+  var hin = [];
+  if(heikel.length) hin.push('Achtung: Der Text enthält '+heikel.join(' und ')+'. Solche Daten besser nicht in KI-Tools kopieren.');
+
+  var kurz = 'WORUM GEHT ES\n'+(worum.length>180?worum.slice(0,180)+'…':worum)
+    + '\n\nWAS WILL DIE PERSON\n'+(will.length>180?will.slice(0,180)+'…':will)
+    + '\n\nBIS WANN\n'+frist;
+
+  var kanal = e.kanal==='mail'?'mail':'wa';
+  var vorschlag = anredeZeile(p,kanal,e.name)+'\n\n'
+    + ds(p,kanal,'danke für Ihre Nachricht. ','danke für deine Nachricht. ')
+    + '[Antwort auf den Kernpunkt in einem Satz].'
+    + '\n\n'+ds(p,kanal,'Ich melde mich bis '+datumAT(plusTage(heute(),1))+' mit einer konkreten Rückmeldung. Passt das für Sie?',
+                         'Ich melde mich bis '+datumAT(plusTage(heute(),1))+' mit einer konkreten Rückmeldung. Passt das für dich?');
+
+  return { titel:'Zusammenfassung', bloecke:[{label:'Kern', text:kurz},{label:'Antwortvorschlag', text:vorschlag}], hinweise:hin };
+};
+
+/* ============================================================
+   7. MODULE
+   ============================================================ */
+function optionen(liste, wert){
+  return liste.map(function(o){
+    var v = o[0], l = o[1];
+    return '<option value="'+esc(v)+'"'+(String(wert)===String(v)?' selected':'')+'>'+esc(l)+'</option>';
+  }).join('');
+}
+function fText(name,label,ph,typ,extra){
+  return '<label class="feld"><span>'+esc(label)+'</span><input type="'+(typ||'text')+'" name="'+name+'" placeholder="'+esc(ph||'')+'" '+(extra||'')+' /></label>';
+}
+function fArea(name,label,ph,hoehe){
+  return '<label class="feld"><span>'+esc(label)+'</span><textarea name="'+name+'" placeholder="'+esc(ph||'')+'"'+(hoehe?' style="min-height:'+hoehe+'px"':'')+'></textarea></label>';
+}
+function fWahl(name,label,liste,wert){
+  return '<label class="feld"><span>'+esc(label)+'</span><select name="'+name+'">'+optionen(liste,wert)+'</select></label>';
+}
+function leistungsOptionen(p){
+  var l = p.leistungen.filter(function(x){ return txt(x.name); });
+  if(!l.length) return [['','— keine Leistungen im Profil —']];
+  return [['','— wählen —']].concat(l.map(function(x){ return [x.name, x.name + (zahl(x.preis)!==null ? ' ('+euro(zahl(x.preis))+')' : ' (Preis fehlt)')]; }));
+}
+function kundenListeHTML(b){
+  return '<datalist id="kundenListe">'+b.kunden.map(function(k){ return '<option value="'+esc(k.name)+'"></option>'; }).join('')+'</datalist>';
+}
+
+var KANAL = [['wa','WhatsApp / Instagram / SMS'],['mail','E-Mail']];
+
+var MODULE = [
+  { key:'antwort', name:'Kundenantwort', kurz:'Nachricht rein, fertige Antwort raus',
+    form:function(p,b){ return kundenListeHTML(b)
+      + '<div class="grid2">'
+      + fWahl('kanal','Kanal',KANAL,'wa')
+      + fWahl('anlass','Anlass',[['preis','Preisanfrage'],['termin','Terminanfrage'],['neukunde','Neukunde / Erstkontakt'],['beschwerde','Beschwerde'],['frage','Allgemeine Frage'],['absage','Absage / bieten wir nicht an'],['spam','Werbung / Spam']],'preis')
+      + '</div>'
+      + '<div class="grid2">'
+      + fText('name','Kundenname','z. B. Frau Gruber','text','list="kundenListe"')
+      + fWahl('leistung','Um welche Leistung geht es', leistungsOptionen(p),'')
+      + '</div>'
+      + fArea('nachricht','Kundennachricht einfügen (optional)','Hier die Nachricht des Kunden einfügen …',80)
+      + '<div class="zeile" style="margin:-6px 0 14px"><button class="btn btn--klein" data-aktion="anlass-erkennen">Anlass aus der Nachricht erkennen</button><span class="mini">Prüft gleichzeitig auf heikle Daten.</span></div>'
+      + '<div class="grid2">'
+      + fText('detail','Inhalt / Problem in einem Satz','z. B. der Termin am Dienstag nicht eingehalten wurde')
+      + fText('loesung','Lösung (bei Beschwerde)','z. B. Ich komme Donnerstag kostenlos nach')
+      + '</div>'; } },
+
+  { key:'angebot', name:'Angebot', kurz:'Positionen, Summe, USt, 14 Tage gültig',
+    form:function(p,b){ var lo = leistungsOptionen(p);
+      var reihen = [1,2,3,4].map(function(i){
+        return '<div class="grid2" style="gap:10px">'
+          + fWahl('pos'+i+'_leistung','Position '+i, lo, '')
+          + fText('pos'+i+'_menge','Menge','1','text')
+          + '</div>';
+      }).join('');
+      return kundenListeHTML(b)
+      + '<div class="grid2">'
+      + fText('name','Kunde','z. B. Familie Berger','text','list="kundenListe"')
+      + fText('nummer','Angebotsnummer (optional)','2026-014')
+      + '</div>' + reihen
+      + fArea('notiz','Zusatz (optional)','z. B. Materialkosten sind enthalten.',60); } },
+
+  { key:'rechnung', name:'Rechnungstext', kurz:'Begleittext zur Rechnung',
+    form:function(p,b){ return kundenListeHTML(b)
+      + '<div class="grid2">'
+      + fText('name','Kunde','','text','list="kundenListe"')
+      + fText('nummer','Rechnungsnummer','2026-014')
+      + '</div><div class="grid2">'
+      + fWahl('leistung','Leistung', leistungsOptionen(p),'')
+      + fText('betrag','Betrag in Euro','480')
+      + '</div>'
+      + fWahl('kanal','Kanal',KANAL,'mail'); } },
+
+  { key:'mahnung', name:'Mahnung', kurz:'1. Erinnerung oder 2. Mahnung',
+    form:function(p,b){ return kundenListeHTML(b)
+      + '<div class="grid2">'
+      + fText('name','Kunde','','text','list="kundenListe"')
+      + fText('nummer','Rechnungsnummer','2026-014')
+      + '</div><div class="grid2">'
+      + fText('betrag','Offener Betrag in Euro','480')
+      + fText('datum','Rechnungsdatum','','date')
+      + '</div>'
+      + fWahl('stufe','Stufe',[['1','1. Zahlungserinnerung'],['2','2. Mahnung']],'1'); } },
+
+  { key:'termin', name:'Termin', kurz:'Bestätigung plus Erinnerung für den Vortag',
+    form:function(p,b){ return kundenListeHTML(b)
+      + '<div class="grid2">'
+      + fText('name','Kunde','','text','list="kundenListe"')
+      + fWahl('leistung','Leistung', leistungsOptionen(p),'')
+      + '</div><div class="grid2">'
+      + fText('datum','Datum','','date')
+      + fText('uhrzeit','Uhrzeit','09:30')
+      + '</div><div class="grid2">'
+      + fText('ort','Ort','','text')
+      + fText('mitbringen','Mitbringen / beachten','z. B. Parkplatz im Hof')
+      + '</div>'
+      + fWahl('kanal','Kanal',KANAL,'wa'); } },
+
+  { key:'bewertung', name:'Bewertung beantworten', kurz:'Google, Facebook, Instagram',
+    form:function(p,b){ return '<div class="grid2">'
+      + fWahl('art','Art',[['positiv','Positive Bewertung'],['negativ','Negative Bewertung']],'positiv')
+      + fText('name','Name der Person','')
+      + '</div>'
+      + fArea('text','Text der Bewertung (einfügen)','',70)
+      + fText('detail','Konkretes Detail, auf das ich eingehe','z. B. die schnelle Terminvergabe'); } },
+
+  { key:'post', name:'Instagram-Post', kurz:'Hook, Caption, Hashtags, Bildidee',
+    form:function(p,b){ return fText('thema','Thema','z. B. Badsanierung in 5 Tagen')
+      + fText('problem','Das Problem des Kunden in einem Satz','')
+      + fText('loesung','Wie ihr das löst','')
+      + fText('foto','Was ist auf dem Foto oder Video zu sehen (optional)',''); } },
+
+  { key:'woche', name:'Wochenplan', kurz:'Sortiert nach Muss, Kann, Kann warten',
+    form:function(p,b){ return fArea('aufgaben','Alles rein, eine Zeile pro Punkt','Angebot Berger schicken\nRechnung Huber 14.10.\nInstagram-Posts vorbereiten\nRückruf Frau Gruber\nWerkstatt aufräumen',150); } },
+
+  { key:'zusammen', name:'Lange Nachricht kürzen', kurz:'Worum geht es, was will die Person, bis wann',
+    form:function(p,b){ return fArea('text','Lange Mail oder Nachricht einfügen','',150)
+      + '<div class="grid2">'
+      + fText('name','Absender (optional)','','text','list="kundenListe"')
+      + fWahl('kanal','Antwort über',KANAL,'mail')
+      + '</div>'; } }
+];
+
+function modulVon(key){ return MODULE.filter(function(m){ return m.key===key; })[0] || MODULE[0]; }
+
+/* ---------- KI-Prompt (für ChatGPT, Claude, Copilot) ---------- */
+var REGELN = [
+ 'Du bist der Büro-Assistent des unten beschriebenen Betriebs in Österreich.',
+ 'Antworte in österreichischem Deutsch, kurze Sätze, ein Gedanke pro Absatz.',
+ 'Erfinde keine Preise und keine freien Termine. Fehlt etwas, schreibe [PREIS?] und frage in einer Zeile darunter nach.',
+ 'Keine medizinischen, rechtlichen oder steuerlichen Einschätzungen.',
+ 'Keine Emojis (außer das Profil erlaubt es), keine Floskeln wie "gerne" oder "selbstverständlich".',
+ 'WhatsApp, Instagram, SMS: maximal 5 Zeilen, keine Formatierung. E-Mail: Betreff, Anrede, maximal 3 Absätze, Signatur.',
+ 'Jede Antwort endet mit genau einem nächsten Schritt.',
+ 'Schreibe im Namen des Betriebs, nie über dich selbst.'
+].join('\n- ');
+
+function profilText(p){
+  var l = p.leistungen.filter(function(x){ return txt(x.name); })
+    .map(function(x){ return '  - '+x.name+': '+(zahl(x.preis)!==null?euro(zahl(x.preis)):'[PREIS?]')+(txt(x.einheit)?' pro '+x.einheit:''); }).join('\n');
+  return 'BETRIEBSPROFIL\n'
+    + 'Betrieb: '+txt(p.name,'[?]')+'\n'
+    + 'Was wir machen: '+txt(p.kurz,'[?]')+'\n'
+    + 'Ort: '+txt(p.ort,'[?]')+'\n'
+    + 'Branche: '+txt(p.branche,'[?]')+'\n'
+    + 'Inhaber: '+txt(p.inhaber,'[?]')+'\n'
+    + 'Anrede: '+({sie:'Sie',du:'Du',gemischt:'Du am Handy, Sie in der Mail'}[p.anrede]||'Sie')+'\n'
+    + 'Emojis: '+({nein:'nein',ja:'ja',insta:'nur auf Instagram'}[p.emojis]||'nein')+'\n'
+    + 'Ton: '+txt(p.ton,'[?]')+'\n'
+    + 'Leistungen und Preise:\n'+(l||'  - [KEINE HINTERLEGT]')+'\n'
+    + 'Zuschläge/Anfahrt: '+txt(p.zuschlaege,'-')+'\n'
+    + 'Einstiegsangebot für Neukunden: '+txt(p.einstiegName,'[?]')+' um '+txt(p.einstiegPreis,'[PREIS?]')+'\n'
+    + 'Buchungsweg: '+txt(p.buchungsweg,'kein Link — zwei Terminvorschläge anbieten')+'\n'
+    + 'Zeiten: '+txt(p.zeiten,'-')+' | Vorlauf: '+txt(p.vorlauf,'-')+'\n'
+    + 'USt: '+(p.ustPflichtig ? 'umsatzsteuerpflichtig, '+(zahl(p.ustSatz)||20)+' %' : 'Kleinunternehmer, keine USt')+'\n'
+    + 'Zahlungsziel: '+(zahl(p.zahlungsziel)||14)+' Tage | Zahlungsarten: '+txt(p.zahlungsarten,'-')+'\n'
+    + 'Signatur E-Mail: '+txt(p.signaturMail,'[?]').replace(/\n/g,' / ')+'\n'
+    + 'Signatur WhatsApp: '+txt(p.signaturWa,'-')+'\n'
+    + 'Instagram: '+txt(p.insta,'-')+' | Tabus: '+txt(p.tabus,'-')+'\n'
+    + 'Was wir nicht machen: '+txt(p.grenzen,'-')+'\n'
+    + 'Verweis bei medizinisch/rechtlich/steuerlich: '+txt(p.verweis,'-');
+}
+
+function kiPrompt(p, modul, daten){
+  var auftrag = Object.keys(daten).filter(function(k){ return txt(daten[k]); })
+    .map(function(k){ return '- '+k+': '+daten[k]; }).join('\n');
+  return 'REGELN\n- '+REGELN+'\n\n'+profilText(p)+'\n\nAUFGABE\nModul: '+modul.name+'\n'+(auftrag||'- keine Angaben')
+    + '\n\nLiefere nur den fertigen Text zum Kopieren. Keine Erklärung, keine Optionen.';
+}
+
+/* ============================================================
+   8. OBERFLÄCHE
+   ============================================================ */
+var ui = { ansicht:'uebersicht', modul:'antwort', ergebnis:null, letzteDaten:null, kundeOffen:null, vorbelegung:null };
+var app = document.getElementById('app');
+
+var STATUS = [['neu','Neu'],['angebot','Angebot offen'],['kunde','Kunde'],['ruhend','Ruhend']];
+function statusName(s){ var x = STATUS.filter(function(o){return o[0]===s;})[0]; return x?x[1]:'Neu'; }
+
+function profilFortschritt(p){
+  var pflicht = [p.name,p.kurz,p.ort,p.inhaber,p.ton,p.buchungsweg,p.zahlungsarten,p.signaturMail,p.einstiegName,p.branche];
+  var voll = pflicht.filter(function(x){ return txt(x); }).length;
+  if(p.leistungen.filter(function(l){ return txt(l.name) && zahl(l.preis)!==null; }).length) voll++;
+  return Math.round(voll/(pflicht.length+1)*100);
+}
+
+/* ---------- Übersicht ---------- */
+function ansichtUebersicht(){
+  var b = aktiv(), p = b.profil;
+  var faellig = b.kunden.filter(function(k){
+    var d = ausISO(k.wiedervorlage); return d && d.getTime() <= heute().getTime();
+  });
+  var angebote = b.kunden.filter(function(k){ return k.status==='angebot'; });
+  var vorWoche = plusTage(heute(),-7).getTime();
+  var texteWoche = b.verlauf.filter(function(v){ return v.ts > vorWoche; }).length;
+  var fort = profilFortschritt(p);
+
+  var h = '<div class="stapel">';
+  h += '<div class="zeile"><h1>'+esc(txt(p.name,'Betrieb ohne Namen'))+'</h1><span class="mini">'+esc(txt(p.kurz,'Kurzbeschreibung fehlt'))+'</span></div>';
+
+  h += '<div class="grid4">'
+    + '<div class="karte kpi"><div class="kpi__zahl">'+b.kunden.length+'</div><div class="kpi__text">Kunden</div></div>'
+    + '<div class="karte kpi"><div class="kpi__zahl" style="color:'+(faellig.length?'#b42318':'inherit')+'">'+faellig.length+'</div><div class="kpi__text">Wiedervorlagen fällig</div></div>'
+    + '<div class="karte kpi"><div class="kpi__zahl">'+angebote.length+'</div><div class="kpi__text">Angebote offen</div></div>'
+    + '<div class="karte kpi"><div class="kpi__zahl">'+texteWoche+'</div><div class="kpi__text">Texte letzte 7 Tage</div></div>'
+    + '</div>';
+
+  if(fort < 100){
+    h += '<div class="karte"><div class="karte__leib">'
+      + '<div class="zeile"><strong>Betriebsprofil zu '+fort+' % ausgefüllt</strong>'
+      + '<button class="btn btn--klein rechts" data-aktion="gehe" data-ansicht="profil">Profil vervollständigen</button></div>'
+      + '<div class="fortschritt" style="margin-top:10px"><div style="width:'+fort+'%"></div></div>'
+      + '<p class="mini" style="margin-top:8px">Je vollständiger das Profil, desto weniger Platzhalter in den Texten.</p>'
+      + '</div></div>';
+  }
+
+  h += '<div class="grid2">';
+  h += '<div class="karte"><div class="karte__kopf"><h2>Heute dran</h2></div><div class="karte__leib">';
+  if(!faellig.length){ h += '<p class="mini">Keine offenen Wiedervorlagen.</p>'; }
+  else {
+    h += '<table><tbody>' + faellig.map(function(k){
+      return '<tr><td><strong>'+esc(k.name)+'</strong><br><span class="mini">'+esc(txt(k.notiz,'—'))+'</span></td>'
+        + '<td style="width:1%;white-space:nowrap"><span class="marke marke--faellig">'+esc(datumAT(ausISO(k.wiedervorlage)))+'</span></td>'
+        + '<td style="width:1%"><button class="btn btn--klein" data-aktion="antwort-fuer" data-id="'+k.id+'">Antworten</button></td></tr>';
+    }).join('') + '</tbody></table>';
+  }
+  h += '</div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>Zuletzt erstellt</h2></div><div class="karte__leib">';
+  if(!b.verlauf.length){ h += '<p class="mini">Noch nichts gespeichert.</p>'; }
+  else {
+    h += '<table><tbody>' + b.verlauf.slice(0,6).map(function(v){
+      return '<tr><td><strong>'+esc(v.titel)+'</strong><br><span class="mini">'+esc(v.text.slice(0,70).replace(/\n/g,' '))+'…</span></td>'
+        + '<td style="width:1%;white-space:nowrap" class="mini">'+esc(datumAT(new Date(v.ts)))+'</td>'
+        + '<td style="width:1%"><button class="btn btn--klein" data-aktion="verlauf-kopieren" data-id="'+v.id+'">Kopieren</button></td></tr>';
+    }).join('') + '</tbody></table>';
+  }
+  h += '</div></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>Schnellstart</h2></div><div class="karte__leib"><div class="zeile">'
+    + MODULE.slice(0,6).map(function(m){ return '<button class="btn" data-aktion="modul-start" data-modul="'+m.key+'">'+esc(m.name)+'</button>'; }).join('')
+    + '</div></div></div>';
+
+  h += '</div>';
+  return h;
+}
+
+/* ---------- Assistent ---------- */
+function ansichtAssistent(){
+  var b = aktiv(), p = b.profil;
+  var m = modulVon(ui.modul);
+  var h = '<div class="split">';
+  h += '<div class="karte"><div class="karte__leib"><div class="modliste">'
+    + MODULE.map(function(x){
+        return '<button class="modul'+(x.key===ui.modul?' is-active':'')+'" data-aktion="modul-waehlen" data-modul="'+x.key+'">'
+          + esc(x.name)+'</button>';
+      }).join('')
+    + '</div></div></div>';
+
+  h += '<div>';
+  h += '<div class="karte" style="margin-bottom:16px"><div class="karte__kopf"><h2>'+esc(m.name)+'</h2><span class="mini">'+esc(m.kurz)+'</span></div>'
+    + '<div class="karte__leib"><form id="modulForm" onsubmit="return false">' + m.form(p,b) + '</form>'
+    + '<div class="zeile" style="margin-top:4px">'
+    + '<button class="btn btn--primar" data-aktion="erstellen">Text erstellen</button>'
+    + '<button class="btn" data-aktion="prompt-kopieren">Als KI-Prompt kopieren</button>'
+    + '</div>'
+    + '<p class="hilfe" style="margin-top:10px">Der KI-Prompt enthält Regeln, Profil und deine Angaben — einfach in ChatGPT oder Claude einfügen, wenn du eine freiere Formulierung willst.</p>'
+    + '</div></div>';
+
+  if(ui.ergebnis){
+    var r = ui.ergebnis;
+    h += '<div class="karte"><div class="karte__kopf"><h2>'+esc(r.titel)+'</h2>'
+      + '<div class="rechts zeile">'
+      + '<button class="btn btn--klein" data-aktion="verlauf-speichern">Im Kundenverlauf speichern</button>'
+      + '<button class="btn btn--klein" data-aktion="drucken">Drucken</button>'
+      + '</div></div><div class="karte__leib">';
+    r.hinweise.forEach(function(x){
+      var rot = /Achtung/.test(x);
+      h += '<div class="hinweis'+(rot?' hinweis--rot':'')+'">'+esc(x)+'</div>';
+    });
+    r.bloecke.forEach(function(bl,i){
+      h += '<div class="aus"><div class="aus__kopf"><strong>'+esc(bl.label)+'</strong>'
+        + '<button class="btn btn--klein rechts" data-aktion="block-kopieren" data-i="'+i+'">Kopieren</button></div>'
+        + '<pre>'+esc(bl.text)+'</pre></div>';
+    });
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+  return h;
+}
+
+/* ---------- Kunden ---------- */
+function ansichtKunden(){
+  var b = aktiv();
+  var h = '<div class="stapel">';
+  h += '<div class="karte"><div class="karte__kopf"><h2>Neuer Kunde</h2></div><div class="karte__leib">'
+    + '<form id="kundeForm" onsubmit="return false"><div class="grid4">'
+    + fText('name','Name','Frau Gruber')
+    + fText('kontakt','Telefon oder E-Mail','')
+    + fWahl('kanal','Kanal',[['WhatsApp','WhatsApp'],['Instagram','Instagram'],['E-Mail','E-Mail'],['Telefon','Telefon'],['Empfehlung','Empfehlung']],'WhatsApp')
+    + fWahl('status','Status',STATUS,'neu')
+    + '</div><div class="grid2">'
+    + fText('wiedervorlage','Wiedervorlage am','','date')
+    + fText('notiz','Notiz','z. B. will Angebot für Bad')
+    + '</div>'
+    + '<button class="btn btn--primar" data-aktion="kunde-neu">Kunde anlegen</button>'
+    + '</form></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>Kunden ('+b.kunden.length+')</h2></div><div class="karte__leib">';
+  if(!b.kunden.length){ h += '<div class="leer">Noch keine Kunden. Oben anlegen — oder beim Erstellen eines Textes automatisch mitspeichern.</div>'; }
+  else {
+    h += '<div class="tabelle-scroll"><table><thead><tr><th>Name</th><th>Kanal</th><th>Status</th><th>Wiedervorlage</th><th>Notiz</th><th></th></tr></thead><tbody>';
+    b.kunden.forEach(function(k){
+      var d = ausISO(k.wiedervorlage);
+      var faellig = d && d.getTime() <= heute().getTime();
+      h += '<tr><td><strong>'+esc(k.name)+'</strong><br><span class="mini">'+esc(txt(k.kontakt,'—'))+'</span></td>'
+        + '<td class="mini">'+esc(txt(k.kanal,'—'))+'</td>'
+        + '<td><span class="marke marke--'+esc(k.status)+'">'+esc(statusName(k.status))+'</span></td>'
+        + '<td>'+(d?'<span class="marke '+(faellig?'marke--faellig':'')+'">'+datumAT(d)+'</span>':'<span class="mini">—</span>')+'</td>'
+        + '<td class="mini">'+esc(txt(k.notiz,'—'))+'</td>'
+        + '<td style="white-space:nowrap"><button class="btn btn--klein" data-aktion="kunde-oeffnen" data-id="'+k.id+'">Öffnen</button> '
+        + '<button class="btn btn--klein" data-aktion="antwort-fuer" data-id="'+k.id+'">Antworten</button></td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  h += '</div></div>';
+
+  if(ui.kundeOffen){
+    var k = aktiv().kunden.filter(function(x){ return x.id===ui.kundeOffen; })[0];
+    if(k){
+      var verlauf = b.verlauf.filter(function(v){ return v.kundeId===k.id; });
+      h += '<div class="karte"><div class="karte__kopf"><h2>'+esc(k.name)+'</h2>'
+        + '<button class="btn btn--klein btn--geist rechts" data-aktion="kunde-schliessen">Schließen</button></div><div class="karte__leib">'
+        + '<form id="kundeEdit" onsubmit="return false"><div class="grid4">'
+        + '<label class="feld"><span>Name</span><input name="name" value="'+esc(k.name)+'"></label>'
+        + '<label class="feld"><span>Kontakt</span><input name="kontakt" value="'+esc(txt(k.kontakt))+'"></label>'
+        + '<label class="feld"><span>Status</span><select name="status">'+optionen(STATUS,k.status)+'</select></label>'
+        + '<label class="feld"><span>Wiedervorlage</span><input type="date" name="wiedervorlage" value="'+esc(txt(k.wiedervorlage))+'"></label>'
+        + '</div>'
+        + '<label class="feld"><span>Notiz</span><textarea name="notiz" style="min-height:70px">'+esc(txt(k.notiz))+'</textarea></label>'
+        + '<div class="zeile"><button class="btn btn--primar" data-aktion="kunde-speichern" data-id="'+k.id+'">Speichern</button>'
+        + '<button class="btn btn--gefahr" data-aktion="kunde-loeschen" data-id="'+k.id+'">Kunde löschen</button></div>'
+        + '</form><div class="trenner"></div><h3>Verlauf</h3>';
+      if(!verlauf.length) h += '<p class="mini">Noch keine gespeicherten Texte.</p>';
+      else verlauf.forEach(function(v){
+        h += '<div class="aus"><div class="aus__kopf"><strong>'+esc(v.titel)+'</strong><span class="mini">'+datumAT(new Date(v.ts))+'</span>'
+          + '<button class="btn btn--klein rechts" data-aktion="verlauf-kopieren" data-id="'+v.id+'">Kopieren</button></div>'
+          + '<pre>'+esc(v.text)+'</pre></div>';
+      });
+      h += '</div></div>';
+    }
+  }
+  h += '</div>';
+  return h;
+}
+
+/* ---------- Betriebsprofil ---------- */
+function pf(name, label, wert, ph, typ){
+  return '<label class="feld"><span>'+esc(label)+'</span><input type="'+(typ||'text')+'" data-feld="'+name+'" value="'+esc(txt(wert))+'" placeholder="'+esc(ph||'')+'"></label>';
+}
+function pa(name, label, wert, ph){
+  return '<label class="feld"><span>'+esc(label)+'</span><textarea data-feld="'+name+'" placeholder="'+esc(ph||'')+'" style="min-height:70px">'+esc(txt(wert))+'</textarea></label>';
+}
+function ps(name, label, liste, wert){
+  return '<label class="feld"><span>'+esc(label)+'</span><select data-feld="'+name+'">'+optionen(liste,wert)+'</select></label>';
+}
+function ansichtProfil(){
+  var p = aktiv().profil;
+  var h = '<div class="stapel">';
+  h += '<div class="karte"><div class="karte__leib"><div class="zeile"><strong>Vollständigkeit: '+profilFortschritt(p)+' %</strong>'
+     + '<span class="mini rechts">Änderungen werden sofort gespeichert.</span></div>'
+     + '<div class="fortschritt" style="margin-top:10px"><div style="width:'+profilFortschritt(p)+'%"></div></div></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>1. Betrieb</h2></div><div class="karte__leib"><div class="grid2">'
+    + pf('name','Name des Betriebs',p.name,'z. B. Malerei Gruber')
+    + pf('ort','Ort / Einzugsgebiet',p.ort,'z. B. Wels')
+    + '</div><div class="grid2">'
+    + pf('branche','Branche in einem Wort (für Hashtags)',p.branche,'z. B. malerei')
+    + pf('inhaber','Inhaber:in (Name für Signatur)',p.inhaber,'')
+    + '</div>'
+    + pf('kurz','Was ihr macht, in einem Satz',p.kurz,'')
+    + '</div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>2. Ton</h2></div><div class="karte__leib"><div class="grid3">'
+    + ps('anrede','Anrede',[['sie','Sie — immer'],['du','Du — immer'],['gemischt','Du am Handy, Sie in der Mail']],p.anrede)
+    + ps('emojis','Emojis',[['nein','nein'],['insta','nur auf Instagram'],['ja','ja']],p.emojis)
+    + ps('duBeiAngebot','Angebote in der Du-Form',[[false,'nein — Angebote immer Sie'],[true,'ja']],p.duBeiAngebot)
+    + '</div>'
+    + pf('ton','Wie du klingen willst, in 3 Wörtern',p.ton,'z. B. direkt, ruhig, verlässlich')
+    + '</div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>3. Leistungen und Preise</h2>'
+    + '<button class="btn btn--klein rechts" data-aktion="leistung-neu">+ Leistung</button></div><div class="karte__leib">';
+  if(!p.leistungen.length) h += '<p class="mini" style="margin-bottom:12px">Noch keine Leistung hinterlegt — ohne Preise schreibt der Assistent [PREIS?] in die Texte.</p>';
+  p.leistungen.forEach(function(l,i){
+    h += '<div class="zeile" style="margin-bottom:8px">'
+      + '<input style="flex:2;min-width:160px" data-leistung="'+i+'" data-schluessel="name" value="'+esc(txt(l.name))+'" placeholder="Leistung">'
+      + '<input style="flex:1;min-width:110px" data-leistung="'+i+'" data-schluessel="einheit" value="'+esc(txt(l.einheit))+'" placeholder="Einheit, z. B. Stunde">'
+      + '<input style="flex:1;min-width:100px" data-leistung="'+i+'" data-schluessel="preis" value="'+esc(txt(l.preis))+'" placeholder="Preis in Euro">'
+      + '<button class="btn btn--klein btn--gefahr" data-aktion="leistung-weg" data-i="'+i+'">Weg</button></div>';
+  });
+  h += pa('zuschlaege','Anfahrt, Zuschläge, Mindestbestellwert',p.zuschlaege,'z. B. Anfahrt bis 20 km inklusive, danach 0,60 Euro pro km.')
+    + '<div class="grid2">'
+    + pf('einstiegName','Einstiegsangebot für Neukunden',p.einstiegName,'z. B. Erstberatung vor Ort')
+    + pf('einstiegPreis','Preis des Einstiegsangebots',p.einstiegPreis,'z. B. 49')
+    + '</div></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>4. Termine</h2></div><div class="karte__leib"><div class="grid3">'
+    + pf('buchungsweg','Buchungsweg (Link oder Telefon)',p.buchungsweg,'')
+    + pf('zeiten','Zeiten',p.zeiten,'Mo–Fr 8–17 Uhr')
+    + pf('vorlauf','Vorlauf für Termine',p.vorlauf,'z. B. 2 Wochen')
+    + '</div></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>5. Rechnung</h2></div><div class="karte__leib"><div class="grid4">'
+    + ps('ustPflichtig','Umsatzsteuer',[[true,'umsatzsteuerpflichtig'],[false,'Kleinunternehmer']],p.ustPflichtig)
+    + pf('ustSatz','USt-Satz in %',p.ustSatz,'20')
+    + pf('zahlungsziel','Zahlungsziel in Tagen',p.zahlungsziel,'14')
+    + pf('zahlungsarten','Zahlungsarten',p.zahlungsarten,'Überweisung, Bar')
+    + '</div></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>6. Signatur und Instagram</h2></div><div class="karte__leib"><div class="grid2">'
+    + pa('signaturMail','E-Mail-Signatur',p.signaturMail,'Name\nBetrieb\nTelefon\nWebseite')
+    + pa('signaturWa','WhatsApp-Abschluss',p.signaturWa,'nur Vorname, oder leer lassen')
+    + '</div><div class="grid2">'
+    + pf('insta','Instagram-Handle',p.insta,'@betrieb')
+    + pf('tabus','Was ihr nie postet',p.tabus,'')
+    + '</div></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>7. Grenzen</h2></div><div class="karte__leib"><div class="grid2">'
+    + pa('grenzen','Was ihr nicht anbietet',p.grenzen,'')
+    + pa('verweis','Verweis bei medizinisch, rechtlich, steuerlich',p.verweis,'z. B. an die Steuerberatung Mayr')
+    + '</div></div></div>';
+
+  h += '</div>';
+  return h;
+}
+
+/* ---------- Einstellungen ---------- */
+function ansichtEinstellungen(){
+  var b = aktiv();
+  var h = '<div class="stapel">';
+  h += '<div class="karte"><div class="karte__kopf"><h2>Betrieb</h2></div><div class="karte__leib">'
+    + '<div class="grid2">'
+    + '<label class="feld"><span>Name des aktiven Betriebs</span><input data-feld="name" value="'+esc(txt(b.profil.name))+'"></label>'
+    + '<div class="feld"><span>Betriebe insgesamt</span><p style="padding-top:8px">'+S.betriebe.length+'</p></div>'
+    + '</div>'
+    + '<div class="zeile"><button class="btn" data-aktion="neuer-betrieb">+ Neuer Betrieb</button>'
+    + '<button class="btn btn--gefahr" data-aktion="betrieb-loeschen">Diesen Betrieb löschen</button></div>'
+    + '<p class="hilfe" style="margin-top:10px">Jeder Betrieb hat eigenes Profil, eigene Kunden, eigenen Verlauf. So betreust du mehrere Firmen aus einer Oberfläche.</p>'
+    + '</div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>Aussehen (für Weiterverkauf)</h2></div><div class="karte__leib"><div class="grid2">'
+    + '<label class="feld"><span>Produktname oben links</span><input data-einst="produkt" value="'+esc(S.einst.produkt)+'"></label>'
+    + '<label class="feld"><span>Akzentfarbe</span><input type="color" data-einst="akzent" value="'+esc(S.einst.akzent)+'"></label>'
+    + '</div></div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>Sichern und übertragen</h2></div><div class="karte__leib">'
+    + '<div class="zeile" style="margin-bottom:12px">'
+    + '<button class="btn" data-aktion="export-aktiv">Aktiven Betrieb exportieren</button>'
+    + '<button class="btn" data-aktion="export-alles">Alles exportieren</button>'
+    + '<button class="btn" data-aktion="datei-laden">Datei laden</button>'
+    + '<input type="file" id="dateiInput" accept="application/json" style="display:none">'
+    + '</div>'
+    + '<label class="feld"><span>Daten (kopieren zum Sichern, einfügen zum Laden)</span><textarea id="jsonFeld" style="min-height:120px;font-family:monospace;font-size:12px"></textarea></label>'
+    + '<div class="zeile"><button class="btn" data-aktion="json-kopieren">Kopieren</button>'
+    + '<button class="btn btn--primar" data-aktion="json-import">Aus Textfeld laden</button></div>'
+    + '<p class="hilfe" style="margin-top:10px">Alle Daten liegen nur in diesem Browser. Kein Server, keine Cloud. Export regelmäßig sichern.</p>'
+    + '</div></div>';
+
+  h += '<div class="karte"><div class="karte__kopf"><h2>Regeln des Assistenten</h2></div><div class="karte__leib">'
+    + '<div class="aus"><div class="aus__kopf"><strong>Diese Regeln stecken in jedem Text</strong>'
+    + '<button class="btn btn--klein rechts" data-aktion="regeln-kopieren">Kopieren</button></div>'
+    + '<pre>'+esc('- '+REGELN)+'</pre></div>'
+    + '<button class="btn btn--gefahr" data-aktion="alles-loeschen">Alle Daten löschen</button>'
+    + '</div></div>';
+
+  h += '</div>';
+  return h;
+}
+
+/* ---------- Rendern ---------- */
+function zeichnen(){
+  document.documentElement.style.setProperty('--akzent', S.einst.akzent);
+  document.documentElement.style.setProperty('--akzent-weich', S.einst.akzent+'1a');
+  document.getElementById('markeName').textContent = S.einst.produkt;
+
+  var wahl = document.getElementById('betriebWahl');
+  wahl.innerHTML = S.betriebe.map(function(b){
+    return '<option value="'+b.id+'"'+(b.id===S.aktivId?' selected':'')+'>'+esc(txt(b.profil.name,'Ohne Namen'))+'</option>';
+  }).join('');
+
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+    t.classList.toggle('is-active', t.getAttribute('data-ansicht')===ui.ansicht);
+  });
+
+  if(ui.ansicht==='uebersicht') app.innerHTML = ansichtUebersicht();
+  else if(ui.ansicht==='assistent') app.innerHTML = ansichtAssistent();
+  else if(ui.ansicht==='kunden') app.innerHTML = ansichtKunden();
+  else if(ui.ansicht==='profil') app.innerHTML = ansichtProfil();
+  else app.innerHTML = ansichtEinstellungen();
+
+  if(ui.ansicht==='assistent' && ui.vorbelegung){
+    var f = document.getElementById('modulForm');
+    Object.keys(ui.vorbelegung).forEach(function(k){
+      var el = f.querySelector('[name="'+k+'"]');
+      if(el) el.value = ui.vorbelegung[k];
+    });
+    ui.vorbelegung = null;
+  }
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   9. AKTIONEN
+   ============================================================ */
+function formDaten(id){
+  var f = document.getElementById(id||'modulForm');
+  var d = {};
+  if(!f) return d;
+  Array.prototype.forEach.call(f.querySelectorAll('[name]'), function(el){ d[el.name] = el.value; });
+  if(ui.modul==='angebot'){
+    d.positionen = [1,2,3,4].map(function(i){
+      return { leistung: d['pos'+i+'_leistung'], menge: d['pos'+i+'_menge'] };
+    }).filter(function(x){ return txt(x.leistung); });
+  }
+  return d;
+}
+
+function textVonErgebnis(r){
+  return r.bloecke.map(function(b){ return b.label+':\n'+b.text; }).join('\n\n');
+}
+
+function kundeFinden(name){
+  var b = aktiv(), n = txt(name).toLowerCase();
+  if(!n) return null;
+  return b.kunden.filter(function(k){ return k.name.toLowerCase()===n; })[0] || null;
+}
+
+function download(dateiname, inhalt){
+  try{
+    var blob = new Blob([inhalt], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = dateiname;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }catch(e){ meldung('Download nicht möglich — bitte Text aus dem Feld kopieren.'); }
+}
+
+document.addEventListener('click', function(ev){
+  var el = ev.target.closest('[data-aktion]');
+  if(!el) return;
+  var a = el.getAttribute('data-aktion');
+  var b = aktiv(), p = b.profil;
+
+  if(a==='gehe'){ ui.ansicht = el.getAttribute('data-ansicht'); zeichnen(); }
+
+  else if(a==='neuer-betrieb'){
+    var nm = prompt('Name des neuen Betriebs:');
+    if(nm===null) return;
+    var nb = neuerBetrieb(txt(nm,'Neuer Betrieb'));
+    S.betriebe.push(nb); S.aktivId = nb.id; ui.ansicht='profil'; ui.ergebnis=null;
+    sichern(); zeichnen(); meldung('Betrieb angelegt.');
+  }
+  else if(a==='betrieb-loeschen'){
+    if(S.betriebe.length<2){ meldung('Der letzte Betrieb kann nicht gelöscht werden.'); return; }
+    if(!confirm('"'+txt(p.name,'Betrieb')+'" mit allen Kunden und Texten löschen?')) return;
+    S.betriebe = S.betriebe.filter(function(x){ return x.id!==b.id; });
+    S.aktivId = S.betriebe[0].id; sichern(); zeichnen(); meldung('Gelöscht.');
+  }
+
+  else if(a==='modul-waehlen' || a==='modul-start'){
+    ui.modul = el.getAttribute('data-modul'); ui.ergebnis = null; ui.ansicht='assistent'; zeichnen();
+  }
+  else if(a==='anlass-erkennen'){
+    var f = document.getElementById('modulForm');
+    var n = f.querySelector('[name="nachricht"]').value;
+    if(!txt(n)){ meldung('Zuerst die Kundennachricht einfügen.'); return; }
+    var erk = anlassErkennen(n);
+    f.querySelector('[name="anlass"]').value = erk;
+    var heikel = heikelPruefen(n);
+    meldung('Erkannt: '+erk+(heikel.length?' — Achtung: '+heikel.join(', '):''));
+  }
+  else if(a==='erstellen'){
+    var d = formDaten();
+    ui.letzteDaten = d;
+    ui.ergebnis = Gen[ui.modul](p, d);
+    zeichnen();
+  }
+  else if(a==='prompt-kopieren'){
+    var d2 = formDaten();
+    kopieren(kiPrompt(p, modulVon(ui.modul), d2));
+  }
+  else if(a==='block-kopieren'){
+    if(!ui.ergebnis) return;
+    kopieren(ui.ergebnis.bloecke[parseInt(el.getAttribute('data-i'),10)].text);
+  }
+  else if(a==='drucken'){ window.print(); }
+  else if(a==='regeln-kopieren'){ kopieren('- '+REGELN); }
+
+  else if(a==='verlauf-speichern'){
+    if(!ui.ergebnis){ meldung('Zuerst einen Text erstellen.'); return; }
+    var name = txt(ui.letzteDaten && ui.letzteDaten.name);
+    var k = kundeFinden(name);
+    if(!k && name){
+      k = { id:uid(), name:name, kontakt:'', kanal:'', status:'neu', notiz:'', wiedervorlage:'' };
+      b.kunden.unshift(k);
+    }
+    b.verlauf.unshift({ id:uid(), ts:Date.now(), modul:ui.modul, titel:ui.ergebnis.titel+(name?' — '+name:''), text:textVonErgebnis(ui.ergebnis), kundeId:k?k.id:null });
+    sichern(); meldung(k ? 'Bei '+k.name+' gespeichert.' : 'Im Verlauf gespeichert.');
+  }
+  else if(a==='verlauf-kopieren'){
+    var v = b.verlauf.filter(function(x){ return x.id===el.getAttribute('data-id'); })[0];
+    if(v) kopieren(v.text);
+  }
+
+  else if(a==='kunde-neu'){
+    var kd = formDaten('kundeForm');
+    if(!txt(kd.name)){ meldung('Name fehlt.'); return; }
+    b.kunden.unshift({ id:uid(), name:kd.name, kontakt:kd.kontakt, kanal:kd.kanal, status:kd.status, notiz:kd.notiz, wiedervorlage:kd.wiedervorlage });
+    sichern(); zeichnen(); meldung('Kunde angelegt.');
+  }
+  else if(a==='kunde-oeffnen'){ ui.kundeOffen = el.getAttribute('data-id'); zeichnen(); }
+  else if(a==='kunde-schliessen'){ ui.kundeOffen = null; zeichnen(); }
+  else if(a==='kunde-speichern'){
+    var id = el.getAttribute('data-id');
+    var kk = b.kunden.filter(function(x){ return x.id===id; })[0];
+    if(!kk) return;
+    var ed = formDaten('kundeEdit');
+    kk.name = ed.name; kk.kontakt = ed.kontakt; kk.status = ed.status; kk.wiedervorlage = ed.wiedervorlage; kk.notiz = ed.notiz;
+    sichern(); zeichnen(); meldung('Gespeichert.');
+  }
+  else if(a==='kunde-loeschen'){
+    var id2 = el.getAttribute('data-id');
+    if(!confirm('Kunde löschen? Der Verlauf bleibt erhalten.')) return;
+    b.kunden = b.kunden.filter(function(x){ return x.id!==id2; });
+    ui.kundeOffen = null; sichern(); zeichnen();
+  }
+  else if(a==='antwort-fuer'){
+    var kx = b.kunden.filter(function(x){ return x.id===el.getAttribute('data-id'); })[0];
+    ui.ansicht='assistent'; ui.modul='antwort'; ui.ergebnis=null;
+    ui.vorbelegung = kx ? { name:kx.name } : null;
+    zeichnen();
+  }
+
+  else if(a==='leistung-neu'){ p.leistungen.push({ name:'', einheit:'', preis:'' }); sichern(); zeichnen(); }
+  else if(a==='leistung-weg'){ p.leistungen.splice(parseInt(el.getAttribute('data-i'),10),1); sichern(); zeichnen(); }
+
+  else if(a==='export-aktiv'){
+    var raus = JSON.stringify({ typ:'betrieb', betrieb:b }, null, 2);
+    document.getElementById('jsonFeld').value = raus;
+    download(slug(p.name||'betrieb')+'-'+isoDatum(heute())+'.json', raus);
+  }
+  else if(a==='export-alles'){
+    var raus2 = JSON.stringify(S, null, 2);
+    document.getElementById('jsonFeld').value = raus2;
+    download('bueroassistent-'+isoDatum(heute())+'.json', raus2);
+  }
+  else if(a==='json-kopieren'){
+    var feld = document.getElementById('jsonFeld');
+    if(!txt(feld.value)) feld.value = JSON.stringify(S, null, 2);
+    kopieren(feld.value);
+  }
+  else if(a==='json-import'){ importieren(document.getElementById('jsonFeld').value); }
+  else if(a==='datei-laden'){ document.getElementById('dateiInput').click(); }
+  else if(a==='alles-loeschen'){
+    if(!confirm('Wirklich alle Betriebe, Kunden und Texte löschen?')) return;
+    try{ localStorage.removeItem(SCHLUESSEL); }catch(e){}
+    location.reload();
+  }
+});
+
+function importieren(roh){
+  var d;
+  try{ d = JSON.parse(roh); }
+  catch(e){ meldung('Das ist keine gültige Sicherungsdatei.'); return; }
+  if(d && d.typ==='betrieb' && d.betrieb && d.betrieb.profil){
+    d.betrieb.id = uid();
+    S.betriebe.push(d.betrieb); S.aktivId = d.betrieb.id;
+    sichern(); zeichnen(); meldung('Betrieb geladen.');
+  } else if(d && d.betriebe && d.betriebe.length){
+    if(!confirm('Alle aktuellen Daten durch die Sicherung ersetzen?')) return;
+    S = d; if(!S.einst) S.einst = { produkt:'Büro-Assistent', akzent:'#2563eb' };
+    S.aktivId = S.betriebe[0].id; sichern(); zeichnen(); meldung('Sicherung geladen.');
+  } else meldung('In der Datei steckt kein Betrieb.');
+}
+
+document.addEventListener('change', function(ev){
+  if(ev.target.id==='dateiInput' && ev.target.files && ev.target.files[0]){
+    var leser = new FileReader();
+    leser.onload = function(){ importieren(String(leser.result)); };
+    leser.readAsText(ev.target.files[0]);
+  }
+  if(ev.target.id==='betriebWahl'){ S.aktivId = ev.target.value; ui.ergebnis=null; ui.kundeOffen=null; sichern(); zeichnen(); }
+});
+
+document.addEventListener('input', function(ev){
+  var el = ev.target;
+  var b = aktiv(), p = b.profil;
+  if(el.hasAttribute && el.hasAttribute('data-feld')){
+    var f = el.getAttribute('data-feld'), w = el.value;
+    if(f==='ustPflichtig' || f==='duBeiAngebot') w = (w==='true');
+    p[f] = w;
+    sichern();
+    if(f==='name'){
+      var opt = document.querySelector('#betriebWahl option[value="'+b.id+'"]');
+      if(opt) opt.textContent = txt(w,'Ohne Namen');
+    }
+    var bar = document.querySelector('.fortschritt>div');
+    if(bar) bar.style.width = profilFortschritt(p)+'%';
+  }
+  else if(el.hasAttribute && el.hasAttribute('data-leistung')){
+    var i = parseInt(el.getAttribute('data-leistung'),10);
+    p.leistungen[i][el.getAttribute('data-schluessel')] = el.value;
+    sichern();
+  }
+  else if(el.hasAttribute && el.hasAttribute('data-einst')){
+    S.einst[el.getAttribute('data-einst')] = el.value;
+    sichern();
+    document.documentElement.style.setProperty('--akzent', S.einst.akzent);
+    document.documentElement.style.setProperty('--akzent-weich', S.einst.akzent+'1a');
+    document.getElementById('markeName').textContent = S.einst.produkt;
+  }
+});
+
+document.getElementById('tabs').addEventListener('click', function(ev){
+  var t = ev.target.closest('.tab');
+  if(!t) return;
+  ui.ansicht = t.getAttribute('data-ansicht');
+  ui.kundeOffen = null;
+  zeichnen();
+});
+
+zeichnen();
+</script>
+</body>
+</html>
