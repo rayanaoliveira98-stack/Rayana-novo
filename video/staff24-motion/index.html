@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="./assets/js/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Archivo";
+        src: url("./assets/fonts/archivo-latin-900-normal.woff2") format("woff2");
+        font-weight: 900;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("./assets/fonts/inter-latin-700-normal.woff2") format("woff2");
+        font-weight: 700;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("./assets/fonts/inter-latin-800-normal.woff2") format("woff2");
+        font-weight: 800;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("./assets/fonts/inter-latin-900-normal.woff2") format("woff2");
+        font-weight: 900;
+        font-display: block;
+      }
+
+      :root {
+        --ink: #08090b;
+        --paper: #f7f7f5;
+        --accent: #ff5c1a;
+        --muted: #8a8f98;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ink);
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* ---------- background ---------- */
+      #bg-grid {
+        background-image: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.045) 1px,
+            transparent 1px
+          ),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+        background-size: 90px 90px;
+      }
+      #bg-glow {
+        background: radial-gradient(
+          circle at 50% 42%,
+          rgba(255, 92, 26, 0.28) 0%,
+          rgba(255, 92, 26, 0.06) 38%,
+          transparent 68%
+        );
+      }
+      #bg-vignette {
+        background: radial-gradient(
+          circle at 50% 50%,
+          transparent 45%,
+          rgba(0, 0, 0, 0.72) 100%
+        );
+      }
+
+      /* ---------- shared ---------- */
+      .stage {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 90px;
+      }
+      .rule {
+        height: 10px;
+        background: var(--accent);
+        border-radius: 99px;
+      }
+      .eyebrow {
+        font-weight: 800;
+        font-size: 34px;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      /* ---------- scene A : lockup ---------- */
+      #wordmark {
+        font-family: "Archivo", sans-serif;
+        font-weight: 900;
+        font-size: 190px;
+        letter-spacing: -0.05em;
+        color: var(--paper);
+        line-height: 0.9;
+      }
+      #tagline {
+        margin-top: 42px;
+        font-weight: 700;
+        font-size: 44px;
+        letter-spacing: 0.02em;
+        color: var(--muted);
+      }
+      #rule-a {
+        width: 260px;
+        margin-top: 58px;
+      }
+
+      /* ---------- scene B : stat hit ---------- */
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+      .stat-num {
+        font-family: "Archivo", sans-serif;
+        font-weight: 900;
+        font-size: 340px;
+        line-height: 0.82;
+        letter-spacing: -0.055em;
+        color: var(--paper);
+        font-variant-numeric: tabular-nums;
+      }
+      .stat-label {
+        margin-top: 26px;
+        font-weight: 900;
+        font-size: 38px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--accent);
+        text-align: center;
+        text-indent: 0.24em; /* offset the trailing letter-space so it optically centres */
+        white-space: nowrap;
+      }
+      #stat-divider {
+        width: 520px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.14);
+        margin: 74px 0;
+      }
+
+      /* ---------- scene C : lower third ---------- */
+      #lower {
+        justify-content: flex-end;
+        align-items: stretch;
+        padding: 0 80px 300px;
+      }
+      #chip {
+        align-self: flex-start;
+        background: var(--accent);
+        color: #ffffff;
+        font-weight: 900;
+        font-size: 30px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        padding: 20px 30px;
+        border-radius: 6px;
+      }
+      #card {
+        margin-top: 26px;
+        background: rgba(247, 247, 245, 0.97);
+        border-radius: 18px;
+        padding: 54px 56px 50px;
+        transform-origin: left center;
+      }
+      #job-title {
+        font-weight: 900;
+        font-size: 82px;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+      }
+      #job-meta {
+        margin-top: 28px;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        font-weight: 800;
+        font-size: 40px;
+        color: #3d424b;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 99px;
+        background: var(--accent);
+      }
+      #cta {
+        margin-top: 44px;
+        font-weight: 900;
+        font-size: 40px;
+        letter-spacing: 0.02em;
+        color: var(--paper);
+        white-space: nowrap;
+      }
+      #cta span {
+        color: var(--accent);
+      }
+      .inner-stage {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .mask {
+        overflow: hidden;
+        display: block;
+        padding-bottom: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <!-- track 0 : background -->
+      <div id="bg-grid" class="clip" data-start="0" data-duration="8" data-track-index="0"></div>
+      <div id="bg-glow" class="clip" data-start="0" data-duration="8" data-track-index="0"></div>
+      <div id="bg-vignette" class="clip" data-start="0" data-duration="8" data-track-index="0"></div>
+
+      <!-- track 1 : scene A — brand lockup -->
+      <div id="scene-a" class="clip stage" data-start="0" data-duration="2.7" data-track-index="1">
+        <div id="a-inner" class="inner-stage">
+          <div class="mask"><div id="wordmark">STAFF24</div></div>
+          <div class="mask"><div id="tagline">Personal, das passt.</div></div>
+          <div id="rule-a" class="rule"></div>
+        </div>
+      </div>
+
+      <!-- track 1 : scene B — stat hit -->
+      <div id="scene-b" class="clip stage" data-start="2.7" data-duration="2.6" data-track-index="1">
+        <div id="b-inner" class="inner-stage">
+        <div class="stat">
+          <div class="stat-num" id="num-jahre">0</div>
+          <div class="stat-label" id="lbl-jahre">Jahre</div>
+        </div>
+        <div id="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num" id="num-standorte">0</div>
+          <div class="stat-label" id="lbl-standorte">Standorte in Österreich</div>
+        </div>
+        </div>
+      </div>
+
+      <!-- track 1 : scene C — job lower-third -->
+      <div id="scene-c" class="clip stage" data-start="5.3" data-duration="2.7" data-track-index="1">
+        <div id="lower-inner" style="width: 100%; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding-bottom: 300px;">
+          <div id="chip">Jetzt bewerben</div>
+          <div id="card">
+            <div id="job-title">Produktions&shy;mitarbeiter<br />(m/w/d)</div>
+            <div id="job-meta">
+              <span>Wels, OÖ</span>
+              <span class="dot"></span>
+              <span>ab € 2.800 brutto</span>
+            </div>
+          </div>
+          <div id="cta">In 60 Sekunden bewerben <span>→</span> staff24.com</div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      const tl = gsap.timeline({ paused: true });
+
+      /* ---------- background : slow drift + breathing glow ---------- */
+      tl.fromTo(
+        "#bg-grid",
+        { backgroundPosition: "0px 0px" },
+        { backgroundPosition: "0px -180px", duration: 8, ease: "none" },
+        0
+      );
+      tl.fromTo(
+        "#bg-glow",
+        { opacity: 0.55, scale: 1 },
+        { opacity: 1, scale: 1.12, duration: 4, ease: "sine.inOut", yoyo: true, repeat: 1 },
+        0
+      );
+
+      /* ---------- scene A : lockup ---------- */
+      tl.from("#wordmark", { yPercent: 115, duration: 0.85, ease: "expo.out" }, 0.15);
+      tl.from("#tagline", { yPercent: 130, opacity: 0, duration: 0.7, ease: "expo.out" }, 0.42);
+      tl.from("#rule-a", { scaleX: 0, transformOrigin: "left center", duration: 0.6, ease: "expo.out" }, 0.62);
+      tl.to("#a-inner", { opacity: 0, yPercent: -6, duration: 0.45, ease: "power2.in" }, 2.25);
+      tl.set("#a-inner", { opacity: 0 }, 2.7);
+
+      /* ---------- scene B : stat count-up ---------- */
+      const jahre = { v: 0 };
+      const standorte = { v: 0 };
+
+      tl.from("#b-inner", { opacity: 0, duration: 0.35, ease: "power2.out" }, 2.7);
+      tl.to(
+        jahre,
+        {
+          v: 25,
+          duration: 1.1,
+          ease: "expo.out",
+          onUpdate: () => {
+            document.getElementById("num-jahre").textContent = Math.round(jahre.v);
+          },
+        },
+        2.8
+      );
+      tl.from("#lbl-jahre", { opacity: 0, y: 24, duration: 0.5, ease: "power3.out" }, 3.3);
+      tl.from("#stat-divider", { scaleX: 0, duration: 0.6, ease: "expo.out" }, 3.45);
+      tl.to(
+        standorte,
+        {
+          v: 17,
+          duration: 1.0,
+          ease: "expo.out",
+          onUpdate: () => {
+            document.getElementById("num-standorte").textContent = Math.round(standorte.v);
+          },
+        },
+        3.55
+      );
+      tl.from("#lbl-standorte", { opacity: 0, y: 24, duration: 0.5, ease: "power3.out" }, 4.0);
+      tl.to("#b-inner", { opacity: 0, scale: 0.96, duration: 0.4, ease: "power2.in" }, 4.9);
+      tl.set("#b-inner", { opacity: 0 }, 5.3);
+
+      /* ---------- scene C : job lower-third ---------- */
+      tl.from("#chip", { xPercent: -115, opacity: 0, duration: 0.55, ease: "expo.out" }, 5.35);
+      tl.from("#card", { scaleX: 0, opacity: 0, duration: 0.6, ease: "expo.out" }, 5.5);
+      tl.from("#job-title", { opacity: 0, y: 30, duration: 0.5, ease: "power3.out" }, 5.85);
+      tl.from("#job-meta", { opacity: 0, y: 22, duration: 0.45, ease: "power3.out" }, 6.05);
+      tl.from("#cta", { opacity: 0, y: 26, duration: 0.5, ease: "power3.out" }, 6.35);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
