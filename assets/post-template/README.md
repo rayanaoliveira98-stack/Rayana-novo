@@ -1,11 +1,18 @@
-# Post-Vorlage Black Strategie
+# Post-Vorlagen Black Strategie
 
 Rendert statische Feed-Posts als PNG in exakt 1080 x 1350, in den echten
 CI-Farben, ohne Umweg über ein Design-Werkzeug.
 
 ```
-./build.sh template.html mein-post.png
+./build.sh template-befund.html mein-post.png
 ```
+
+## Zwei Vorlagen
+
+| Datei | Charakter |
+|-------|-----------|
+| `template-befund.html` | Protokollblatt, Haarlinien, Registermarken, Prüfkästchen. Die stärkere Fassung, folgt `PHILOSOPHIE.md` |
+| `template.html` | einfacher Stapel, Ghost-Nummer. Erste Fassung, als Rückfallebene |
 
 ## Aufbau der Vorlage
 

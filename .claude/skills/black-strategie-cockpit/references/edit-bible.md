@@ -29,3 +29,12 @@ gesperrt.
 Reihenfolge ist bewusst so. Einen Editor ohne dokumentierte Handschrift
 einzuschulen erzeugt Inkonsistenz und macht Rayana zur
 Vollzeitkorrektorin.
+
+## Statische Posts
+
+Vorlagen und Renderer liegen in `assets/post-template/`. Gestaltungsgrundlage
+ist `assets/post-template/PHILOSOPHIE.md`, Bewegung "Diagnostic Silence":
+Haarlinien statt Kästen, Registermarken, nummerierte Prüfpunkte, ein
+gesättigter Ton für das Wesentliche und ein warmer Ton ausschließlich für die
+Handlung. Ein Post entsteht mit einem Befehl, nicht mit einer Auswahl aus
+generierten Entwürfen.

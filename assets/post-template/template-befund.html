@@ -1,0 +1,64 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><style>@import "fonts.css"; /* build.sh ersetzt diese Zeile durch die eingebetteten Schriften */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden}
+body{background:#0F0F0E;font-family:"Montserrat",sans-serif;-webkit-font-smoothing:antialiased}
+.sheet{position:relative;width:1080px;height:1350px;overflow:hidden}
+.grain{position:absolute;inset:0;z-index:1;opacity:.05;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>");}
+.reg{position:absolute;width:24px;height:24px;z-index:3}
+.reg.tl{top:44px;left:44px;border-top:1px solid rgba(254,254,254,.24);border-left:1px solid rgba(254,254,254,.24)}
+.reg.tr{top:44px;right:44px;border-top:1px solid rgba(254,254,254,.24);border-right:1px solid rgba(254,254,254,.24)}
+.reg.bl{bottom:134px;left:44px;border-bottom:1px solid rgba(254,254,254,.24);border-left:1px solid rgba(254,254,254,.24)}
+.reg.br{bottom:134px;right:44px;border-bottom:1px solid rgba(254,254,254,.24);border-right:1px solid rgba(254,254,254,.24)}
+.body{position:absolute;top:0;left:84px;right:84px;z-index:4}
+.mono{font-family:"GeistMono",monospace;text-transform:uppercase}
+.datarow{position:absolute;top:100px;left:0;right:0;display:flex;justify-content:space-between;align-items:baseline}
+.datarow .l{font-size:19px;letter-spacing:.34em;color:#A703FF;font-weight:700}
+.datarow .r{font-size:19px;letter-spacing:.26em;color:rgba(254,254,254,.34)}
+.rule{position:absolute;left:0;right:0;height:1px;background:rgba(254,254,254,.15)}
+h1{position:absolute;top:196px;left:0;right:0;font-family:"Gloock",serif;font-weight:400;
+   font-size:87px;line-height:1.07;color:#FEFEFE;text-transform:uppercase;letter-spacing:-.012em}
+h1 .a{color:#A703FF}
+.seclabel{position:absolute;top:530px;left:0;right:0;display:flex;justify-content:space-between;align-items:baseline}
+.seclabel span{font-size:17px;letter-spacing:.32em;color:rgba(254,254,254,.38)}
+.list{position:absolute;top:576px;left:0;right:0}
+.row{position:relative;height:71px;display:grid;grid-template-columns:58px 1fr 26px;align-items:center;
+     border-bottom:1px solid rgba(254,254,254,.085)}
+.row:first-child{border-top:1px solid rgba(254,254,254,.085)}
+.row .n{font-family:"GeistMono",monospace;font-size:19px;font-weight:700;color:#A703FF;letter-spacing:.06em}
+.row .q{font-size:26px;font-weight:500;color:#FEFEFE;line-height:1.2;padding-right:24px}
+.row .box{width:19px;height:19px;border:1px solid rgba(254,254,254,.26);justify-self:end}
+.scale{display:none}
+.scale i{position:absolute;right:0;height:1px;background:rgba(254,254,254,.22)}
+.verdict{position:absolute;top:1036px;left:0;right:0}
+.verdict .lab{font-size:17px;letter-spacing:.32em;color:rgba(254,254,254,.38);display:block;margin-bottom:18px}
+.verdict p{font-size:29px;line-height:1.34;font-weight:600;color:#FEFEFE;max-width:790px}
+.verdict p b{color:#FF6600;font-weight:600}
+.foot{position:absolute;top:1184px;left:0;right:0;display:flex;justify-content:space-between;align-items:baseline}
+.foot .h{font-family:"GeistMono",monospace;font-size:18px;letter-spacing:.1em;color:rgba(254,254,254,.5)}
+.foot .m{font-size:18px;font-weight:800;letter-spacing:.24em;color:#FEFEFE}
+.cta{position:absolute;left:0;right:0;bottom:0;height:98px;background:#FF6600;display:flex;
+     align-items:center;justify-content:center;gap:22px;z-index:5}
+.cta span{font-size:26px;font-weight:800;letter-spacing:.13em;color:#0F0F0E;text-transform:uppercase}
+.cta i{width:34px;height:1px;background:#0F0F0E}
+</style></head><body>
+<div class="sheet">
+  <div class="grain"></div>
+  <div class="reg tl"></div><div class="reg tr"></div><div class="reg bl"></div><div class="reg br"></div>
+  <div class="body">
+    <div class="datarow mono"><span class="l">Praxis-Check</span><span class="r">Blatt 06</span></div>
+    <div class="rule" style="top:140px"></div>
+    <h1>Ihre Website ist<br>nicht hässlich.<br><span class="a">Sie ist stumm.</span></h1>
+    <div class="seclabel mono"><span>Sechs Prüfpunkte</span><span>Selbsttest, 2 Minuten</span></div>
+    <div class="list"><div class="row"><div class="n">01</div><div class="q">Sieht sie aus wie 2026 oder wie 2016?</div><div class="box"></div></div>
+<div class="row"><div class="n">02</div><div class="q">Funktioniert sie am Handy ohne Zoomen?</div><div class="box"></div></div>
+<div class="row"><div class="n">03</div><div class="q">Sieht man ohne Scrollen, wie man einen Termin bekommt?</div><div class="box"></div></div>
+<div class="row"><div class="n">04</div><div class="q">Stehen Bewertungen sichtbar auf der Startseite?</div><div class="box"></div></div>
+<div class="row"><div class="n">05</div><div class="q">Versteht ein Fremder in zehn Sekunden Ihr Angebot?</div><div class="box"></div></div>
+<div class="row"><div class="n">06</div><div class="q">Lädt sie in unter drei Sekunden?</div><div class="box"></div></div></div>
+        <div class="verdict"><span class="lab mono">Befund</span>
+      <p><b>Dreimal Nein</b> und Sie wissen, warum das Telefon leiser geworden ist.</p></div>
+    <div class="foot"><span class="h">@blackstrategie.marketing</span><span class="m">BLACK STRATEGIE</span></div>
+  </div>
+  <div class="cta"><span>Schreiben Sie Check</span><i></i><span>per WhatsApp</span></div>
+</div></body></html>
