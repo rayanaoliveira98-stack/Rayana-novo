@@ -46,42 +46,47 @@ Black Strategie
 
 ## Angebot, Grundstruktur
 
-Nie als Preisliste bauen. Immer als Ergebnisversprechen.
+Preise, Angebotstreppe und Verkaufsregeln kommen ausschließlich aus
+`black-strategie-content`. Nie eine Preisvariante erfinden, nie ein Menü
+anbieten. Pro Lead genau eine Empfehlung.
 
 ```
 1. Ausgangslage
-   Was ich bei euch gesehen habe, in zwei bis drei Sätzen, konkret.
+   Was ich gesehen habe, in zwei bis drei Sätzen, mit ihren eigenen
+   Worten aus dem Erstgespräch, nie als Kritik.
 
 2. Ziel
    Was in [Zeitraum] erreicht sein soll, mit Zahl.
 
 3. Weg
-   Drei bis fünf Schritte, jeweils eine Zeile, keine Methodenvorträge.
+   Drei bis fünf Schritte, je eine Zeile, keine Methodenvorträge.
 
-4. Pakete
-   Basis, Empfehlung, Ausbau. Die Empfehlung steht in der Mitte und ist
-   optisch hervorgehoben.
+4. Leistungen
+   Was genau geliefert wird, bis wann.
 
-5. Was ihr liefert
-   Zugänge, Ansprechperson, Freigabezeiten.
+5. Investition
+   Ein Betrag, ein Zahlungsmodus, laut Angebotstreppe.
 
-6. Investition
-   Betrag, Laufzeit, Zahlungsziel.
-
-7. Risikoumkehr
+6. Risikoumkehr
    Was passiert, wenn das Ziel nicht erreicht wird.
 
-8. Nächster Schritt
-   Eine Handlung, eine Frist, ein Terminlink.
+7. Nächster Schritt
+   Eine Handlung, eine Frist, ein Kanal.
 ```
+
+Ablaufregeln, nicht verhandelbar:
+- Die Präsentation wird im Termin gezeigt, nie per E-Mail verschickt.
+- Danach geht nur die einseitige Versandfassung raus.
+- Die ausgearbeitete Strategie kommt nach dem Auftrag, oder wird einzeln
+  verkauft und angerechnet.
 
 ## Kampagnen-Reporting
 
 ```
 Zeitraum: [von bis]
 Budget eingesetzt: [Betrag]
-Ergebnis: [Leads oder Bewerbungen], Kosten pro Ergebnis [Betrag]
-Beste Anzeige: [Name], Kosten pro Ergebnis [Betrag]
+Ergebnis: [Check-Anfragen], Kosten pro Anfrage [Betrag]
+Beste Anzeige: [Name], Kosten pro Anfrage [Betrag]
 Schwächste Anzeige: [Name], gestoppt am [Datum]
 
 Beobachtung: [ein Satz]

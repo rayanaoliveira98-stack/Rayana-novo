@@ -1,70 +1,74 @@
 # Wachstum und Wettbewerb
 
-## Wachstumsmodell organisch plus bezahlt
+Marken- und Funnelwahrheit steht in `black-strategie-content`. Hier steht
+die Steuerungslogik darüber: Kapazität, Kennzahlen, Entscheidungspunkte,
+Wettbewerbsbeobachtung.
 
-Organisch und bezahlt sind kein Entweder-oder. Organisch findet die
-Botschaft, bezahlt skaliert sie.
-
-**Aufteilung der Contentkapazität**
+## Kapazität verteilen
 
 | Anteil | Zweck |
 |--------|-------|
-| 70 Prozent | bewährte Formate, die nachweislich Anfragen oder Bewerbungen bringen |
-| 20 Prozent | Variationen dieser Formate, neue Hooks, neue Aufhänger |
+| 70 Prozent | Formate, die nachweislich Check-Anfragen bringen |
+| 20 Prozent | Variationen davon, neue Hooks, neue Aufhänger |
 | 10 Prozent | Experimente, neue Formate, neue Plattformlogik |
 
-**Regel für den Übergang ins Budget:** Nur Content wird beworben, der
-organisch bereits überdurchschnittlich performt hat. Überdurchschnittlich
-heißt gemessen am eigenen Median der letzten 30 Beiträge, nicht am Gefühl.
+Beworben wird nur, was organisch über dem eigenen Median der letzten 30
+Beiträge liegt. Ein schwacher Beitrag wird durch Budget nicht besser, nur
+teurer.
 
-**Kampagnenleiter**
+## Kampagnenleiter
+
+Einstieg für alle Kanäle ist der Praxis-Check mit dem Keyword CHECK,
+Antwortkanal WhatsApp, kein Formular.
 
 | Stufe | Zielgruppe | Ziel | Botschaft |
 |-------|------------|------|-----------|
-| 1 Kalt | Interesse, Standort, Branche | Reichweite und Videoansichten | Problem sichtbar machen |
-| 2 Warm | 25 Prozent Videoansicht, Profilbesuch, Interaktion 180 Tage | Anfrage oder Bewerbung | Beweis und Ergebnis |
-| 3 Heiß | Website, Formular begonnen, DM | Abschluss | Risikoumkehr und Frist |
+| 1 Kalt | Standort und Branche in OÖ | Reichweite und Videoansichten | Problem sichtbar machen |
+| 2 Warm | 25 Prozent Videoansicht, Profilbesuch, Interaktion 180 Tage | Check-Anfrage per DM | Beweis und Ergebnis |
+| 3 Heiß | Website, DM begonnen, Terminseite | Termin | Risikoumkehr und Frist |
 
-**Kennzahlen, die zählen**
+## Kennzahlen und Konsequenzen
 
 | Ebene | Kennzahl | Entscheidung |
 |-------|----------|--------------|
-| Content | Haltequote in den ersten 3 Sekunden | unter 50 Prozent, Hook neu bauen |
-| Kampagne | Kosten pro Lead oder Bewerbung | gegen Zielwert, nicht gegen Bauchgefühl |
+| Content | Haltequote erste 3 Sekunden | unter 50 Prozent, Hook neu bauen |
+| Kampagne | Kosten pro Check-Anfrage | Zielkorridor laut `black-strategie-content`, außerhalb bedeutet Creative oder Zielgruppe prüfen |
 | Anzeige | Frequenz | über 2,5 bei kalter Zielgruppe, Creative tauschen |
-| Funnel | Anteil qualifizierter Leads | unter 40 Prozent, Zielgruppe oder Formular schärfen |
+| Funnel | Anteil qualifizierter Anfragen | unter 40 Prozent, Zielgruppe oder Vorqualifizierung schärfen |
+| Vertrieb | Anfrage zu Termin | unter 30 Prozent, Antwortzeit und Analyse-Video prüfen |
 
 Jede Optimierung wird als Hypothese formuliert, mit Zeitraum und
-Entscheidungspunkt. Kein Eingriff in eine laufende Anzeigengruppe vor
-Erreichen einer aussagekräftigen Datenmenge.
+Entscheidungsdatum. Kein Eingriff in eine laufende Anzeigengruppe, bevor
+genug Daten vorliegen. Zwei Änderungen gleichzeitig machen das Ergebnis
+unlesbar.
 
 ## Wettbewerbsanalyse
 
-Alle drei Monate, oder wenn ein neuer Markt oder eine neue Nische
-angegangen wird. Drei bis fünf relevante Anbieter, nicht zehn.
+Alle drei Monate, oder vor dem Einstieg in eine neue Nische. Drei bis fünf
+relevante Anbieter, nicht zehn.
 
-**Fünf Dimensionen pro Anbieter**
+Fünf Dimensionen pro Anbieter:
 
-1. **Versprechen** Was verkaufen sie wörtlich, welches Ergebnis?
-2. **Beweis** Womit belegen sie es, Zahlen, Fälle, Testimonials?
-3. **Format** Welche Inhalte laufen bei ihnen, was wird oft wiederholt?
+1. **Versprechen** Welches Ergebnis verkaufen sie wörtlich?
+2. **Beweis** Womit belegen sie es?
+3. **Format** Was läuft bei ihnen, was wiederholen sie?
 4. **Ton und Optik** Wie klingen und wie schauen sie aus?
-5. **Lücke** Was sagt keiner von ihnen, obwohl es die Zielgruppe bewegt?
+5. **Lücke** Was sagt keiner, obwohl es die Zielgruppe bewegt?
 
-**Auswertung: die Lückenkarte**
+**Auswertung.** Alles, was alle gleich machen, kommt auf eine Liste und
+wird nicht kopiert. Positioniert wird auf der Lücke, nicht auf dem
+Durchschnitt.
 
-Nach der Analyse wird eine Liste erstellt mit allem, was alle Anbieter
-gleich machen. Genau das wird nicht kopiert. Positioniert wird auf der
-Lücke, nicht auf dem Durchschnitt.
+Prüffrage: Logo weg, erkennt jemand den Beitrag trotzdem als Black
+Strategie? Wenn nein, ist es noch nicht differenziert.
 
-Prüffrage: Wenn das Logo entfernt wird, erkennt jemand, dass der Beitrag
-von Black Strategie ist? Wenn nein, ist es noch nicht differenziert.
+## Positionierungsanker
 
-## Positionierungsanker Black Strategie
+Diese Anker stammen aus `black-strategie-content` und werden hier nur zur
+Prüfung gespiegelt. Bei Abweichung gilt dort:
 
-- Recruiting über Content und Kampagnen, nicht über Stellenanzeigen
-- brasilianisch und amerikanisch geprägte Ästhetik in einem Markt, der
-  visuell zurückhaltend ist
-- Sprache wie ein Mensch, nicht wie eine Personalabteilung
-- lokale Verankerung in Wels und Oberösterreich, mit einem Bild- und
-  Textniveau, das nach internationaler Marke ausschaut
+- die fertige Lösung kommt vor dem Vertrag, nicht die Präsentation
+- Anti-Guru, lokal, messbar
+- Praxen, Selbstständige und kleine Betriebe in Oberösterreich, nie Wien
+- eine Ästhetik, die nach internationaler Marke ausschaut, in einem Markt,
+  der visuell zurückhaltend ist

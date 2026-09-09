@@ -1,77 +1,77 @@
-# Content Frameworks
+# Bewertungslogik vor der Produktion
+
+Diese Datei entscheidet, **ob** und **wie gut** etwas produziert wird.
+Die Produktion selbst läuft über `content-engine`, Marken- und Tonregeln
+kommen aus `black-strategie-content`. Hier steht nur, was dort nicht
+steht: die Prüfung davor und die Bewertung danach.
+
+## Torwächter-Frage
+
+Zahlt die Kreation auf ein aktives Ziel der laufenden Kampagne ein, so
+wie in `black-strategie-content` definiert? Wenn nein, wird nachgefragt,
+bevor produziert wird. Content ohne Zielbezug ist Beschäftigung, kein
+Marketing.
 
 ## Der 2-Sekunden-Test
 
-Jeder Content wird vor der Produktion gegen vier Fragen geprüft. Fällt
-eine durch, wird neu gebaut, nicht nachgebessert.
+Vier Fragen vor der Produktion. Fällt eine durch, wird neu gedacht, nicht
+nachgebessert.
 
 1. Hält es die Aufmerksamkeit in den ersten zwei Sekunden?
 2. Klingt es austauschbar? Könnte eine andere Agentur denselben Satz
    posten?
-3. Erzeugt es Kommentar, Weiterleitung oder Anfrage?
+3. Erzeugt es eine Check-Anfrage, einen Kommentar oder eine Weiterleitung?
 4. Baut es Autorität auf, oder nur Reichweite?
 
-## Hook-Typen
+## Hook-Mechaniken
 
-Immer drei Varianten pro Thema bauen, aus unterschiedlichen Typen, damit
-der A/B-Test etwas aussagt.
+Immer drei Varianten pro Thema, aus unterschiedlichen Mechaniken, sonst
+sagt der A/B-Test nichts aus. Zielgruppe sind Praxen, Ordinationen und
+kleine Dienstleistungsbetriebe in Oberösterreich, Anrede Sie.
 
-| Typ | Mechanik | Beispiel |
-|-----|----------|----------|
-| Widerspruch | Erwartung brechen | "Mehr Stellenanzeigen bringen euch weniger Bewerber." |
-| Kosten | Verlust sichtbar machen | "Jede offene Stelle kostet euch pro Monat ein Gehalt." |
-| Beweis | Zahl vorne | "37 Bewerbungen in 11 Tagen, ohne Jobbörse." |
-| Insider | Wissen aus dem Inneren | "Was Personalberater euch nicht sagen." |
-| Zielgruppe | direkte Adressierung | "Wenn du in Wels Fachkräfte suchst, hör auf zu inserieren." |
-| Fehler | Selbsterkennung | "Drei Fehler, die eure Karriereseite unbrauchbar machen." |
+| Mechanik | Wirkung | Beispiel |
+|----------|---------|----------|
+| Widerspruch | kippt eine Annahme | "Sie posten jede Woche. Trotzdem ruft niemand an." |
+| Kosten | macht Verlust sichtbar | "Ihre Website kostet Sie jeden Monat Patienten, ohne dass Sie es sehen." |
+| Beweis | Zahl zuerst | "Elf Anfragen in vierzehn Tagen, ohne einen Cent Werbebudget." |
+| Insider | Wissen von innen | "Was Ihnen keine Agentur über Reichweite sagt." |
+| Adressierung | direkte Zielgruppe | "Wenn Sie Wahlärztin in Wels sind, ist Ihre Startseite Ihr größtes Problem." |
+| Fehler | Selbsterkennung | "Drei Fehler, die Ihre Website teuer machen." |
 
 Regeln für Hooks:
 - Erster Satz maximal acht Wörter.
-- Keine Begrüßung, kein "Heute zeige ich euch".
-- Das Wichtigste steht vorne, nicht in der Auflösung.
-- Der Hook muss auch stumm funktionieren, also als Text im Bild.
+- Keine Begrüßung, kein "Heute zeige ich Ihnen".
+- Das Wichtigste vorne, nicht in der Auflösung.
+- Der Hook muss stumm funktionieren, also als Text im Bild.
 
 ## Retentionaufbau Reel
 
 | Sekunde | Aufgabe |
 |---------|---------|
 | 0 bis 2 | Hook, visuell und gesprochen gleichzeitig |
-| 2 bis 5 | Relevanz, warum betrifft das die Zuschauerin |
-| 5 bis 15 | Spannung halten, ein Schnitt oder Bildwechsel alle 2 bis 3 Sekunden |
+| 2 bis 5 | Relevanz, warum betrifft das genau diese Zuschauerin |
+| 5 bis 15 | Spannung halten, Bildwechsel alle 2 bis 3 Sekunden |
 | 15 bis 30 | Substanz, der konkrete Punkt oder Beweis |
-| Ende | CTA, eine einzige Handlung, nie zwei |
+| Ende | ein CTA, nie zwei |
 
 ## Konversionspsychologie
 
-Jeder verkaufende Text durchläuft sechs Stufen. Fehlt eine, bricht die
-Konversion an genau dieser Stelle.
+Sechs Stufen. Fehlt eine, bricht die Konversion genau dort.
 
-1. **Aufmerksamkeit** Der Hook.
-2. **Identifikation** Die Person erkennt ihre eigene Lage im Text.
-3. **Spannung** Der Preis des Nichtstuns wird konkret.
-4. **Beweis** Zahl, Fall, Screenshot, Zeitraum.
-5. **Risikoumkehr** Was passiert, wenn es nicht funktioniert.
-6. **Handlung** Eine Handlung, ein Kanal, eine Frist.
+1. **Aufmerksamkeit** der Hook
+2. **Identifikation** die Person erkennt ihre Lage im Text
+3. **Spannung** der Preis des Nichtstuns wird konkret
+4. **Beweis** Zahl, Fall, Vorher-Nachher, Zeitraum
+5. **Risikoumkehr** was passiert, wenn es nicht funktioniert
+6. **Handlung** eine Handlung, ein Kanal, eine Frist
 
-## Ton pro Plattform
+## Bewertung nach der Veröffentlichung
 
-| Plattform | Ton | Länge | CTA |
-|-----------|-----|-------|-----|
-| Instagram | menschlich, direkt, ästhetisch stark, emotionales Storytelling | Reel 15 bis 45 Sekunden, Caption 3 bis 6 Zeilen | DM-Wort oder Link in Bio |
-| TikTok | roh, schnell, gesprochen wie zu einer Person, kein Marketingdeutsch | 15 bis 40 Sekunden | Kommentar provozieren |
-| LinkedIn | analytisch, Erfahrung zeigend, keine Emojiketten, Position beziehen | 600 bis 1200 Zeichen, kurze Absätze | Frage am Ende oder Terminlink |
-| Meta Ads | klar, nutzenorientiert, Zielgruppe im ersten Satz benannt | Primärtext 2 bis 4 Zeilen | ein Ziel, ein Formular |
+| Kennzahl | Schwelle | Konsequenz |
+|----------|----------|------------|
+| Haltequote erste 3 Sekunden | unter 50 Prozent | Hook neu bauen, Thema behalten |
+| Speicherungen und Weiterleitungen | unter dem eigenen Median | Substanz zu dünn, konkreter werden |
+| Check-Anfragen | null bei gutem Reichweitenwert | CTA oder Angebotsklarheit prüfen |
 
-Für alle Kanäle: Deutsch, österreichisch, keine Gedankenstriche,
-kein Behördendeutsch, keine Floskeln wie "in der heutigen Zeit".
-
-## Standardlieferung pro Content-Stück
-
-- Hook, drei Varianten aus verschiedenen Typen
-- Skript oder Karussell-Text, vollständig ausformuliert
-- Caption inklusive Zeilenumbrüchen
-- ein CTA
-- visueller Hinweis, was zu sehen ist, wie gefilmt wird
-- Titelbild oder Coverzeile
-- Hinweis, welche Variante zuerst getestet wird und woran Erfolg
-  gemessen wird
+Verglichen wird immer gegen den eigenen Median der letzten 30 Beiträge,
+nie gegen Bauchgefühl oder fremde Benchmarks.
