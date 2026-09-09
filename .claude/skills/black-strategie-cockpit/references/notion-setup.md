@@ -40,3 +40,33 @@ alle sechs Agentenspalten dauerhaft sehen will, schaltet in der Ansicht
   gelöscht, nicht erneut verschoben.
 - Done bleibt bis Monatsende sichtbar, damit die Monatsübersicht daraus
   gebaut werden kann. Erst danach archivieren.
+
+## Content-Kalender
+
+Neben der Cockpit-Datenbank gibt es den Redaktionskalender
+**🗓️ CONTENT CALENDER - CLAUDE**, geteilt über alle Marken.
+
+| Eigenschaft | Typ | Werte |
+|-------------|-----|-------|
+| Name | Titel | Freitext |
+| Marke | Auswahl | Black Strategie, STAFF24, FITARY, & Beauty, Privat |
+| Type | Auswahl | Instagram, Facebook, Video, Blog Post, Podcast, Tweet, Sponsored Post |
+| Status | Status | Idea, In Progress, In Review, Published |
+| Publication Date, Deadline | Datum | Veröffentlichung und Abgabe |
+| Media | Datei | Grafik zum Post |
+| Link, Assign | URL, Person | Beitragslink, Verantwortliche |
+
+Ansicht **Nach Marke** gruppiert nach Marke, sortiert nach
+Veröffentlichungsdatum.
+
+Drei Punkte, die beim Anlegen von Einträgen zählen:
+
+- Der Status **Bereit zum Posten** existiert hier nicht. Bis das Visual
+  freigegeben ist, gilt **In Review**.
+- Eine Notion-Benutzerin **Maria** gibt es im Workspace nicht. Das Feld
+  Assign bleibt leer, bis geklärt ist, wer gemeint ist.
+- Die Eigenschaft **Marke** ist neu. Ältere Einträge haben sie noch nicht
+  und landen in der Spalte ohne Marke, bis sie nachgetragen sind.
+- Grafiken lassen sich aus dieser Arbeitsumgebung nicht hochladen,
+  `api.notion.com` ist durch die Egress-Policy gesperrt. Die Datei wird im
+  Chat geliefert und per Hand ins Feld Media gezogen.
