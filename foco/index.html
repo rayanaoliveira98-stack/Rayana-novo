@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FOCO — Mapa de tarefas + recompensa física</title>
+<meta name="description" content="App de produtividade com recompensa física: mapeia tarefas, força blocos curtos de foco e libera um ritual de endorfina a cada conclusão.">
+<meta name="theme-color" content="#0b0d12">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FOCO">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ ONBOARDING ============ -->
+<div id="onboarding" class="overlay" hidden>
+  <div class="onb-card">
+    <div class="onb-badge">FOCO</div>
+    <h1>Seu cérebro não tem preguiça.<br>Ele tem falta de recompensa.</h1>
+    <p class="onb-sub">Este app quebra o trabalho em blocos curtos e trava a tela no fim de cada bloco até você fazer o ritual físico que libera endorfina. É assim que a conclusão vira hábito.</p>
+    <label class="field">
+      <span>Como te chamo?</span>
+      <input id="onbName" class="input" type="text" placeholder="Rayana" maxlength="24" autocomplete="given-name">
+    </label>
+    <label class="field">
+      <span>Quantas tarefas você quer concluir por dia?</span>
+      <div class="chips" id="onbGoal">
+        <button type="button" class="chip" data-goal="2">2 · leve</button>
+        <button type="button" class="chip is-on" data-goal="4">4 · real</button>
+        <button type="button" class="chip" data-goal="6">6 · pesado</button>
+      </div>
+    </label>
+    <button id="onbStart" class="btn btn-primary btn-lg">Começar</button>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-dot"></span>
+    <span class="brand-name">FOCO</span>
+  </div>
+  <div class="topstats">
+    <div class="tstat" title="Dias seguidos concluindo pelo menos 1 tarefa">
+      <span class="tstat-ico">🔥</span><span id="statStreak">0</span>
+    </div>
+    <div class="tstat" title="Pontos de conclusão">
+      <span class="tstat-ico">⚡</span><span id="statXp">0</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ---------- MAPA ---------- -->
+  <section id="view-mapa" class="view is-active">
+
+    <div id="heroWrap"></div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Mapear tarefa</h2>
+        <span class="hint">Descarregue da cabeça. Uma linha por vez.</span>
+      </div>
+      <form id="taskForm" class="taskform" autocomplete="off">
+        <input id="fTitle" class="input input-big" type="text" placeholder="O que precisa ser feito?" maxlength="90" required>
+        <input id="fStep" class="input" type="text" placeholder="Primeiro passo mínimo (ex.: abrir o arquivo e escrever 1 linha)" maxlength="90">
+
+        <div class="grid2">
+          <div class="field-inline">
+            <span class="lbl">Impacto</span>
+            <div class="chips" data-group="impact">
+              <button type="button" class="chip" data-v="1">Baixo</button>
+              <button type="button" class="chip is-on" data-v="2">Médio</button>
+              <button type="button" class="chip" data-v="3">Alto</button>
+            </div>
+          </div>
+          <div class="field-inline">
+            <span class="lbl">Esforço</span>
+            <div class="chips" data-group="effort">
+              <button type="button" class="chip is-on" data-v="1">Leve</button>
+              <button type="button" class="chip" data-v="2">Médio</button>
+              <button type="button" class="chip" data-v="3">Pesado</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-inline">
+          <span class="lbl">Bloco de foco</span>
+          <div class="chips" data-group="block">
+            <button type="button" class="chip" data-v="15">15 min</button>
+            <button type="button" class="chip is-on" data-v="25">25 min</button>
+            <button type="button" class="chip" data-v="45">45 min</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Adicionar ao mapa</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Mapa <span id="countTodo" class="pill">0</span></h2>
+        <div class="segmented" id="taskFilter">
+          <button class="seg is-on" data-f="todo">A fazer</button>
+          <button class="seg" data-f="done">Concluídas</button>
+        </div>
+      </div>
+      <ul id="taskList" class="tasklist"></ul>
+      <p id="emptyState" class="empty" hidden></p>
+    </div>
+  </section>
+
+  <!-- ---------- FOCO ---------- -->
+  <section id="view-foco" class="view">
+    <div id="focoIdle" class="card center-card">
+      <div class="big-ico">🎯</div>
+      <h2>Nenhum bloco rodando</h2>
+      <p class="muted">Escolha uma tarefa no mapa e comece um bloco. Uma tarefa por vez — o resto some da tela.</p>
+      <button class="btn btn-ghost" data-go="mapa">Ir para o mapa</button>
+    </div>
+
+    <div id="focoRun" class="focus" hidden>
+      <div class="focus-task">
+        <span class="focus-label">Agora, só isto:</span>
+        <h2 id="focusTitle">—</h2>
+        <p id="focusStep" class="focus-step"></p>
+      </div>
+
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 240 240" aria-hidden="true">
+          <circle class="ring-bg" cx="120" cy="120" r="106"></circle>
+          <circle id="ringFg" class="ring-fg" cx="120" cy="120" r="106"></circle>
+        </svg>
+        <div class="ring-center">
+          <div id="focusClock" class="clock">25:00</div>
+          <div id="focusState" class="clock-sub">em foco</div>
+        </div>
+      </div>
+
+      <div class="focus-actions">
+        <button id="btnDone" class="btn btn-primary btn-lg">Concluí — quero a recompensa</button>
+        <div class="row-btns">
+          <button id="btnPause" class="btn btn-ghost">Pausar</button>
+          <button id="btnPlus" class="btn btn-ghost">+5 min</button>
+          <button id="btnQuit" class="btn btn-ghost btn-danger">Sair</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- PROGRESSO ---------- -->
+  <section id="view-progresso" class="view">
+    <div class="card">
+      <div class="card-head"><h2>Endorfina de hoje</h2></div>
+      <div class="meter"><div id="meterFill" class="meter-fill"></div></div>
+      <p id="meterLabel" class="muted">0 de 4 tarefas concluídas hoje.</p>
+      <div class="kpis">
+        <div class="kpi"><b id="kpiToday">0</b><span>hoje</span></div>
+        <div class="kpi"><b id="kpiFocus">0m</b><span>foco hoje</span></div>
+        <div class="kpi"><b id="kpiStreak">0</b><span>dias seguidos</span></div>
+        <div class="kpi"><b id="kpiTotal">0</b><span>total</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Últimos 7 dias</h2></div>
+      <div id="weekChart" class="week"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Rituais recentes</h2></div>
+      <ul id="ritualLog" class="loglist"></ul>
+    </div>
+  </section>
+
+  <!-- ---------- AJUSTES ---------- -->
+  <section id="view-ajustes" class="view">
+    <div class="card">
+      <div class="card-head"><h2>Baralho de recompensas</h2><span class="hint">O app sorteia uma carta a cada conclusão. Variação aleatória = mais dopamina.</span></div>
+      <ul id="deckList" class="switchlist"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Preferências</h2></div>
+      <label class="switchrow">
+        <span><b>Som</b><small>Palmas, sinos e contagem</small></span>
+        <input id="setSound" type="checkbox" class="switch">
+      </label>
+      <label class="switchrow">
+        <span><b>Travar até completar o ritual</b><small>Sem atalho: a recompensa só libera fazendo</small></span>
+        <input id="setLock" type="checkbox" class="switch">
+      </label>
+      <label class="field">
+        <span>Seu nome</span>
+        <input id="setName" class="input" type="text" maxlength="24">
+      </label>
+      <label class="field">
+        <span>Meta diária de tarefas</span>
+        <div class="chips" id="setGoal">
+          <button type="button" class="chip" data-goal="2">2</button>
+          <button type="button" class="chip" data-goal="4">4</button>
+          <button type="button" class="chip" data-goal="6">6</button>
+          <button type="button" class="chip" data-goal="8">8</button>
+        </div>
+      </label>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Dados</h2><span class="hint">Tudo fica salvo só neste aparelho.</span></div>
+      <div class="row-btns">
+        <button id="btnExport" class="btn btn-ghost">Exportar backup</button>
+        <button id="btnWipe" class="btn btn-ghost btn-danger">Apagar tudo</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar">
+  <button class="tab is-on" data-go="mapa"><span>🗺️</span>Mapa</button>
+  <button class="tab" data-go="foco"><span>⏱️</span>Foco</button>
+  <button class="tab" data-go="progresso"><span>📈</span>Progresso</button>
+  <button class="tab" data-go="ajustes"><span>⚙️</span>Ajustes</button>
+</nav>
+
+<!-- ============ RITUAL ============ -->
+<div id="ritual" class="overlay ritual" hidden>
+  <canvas id="confetti" class="confetti"></canvas>
+  <div class="ritual-inner">
+    <div id="ritualKicker" class="ritual-kicker">Tarefa concluída</div>
+    <h2 id="ritualTitle" class="ritual-title">Boa!</h2>
+    <p id="ritualCue" class="ritual-cue"></p>
+
+    <div id="ritualStage" class="stage">
+      <div id="stageCounter" class="stage-counter">0</div>
+      <div id="stageBreath" class="breath" hidden><div class="breath-ball"></div><span id="breathPhase">Inspire</span></div>
+    </div>
+
+    <div id="ritualProgress" class="ritual-progress"><div id="ritualProgressFill"></div></div>
+
+    <div class="ritual-actions">
+      <button id="ritualTap" class="btn btn-primary btn-lg" hidden>+1</button>
+      <button id="ritualClose" class="btn btn-primary btn-lg" disabled>Fazendo…</button>
+      <button id="ritualSkip" class="linkbtn" hidden>pular hoje</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
