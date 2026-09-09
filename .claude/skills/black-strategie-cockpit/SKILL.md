@@ -142,5 +142,7 @@ Am Ende jeder Session, ohne Ausschmückung:
 - `references/vorlagen.md` Mahnung, Angebotsstruktur, Reporting,
   Freigabe, Sessionabschluss
 - `references/notion-setup.md` Datenbank und Ansichten im Cockpit
+- `references/edit-bible.md` Schnitthandschrift für Reels, Editor-Briefing,
+  Testauftrag
 - `references/skill-abgrenzung.md` Grenze zu `content-engine` und
   `black-strategie-content`, Vorrang bei Widerspruch
