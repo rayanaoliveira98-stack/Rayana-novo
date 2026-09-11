@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Betriebliche Gesundheitsförderung Wels | FITARY Corporate Health</title>
+<meta name="description" content="Weniger Krankenstände, gesündere Teams. Gesundheitstage und Firmenfitness in Wels und Oberösterreich. Betriebsanalyse vor Ort kostenlos. Jetzt anfragen.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://fitary.at/corporate-health/">
+<meta property="og:title" content="Betriebliche Gesundheitsförderung Wels | FITARY Corporate Health">
+<meta property="og:description" content="Weniger Krankenstände, gesündere Teams. Betriebsanalyse vor Ort kostenlos. FITARY in Wels.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fitary.at/corporate-health/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --petrol-900:#1B3431;
+  --petrol-800:#22403D;
+  --petrol-600:#2F4F4C;
+  --petrol-400:#3F5D5B;
+  --rost:#B03008;
+  --rost-hell:#C7411A;
+  --creme:#E4F0E4;
+  --creme-dim:rgba(228,240,228,.72);
+  --linie:rgba(228,240,228,.14);
+  --radius:4px;
+  --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--petrol-800);
+  color:var(--creme);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-size:17px;line-height:1.62;font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+h1,h2,h3,.num__big,.paket__preis{
+  font-family:'Big Shoulders Display','Inter',Impact,sans-serif;
+  font-weight:800;line-height:.98;letter-spacing:.005em;text-transform:uppercase;
+}
+h1{font-size:clamp(2.5rem,8.5vw,4.6rem)}
+h2{font-size:clamp(1.9rem,6vw,3.1rem);margin-bottom:.55em}
+h3{font-size:clamp(1.25rem,3.6vw,1.6rem);line-height:1.05}
+p{max-width:62ch}
+a{color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+section{padding:68px 0}
+@media(min-width:860px){section{padding:100px 0}}
+.eyebrow{
+  font-size:.74rem;font-weight:600;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--rost-hell);margin-bottom:18px;
+}
+.lead{font-size:clamp(1.02rem,2.4vw,1.18rem);color:var(--creme-dim)}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:56px;padding:16px 30px;
+  background:var(--rost);color:#fff;text-decoration:none;
+  font-weight:600;font-size:1.02rem;letter-spacing:.01em;
+  border:0;border-radius:var(--radius);cursor:pointer;
+  transition:background .18s ease;width:100%;text-align:center;
+}
+.btn:hover,.btn:focus{background:var(--rost-hell)}
+.btn--ghost{
+  background:transparent;color:var(--creme);
+  border:1px solid rgba(228,240,228,.34);
+}
+.btn--ghost:hover{background:rgba(228,240,228,.08)}
+@media(min-width:620px){.btn{width:auto;min-width:300px}}
+.cta-row{display:flex;flex-direction:column;gap:12px;margin-top:30px}
+@media(min-width:620px){.cta-row{flex-direction:row;flex-wrap:wrap;align-items:center}}
+.cta-row .btn--ghost{min-width:0}
+.kontakt-inline{
+  display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:20px;
+  font-size:.96rem;color:var(--creme-dim)
+}
+.kontakt-inline a{
+  color:var(--creme);text-decoration:none;font-weight:600;
+  border-bottom:1px solid rgba(228,240,228,.35);padding:6px 0;
+  display:inline-flex;align-items:center;min-height:44px;
+}
+.kontakt-inline a:hover{border-color:var(--rost-hell)}
+
+/* HERO */
+.hero{
+  position:relative;overflow:hidden;
+  padding:74px 0 62px;
+  background:linear-gradient(155deg,var(--petrol-900) 0%,var(--petrol-800) 48%,var(--petrol-400) 100%);
+}
+@media(min-width:860px){.hero{padding:118px 0 96px}}
+.hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(70% 90% at 88% 12%,rgba(176,48,8,.20),transparent 62%);
+}
+.hero .wrap{position:relative;z-index:2}
+.hero__inner{max-width:760px}
+.hero h1{margin-bottom:22px}
+.hero h1 .akzent{color:var(--rost-hell);display:block}
+.hero__sub{font-size:clamp(1.06rem,2.7vw,1.28rem);color:var(--creme-dim);max-width:56ch}
+.hero__mikro{margin-top:16px;font-size:.9rem;color:rgba(228,240,228,.55)}
+
+/* FOTO-PLATZHALTER (Duotone) */
+.foto{
+  position:relative;background:var(--petrol-600);border:1px dashed rgba(228,240,228,.28);
+  border-radius:var(--radius);overflow:hidden;
+}
+.foto::before{
+  content:attr(data-hinweis);
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:24px;
+  font-size:.78rem;letter-spacing:.11em;text-transform:uppercase;font-weight:600;
+  color:rgba(228,240,228,.5);
+  background:linear-gradient(150deg,rgba(27,52,49,.9),rgba(176,48,8,.24));
+}
+
+/* ZAHLENLEISTE */
+.zahlen{background:var(--petrol-900);padding:0;border-top:1px solid var(--linie);border-bottom:1px solid var(--linie)}
+.zahlen__grid{display:grid;grid-template-columns:1fr}
+@media(min-width:780px){.zahlen__grid{grid-template-columns:repeat(3,1fr)}}
+.num{padding:34px 22px;border-bottom:1px solid var(--linie)}
+@media(min-width:780px){
+  .num{padding:44px 30px;border-bottom:0;border-right:1px solid var(--linie)}
+  .num:last-child{border-right:0}
+}
+.num:last-child{border-bottom:0}
+.num__big{font-size:clamp(2.6rem,7vw,3.5rem);color:var(--rost-hell);margin-bottom:8px}
+.num__txt{font-size:1rem;font-weight:600;margin-bottom:6px}
+.num__quelle{font-size:.78rem;color:rgba(228,240,228,.5);line-height:1.45}
+
+/* GRIDS */
+.grid-3{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:780px){.grid-3{grid-template-columns:repeat(3,1fr);gap:26px}}
+.karte{
+  background:var(--petrol-600);border:1px solid var(--linie);
+  border-radius:var(--radius);padding:30px 26px;
+}
+.karte h3{margin-bottom:12px}
+.karte p{color:var(--creme-dim);font-size:.98rem}
+
+/* ABLAUF */
+.ablauf{background:var(--petrol-900)}
+.schritt{position:relative;padding:30px 26px 30px 26px;background:var(--petrol-800);border:1px solid var(--linie);border-radius:var(--radius)}
+.schritt__nr{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:2.9rem;
+  color:var(--rost-hell);line-height:1;margin-bottom:10px;display:block;
+}
+.schritt h3{margin-bottom:10px}
+.schritt p{color:var(--creme-dim);font-size:.98rem}
+.schritt__tag{
+  display:inline-block;margin-top:14px;font-size:.74rem;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--rost-hell);
+}
+
+/* PAKETE */
+.paket{
+  display:flex;flex-direction:column;
+  background:var(--petrol-600);border:1px solid var(--linie);
+  border-radius:var(--radius);padding:30px 26px;
+}
+.paket--top{border-color:var(--rost);background:var(--petrol-400);position:relative}
+.paket__badge{
+  position:absolute;top:-13px;left:26px;
+  background:var(--rost);color:#fff;font-size:.7rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;padding:6px 13px;border-radius:2px;
+}
+.paket__preis{font-size:clamp(2.2rem,6vw,2.9rem);color:var(--creme);margin-bottom:4px}
+.paket__name{font-size:.78rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--rost-hell);margin-bottom:16px}
+.paket ul{list-style:none;margin:0 0 4px}
+.paket li{
+  font-size:.97rem;color:var(--creme-dim);padding:9px 0 9px 22px;position:relative;
+  border-top:1px solid var(--linie);
+}
+.paket li::before{content:"";position:absolute;left:0;top:18px;width:9px;height:2px;background:var(--rost-hell)}
+.paket li:first-child{border-top:0}
+.zusatz{
+  margin-top:26px;padding:20px 24px;background:var(--petrol-600);
+  border-left:3px solid var(--rost);border-radius:var(--radius);
+}
+.zusatz p{font-size:.97rem;color:var(--creme-dim);max-width:none}
+.zusatz strong{color:var(--creme)}
+
+/* STEUER */
+.steuer{background:var(--petrol-900)}
+.steuer__box{
+  border-left:3px solid var(--rost);padding:4px 0 4px 26px;max-width:70ch;
+}
+.steuer p{color:var(--creme-dim);margin-bottom:14px}
+.steuer .paragraf{font-size:.86rem;color:rgba(228,240,228,.55)}
+
+/* ÜBER */
+.ueber__grid{display:grid;gap:32px;grid-template-columns:1fr;align-items:start}
+@media(min-width:860px){.ueber__grid{grid-template-columns:0.85fr 1.15fr;gap:52px}}
+.ueber .foto{aspect-ratio:4/5}
+.fakten{list-style:none;margin-top:24px}
+.fakten li{
+  padding:13px 0 13px 24px;border-top:1px solid var(--linie);
+  position:relative;font-size:.99rem;color:var(--creme-dim);
+}
+.fakten li::before{content:"";position:absolute;left:0;top:22px;width:10px;height:2px;background:var(--rost-hell)}
+.fakten strong{color:var(--creme);font-weight:600}
+
+/* TESTIMONIALS */
+.stimmen{background:var(--petrol-900)}
+.stimme{background:var(--petrol-800);border:1px solid var(--linie);border-radius:var(--radius);padding:30px 26px;display:flex;flex-direction:column}
+.stimme__text{font-size:1.03rem;color:var(--creme);margin-bottom:20px;flex:1}
+.stimme__wer{font-size:.87rem;color:var(--creme-dim);border-top:1px solid var(--linie);padding-top:16px}
+.stimme__wer strong{display:block;color:var(--creme);font-weight:600;font-size:.97rem}
+.platzhalter{
+  color:var(--rost-hell);font-weight:600;background:rgba(176,48,8,.16);
+  padding:2px 8px;border-radius:2px;display:inline-block;
+}
+
+/* FAQ */
+.faq details{
+  border-top:1px solid var(--linie);padding:0;
+}
+.faq details:last-of-type{border-bottom:1px solid var(--linie)}
+.faq summary{
+  cursor:pointer;list-style:none;padding:22px 40px 22px 0;position:relative;
+  font-weight:600;font-size:1.05rem;min-height:56px;display:flex;align-items:center;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{
+  content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);
+  font-size:1.6rem;color:var(--rost-hell);line-height:1;font-weight:400;
+}
+.faq details[open] summary::after{content:"\2212";}
+.faq p{padding:0 0 24px;color:var(--creme-dim);font-size:.99rem}
+
+/* FORMULAR */
+.anfrage{background:linear-gradient(200deg,var(--petrol-400) 0%,var(--petrol-800) 60%,var(--petrol-900) 100%)}
+.anfrage__grid{display:grid;gap:34px;grid-template-columns:1fr}
+@media(min-width:900px){.anfrage__grid{grid-template-columns:0.9fr 1.1fr;gap:56px}}
+.formbox{background:var(--petrol-900);border:1px solid var(--linie);border-radius:var(--radius);padding:28px 24px}
+@media(min-width:620px){.formbox{padding:36px 34px}}
+.feld{margin-bottom:16px}
+.feld label{display:block;font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--creme-dim);margin-bottom:7px}
+.feld input,.feld select,.feld textarea{
+  width:100%;min-height:52px;padding:14px 15px;
+  background:var(--petrol-800);color:var(--creme);
+  border:1px solid rgba(228,240,228,.22);border-radius:var(--radius);
+  font-family:inherit;font-size:1rem;
+}
+.feld textarea{min-height:104px;resize:vertical}
+.feld input:focus,.feld select:focus,.feld textarea:focus{outline:2px solid var(--rost-hell);outline-offset:1px;border-color:transparent}
+.feld select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--creme-dim) 50%),linear-gradient(135deg,var(--creme-dim) 50%,transparent 50%);background-position:calc(100% - 20px) 23px,calc(100% - 14px) 23px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+.feld--reihe{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:620px){.feld--reihe{grid-template-columns:1fr 1fr}}
+.dsgvo{display:flex;gap:12px;align-items:flex-start;margin:20px 0 22px;font-size:.85rem;color:var(--creme-dim)}
+.dsgvo input{width:22px;height:22px;min-height:22px;margin-top:2px;flex:0 0 auto;accent-color:var(--rost)}
+.dsgvo a{color:var(--creme)}
+.form__hinweis{margin-top:16px;font-size:.85rem;color:rgba(228,240,228,.6)}
+.erfolg{
+  display:none;background:var(--petrol-800);border:1px solid var(--rost);
+  border-radius:var(--radius);padding:30px 26px;
+}
+.erfolg.ist-sichtbar{display:block}
+.erfolg h3{color:var(--rost-hell);margin-bottom:12px}
+
+/* FOOTER */
+.footer{background:var(--petrol-900);border-top:1px solid var(--linie);padding:44px 0 38px;font-size:.93rem;color:var(--creme-dim)}
+.footer__grid{display:grid;gap:26px;grid-template-columns:1fr}
+@media(min-width:780px){.footer__grid{grid-template-columns:repeat(3,1fr)}}
+.footer strong{display:block;color:var(--creme);font-weight:600;margin-bottom:10px;font-size:.8rem;letter-spacing:.13em;text-transform:uppercase}
+.footer a{color:var(--creme-dim);text-decoration:none;display:inline-block;padding:5px 0}
+.footer a:hover{color:var(--creme)}
+.footer__marke{
+  font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:1.9rem;
+  color:var(--creme);letter-spacing:.03em;margin-bottom:10px;display:block;text-transform:uppercase;
+}
+.footer__unten{margin-top:32px;padding-top:20px;border-top:1px solid var(--linie);font-size:.82rem;color:rgba(228,240,228,.45)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+</head>
+<body>
+
+<!-- ============ 1. HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero__inner">
+      <p class="eyebrow">FITARY Corporate Health &middot; Wels und Umgebung</p>
+      <h1>Weniger Ausfälle im Team.<span class="akzent">Betriebliche Gesundheitsförderung in Wels.</span></h1>
+      <p class="hero__sub">Wir kommen 30 Minuten in Ihren Betrieb, sehen uns Arbeitsplätze und Belastungen an und geben Ihnen eine konkrete Empfehlung. Kostenlos und unverbindlich.</p>
+      <div class="cta-row">
+        <a class="btn" href="#anfrage">Kostenlose Betriebsanalyse anfragen</a>
+      </div>
+      <div class="kontakt-inline">
+        <a href="tel:+436703565006">Anrufen: +43 670 3565006</a>
+        <a href="https://wa.me/436703565006" target="_blank" rel="noopener">Auf WhatsApp schreiben</a>
+      </div>
+      <p class="hero__mikro">Für Betriebe mit 10 bis 150 Mitarbeitenden in Wels, Wels-Land, Linz-Land und Grieskirchen.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 2. ZAHLENLEISTE ============ -->
+<section class="zahlen" aria-label="Zahlen im Überblick">
+  <div class="wrap" style="padding:0">
+    <div class="zahlen__grid">
+      <div class="num">
+        <p class="num__big">250 &euro;</p>
+        <p class="num__txt">kostet ein Krankenstandstag einen Betrieb im Schnitt</p>
+        <p class="num__quelle">Quelle: WKO, Fehlzeitenreport. Entgeltfortzahlung, Überstunden und entgangene Wertschöpfung zusammengerechnet.</p>
+      </div>
+      <div class="num">
+        <p class="num__big">600 &euro;</p>
+        <p class="num__txt">pro Mitarbeitendem und Jahr steuerfrei</p>
+        <p class="num__quelle">Für Maßnahmen der betrieblichen Gesundheitsförderung nach &sect; 3 Abs. 1 Z 13 lit. b EStG.</p>
+      </div>
+      <div class="num">
+        <p class="num__big">4,9</p>
+        <p class="num__txt">Sterne auf Google, 96 Prozent Weiterempfehlung</p>
+        <p class="num__quelle">Bewertungen von Kundinnen und Kunden des FITARY Studios in Wels.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. PROBLEM ============ -->
+<section id="problem">
+  <div class="wrap">
+    <p class="eyebrow">Warum das Thema auf Ihrem Tisch liegt</p>
+    <h2>Gesundheit steht in Ihrer Bilanz.</h2>
+    <p class="lead" style="margin-bottom:42px">Drei Punkte, die in fast jedem Betrieb im Raum Wels gleich aussehen.</p>
+    <div class="grid-3">
+      <article class="karte">
+        <h3>Ausfälle, die niemand einplant</h3>
+        <p>Ein Krankenstand trifft immer das ganze Team. Überstunden für die anderen, verschobene Termine, Kunden die warten. Die Kosten tauchen in keiner eigenen Zeile auf, zahlen tun Sie sie trotzdem.</p>
+      </article>
+      <article class="karte">
+        <h3>Rücken, der nicht mehr mitmacht</h3>
+        <p>Ob am Schreibtisch oder in der Produktion. Muskel und Skelett gehören zu den häufigsten Ursachen für Krankenstände in Österreich. Das Muster ist bekannt und lässt sich früh unterbrechen.</p>
+      </article>
+      <article class="karte">
+        <h3>Fachkräfte, die Sie halten wollen</h3>
+        <p>Gehalt allein hält heute niemanden. Ein Betrieb, der sichtbar in die Gesundheit seiner Leute investiert, wird empfohlen. Intern und am Arbeitsmarkt in Oberösterreich.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. ABLAUF ============ -->
+<section class="ablauf" id="ablauf">
+  <div class="wrap">
+    <p class="eyebrow">Der Weg zu Ihrem Programm</p>
+    <h2>So läuft es ab.</h2>
+    <p class="lead" style="margin-bottom:42px">Drei Schritte. Kein Abo, das Sie nicht überblicken.</p>
+    <div class="grid-3">
+      <article class="schritt">
+        <span class="schritt__nr">01</span>
+        <h3>Betriebsanalyse vor Ort</h3>
+        <p>Yalcin Arslan kommt zu Ihnen in den Betrieb. Er sieht sich Arbeitsplätze, Abläufe und typische Belastungen an und sagt Ihnen, wo der Hebel am größten ist.</p>
+        <span class="schritt__tag">30 Minuten &middot; kostenlos</span>
+      </article>
+      <article class="schritt">
+        <span class="schritt__nr">02</span>
+        <h3>Programmvorschlag mit Fixpreis</h3>
+        <p>Sie bekommen eine konkrete Empfehlung auf einer Seite. Inhalte, Dauer, Anzahl der Personen und ein Fixpreis. Keine offenen Posten, keine Nachverrechnung.</p>
+        <span class="schritt__tag">Innerhalb weniger Tage</span>
+      </article>
+      <article class="schritt">
+        <span class="schritt__nr">03</span>
+        <h3>Umsetzung mit Dokumentation</h3>
+        <p>Wir setzen im Betrieb oder im Studio um. Sie bekommen eine saubere Dokumentation für Lohnverrechnung, Steuerberatung und Betriebsrat.</p>
+        <span class="schritt__tag">Nachvollziehbar belegt</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. PAKETE ============ -->
+<section id="pakete">
+  <div class="wrap">
+    <p class="eyebrow">Gesundheitstag im Betrieb</p>
+    <h2>Pakete mit Fixpreis.</h2>
+    <p class="lead" style="margin-bottom:48px">Sie sehen den Preis, bevor Sie anfragen. Das spart uns beiden Zeit.</p>
+    <div class="grid-3">
+
+      <article class="paket">
+        <p class="paket__name">Starter</p>
+        <p class="paket__preis">490 &euro;</p>
+        <ul>
+          <li>Bis 15 Personen</li>
+          <li>2 Stunden im Betrieb</li>
+          <li>Haltungs-Check am Arbeitsplatz</li>
+          <li>Praxisteil Rücken und Mobility</li>
+          <li>Kurzbericht für die Geschäftsführung</li>
+        </ul>
+      </article>
+
+      <article class="paket paket--top">
+        <span class="paket__badge">Meistgewählt</span>
+        <p class="paket__name">Professional</p>
+        <p class="paket__preis">890 &euro;</p>
+        <ul>
+          <li>Bis 40 Personen</li>
+          <li>4 Stunden im Betrieb</li>
+          <li>Stationenbetrieb für Schichten</li>
+          <li>Rücken, Haltung, Mobility und Recovery</li>
+          <li>Kleingruppen bis 4 Personen möglich</li>
+          <li>Auswertung und Empfehlung schriftlich</li>
+        </ul>
+      </article>
+
+      <article class="paket">
+        <p class="paket__name">Jahresprogramm</p>
+        <p class="paket__preis">ab 2.900 &euro;</p>
+        <ul>
+          <li>Pro Quartal, laufende Betreuung</li>
+          <li>Wiederkehrende Einheiten im Betrieb</li>
+          <li>Fortschritt wird dokumentiert</li>
+          <li>Unterlagen für Lohnverrechnung</li>
+          <li>Fester Ansprechpartner</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="zusatz">
+      <p><strong>Individueller Aktionsplan: 19 &euro; pro Person.</strong> Jede und jeder Mitarbeitende bekommt einen persönlichen Plan zum Mitnehmen, passend zur eigenen Belastung am Arbeitsplatz.</p>
+    </div>
+    <div class="zusatz">
+      <p><strong>PT Kontingent für Ihre Mitarbeitenden.</strong> Trainingsblöcke im Studio in Wels mit drei Rabattstufen, gestaffelt nach Vertragsumfang. Die Abwicklung stimmen wir direkt mit Ihrer Lohnverrechnung ab. Inhalte auf Wunsch: Rücken und Haltungstraining, Mobility und Recovery, Kleingruppentraining bis 4 Personen sowie Parkinson Fit Boxing als Beispiel für medizinisch fundierte Arbeit.</p>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn" href="#anfrage">Kostenlose Betriebsanalyse anfragen</a>
+      <a class="btn btn--ghost" href="tel:+436703565006">+43 670 3565006</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. STEUER ============ -->
+<section class="steuer" id="steuer">
+  <div class="wrap">
+    <p class="eyebrow">Steuerlicher Rahmen</p>
+    <h2>600 Euro pro Kopf steuerfrei.</h2>
+    <div class="steuer__box">
+      <p>Maßnahmen der betrieblichen Gesundheitsförderung sind in Österreich bis 600 Euro pro Mitarbeitendem und Jahr steuerfrei. Für Ihr Unternehmen heißt das: Das Budget kommt bei Ihren Leuten an, ohne dass Lohnnebenkosten daraus werden.</p>
+      <p>Voraussetzung ist, dass das Angebot allen Mitarbeitenden oder klar abgegrenzten Gruppen offensteht. Wir liefern die Dokumentation dafür mit.</p>
+      <p class="paragraf">Rechtsgrundlage: &sect; 3 Abs. 1 Z 13 lit. b EStG. Die Details für Ihren Betrieb klärt Ihr Steuerberater.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. ÜBER YALCIN ============ -->
+<section class="ueber" id="ueber">
+  <div class="wrap">
+    <div class="ueber__grid">
+      <div class="foto" data-hinweis="Foto 1: Yalcin Arslan im Studio, Portrait hochkant, dunkle Duotone-Optik"></div>
+      <div>
+        <p class="eyebrow">Ihr Ansprechpartner</p>
+        <h2>Yalcin Arslan, Wels.</h2>
+        <p class="lead">Er führt das erste Boutique Personal Training Studio in Wels. Bei Ihnen im Betrieb ist er die Person, die kommt, schaut und umsetzt. Keine wechselnden Trainer, kein Callcenter dazwischen.</p>
+        <ul class="fakten">
+          <li><strong>Medizinisch ausgebildeter Fitnesstrainer.</strong> Schwerpunkt Prävention, Rücken und Haltung.</li>
+          <li><strong>Boxer und Coach.</strong> Parkinson Fit Boxing als Beispiel für medizinisch fundierte Arbeit.</li>
+          <li><strong>Drei Sprachen.</strong> Deutsch, Türkisch und Englisch. Das hilft in gemischten Teams in Produktion und Logistik.</li>
+          <li><strong>Studio in Wels.</strong> Plobergerstraße 7, kurze Wege für Ihre Mitarbeitenden.</li>
+          <li><strong>4,9 Sterne auf Google.</strong> 96 Prozent Weiterempfehlung.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. TESTIMONIALS ============ -->
+<section class="stimmen" id="stimmen">
+  <div class="wrap">
+    <p class="eyebrow">Rückmeldungen</p>
+    <h2>Was andere sagen.</h2>
+    <div class="grid-3" style="margin-top:42px">
+
+      <!-- PLATZHALTER: Originalzitat von Dr. Budenhofer einsetzen, freigegeben. -->
+      <article class="stimme">
+        <p class="stimme__text"><span class="platzhalter">[ZITAT BUDENHOFER EINSETZEN]</span> Originalzitat mit schriftlicher Freigabe einfügen. Zwei bis drei Sätze, Fokus auf Haltung, Rücken oder Arbeitsalltag.</p>
+        <p class="stimme__wer"><strong>Dr. Peter Budenhofer</strong>Fachzahnarzt</p>
+      </article>
+
+      <!-- PLATZHALTER: Originalzitat von Valentin Hofer einsetzen, freigegeben. -->
+      <article class="stimme">
+        <p class="stimme__text"><span class="platzhalter">[ZITAT HOFER EINSETZEN]</span> Originalzitat mit schriftlicher Freigabe einfügen. Zwei bis drei Sätze, Fokus auf medizinische Zusammenarbeit und Qualität der Betreuung.</p>
+        <p class="stimme__wer"><strong>Valentin Hofer</strong>Physiotherapeut, Empfehlung</p>
+      </article>
+
+      <article class="stimme">
+        <p class="stimme__text">Fallbeispiel Markus: 13 Kilogramm weniger und 22 Prozent mehr Kraft in 16 Wochen. Betreut im Studio in Wels, neben einem vollen Arbeitsalltag.</p>
+        <p class="stimme__wer"><strong>Markus</strong>Kunde, 16 Wochen Betreuung</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. FAQ ============ -->
+<section class="faq" id="faq">
+  <div class="wrap">
+    <p class="eyebrow">Häufige Fragen</p>
+    <h2>Kurz beantwortet.</h2>
+    <div style="margin-top:36px;max-width:820px">
+
+      <details>
+        <summary>Müssen unsere Mitarbeitenden ins Studio kommen?</summary>
+        <p>Nein. Der Gesundheitstag findet bei Ihnen im Betrieb statt, dort wo die Belastung entsteht. Das Studio in Wels nutzen wir nur, wenn Sie zusätzlich Trainingsblöcke für einzelne Mitarbeitende buchen.</p>
+      </details>
+
+      <details>
+        <summary>Ab wie vielen Personen lohnt sich das?</summary>
+        <p>Ab etwa 10 Mitarbeitenden. Das Starter Paket ist für bis zu 15 Personen ausgelegt, Professional für bis zu 40. Bei größeren Teams arbeiten wir im Stationenbetrieb oder verteilen den Tag auf mehrere Termine, auch über Schichten hinweg.</p>
+      </details>
+
+      <details>
+        <summary>Wie lange dauert ein Gesundheitstag?</summary>
+        <p>Starter dauert 2 Stunden, Professional 4 Stunden. Wir legen die Zeiten so, dass Ihr Betrieb weiterläuft. Mitarbeitende kommen in Gruppen, nicht alle gleichzeitig.</p>
+      </details>
+
+      <details>
+        <summary>Was kostet die Betriebsanalyse?</summary>
+        <p>Nichts. Die 30 Minuten vor Ort sind kostenlos und unverbindlich. Sie bekommen danach eine Empfehlung und einen Fixpreis. Ob Sie buchen, entscheiden Sie in Ruhe.</p>
+      </details>
+
+      <details>
+        <summary>Wie wird abgerechnet?</summary>
+        <p>Nach dem Termin per Rechnung an Ihr Unternehmen, mit allen Angaben, die Ihre Buchhaltung braucht. Für die Steuerfreiheit bis 600 Euro pro Mitarbeitendem und Jahr liefern wir die passende Dokumentation mit. Bei PT Kontingenten stimmen wir die Abwicklung direkt mit Ihrer Lohnverrechnung ab.</p>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. ANFRAGE ============ -->
+<section class="anfrage" id="anfrage">
+  <div class="wrap">
+    <div class="anfrage__grid">
+
+      <div>
+        <p class="eyebrow">Nächster Schritt</p>
+        <h2>Betriebsanalyse anfragen.</h2>
+        <p class="lead">30 Minuten bei Ihnen im Betrieb. Kostenlos, unverbindlich, ohne Verkaufsgespräch. Sie wissen danach, was Ihr Team braucht und was es kostet.</p>
+        <div class="kontakt-inline" style="margin-top:28px">
+          <a href="tel:+436703565006">Anrufen: +43 670 3565006</a>
+          <a href="https://wa.me/436703565006" target="_blank" rel="noopener">Auf WhatsApp schreiben</a>
+        </div>
+        <p class="form__hinweis">Wir melden uns innerhalb von 24 Stunden. An Werktagen meist schneller.</p>
+      </div>
+
+      <div>
+        <div class="formbox" id="formbox">
+          <!-- WORDPRESS: Diesen Block durch das Shortcode des Formular-Plugins ersetzen.
+               Feldnamen und Reihenfolge exakt übernehmen. Empfänger: office@fitary.at -->
+          <form id="bgf-formular" method="post" action="/corporate-health/danke/" novalidate>
+            <div class="feld">
+              <label for="firma">Firma</label>
+              <input type="text" id="firma" name="firma" autocomplete="organization" required>
+            </div>
+            <div class="feld">
+              <label for="ansprechperson">Ansprechperson</label>
+              <input type="text" id="ansprechperson" name="ansprechperson" autocomplete="name" required>
+            </div>
+            <div class="feld feld--reihe">
+              <div>
+                <label for="telefon">Telefon</label>
+                <input type="tel" id="telefon" name="telefon" autocomplete="tel" required>
+              </div>
+              <div>
+                <label for="email">E-Mail</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="feld">
+              <label for="mitarbeiterzahl">Mitarbeiterzahl</label>
+              <select id="mitarbeiterzahl" name="mitarbeiterzahl" required>
+                <option value="">Bitte wählen</option>
+                <option value="bis 10">bis 10</option>
+                <option value="11 bis 50">11 bis 50</option>
+                <option value="51 bis 150">51 bis 150</option>
+                <option value="über 150">über 150</option>
+              </select>
+            </div>
+            <div class="feld">
+              <label for="nachricht">Nachricht (optional)</label>
+              <textarea id="nachricht" name="nachricht" rows="3" placeholder="Wunschtermin, Schichtbetrieb, besondere Belastungen"></textarea>
+            </div>
+            <label class="dsgvo" for="dsgvo">
+              <input type="checkbox" id="dsgvo" name="dsgvo" value="1" required>
+              <span>Ich stimme zu, dass meine Angaben zur Bearbeitung der Anfrage verwendet werden. Mehr dazu in der <a href="/allgemein-be/">Datenschutzerklärung</a>.</span>
+            </label>
+            <button type="submit" class="btn">Betriebsanalyse anfragen</button>
+            <p class="form__hinweis">Ihre Daten gehen direkt an office@fitary.at. Keine Weitergabe an Dritte, kein Newsletter.</p>
+          </form>
+        </div>
+
+        <div class="erfolg" id="erfolg" role="status" aria-live="polite">
+          <h3>Anfrage ist angekommen.</h3>
+          <p>Danke. Wir melden uns innerhalb von 24 Stunden bei Ihnen und vereinbaren einen Termin für die Betriebsanalyse.</p>
+          <div class="kontakt-inline">
+            <a href="tel:+436703565006">+43 670 3565006</a>
+            <a href="https://wa.me/436703565006" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <span class="footer__marke">FITARY</span>
+        <p>Erstes Boutique Personal Training Studio in Wels.</p>
+      </div>
+      <div>
+        <strong>Studio</strong>
+        <p>Plobergerstraße 7<br>4600 Wels, Oberösterreich</p>
+      </div>
+      <div>
+        <strong>Kontakt</strong>
+        <p>
+          <a href="tel:+436703565006">+43 670 3565006</a><br>
+          <a href="mailto:office@fitary.at">office@fitary.at</a><br>
+          <a href="/impressum/">Impressum</a> &middot; <a href="/allgemein-be/">Datenschutz</a>
+        </p>
+      </div>
+    </div>
+    <p class="footer__unten">FITARY Corporate Health &middot; Betriebliche Gesundheitsförderung in Wels, Wels-Land, Linz-Land und Grieskirchen.</p>
+  </div>
+</footer>
+
+<script>
+/* Nur Fallback fuer die statische Vorschau.
+   In WordPress uebernimmt das Formular-Plugin den Versand und die Weiterleitung auf /corporate-health/danke/ */
+(function(){
+  var f=document.getElementById('bgf-formular');
+  if(!f)return;
+  f.addEventListener('submit',function(e){
+    if(!f.checkValidity()){return;}
+    if(window.location.protocol==='file:'){
+      e.preventDefault();
+      document.getElementById('formbox').style.display='none';
+      document.getElementById('erfolg').classList.add('ist-sichtbar');
+      document.getElementById('erfolg').scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
