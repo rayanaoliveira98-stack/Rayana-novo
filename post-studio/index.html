@@ -255,6 +255,7 @@ tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
   <section class="pane stage">
     <div class="stage__bar">
       <div class="chips" id="typeChips"></div>
+      <div class="chips" id="styleChips"></div>
       <div class="sw" id="presetSw"></div>
       <div class="chips" id="slideChips"></div>
     </div>
@@ -309,6 +310,16 @@ tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
       <div class="f" style="margin-top:10px">
         <label for="fTicker">Ticker unten</label>
         <input type="text" id="fTicker" data-field="ticker" />
+      </div>
+      <div class="f" style="margin-top:10px">
+        <label>Bild</label>
+        <div style="display:flex; gap:8px; align-items:center">
+          <button class="mini" id="pickPhoto">Bild wählen</button>
+          <button class="mini" id="dropPhoto">Entfernen</button>
+          <span class="hint" id="photoState">kein Bild</span>
+        </div>
+        <input type="file" id="photoInput" accept="image/*" hidden />
+        <p class="hint">Freigestelltes PNG wirkt am stärksten. Stil Cutout stellt die Person auf die Farbfläche.</p>
       </div>
       <div class="hooks" id="hookLib"></div>
       <button class="btn btn--ai" id="aiHooks" style="margin-top:10px; width:100%">3 Hook-Varianten von Claude</button>
@@ -411,7 +422,7 @@ const FORMATE = {
   F1:{
     name:"F1 Fehler",
     note:"Kippt eine Annahme der Leserin. Zeigt den Fehler, den fast alle machen, und was er kostet. Zahlt auf Autorität ein und erzeugt Antworten.",
-    goal:"autoritaet", preset:"void", type:"reel", tag:"FEHLER",
+    goal:"autoritaet", stil:"editorial", preset:"void", type:"reel", tag:"FEHLER",
     ticker:"SICHTBARKEIT, DIE ANFRAGEN BRINGT • WELS • OBERÖSTERREICH",
     hooks:[
       "Sie posten jede Woche. Und trotzdem ruft niemand an.",
@@ -438,7 +449,7 @@ const FORMATE = {
   F2:{
     name:"F2 Praxis-Check",
     note:"Die Freitags-Serie. Eine echte Website, sechs Kriterien, eine Punktezahl. Das Material für das Outbound der Folgewoche. Ghost-Nummer hochzählen.",
-    goal:"check", preset:"papier", type:"reel", tag:"PRAXIS-CHECK",
+    goal:"check", stil:"editorial", preset:"papier", type:"reel", tag:"PRAXIS-CHECK",
     ticker:"PRAXIS-CHECK • JEDEN FREITAG • GRATIS ANALYSE IN 48 STUNDEN",
     hooks:[
       "Praxis-Check: sechs Kriterien, eine Website, [Punkte] von 30.",
@@ -464,7 +475,7 @@ const FORMATE = {
   F3:{
     name:"F3 Beweis",
     note:"Ergebnis statt Behauptung. Ein Fall, ein Zeitraum, eine Zahl. Nur echte Werte einsetzen, Platzhalter blockieren die Freigabe.",
-    goal:"termin", preset:"roxo", type:"karussell", tag:"ERGEBNIS",
+    goal:"termin", stil:"foto", preset:"roxo", type:"karussell", tag:"ERGEBNIS",
     ticker:"ERGEBNISSE AUS OBERÖSTERREICH • WELS • LINZ",
     hooks:[
       "Wahlarztpraxis in Wels. [Zeitraum] später: [Ergebnis].",
@@ -491,7 +502,7 @@ const FORMATE = {
   F4:{
     name:"F4 Ich",
     note:"Arbeitsweise und Haltung. Der Unterschied zur Agentur: die fertige Lösung kommt vor dem Vertrag. Baut Nähe auf, verkauft nicht direkt.",
-    goal:"autoritaet", preset:"rosa", type:"feed", tag:"ARBEITSWEISE",
+    goal:"autoritaet", stil:"cutout", preset:"rosa", type:"feed", tag:"ARBEITSWEISE",
     ticker:"DIE STRATEGIE, DIE WIRKT! • BLACK STRATEGIE WELS",
     hooks:[
       "Ich schicke die fertige Lösung, bevor es einen Vertrag gibt.",
@@ -518,7 +529,7 @@ const FORMATE = {
   F5:{
     name:"F5 Angebot",
     note:"Direkt und ohne Umweg. Ein Angebot, ein Preis, ein nächster Schritt. Nie ein Menü aus Varianten zeigen.",
-    goal:"sprint", preset:"laranja", type:"feed", tag:"ANGEBOT",
+    goal:"sprint", stil:"band", preset:"laranja", type:"feed", tag:"ANGEBOT",
     ticker:"WEBSITE-SPRINT • 7 TAGE • 690 EURO • WELS",
     hooks:[
       "Website-Sprint: sieben Tage, 690 Euro, eine Seite, die Termine bringt.",
@@ -541,6 +552,13 @@ const FORMATE = {
       "Schreiben Sie CHECK per WhatsApp."
     ].join("\n")
   }
+};
+
+const STILE = {
+  editorial:{name:"Editorial", note:"Hook füllt die Fläche. Der Standard für Autorität."},
+  band:{name:"Laufband",  note:"Zwei diagonale Bänder mit Wiederholtext. Für Serien und Claims."},
+  foto:{name:"Foto",      note:"Bild oben im Rahmen, Aussage unten. Für Beweis und Gesicht."},
+  cutout:{name:"Cutout",  note:"Aussage oben, freigestellte Person auf der Farbfläche unten."}
 };
 
 const TYPEN = {
@@ -589,7 +607,7 @@ function startplan(){
       out.push(neuerPost({
         id:iso(d)+"-"+fmt.toLowerCase(),
         date:iso(d), channel:kanal, format:fmt, type:typ,
-        preset:kanal==="linkedin" ? "papier" : F.preset,
+        preset:kanal==="linkedin" ? "papier" : F.preset, stil:F.stil,
         tag:F.tag, num:nr, ticker:F.ticker, goal:F.goal,
         hook:F.hooks[(woche+wd)%F.hooks.length],
         hashtags:HASHTAGS[kanal]
@@ -606,7 +624,7 @@ function neuerPost(o){
   const p = Object.assign({
     id:"p"+Date.now().toString(36),
     date:iso(new Date()), channel:"instagram", format:"F1", type:"reel", preset:"void",
-    tag:F.tag, num:"01", ticker:F.ticker, goal:F.goal, status:"idee",
+    tag:F.tag, num:"01", ticker:F.ticker, goal:F.goal, stil:F.stil||"editorial", photo:null, status:"idee",
     hook:F.hooks[0], subline:"", cta:"Schreiben Sie CHECK per WhatsApp",
     caption:"", hashtags:HASHTAGS.instagram, slides:[], slide:0
   }, o);
@@ -699,6 +717,54 @@ function pill(ctx, text, x, y, o){
   return {w,h};
 }
 
+/* Bildspeicher */
+const IMGS={};
+function bild(p){
+  const q=p.photo && (p.photo.url||p.photo.id);
+  if(!q) return null;
+  const src = p.photo.url || ("/_blob/"+p.photo.id);
+  if(IMGS[src]) return IMGS[src].ok ? IMGS[src].img : null;
+  const img=new Image(); IMGS[src]={img, ok:false};
+  img.onload=()=>{ IMGS[src].ok=true; if(typeof buehneZeichnen==="function") buehneZeichnen(); };
+  img.onerror=()=>{ IMGS[src].ok=false; };
+  img.src=src;
+  return null;
+}
+function fuellen(ctx, img, x, y, w, h){
+  const r=Math.max(w/img.width, h/img.height);
+  const dw=img.width*r, dh=img.height*r;
+  ctx.save(); ctx.beginPath(); ctx.rect(x,y,w,h); ctx.clip();
+  ctx.drawImage(img, x+(w-dw)/2, y+(h-dh)/2, dw, dh); ctx.restore();
+}
+function platzhalter(ctx, x, y, w, h, ink){
+  ctx.save(); ctx.globalAlpha=.28; ctx.strokeStyle=ink; ctx.lineWidth=4; ctx.setLineDash([18,14]);
+  ctx.strokeRect(x+2,y+2,w-4,h-4);
+  ctx.setLineDash([]); ctx.globalAlpha=.5; ctx.fillStyle=ink;
+  ctx.font="800 30px "+BODY; ctx.textAlign="center"; ctx.fillText("BILD WÄHLEN", x+w/2, y+h/2);
+  ctx.textAlign="left"; ctx.restore();
+}
+function laufband(ctx, text, cy, winkel, bg, ink, W, hoehe){
+  ctx.save(); ctx.translate(W/2, cy); ctx.rotate(winkel*Math.PI/180);
+  ctx.fillStyle=bg; ctx.fillRect(-W, -hoehe/2, W*2, hoehe);
+  ctx.font="800 "+Math.round(hoehe*0.40)+"px "+BODY; track(ctx,"0.2em");
+  ctx.fillStyle=ink; ctx.textBaseline="middle";
+  let s=(text||"").toUpperCase()+"   •   ", line=s;
+  while(ctx.measureText(line).width < W*2.2) line+=s;
+  ctx.textAlign="center"; ctx.fillText(line, 0, 1);
+  ctx.textAlign="left"; ctx.textBaseline="alphabetic"; track(ctx,"0px"); ctx.restore();
+}
+function swipe(ctx, S, W, H, tickerH){
+  const t="SWIPE →";
+  ctx.font="800 26px "+BODY; track(ctx,"0.16em");
+  const w=ctx.measureText(t).width+56, h=66;
+  const x=W-78-w, y=H-tickerH-36-h;
+  ctx.fillStyle=S.ink; ctx.beginPath();
+  if(ctx.roundRect) ctx.roundRect(x,y,w,h,h/2); else ctx.rect(x,y,w,h);
+  ctx.fill();
+  ctx.fillStyle=S.bg; ctx.textBaseline="middle"; ctx.fillText(t, x+28, y+h/2+1);
+  ctx.textBaseline="alphabetic"; track(ctx,"0px");
+}
+
 function renderPost(cv, p, slideIdx){
   const T=TYPEN[p.type]||TYPEN.feed, S=PRESETS[p.preset]||PRESETS.void;
   const W=T.w, H=T.h;
@@ -706,12 +772,13 @@ function renderPost(cv, p, slideIdx){
   const ctx=cv.getContext("2d");
   ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,W,H);
   ctx.fillStyle=S.bg; ctx.fillRect(0,0,W,H);
-  const M=78, IW=W-M*2;
+  const M=78, IW=W-M*2, tickerH=Math.round(H*0.048);
+  const istSlide = p.type==="karussell" && slideIdx>0;
+  const stil = istSlide ? "editorial" : (p.stil||"editorial");
 
-  /* Kopfbalken */
   ctx.fillStyle=S.bar; ctx.fillRect(0,0,W,18);
 
-  /* Kopfzeile: Wortmarke links, Kanal rechts */
+  /* Kopfzeile */
   ctx.font="400 30px "+DISP; track(ctx,"0.2em"); ctx.fillStyle=S.ink;
   ctx.textBaseline="alphabetic"; ctx.fillText("BLACK STRATEGIE", M, 112);
   track(ctx,"0px");
@@ -719,67 +786,118 @@ function renderPost(cv, p, slideIdx){
   ctx.fillText(p.channel==="linkedin" ? "Rayana · Black Strategie" : "@blackstrategie.marketing", W-M, 110);
   ctx.globalAlpha=1; ctx.textAlign="left";
 
-  const istSlide = p.type==="karussell" && slideIdx>0;
-  const tickerH = Math.round(H*0.048);
+  if(istSlide){
+    slideZeichnen(ctx,p,S,W,H,M,IW,tickerH,slideIdx);
+    tickerZeichnen(ctx,p,S,W,H,M,tickerH);
+    return cv;
+  }
 
-  /* Ghost-Nummer hinter allem */
-  const nr = istSlide ? String(slideIdx+1).padStart(2,"0") : (p.num||"");
-  if(nr){
-    ctx.save();
-    ctx.font="400 "+Math.round(H*0.30)+"px "+DISP;
-    ctx.textAlign="right"; ctx.globalAlpha=.14; ctx.lineWidth=5;
-    ctx.strokeStyle=S.ink; ctx.strokeText(nr, W-M+10, H-tickerH-Math.round(H*0.055));
+  const img=bild(p);
+
+  /* Ghost-Nummer nur dort, wo Platz ist */
+  if(p.num && (stil==="editorial"||stil==="band")){
+    ctx.save(); ctx.font="400 "+Math.round(H*0.30)+"px "+DISP;
+    ctx.textAlign="right"; ctx.globalAlpha=.14; ctx.lineWidth=5; ctx.strokeStyle=S.ink;
+    ctx.strokeText(p.num, W-M+10, H-tickerH-Math.round(H*0.055));
     ctx.restore(); ctx.textAlign="left";
   }
+  if(p.tag && stil!=="cutout") pillTag(ctx,p,S,M);
 
-  if(!istSlide){
-    /* Serien-Tag */
-    if(p.tag) pill(ctx, p.tag, M, 152, {size:26, bg:S.akzent, ink:S.bg===CI.weiss?CI.schwarz:pickInk(S.akzent)});
+  if(stil==="editorial") layEditorial(ctx,p,S,W,H,M,IW,tickerH);
+  else if(stil==="band") layBand(ctx,p,S,W,H,M,IW,tickerH);
+  else if(stil==="foto") layFoto(ctx,p,S,W,H,M,IW,tickerH,img);
+  else layCutout(ctx,p,S,W,H,M,IW,tickerH,img);
 
-    /* Aufbau von unten nach oben */
-    let cursor = H - tickerH - 70;
-    if(p.cta){
-      const m=pill(ctx, p.cta, M, cursor-70, {size:27, bg:"rgba(0,0,0,0)", ink:S.ink, border:S.ink});
-      cursor = cursor-70-24;
-    }
-    if(p.subline){
-      const sb=fitBlock(ctx, p.subline, {family:BODY, weight:600, maxW:IW, maxLines:3, start:44, min:28, lh:1.3, space:0.24});
-      cursor -= sb.height;
-      ctx.globalAlpha=.78; drawBlock(ctx, sb, M, cursor, S.ink, S.akzent, {family:BODY, weight:600, space:0.24}); ctx.globalAlpha=1;
-      cursor -= 34;
-    }
-    const hb=fitBlock(ctx, p.hook||"", {family:DISP, weight:400, maxW:IW, maxLines:6, start:Math.round(H*0.082), min:48, lh:1.0, space:0.22, upper:true});
-    cursor -= hb.height;
-    drawBlock(ctx, hb, M, cursor, S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
-    ctx.fillStyle=S.bar; ctx.fillRect(M, cursor-38, 170, 12);
-  } else {
-    const sl=(p.slides||[])[slideIdx-1]||{head:"",body:""};
-    let y=Math.round(H*0.30);
-    const hb=fitBlock(ctx, sl.head||"", {family:DISP, weight:400, maxW:IW, maxLines:3, start:Math.round(H*0.062), min:42, lh:1.02, space:0.22, upper:true});
-    ctx.fillStyle=S.bar; ctx.fillRect(M, y-40, 120, 10);
-    drawBlock(ctx, hb, M, y, S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
-    y += hb.height + 40;
-    const bb=fitBlock(ctx, sl.body||"", {family:BODY, weight:500, maxW:IW, maxLines:9, start:42, min:26, lh:1.42, space:0.24});
-    ctx.globalAlpha=.86; drawBlock(ctx, bb, M, y, S.ink, S.akzent, {family:BODY, weight:500, space:0.24}); ctx.globalAlpha=1;
-    const letzte = slideIdx===(p.slides||[]).length;
-    ctx.font="800 26px "+BODY; track(ctx,"0.14em"); ctx.fillStyle=S.akzent;
-    ctx.fillText(letzte ? "SCHREIBEN SIE CHECK" : "WEITER WISCHEN →", M, H-tickerH-64);
-    track(ctx,"0px");
+  if(p.type==="karussell") swipe(ctx,S,W,H,tickerH);
+  tickerZeichnen(ctx,p,S,W,H,M,tickerH);
+  return cv;
+}
+
+function pillTag(ctx,p,S,M){
+  pill(ctx, p.tag, M, 152, {size:26, bg:S.akzent, ink:pickInk(S.akzent)});
+}
+function ctaUndSub(ctx,p,S,M,IW,cursor){
+  if(p.cta){ pill(ctx, p.cta, M, cursor-70, {size:27, bg:"rgba(0,0,0,0)", ink:S.ink, border:S.ink}); cursor=cursor-70-24; }
+  if(p.subline){
+    const sb=fitBlock(ctx, p.subline, {family:BODY, weight:600, maxW:IW, maxLines:3, start:44, min:28, lh:1.3, space:0.24});
+    cursor-=sb.height;
+    ctx.globalAlpha=.78; drawBlock(ctx, sb, M, cursor, S.ink, S.akzent, {family:BODY, weight:600, space:0.24}); ctx.globalAlpha=1;
+    cursor-=34;
   }
-
-  /* Ticker */
+  return cursor;
+}
+function layEditorial(ctx,p,S,W,H,M,IW,tickerH){
+  let cursor=ctaUndSub(ctx,p,S,M,IW,H-tickerH-70);
+  const hb=fitBlock(ctx, p.hook||"", {family:DISP, weight:400, maxW:IW, maxLines:6, start:Math.round(H*0.082), min:48, lh:1.0, space:0.22, upper:true});
+  cursor-=hb.height;
+  drawBlock(ctx, hb, M, cursor, S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
+  ctx.fillStyle=S.bar; ctx.fillRect(M, cursor-38, 170, 12);
+}
+function layBand(ctx,p,S,W,H,M,IW,tickerH){
+  const bandH=Math.round(H*0.055);
+  laufband(ctx, p.tag||"BLACK STRATEGIE", H*0.60, -7, S.akzent, pickInk(S.akzent), W, bandH);
+  laufband(ctx, p.ticker||"DIE STRATEGIE, DIE WIRKT", H*0.60+bandH+26, 5, S.bar, pickInk(S.bar), W, bandH);
+  const hb=fitBlock(ctx, p.hook||"", {family:DISP, weight:400, maxW:IW, maxLines:4, start:Math.round(H*0.078), min:44, lh:1.0, space:0.22, upper:true});
+  drawBlock(ctx, hb, M, Math.round(H*0.20), S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
+  ctaUndSub(ctx,p,S,M,IW,H-tickerH-70);
+}
+function layFoto(ctx,p,S,W,H,M,IW,tickerH,img){
+  const y0=Math.round(H*0.175), fh=Math.round(H*0.355);
+  if(img) fuellen(ctx,img,M,y0,IW,fh); else platzhalter(ctx,M,y0,IW,fh,S.ink);
+  ctx.strokeStyle=S.ink; ctx.lineWidth=5; ctx.strokeRect(M+2.5,y0+2.5,IW-5,fh-5);
+  let cursor=ctaUndSub(ctx,p,S,M,IW,H-tickerH-70);
+  const hb=fitBlock(ctx, p.hook||"", {family:DISP, weight:400, maxW:IW, maxLines:4, start:Math.round(H*0.070), min:42, lh:1.0, space:0.22, upper:true});
+  cursor-=hb.height;
+  drawBlock(ctx, hb, M, Math.max(cursor, y0+fh+40), S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
+}
+function layCutout(ctx,p,S,W,H,M,IW,tickerH,img){
+  const fy=Math.round(H*0.42), fh=H-tickerH-fy;
+  if(img) fuellen(ctx,img,0,fy,W,fh); else platzhalter(ctx,M,fy+20,IW,fh-40,S.ink);
+  const hb=fitBlock(ctx, p.hook||"", {family:DISP, weight:400, maxW:IW, maxLines:4, start:Math.round(H*0.080), min:44, lh:1.0, space:0.22, upper:true});
+  ctx.fillStyle=S.bar; ctx.fillRect(M, Math.round(H*0.15)-38, 170, 12);
+  drawBlock(ctx, hb, M, Math.round(H*0.15), S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
+  if(p.tag){
+    ctx.save(); ctx.translate(W-M, fy+30); ctx.rotate(-90*Math.PI/180);
+    pill(ctx, p.tag, 0, 0, {size:24, bg:S.akzent, ink:pickInk(S.akzent)});
+    ctx.restore();
+  }
+  if(p.cta){
+    ctx.font="800 27px "+BODY; track(ctx,"0.12em");
+    const w=ctx.measureText(p.cta).width+52;
+    ctx.fillStyle=S.bg; ctx.fillRect(M-14, H-tickerH-108, w+28, 74);
+    ctx.strokeStyle=S.ink; ctx.lineWidth=3; ctx.strokeRect(M-12.5, H-tickerH-106.5, w+25, 71);
+    ctx.fillStyle=S.ink; ctx.textBaseline="middle"; ctx.fillText(p.cta, M+12, H-tickerH-71);
+    ctx.textBaseline="alphabetic"; track(ctx,"0px");
+  }
+}
+function slideZeichnen(ctx,p,S,W,H,M,IW,tickerH,slideIdx){
+  const sl=(p.slides||[])[slideIdx-1]||{head:"",body:""};
+  ctx.save(); ctx.font="400 "+Math.round(H*0.30)+"px "+DISP; ctx.textAlign="right";
+  ctx.globalAlpha=.14; ctx.lineWidth=5; ctx.strokeStyle=S.ink;
+  ctx.strokeText(String(slideIdx+1).padStart(2,"0"), W-M+10, H-tickerH-Math.round(H*0.055));
+  ctx.restore(); ctx.textAlign="left";
+  let y=Math.round(H*0.30);
+  const hb=fitBlock(ctx, sl.head||"", {family:DISP, weight:400, maxW:IW, maxLines:3, start:Math.round(H*0.062), min:42, lh:1.02, space:0.22, upper:true});
+  ctx.fillStyle=S.bar; ctx.fillRect(M, y-40, 120, 10);
+  drawBlock(ctx, hb, M, y, S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
+  y+=hb.height+40;
+  const bb=fitBlock(ctx, sl.body||"", {family:BODY, weight:500, maxW:IW, maxLines:9, start:42, min:26, lh:1.42, space:0.24});
+  ctx.globalAlpha=.86; drawBlock(ctx, bb, M, y, S.ink, S.akzent, {family:BODY, weight:500, space:0.24}); ctx.globalAlpha=1;
+  const letzte = slideIdx===(p.slides||[]).length;
+  ctx.font="800 26px "+BODY; track(ctx,"0.14em"); ctx.fillStyle=S.akzent;
+  ctx.fillText(letzte ? "SCHREIBEN SIE CHECK" : "WEITER WISCHEN →", M, H-tickerH-64);
+  track(ctx,"0px");
+}
+function tickerZeichnen(ctx,p,S,W,H,M,tickerH){
   ctx.fillStyle=S.ticker; ctx.fillRect(0,H-tickerH,W,tickerH);
   const tx=(p.ticker||"").toUpperCase();
-  if(tx){
-    ctx.save(); ctx.beginPath(); ctx.rect(0,H-tickerH,W,tickerH); ctx.clip();
-    ctx.font="800 24px "+BODY; track(ctx,"0.18em"); ctx.fillStyle=S.tickerInk;
-    ctx.textBaseline="middle";
-    let s=tx+"   •   ", line=s;
-    while(ctx.measureText(line).width < W*1.3) line+=s;
-    ctx.fillText(line, M/2, H-tickerH/2+1);
-    ctx.restore(); track(ctx,"0px"); ctx.textBaseline="alphabetic";
-  }
-  return cv;
+  if(!tx) return;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,H-tickerH,W,tickerH); ctx.clip();
+  ctx.font="800 24px "+BODY; track(ctx,"0.18em"); ctx.fillStyle=S.tickerInk; ctx.textBaseline="middle";
+  let s=tx+"   •   ", line=s;
+  while(ctx.measureText(line).width < W*1.3) line+=s;
+  ctx.fillText(line, M/2, H-tickerH/2+1);
+  ctx.restore(); track(ctx,"0px"); ctx.textBaseline="alphabetic";
 }
 function pickInk(hex){
   const c=hex.replace("#",""); const r=parseInt(c.substr(0,2),16), g=parseInt(c.substr(2,2),16), b=parseInt(c.substr(4,2),16);
@@ -898,6 +1016,13 @@ function buehneZeichnen(){
     b.onclick=()=>{ p.type=k; if(k==="karussell"&&!(p.slides||[]).length) p.slides=standardSlides(p); S.slide=0; bearbeitet(); allesZeichnen(); };
     tc.appendChild(b);
   });
+  const stc=$("#styleChips"); stc.innerHTML="";
+  Object.entries(STILE).forEach(([k,v])=>{
+    const b=document.createElement("button"); b.className="chip"; b.type="button"; b.title=v.note;
+    b.setAttribute("aria-pressed", (p.stil||"editorial")===k?"true":"false"); b.textContent=v.name;
+    b.onclick=()=>{ p.stil=k; bearbeitet(); allesZeichnen(); };
+    stc.appendChild(b);
+  });
   const sw=$("#presetSw"); sw.innerHTML="";
   Object.entries(PRESETS).forEach(([k,v])=>{
     const b=document.createElement("button"); b.type="button"; b.title=v.name;
@@ -926,13 +1051,14 @@ function formularZeichnen(){
   const gs=$("#fGoal"); gs.innerHTML="";
   Object.entries(ZIELE).forEach(([k,v])=>{ const o=document.createElement("option"); o.value=k; o.textContent=v.label+(v.min?" ("+v.min+" bis "+v.max+")":""); gs.appendChild(o); });
   $$("[data-field]").forEach(el=>{ const v=p[el.dataset.field]; el.value = v==null ? "" : v; });
-  $("#fmtNote").textContent=FORMATE[p.format].note;
+  $("#fmtNote").textContent=FORMATE[p.format].note+"  Stil "+(STILE[p.stil||"editorial"].name)+": "+(STILE[p.stil||"editorial"].note);
 
   const hl=(p.hook||"").replace(/\*/g,"").length;
   const hc=$("#hookCnt"); hc.textContent="· "+hl+" Zeichen"; hc.className="cnt"+(hl>90?" bad":hl>60?" mid":"");
   const tg=(p.hashtags||"").split(/\s+/).filter(t=>t.startsWith("#")).length;
   const tc2=$("#tagCnt"); tc2.textContent="· "+tg+" von 3 bis 5"; tc2.className="cnt"+((tg<3||tg>5)?" mid":"");
 
+  $("#photoState").textContent = !p.photo ? "kein Bild" : (p.photo.id ? "Bild gesichert" : "Bild nur in dieser Sitzung");
   const lib=$("#hookLib"); lib.innerHTML="";
   FORMATE[p.format].hooks.forEach(h=>{
     const b=document.createElement("button"); b.type="button"; b.textContent=h;
@@ -996,7 +1122,7 @@ function zustand(k,t){ const d=$("#saveDot"); d.className="dot "+k; $("#saveTxt"
 
 function sauber(p){
   return {date:p.date, channel:p.channel, format:p.format, type:p.type, preset:p.preset,
-    tag:p.tag||"", num:p.num||"", ticker:p.ticker||"", goal:p.goal||"", status:p.status||"idee",
+    tag:p.tag||"", num:p.num||"", ticker:p.ticker||"", goal:p.goal||"", stil:p.stil||"editorial", photo:(p.photo&&p.photo.id)?{id:p.photo.id}:null, status:p.status||"idee",
     hook:p.hook||"", subline:p.subline||"", cta:p.cta||"", caption:p.caption||"",
     hashtags:p.hashtags||"", slides:(p.slides||[]).map(s=>({head:s.head||"", body:s.body||""}))};
 }
@@ -1044,6 +1170,7 @@ function briefing(p){
   const z=[
     "CANVA-BRIEFING · BLACK STRATEGIE",
     "Beitrag: "+deDate(p.date)+" · "+FORMATE[p.format].name+" · "+T.label+" ("+T.w+" x "+T.h+" px)",
+    "Layout: "+STILE[p.stil||"editorial"].name+". "+STILE[p.stil||"editorial"].note,
     "",
     "FARBEN",
     "Hintergrund "+S2.bg+" · Schrift "+S2.ink+" · Akzent "+S2.akzent+" · Kopfbalken "+S2.bar+" · Ticker "+S2.ticker,
@@ -1226,6 +1353,17 @@ function verdrahten(){
     const p=aktiv(); p.caption=FORMATE[p.format].caption(p)+"\n\n"+(p.hashtags||"");
     bearbeitet(); allesZeichnen(); toast("Vorlage eingesetzt");
   };
+  $("#pickPhoto").onclick=()=>$("#photoInput").click();
+  $("#photoInput").onchange=async e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f) return;
+    const p=aktiv();
+    let gesichert=false;
+    if(S.assets){ try{ const a=await S.assets.upload(f); p.photo={id:a.id}; gesichert=true; }catch(err){} }
+    if(!gesichert){ p.photo={url:URL.createObjectURL(f)}; toast("Bild nur in dieser Sitzung"); }
+    bearbeitet(); allesZeichnen();
+    e.target.value="";
+  };
+  $("#dropPhoto").onclick=()=>{ const p=aktiv(); p.photo=null; bearbeitet(); allesZeichnen(); };
   $("#dlPng").onclick=bildSpeichern;
   $("#cpCaption").onclick=()=>{ const p=aktiv(); kopieren((p.caption||"").trim(), "Caption kopiert"); };
   $("#cpBrief").onclick=()=>kopieren(briefing(aktiv()), "Briefing kopiert");
@@ -1266,6 +1404,7 @@ function start(){
       }catch(e){ zustand("off","nur in diesem Browser"); }
     });
     claude.use("downloads").then(d=>{ S.downloads=d; });
+    claude.use("assets").then(a=>{ S.assets=a; });
     claude.use("sample").then(s=>{
       ["#aiHooks","#aiCaption","#aiSlides"].forEach(sel=>{
         const b=$(sel);
