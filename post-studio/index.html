@@ -220,6 +220,13 @@ tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
 .rule{border-left:2px solid var(--roxo); padding-left:12px}
 .rule h5{margin:0 0 4px; font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase}
 .rule p{margin:0; font-size:12px; color:var(--muted); line-height:1.5}
+.profil{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line)}
+.pbox{background:var(--panel); padding:16px; display:flex; flex-direction:column; gap:10px; align-items:flex-start}
+.pbox h5{margin:0; font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.pbox pre{margin:0; font:600 13px/1.5 "Montserrat",sans-serif; white-space:pre-wrap; background:var(--panel2); padding:10px; border-radius:2px; width:100%}
+.pbox p{margin:0; font-size:12.5px; line-height:1.55; color:var(--muted)}
+.hl{margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:9px; font-size:12.5px; line-height:1.45; color:var(--muted)}
+.hl b{display:block; color:var(--ink); font-size:11px; letter-spacing:.1em}
 .toast{
   position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(8px);
   background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:2px;
@@ -369,6 +376,33 @@ tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
       <thead><tr><th>Tag</th><th>Kanal</th><th>Format</th><th>Hook</th><th>Ziel</th><th>Status</th><th>Check</th></tr></thead>
       <tbody id="planBody"></tbody>
     </table></div>
+  </section>
+
+  <section>
+    <h2 class="lab" style="margin-bottom:12px">Profil-Reparatur @blackstrategie.marketing</h2>
+    <div class="profil">
+      <div class="pbox">
+        <h5>Bio, drei Zeilen</h5>
+        <pre id="bioTxt">Social Media Agentur Wels
+Sichtbarkeit, die Anfragen bringt. Praxen, Selbstständige, KMU in OÖ
+Gratis Praxis-Check ⬇️</pre>
+        <button class="mini" id="cpBio">Bio kopieren</button>
+      </div>
+      <div class="pbox">
+        <h5>Highlights in Kaufreihenfolge</h5>
+        <ol class="hl">
+          <li><b>01 ERGEBNISSE</b> Vorher und Nachher, Zahlen, Stimmen. Ersetzt Cases und Kunden-Referenzen.</li>
+          <li><b>02 CHECK</b> Was der Praxis-Check ist, was er kostet, wie lange er dauert. Fehlt heute komplett.</li>
+          <li><b>03 ABLAUF</b> Von der Anfrage bis zur fertigen Seite in sieben Tagen.</li>
+          <li><b>04 ÜBER MICH</b> Rayana, Wels, Arbeitsweise. Nicht Unsere, nicht Wir.</li>
+        </ol>
+      </div>
+      <div class="pbox">
+        <h5>Regel für die nächsten neun Beiträge</h5>
+        <p>Vier von fünf Beiträgen sprechen die Kundin an: ihr Problem, ihr Ergebnis, ihr nächster Schritt.
+        Höchstens einer von fünf zeigt den Beruf. Keine geteilten Fremdvideos, egal wie viele Aufrufe sie bringen.</p>
+      </div>
+    </div>
   </section>
 
   <section>
@@ -931,6 +965,12 @@ const REGELN = [
    t:"Falsches Gebiet", m:"Wels, Linz, Oberösterreich. Wien kommt nicht vor."},
   {id:"guru", sev:"warn", re:/\b(explodier\w*|Game[-\s]?Changer|10x|krass|Geheimnis|revolutionär\w*|unglaublich|viral)\b/gi,
    t:"Guru-Ton", m:"Argument statt Hyperbel. Die Zielgruppe sind Unternehmerinnen, keine Follower."},
+  {id:"kollegen", sev:"warn", re:/\b(Social[-\s]?Media[-\s]?Manager\w*|SMM|Akquise\w*|Content[-\s]?Planung|Redaktionsplan|Algorithmus|Aufrufe|Community[-\s]?Manager|Agenturalltag|Kundenbudget|Kunde fragt)\b/gi,
+   t:"Content für Kolleginnen", m:"Das spricht andere Social-Media-Leute an, nicht Ihre Kundin. Die Ärztin interessiert ihr Terminkalender, nicht Ihr Arbeitsalltag."},
+  {id:"meme", sev:"warn", re:/(^|\n)\s*(POV:|Ich wenn\b|True fact|Wenn der Kunde)/gi,
+   t:"Meme-Format", m:"Bringt Aufrufe von Kolleginnen und trainiert den Algorithmus auf die falsche Zielgruppe."},
+  {id:"englisch", sev:"warn", re:/\b(your|clients|growth|business card|how to|tips|level up)\b/gi,
+   t:"Englisch", m:"Die Zielgruppe sitzt in Wels und Linz. Alles Veröffentlichte ist deutsch, österreichisch."},
   {id:"generisch", sev:"warn", re:/(mehr Reichweite|Reichweite steigern|Sichtbarkeit steigern|professionelle[rn]? Auftritt|maßgeschneidert\w*|aus einer Hand|ganzheitlich\w*)/gi,
    t:"Generischer Agentursatz", m:"Ergebnis benennen, nicht die Leistung. Anfragen, Termine, Patienten."}
 ];
@@ -1364,6 +1404,7 @@ function verdrahten(){
     e.target.value="";
   };
   $("#dropPhoto").onclick=()=>{ const p=aktiv(); p.photo=null; bearbeitet(); allesZeichnen(); };
+  $("#cpBio").onclick=()=>kopieren($("#bioTxt").textContent.trim(), "Bio kopiert");
   $("#dlPng").onclick=bildSpeichern;
   $("#cpCaption").onclick=()=>{ const p=aktiv(); kopieren((p.caption||"").trim(), "Caption kopiert"); };
   $("#cpBrief").onclick=()=>kopieren(briefing(aktiv()), "Briefing kopiert");
