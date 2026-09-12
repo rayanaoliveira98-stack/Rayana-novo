@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Black Strategie Post Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;800&display=swap" />
+<style>
+:root{
+  --bg:#0B0B0C; --stage:#0F0F0E; --panel:#151417; --panel2:#1C1A20;
+  --line:#2B2632; --ink:#FEFEFE; --muted:#9A92A6;
+  --roxo:#A703FF; --laranja:#FF6600;
+  --ok:#3BC98D; --warn:#FFB020; --stop:#FF5252;
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#FAF8F4; --stage:#EDE7DF; --panel:#FFFFFF; --panel2:#F5F1EB;
+    --line:#E2DAD0; --ink:#0F0F0E; --muted:#6B6274;
+    --roxo:#8A02D6; --laranja:#C24E00;
+    --ok:#12805A; --warn:#8F5600; --stop:#C0261F;
+    --shadow:0 18px 44px rgba(15,15,14,.14);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#FAF8F4; --stage:#EDE7DF; --panel:#FFFFFF; --panel2:#F5F1EB;
+  --line:#E2DAD0; --ink:#0F0F0E; --muted:#6B6274;
+  --roxo:#8A02D6; --laranja:#C24E00;
+  --ok:#12805A; --warn:#8F5600; --stop:#C0261F;
+  --shadow:0 18px 44px rgba(15,15,14,.14);
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0; text-wrap:balance}
+button,input,select,textarea{font:inherit; color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--roxo); outline-offset:2px}
+.lab{
+  font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted);
+}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- Topbar ---------- */
+.top{
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  padding:12px 20px; border-bottom:1px solid var(--line); background:var(--panel);
+  position:sticky; top:0; z-index:20;
+}
+.brand{display:flex; align-items:baseline; gap:10px; margin-right:auto}
+.brand b{font-family:"Anton",Impact,sans-serif; font-weight:400; font-size:19px; letter-spacing:.14em}
+.brand span{font-size:10px; font-weight:800; letter-spacing:.2em; color:var(--roxo)}
+.camp{display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted)}
+.camp b{color:var(--ink); font-weight:800}
+.tabs{display:flex; gap:2px; background:var(--panel2); padding:3px; border-radius:2px}
+.tabs button{
+  border:0; background:transparent; color:var(--muted); padding:7px 14px; border-radius:1px;
+  font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+}
+.tabs button[aria-selected="true"]{background:var(--ink); color:var(--bg)}
+.state{display:flex; align-items:center; gap:7px; font-size:11px; color:var(--muted)}
+.dot{width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none}
+.dot.on{background:var(--ok)}
+.dot.off{background:var(--warn)}
+
+/* ---------- Studio ---------- */
+.studio{display:grid; grid-template-columns:248px minmax(0,1fr) 392px; gap:1px; background:var(--line)}
+.pane{background:var(--panel); min-width:0}
+@media (min-width:1080px){
+  .studio{height:calc(100dvh - 57px)}
+  .pane{overflow-y:auto}
+}
+@media (max-width:1079px){
+  .studio{grid-template-columns:1fr}
+  .rail{order:3}
+}
+
+/* rail */
+.rail__head{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:14px 14px 10px; position:sticky; top:0; background:var(--panel); border-bottom:1px solid var(--line);
+}
+.mini{
+  border:1px solid var(--line); background:transparent; color:var(--ink);
+  font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  padding:6px 9px; border-radius:2px;
+}
+.mini:hover{border-color:var(--roxo); color:var(--roxo)}
+.slots{list-style:none; margin:0; padding:8px}
+.slot{
+  display:grid; grid-template-columns:42px minmax(0,1fr); gap:10px; align-items:start;
+  width:100%; text-align:left; border:0; background:transparent; color:inherit;
+  padding:9px 8px; border-radius:2px; border-left:2px solid transparent;
+}
+.slot:hover{background:var(--panel2)}
+.slot[aria-current="true"]{background:var(--panel2); border-left-color:var(--roxo)}
+.slot__d{font-family:"Anton",Impact,sans-serif; font-size:17px; line-height:1; letter-spacing:.02em}
+.slot__d small{display:block; font-family:"Montserrat",sans-serif; font-size:9px; font-weight:800; letter-spacing:.12em; color:var(--muted); margin-top:3px}
+.slot__t{font-size:12px; line-height:1.35; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical}
+.slot__m{display:flex; gap:6px; align-items:center; margin-top:5px; font-size:9px; font-weight:800; letter-spacing:.1em; color:var(--muted)}
+.wk{padding:14px 10px 4px; font-size:10px; font-weight:800; letter-spacing:.16em; color:var(--muted); text-transform:uppercase}
+
+/* stage */
+.stage{display:flex; flex-direction:column}
+.stage__bar{
+  display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+  padding:12px 16px; border-bottom:1px solid var(--line);
+}
+.chips{display:flex; gap:4px; flex-wrap:wrap}
+.chip{
+  border:1px solid var(--line); background:transparent; color:var(--muted);
+  padding:6px 10px; border-radius:2px; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+}
+.chip[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.sw{display:flex; gap:5px}
+.sw button{width:22px; height:22px; border-radius:50%; border:2px solid var(--line); padding:0}
+.sw button[aria-pressed="true"]{border-color:var(--roxo); box-shadow:0 0 0 2px var(--panel) inset}
+.canvaswrap{
+  flex:1; display:grid; place-items:center; padding:22px 16px;
+  background:var(--stage);
+  background-image:radial-gradient(currentColor 1px, transparent 1px);
+  background-size:22px 22px; color:rgba(154,146,166,.16);
+}
+#cv{max-width:100%; max-height:min(62vh,720px); box-shadow:var(--shadow); border-radius:2px; display:block}
+.stage__act{display:flex; gap:8px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line)}
+.btn{
+  border:1px solid var(--line); background:transparent; color:var(--ink);
+  padding:9px 13px; border-radius:2px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+}
+.btn:hover{border-color:var(--ink)}
+.btn--go{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.btn--go:hover{background:var(--roxo); border-color:var(--roxo); color:#FEFEFE}
+.btn--ai{border-color:var(--roxo); color:var(--roxo)}
+.btn--ai:hover{background:var(--roxo); color:#FEFEFE}
+.btn[disabled]{opacity:.4; cursor:not-allowed}
+
+/* inspector */
+.insp{padding:0 0 40px}
+.sec{border-bottom:1px solid var(--line); padding:16px}
+.sec>h3{font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; margin-bottom:12px; color:var(--muted)}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.f{display:flex; flex-direction:column; gap:5px; min-width:0}
+.f>label{font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+input[type=text],input[type=date],select,textarea{
+  width:100%; background:var(--panel2); border:1px solid var(--line); color:var(--ink);
+  padding:9px 10px; border-radius:2px; font-size:13px;
+}
+textarea{resize:vertical; line-height:1.45}
+input:focus,select:focus,textarea:focus{border-color:var(--roxo); outline:none}
+.hint{font-size:11px; color:var(--muted); line-height:1.4}
+.cnt{font-size:10px; font-weight:800; letter-spacing:.08em; color:var(--muted)}
+.cnt.bad{color:var(--stop)}
+.cnt.mid{color:var(--warn)}
+.fmtnote{
+  border-left:2px solid var(--laranja); padding:8px 0 8px 11px; margin-top:10px;
+  font-size:11.5px; color:var(--muted); line-height:1.45;
+}
+.pill{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:2px;
+  font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  border:1px solid var(--line); color:var(--muted);
+}
+.pill--ok{color:var(--ok); border-color:var(--ok)}
+.pill--warn{color:var(--warn); border-color:var(--warn)}
+.pill--stop{color:var(--stop); border-color:var(--stop)}
+.hooks{display:flex; flex-direction:column; gap:6px; margin-top:10px}
+.hooks button{
+  text-align:left; border:1px solid var(--line); background:var(--panel2); color:var(--ink);
+  padding:9px 10px; border-radius:2px; font-size:12px; line-height:1.35;
+}
+.hooks button:hover{border-color:var(--roxo)}
+.slides{display:flex; flex-direction:column; gap:10px}
+.slidecard{border:1px solid var(--line); border-radius:2px; padding:10px; display:flex; flex-direction:column; gap:7px; background:var(--panel2)}
+.slidecard header{display:flex; align-items:center; justify-content:space-between}
+.slidecard input,.slidecard textarea{background:var(--panel)}
+
+/* check */
+.checks{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px}
+.check{display:grid; grid-template-columns:8px minmax(0,1fr); gap:10px; align-items:start; font-size:12px; line-height:1.45}
+.check i{width:8px; height:8px; border-radius:50%; margin-top:5px; display:block; background:var(--ok)}
+.check.warn i{background:var(--warn)} .check.stop i{background:var(--stop)}
+.check b{display:block; font-weight:800; font-size:11px; letter-spacing:.04em}
+.check span{color:var(--muted)}
+.verdict{display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:11px 12px; border:1px solid var(--line); border-radius:2px}
+.verdict b{font-family:"Anton",Impact,sans-serif; font-weight:400; font-size:16px; letter-spacing:.06em}
+
+/* ---------- Plan ---------- */
+.plan{padding:20px; display:flex; flex-direction:column; gap:22px; max-width:1180px; margin:0 auto}
+.goals{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line)}
+.goal{background:var(--panel); padding:14px}
+.goal h4{margin:0 0 8px; font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.goal .val{font-family:"Anton",Impact,sans-serif; font-size:30px; line-height:1; letter-spacing:.02em}
+.goal .tgt{font-size:11px; color:var(--muted); margin-left:6px}
+.bar{height:4px; background:var(--panel2); margin:10px 0 9px; overflow:hidden}
+.bar i{display:block; height:100%; background:var(--roxo)}
+.bar i.done{background:var(--ok)}
+.step{display:flex; gap:6px}
+.step button{width:30px; height:26px; border:1px solid var(--line); background:transparent; border-radius:2px; font-weight:800}
+.step button:hover{border-color:var(--roxo); color:var(--roxo)}
+.tablewrap{overflow-x:auto; border:1px solid var(--line)}
+table{border-collapse:collapse; width:100%; min-width:760px; font-size:12.5px; background:var(--panel)}
+th{
+  text-align:left; font-size:9.5px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  padding:10px 12px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--panel);
+}
+td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+tr.wkrow td{background:var(--panel2); font-size:9.5px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
+.tdhook{max-width:420px}
+.legend{display:flex; gap:18px; flex-wrap:wrap; font-size:11.5px; color:var(--muted)}
+.legend b{color:var(--ink)}
+.rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px}
+.rule{border-left:2px solid var(--roxo); padding-left:12px}
+.rule h5{margin:0 0 4px; font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase}
+.rule p{margin:0; font-size:12px; color:var(--muted); line-height:1.5}
+.toast{
+  position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(8px);
+  background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:2px;
+  font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; z-index:60;
+}
+.toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><b>BLACK STRATEGIE</b><span>POST STUDIO</span></div>
+  <div class="camp" id="camp"></div>
+  <div class="tabs" role="tablist">
+    <button id="tabStudio" role="tab" aria-selected="true" aria-controls="viewStudio">Studio</button>
+    <button id="tabPlan" role="tab" aria-selected="false" aria-controls="viewPlan">Redaktionsplan</button>
+  </div>
+  <div class="state"><i class="dot" id="saveDot"></i><span id="saveTxt">wird geladen</span></div>
+</header>
+
+<main class="studio" id="viewStudio" role="tabpanel" aria-labelledby="tabStudio">
+
+  <aside class="pane rail">
+    <div class="rail__head">
+      <span class="lab">Beiträge <span class="num" id="slotCount"></span></span>
+      <button class="mini" id="addPost">Neu</button>
+    </div>
+    <ul class="slots" id="slots"></ul>
+  </aside>
+
+  <section class="pane stage">
+    <div class="stage__bar">
+      <div class="chips" id="typeChips"></div>
+      <div class="sw" id="presetSw"></div>
+      <div class="chips" id="slideChips"></div>
+    </div>
+    <div class="canvaswrap"><canvas id="cv" width="1080" height="1350"></canvas></div>
+    <div class="stage__act">
+      <button class="btn btn--go" id="dlPng">Bild speichern</button>
+      <button class="btn" id="cpCaption">Caption kopieren</button>
+      <button class="btn" id="cpBrief">Canva-Briefing</button>
+      <button class="btn" id="delPost" style="margin-left:auto">Löschen</button>
+    </div>
+  </section>
+
+  <aside class="pane insp">
+
+    <div class="sec">
+      <h3>Slot</h3>
+      <div class="grid2">
+        <div class="f"><label for="fDate">Datum</label><input type="date" id="fDate" data-field="date" /></div>
+        <div class="f"><label for="fChannel">Kanal</label><select id="fChannel" data-field="channel">
+          <option value="instagram">Instagram</option><option value="linkedin">LinkedIn</option>
+          <option value="story">Story</option><option value="ads">Meta Ads</option></select></div>
+        <div class="f"><label for="fFormat">Format</label><select id="fFormat" data-field="format"></select></div>
+        <div class="f"><label for="fStatus">Status</label><select id="fStatus" data-field="status">
+          <option value="idee">Idee</option><option value="entwurf">Entwurf</option>
+          <option value="freigegeben">Freigegeben</option><option value="veroeffentlicht">Veröffentlicht</option></select></div>
+        <div class="f" style="grid-column:1/-1"><label for="fGoal">Zahlt ein auf</label><select id="fGoal" data-field="goal"></select></div>
+      </div>
+      <p class="fmtnote" id="fmtNote"></p>
+    </div>
+
+    <div class="sec">
+      <h3>Cover</h3>
+      <div class="grid2">
+        <div class="f" style="grid-column:1/-1"><label for="fTag">Serien-Tag</label><input type="text" id="fTag" data-field="tag" placeholder="PRAXIS-CHECK" /></div>
+        <div class="f"><label for="fNum">Ghost-Nummer</label><input type="text" id="fNum" data-field="num" placeholder="03" /></div>
+        <div class="f"><label for="fCta">CTA-Badge</label><input type="text" id="fCta" data-field="cta" list="ctaList" /></div>
+      </div>
+      <datalist id="ctaList">
+        <option value="Schreiben Sie CHECK per WhatsApp"></option>
+        <option value="Praxis-Check anfragen"></option>
+        <option value="Jetzt Termin sichern"></option>
+      </datalist>
+      <div class="f" style="margin-top:10px">
+        <label for="fHook">Hook <span class="cnt" id="hookCnt"></span></label>
+        <textarea id="fHook" data-field="hook" rows="3" placeholder="Sie posten jede Woche. Und trotzdem ruft niemand an."></textarea>
+        <p class="hint">*Sternchen* um ein Wort setzt es in die Akzentfarbe. Zeilenumbruch bricht hart um.</p>
+      </div>
+      <div class="f" style="margin-top:10px">
+        <label for="fSub">Subline</label>
+        <textarea id="fSub" data-field="subline" rows="2"></textarea>
+      </div>
+      <div class="f" style="margin-top:10px">
+        <label for="fTicker">Ticker unten</label>
+        <input type="text" id="fTicker" data-field="ticker" />
+      </div>
+      <div class="hooks" id="hookLib"></div>
+      <button class="btn btn--ai" id="aiHooks" style="margin-top:10px; width:100%">3 Hook-Varianten von Claude</button>
+    </div>
+
+    <div class="sec" id="slideSec">
+      <h3>Karussell-Slides</h3>
+      <div class="slides" id="slideEdit"></div>
+      <div style="display:flex; gap:8px; margin-top:10px">
+        <button class="mini" id="addSlide">Slide +</button>
+        <button class="btn btn--ai" id="aiSlides" style="flex:1">Gerüst von Claude</button>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>Caption</h3>
+      <div class="f"><textarea id="fCaption" data-field="caption" rows="10"></textarea></div>
+      <div class="f" style="margin-top:10px"><label for="fTags">Hashtags <span class="cnt" id="tagCnt"></span></label>
+        <input type="text" id="fTags" data-field="hashtags" /></div>
+      <div style="display:flex; gap:8px; margin-top:10px">
+        <button class="btn" id="tplCaption" style="flex:1">Vorlage F-Format</button>
+        <button class="btn btn--ai" id="aiCaption" style="flex:1">Claude schreibt</button>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>Freigabe-Check</h3>
+      <div class="verdict" id="verdict"></div>
+      <ul class="checks" id="checkList"></ul>
+    </div>
+  </aside>
+</main>
+
+<main class="plan" id="viewPlan" role="tabpanel" aria-labelledby="tabPlan" hidden>
+  <section>
+    <h2 class="lab" style="margin-bottom:12px">Kampagne CHECK · 15.09. bis 16.10.2026</h2>
+    <div class="goals" id="goals"></div>
+    <p class="hint" style="margin-top:10px">Ist-Zahlen selbst mitzählen. Die Balken zeigen den Weg zum unteren Zielwert.</p>
+  </section>
+
+  <section>
+    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px">
+      <h2 class="lab">Redaktionsplan</h2>
+      <div class="legend"><span><b id="planFertig">0</b> freigegeben</span><span><b id="planOffen">0</b> offen</span><span><b id="planStop">0</b> mit Stopp im Check</span></div>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Tag</th><th>Kanal</th><th>Format</th><th>Hook</th><th>Ziel</th><th>Status</th><th>Check</th></tr></thead>
+      <tbody id="planBody"></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2 class="lab" style="margin-bottom:12px">Regeln, die das Studio erzwingt</h2>
+    <div class="rules">
+      <div class="rule"><h5>Sie-Form, Ich-Stimme</h5><p>Kundinnen werden gesiezt. Rayana spricht als Ich. Kein Wir, kein Du.</p></div>
+      <div class="rule"><h5>Ein Einstieg</h5><p>Jeder Beitrag führt auf den Praxis-Check mit dem Keyword CHECK per WhatsApp. Kein Formular.</p></div>
+      <div class="rule"><h5>Keine Agentursprache</h5><p>Positionierung, Funnel, Reporting, Performance und Co. fliegen raus. Ergebnis, Termin, Preis bleiben.</p></div>
+      <div class="rule"><h5>Kein Recruiting</h5><p>Personalthemen sind kein Angebot von Black Strategie. Menschen im Unternehmen zeigen, ohne das Wort.</p></div>
+      <div class="rule"><h5>Zwei Sekunden</h5><p>Hooks über 60 Zeichen greifen nicht mehr im Scrollen. Der Zähler warnt vorher.</p></div>
+      <div class="rule"><h5>Keine erfundenen Zahlen</h5><p>Platzhalter in eckigen Klammern blockieren die Freigabe, bis die echte Zahl drin steht.</p></div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. MARKENDATEN — Black Strategie, Stand 09.09.2026
+   ============================================================ */
+
+const CI = {
+  schwarz:"#0F0F0E", weiss:"#FEFEFE", papier:"#FAF8F4",
+  roxo:"#A703FF", laranja:"#FF6600", rosa:"#F6D6E1", blau:"#CFD6FB"
+};
+
+const PRESETS = {
+  void:    {name:"Tiefschwarz", bg:CI.schwarz, ink:CI.weiss,   akzent:CI.roxo,    bar:CI.laranja, ticker:CI.roxo,    tickerInk:CI.weiss},
+  papier:  {name:"Papierweiß",  bg:CI.papier,  ink:CI.schwarz, akzent:CI.roxo,    bar:CI.laranja, ticker:CI.schwarz, tickerInk:CI.weiss},
+  roxo:    {name:"Roxo",        bg:CI.roxo,    ink:CI.weiss,   akzent:CI.laranja, bar:CI.schwarz, ticker:CI.schwarz, tickerInk:CI.weiss},
+  laranja: {name:"Laranja",     bg:CI.laranja, ink:CI.schwarz, akzent:CI.weiss,   bar:CI.schwarz, ticker:CI.schwarz, tickerInk:CI.weiss},
+  rosa:    {name:"Rosa hell",   bg:CI.rosa,    ink:CI.schwarz, akzent:CI.roxo,    bar:CI.laranja, ticker:CI.schwarz, tickerInk:CI.weiss},
+  blau:    {name:"Blau hell",   bg:CI.blau,    ink:CI.schwarz, akzent:CI.roxo,    bar:CI.laranja, ticker:CI.schwarz, tickerInk:CI.weiss}
+};
+
+const ZIELE = {
+  check:     {label:"Check-Anfragen",  min:25, max:35},
+  video:     {label:"Analyse-Videos",  min:15, max:20},
+  termin:    {label:"Termine",         min:6,  max:8},
+  sprint:    {label:"Website-Sprints", min:2,  max:3},
+  paket:     {label:"Aufbau-Paket",    min:1,  max:1},
+  assistent: {label:"ASSISTENT per DM",min:1,  max:1},
+  autoritaet:{label:"Autorität",       min:0,  max:0}
+};
+
+/* Die fünf festen Instagram-Formate */
+const FORMATE = {
+  F1:{
+    name:"F1 Fehler",
+    note:"Kippt eine Annahme der Leserin. Zeigt den Fehler, den fast alle machen, und was er kostet. Zahlt auf Autorität ein und erzeugt Antworten.",
+    goal:"autoritaet", preset:"void", type:"reel", tag:"FEHLER",
+    ticker:"SICHTBARKEIT, DIE ANFRAGEN BRINGT • WELS • OBERÖSTERREICH",
+    hooks:[
+      "Sie posten jede Woche. Und trotzdem ruft niemand an.",
+      "Ihre Website ist schön. Termine bringt sie trotzdem keine.",
+      "Wer Sie googelt, entscheidet in acht Sekunden. Meistens dagegen.",
+      "Mehr Follower haben Ihnen noch keinen einzigen Patienten gebracht."
+    ],
+    caption:(p)=>[
+      p.hook,
+      "",
+      "Der Grund ist fast immer derselbe.",
+      "Ihre Seite erklärt, wer Sie sind.",
+      "Sie sagt nicht, was die Patientin als Nächstes tun soll.",
+      "",
+      "Drei Dinge, die das sofort ändern:",
+      "1. Ein klarer Satz ganz oben, was Sie anbieten und für wen.",
+      "2. Ein Termin-Button, der ohne Scrollen sichtbar ist.",
+      "3. Zwei echte Stimmen von Patientinnen statt Stockfotos.",
+      "",
+      "Ich sehe mir Ihre Seite gern an und schicke Ihnen ein kurzes Video dazu.",
+      "Schreiben Sie CHECK per WhatsApp, Antwort innerhalb von 48 Stunden."
+    ].join("\n")
+  },
+  F2:{
+    name:"F2 Praxis-Check",
+    note:"Die Freitags-Serie. Eine echte Website, sechs Kriterien, eine Punktezahl. Das Material für das Outbound der Folgewoche. Ghost-Nummer hochzählen.",
+    goal:"check", preset:"papier", type:"reel", tag:"PRAXIS-CHECK",
+    ticker:"PRAXIS-CHECK • JEDEN FREITAG • GRATIS ANALYSE IN 48 STUNDEN",
+    hooks:[
+      "Praxis-Check: sechs Kriterien, eine Website, [Punkte] von 30.",
+      "Diese Ordinationsseite verliert jede Woche Anfragen. Hier ist wo.",
+      "Ich prüfe jede Woche eine Praxis-Website. Diese fiel bei [Kriterium] durch.",
+      "Schön heißt nicht gebucht. Der Beweis in 30 Sekunden."
+    ],
+    caption:(p)=>[
+      p.hook,
+      "",
+      "Ich prüfe jede Woche eine Praxis-Website nach sechs Kriterien:",
+      "Aussehen, Mobil, Termin-Button oben, Stimmen von Patientinnen, klares Angebot, Technik.",
+      "Jedes Kriterium bekommt einen bis fünf Punkte.",
+      "",
+      "Diese Seite: [Punkte] von 30.",
+      "Der größte Verlust liegt bei [Kriterium].",
+      "Das kostet nach meiner Rechnung [Zahl] Anfragen pro Monat.",
+      "",
+      "Ihre Seite im nächsten Check?",
+      "Schreiben Sie CHECK per WhatsApp. Sie bekommen das Video innerhalb von 48 Stunden."
+    ].join("\n")
+  },
+  F3:{
+    name:"F3 Beweis",
+    note:"Ergebnis statt Behauptung. Ein Fall, ein Zeitraum, eine Zahl. Nur echte Werte einsetzen, Platzhalter blockieren die Freigabe.",
+    goal:"termin", preset:"roxo", type:"karussell", tag:"ERGEBNIS",
+    ticker:"ERGEBNISSE AUS OBERÖSTERREICH • WELS • LINZ",
+    hooks:[
+      "Wahlarztpraxis in Wels. [Zeitraum] später: [Ergebnis].",
+      "Kein Werbebudget, keine Tanzvideos. Trotzdem [Ergebnis].",
+      "So sieht eine Praxis-Website aus, die Termine bringt.",
+      "Von [Startwert] auf [Endwert] Anfragen. Ohne einen einzigen Rabatt."
+    ],
+    caption:(p)=>[
+      p.hook,
+      "",
+      "Ausgangslage: [Ausgangslage in den Worten der Kundin].",
+      "Aufgabe: aus Besuchern Termine machen.",
+      "",
+      "Gemacht habe ich:",
+      "Neue Startseite in sieben Tagen.",
+      "Angebot in einem Satz statt in fünf Absätzen.",
+      "Terminweg über WhatsApp statt Formular.",
+      "",
+      "Ergebnis nach [Zeitraum]: [Ergebnis].",
+      "",
+      "Wenn Sie wissen wollen, wo Ihre Seite steht: Schreiben Sie CHECK per WhatsApp."
+    ].join("\n")
+  },
+  F4:{
+    name:"F4 Ich",
+    note:"Arbeitsweise und Haltung. Der Unterschied zur Agentur: die fertige Lösung kommt vor dem Vertrag. Baut Nähe auf, verkauft nicht direkt.",
+    goal:"autoritaet", preset:"rosa", type:"feed", tag:"ARBEITSWEISE",
+    ticker:"DIE STRATEGIE, DIE WIRKT! • BLACK STRATEGIE WELS",
+    hooks:[
+      "Ich schicke die fertige Lösung, bevor es einen Vertrag gibt.",
+      "Warum ich keine Präsentation per E-Mail verschicke.",
+      "Ich baue Ihre neue Startseite, bevor ich Sie das erste Mal anrufe.",
+      "Agenturen zeigen Konzepte. Ich zeige die fertige Seite."
+    ],
+    caption:(p)=>[
+      p.hook,
+      "",
+      "Die meisten Agenturen schicken eine Präsentation und hoffen auf ein Ja.",
+      "Ich mache es umgekehrt.",
+      "",
+      "Bevor wir sprechen, baue ich eine neue Version Ihrer Startseite.",
+      "Sie sehen sie live, in Ihren Farben, mit Ihrem Logo.",
+      "Erst dann reden wir über Zusammenarbeit.",
+      "",
+      "Warum? Weil Sie sonst nur über Geschmack entscheiden.",
+      "Mit der fertigen Seite entscheiden Sie über ein Ergebnis.",
+      "",
+      "Neugierig, wie Ihre aussehen würde? Schreiben Sie CHECK per WhatsApp."
+    ].join("\n")
+  },
+  F5:{
+    name:"F5 Angebot",
+    note:"Direkt und ohne Umweg. Ein Angebot, ein Preis, ein nächster Schritt. Nie ein Menü aus Varianten zeigen.",
+    goal:"sprint", preset:"laranja", type:"feed", tag:"ANGEBOT",
+    ticker:"WEBSITE-SPRINT • 7 TAGE • 690 EURO • WELS",
+    hooks:[
+      "Website-Sprint: sieben Tage, 690 Euro, eine Seite, die Termine bringt.",
+      "Der Praxis-Check kostet nichts. Der Stillstand schon.",
+      "Sieben Tage bis zur neuen Startseite. Heute angefragt, nächste Woche online.",
+      "690 Euro. Sieben Tage. Eine Seite, die nach Terminen fragt."
+    ],
+    caption:(p)=>[
+      p.hook,
+      "",
+      "Was drin ist:",
+      "Neue Startseite, geschrieben auf Termine statt auf Selbstdarstellung.",
+      "Mobil zuerst, weil vier von fünf Patientinnen am Handy suchen.",
+      "Terminweg über WhatsApp, damit niemand ein Formular ausfüllen muss.",
+      "",
+      "Dauer: sieben Tage ab Freigabe der Inhalte.",
+      "Preis: 690 Euro, wird auf das Aufbau-Paket angerechnet, wenn Sie weitermachen.",
+      "",
+      "Vorher sehen Sie kostenlos, wo Ihre Seite heute steht.",
+      "Schreiben Sie CHECK per WhatsApp."
+    ].join("\n")
+  }
+};
+
+const TYPEN = {
+  reel:     {label:"Reel-Cover", w:1080, h:1920},
+  feed:     {label:"Feed 4:5",   w:1080, h:1350},
+  karussell:{label:"Karussell",  w:1080, h:1350},
+  story:    {label:"Story",      w:1080, h:1920},
+  linkedin: {label:"LinkedIn",   w:1080, h:1080}
+};
+
+const HASHTAGS = {
+  instagram:"#wels #oberösterreich #praxismarketing #wahlarzt #socialmediaagentur",
+  linkedin:"#oberösterreich #wels #praxismarketing",
+  story:"",
+  ads:""
+};
+
+/* ============================================================
+   2. STARTPLAN — Kampagne CHECK, 15.09. bis 16.10.2026
+   Montag F1 · Mittwoch F4/F3 · Donnerstag LinkedIn · Freitag F2
+   ============================================================ */
+
+const KAMPAGNE = {von:"2026-09-15", bis:"2026-10-16"};
+const WOCHENTAG = ["So","Mo","Di","Mi","Do","Fr","Sa"];
+const STATUS = {idee:"Idee", entwurf:"Entwurf", freigegeben:"Freigegeben", veroeffentlicht:"Veröffentlicht"};
+const MO_ROT = ["F1","F5","F1","F3","F1"];
+const MI_ROT = ["F4","F3","F5","F4","F3"];
+const DO_ROT = ["F3","F1","F4","F5","F1"];
+
+function iso(d){ return d.toISOString().slice(0,10); }
+function deDate(s){ const d=new Date(s+"T12:00:00"); return WOCHENTAG[d.getDay()]+" "+String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."; }
+
+function startplan(){
+  const out=[]; let checkNr=1, woche=0;
+  const d=new Date(KAMPAGNE.von+"T12:00:00"), end=new Date(KAMPAGNE.bis+"T12:00:00");
+  while(d<=end){
+    const wd=d.getDay();
+    let fmt=null, kanal="instagram", typ=null;
+    if(wd===1){ fmt=MO_ROT[woche%MO_ROT.length]; typ="reel"; }
+    else if(wd===3){ fmt=MI_ROT[woche%MI_ROT.length]; typ="karussell"; }
+    else if(wd===4){ fmt=DO_ROT[woche%DO_ROT.length]; kanal="linkedin"; typ="linkedin"; }
+    else if(wd===5){ fmt="F2"; typ="reel"; }
+    if(fmt){
+      const F=FORMATE[fmt];
+      const nr = fmt==="F2" ? String(checkNr++).padStart(2,"0") : String(out.length+1).padStart(2,"0");
+      out.push(neuerPost({
+        id:iso(d)+"-"+fmt.toLowerCase(),
+        date:iso(d), channel:kanal, format:fmt, type:typ,
+        preset:kanal==="linkedin" ? "papier" : F.preset,
+        tag:F.tag, num:nr, ticker:F.ticker, goal:F.goal,
+        hook:F.hooks[(woche+wd)%F.hooks.length],
+        hashtags:HASHTAGS[kanal]
+      }));
+    }
+    if(wd===0) woche++;
+    d.setDate(d.getDate()+1);
+  }
+  return out;
+}
+
+function neuerPost(o){
+  const F = FORMATE[o.format||"F1"];
+  const p = Object.assign({
+    id:"p"+Date.now().toString(36),
+    date:iso(new Date()), channel:"instagram", format:"F1", type:"reel", preset:"void",
+    tag:F.tag, num:"01", ticker:F.ticker, goal:F.goal, status:"idee",
+    hook:F.hooks[0], subline:"", cta:"Schreiben Sie CHECK per WhatsApp",
+    caption:"", hashtags:HASHTAGS.instagram, slides:[], slide:0
+  }, o);
+  if(!p.caption) p.caption = FORMATE[p.format].caption(p) + "\n\n" + (p.hashtags||"");
+  if(p.type==="karussell" && (!p.slides || !p.slides.length)) p.slides = standardSlides(p);
+  return p;
+}
+
+function standardSlides(p){
+  return [
+    {head:"Was gerade passiert", body:"Beschreiben Sie in zwei Sätzen, was die Leserin heute erlebt. Mit ihren Worten, nicht mit Ihren."},
+    {head:"Warum das so ist", body:"Ein Grund, keine Liste. Der Satz, der die Annahme kippt."},
+    {head:"Was stattdessen wirkt", body:"Drei konkrete Schritte. Jeder Schritt in einer Zeile, ohne Fachwort."},
+    {head:"Nächster Schritt", body:"Schreiben Sie CHECK per WhatsApp. Sie bekommen ein Analyse-Video innerhalb von 48 Stunden."}
+  ];
+}
+</script>
+
+<script>
+"use strict";
+
+/* ============================================================
+   3. CANVAS — zeichnet 1:1 das, was exportiert wird
+   Typografie-Regel: groß, bold, kontrastreich. Titel Anton als
+   Stellvertreter für Higuen, Fließtext Montserrat.
+   ============================================================ */
+
+const DISP = '"Anton", Impact, "Arial Black", sans-serif';
+const BODY = '"Montserrat", system-ui, sans-serif';
+
+function toks(text, upper){
+  const out=[]; const src = upper ? String(text||"").toUpperCase() : String(text||"");
+  src.split("\n").forEach((line,i)=>{
+    if(i) out.push({br:true});
+    line.split(/\s+/).filter(Boolean).forEach(w=>{
+      out.push({w:w.replace(/\*/g,""), hi:w.indexOf("*")>-1});
+    });
+  });
+  return out;
+}
+function wrapToks(ctx, tk, maxW, space){
+  const lines=[[]];
+  let w=0;
+  for(const t of tk){
+    if(t.br){ lines.push([]); w=0; continue; }
+    const tw=ctx.measureText(t.w).width;
+    const cur=lines[lines.length-1];
+    const add=cur.length ? space+tw : tw;
+    if(cur.length && w+add>maxW){ lines.push([t]); w=tw; }
+    else { cur.push(t); w+=add; }
+  }
+  return lines;
+}
+function fitBlock(ctx, text, o){
+  const tk=toks(text, o.upper);
+  let size=o.start;
+  let lines=[];
+  while(size>=o.min){
+    ctx.font=(o.weight||400)+" "+size+"px "+o.family;
+    lines=wrapToks(ctx, tk, o.maxW, size*(o.space||0.26));
+    if(lines.length<=o.maxLines) break;
+    size-=Math.max(2, Math.round(size*0.05));
+  }
+  ctx.font=(o.weight||400)+" "+size+"px "+o.family;
+  return {size, lines, lh:size*(o.lh||1.04), height:lines.length*size*(o.lh||1.04)};
+}
+function drawBlock(ctx, b, x, yTop, ink, akzent, o){
+  ctx.textBaseline="alphabetic";
+  ctx.font=(o.weight||400)+" "+b.size+"px "+o.family;
+  const space=b.size*(o.space||0.26);
+  b.lines.forEach((line,i)=>{
+    let cx=x;
+    const y=yTop + b.lh*(i+1) - b.size*0.22;
+    line.forEach((t,j)=>{
+      ctx.fillStyle = t.hi ? akzent : ink;
+      ctx.fillText(t.w, cx, y);
+      cx += ctx.measureText(t.w).width + space;
+    });
+  });
+}
+function track(ctx, v){ try{ ctx.letterSpacing=v; }catch(e){} }
+function pill(ctx, text, x, y, o){
+  ctx.font="800 "+o.size+"px "+BODY; track(ctx,"0.14em");
+  const padX=o.size*0.85, padY=o.size*0.66;
+  const w=ctx.measureText(text).width+padX*2, h=o.size+padY*2;
+  ctx.fillStyle=o.bg; ctx.fillRect(x,y,w,h);
+  if(o.border){ ctx.strokeStyle=o.border; ctx.lineWidth=3; ctx.strokeRect(x+1.5,y+1.5,w-3,h-3); }
+  ctx.fillStyle=o.ink; ctx.textBaseline="middle"; ctx.fillText(text, x+padX, y+h/2+1);
+  track(ctx,"0px"); ctx.textBaseline="alphabetic";
+  return {w,h};
+}
+
+function renderPost(cv, p, slideIdx){
+  const T=TYPEN[p.type]||TYPEN.feed, S=PRESETS[p.preset]||PRESETS.void;
+  const W=T.w, H=T.h;
+  if(cv.width!==W||cv.height!==H){ cv.width=W; cv.height=H; }
+  const ctx=cv.getContext("2d");
+  ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=S.bg; ctx.fillRect(0,0,W,H);
+  const M=78, IW=W-M*2;
+
+  /* Kopfbalken */
+  ctx.fillStyle=S.bar; ctx.fillRect(0,0,W,18);
+
+  /* Kopfzeile: Wortmarke links, Kanal rechts */
+  ctx.font="400 30px "+DISP; track(ctx,"0.2em"); ctx.fillStyle=S.ink;
+  ctx.textBaseline="alphabetic"; ctx.fillText("BLACK STRATEGIE", M, 112);
+  track(ctx,"0px");
+  ctx.font="600 24px "+BODY; ctx.textAlign="right"; ctx.globalAlpha=.62;
+  ctx.fillText(p.channel==="linkedin" ? "Rayana · Black Strategie" : "@blackstrategie.marketing", W-M, 110);
+  ctx.globalAlpha=1; ctx.textAlign="left";
+
+  const istSlide = p.type==="karussell" && slideIdx>0;
+  const tickerH = Math.round(H*0.048);
+
+  /* Ghost-Nummer hinter allem */
+  const nr = istSlide ? String(slideIdx+1).padStart(2,"0") : (p.num||"");
+  if(nr){
+    ctx.save();
+    ctx.font="400 "+Math.round(H*0.30)+"px "+DISP;
+    ctx.textAlign="right"; ctx.globalAlpha=.14; ctx.lineWidth=5;
+    ctx.strokeStyle=S.ink; ctx.strokeText(nr, W-M+10, H-tickerH-Math.round(H*0.055));
+    ctx.restore(); ctx.textAlign="left";
+  }
+
+  if(!istSlide){
+    /* Serien-Tag */
+    if(p.tag) pill(ctx, p.tag, M, 152, {size:26, bg:S.akzent, ink:S.bg===CI.weiss?CI.schwarz:pickInk(S.akzent)});
+
+    /* Aufbau von unten nach oben */
+    let cursor = H - tickerH - 70;
+    if(p.cta){
+      const m=pill(ctx, p.cta, M, cursor-70, {size:27, bg:"rgba(0,0,0,0)", ink:S.ink, border:S.ink});
+      cursor = cursor-70-24;
+    }
+    if(p.subline){
+      const sb=fitBlock(ctx, p.subline, {family:BODY, weight:600, maxW:IW, maxLines:3, start:44, min:28, lh:1.3, space:0.24});
+      cursor -= sb.height;
+      ctx.globalAlpha=.78; drawBlock(ctx, sb, M, cursor, S.ink, S.akzent, {family:BODY, weight:600, space:0.24}); ctx.globalAlpha=1;
+      cursor -= 34;
+    }
+    const hb=fitBlock(ctx, p.hook||"", {family:DISP, weight:400, maxW:IW, maxLines:6, start:Math.round(H*0.082), min:48, lh:1.0, space:0.22, upper:true});
+    cursor -= hb.height;
+    drawBlock(ctx, hb, M, cursor, S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
+    ctx.fillStyle=S.bar; ctx.fillRect(M, cursor-38, 170, 12);
+  } else {
+    const sl=(p.slides||[])[slideIdx-1]||{head:"",body:""};
+    let y=Math.round(H*0.30);
+    const hb=fitBlock(ctx, sl.head||"", {family:DISP, weight:400, maxW:IW, maxLines:3, start:Math.round(H*0.062), min:42, lh:1.02, space:0.22, upper:true});
+    ctx.fillStyle=S.bar; ctx.fillRect(M, y-40, 120, 10);
+    drawBlock(ctx, hb, M, y, S.ink, S.akzent, {family:DISP, weight:400, space:0.22});
+    y += hb.height + 40;
+    const bb=fitBlock(ctx, sl.body||"", {family:BODY, weight:500, maxW:IW, maxLines:9, start:42, min:26, lh:1.42, space:0.24});
+    ctx.globalAlpha=.86; drawBlock(ctx, bb, M, y, S.ink, S.akzent, {family:BODY, weight:500, space:0.24}); ctx.globalAlpha=1;
+    const letzte = slideIdx===(p.slides||[]).length;
+    ctx.font="800 26px "+BODY; track(ctx,"0.14em"); ctx.fillStyle=S.akzent;
+    ctx.fillText(letzte ? "SCHREIBEN SIE CHECK" : "WEITER WISCHEN →", M, H-tickerH-64);
+    track(ctx,"0px");
+  }
+
+  /* Ticker */
+  ctx.fillStyle=S.ticker; ctx.fillRect(0,H-tickerH,W,tickerH);
+  const tx=(p.ticker||"").toUpperCase();
+  if(tx){
+    ctx.save(); ctx.beginPath(); ctx.rect(0,H-tickerH,W,tickerH); ctx.clip();
+    ctx.font="800 24px "+BODY; track(ctx,"0.18em"); ctx.fillStyle=S.tickerInk;
+    ctx.textBaseline="middle";
+    let s=tx+"   •   ", line=s;
+    while(ctx.measureText(line).width < W*1.3) line+=s;
+    ctx.fillText(line, M/2, H-tickerH/2+1);
+    ctx.restore(); track(ctx,"0px"); ctx.textBaseline="alphabetic";
+  }
+  return cv;
+}
+function pickInk(hex){
+  const c=hex.replace("#",""); const r=parseInt(c.substr(0,2),16), g=parseInt(c.substr(2,2),16), b=parseInt(c.substr(4,2),16);
+  return (r*299+g*587+b*114)/1000 > 150 ? CI.schwarz : CI.weiss;
+}
+</script>
+
+<script>
+"use strict";
+
+/* ============================================================
+   4. FREIGABE-CHECK — die Markenregeln als Prüfung
+   ============================================================ */
+
+const REGELN = [
+  {id:"agentur", sev:"stop", re:/\b(Positionierung|Content[-\s]?Mix|Bausteine?|Launch(es)?|Reporting|Funnels?|Touchpoints?|Performance)\b/gi,
+   t:"Agentursprache", m:"Sagen Sie stattdessen, was die Kundin bekommt, bis wann und was es kostet."},
+  {id:"wir", sev:"stop", re:/\b(wir|uns|unser|unsere|unserem|unseren|unserer)\b/gi,
+   t:"Wir-Form", m:"Black Strategie ist Rayana. Es heißt ich, nie wir."},
+  {id:"du", sev:"stop", re:/\b(du|dein|deine|deinem|deinen|deiner|dich|dir|euer|eure|euch)\b/gi,
+   t:"Du-Form", m:"Kundinnen werden gesiezt. In Content, DMs, Mails und auf der Website."},
+  {id:"strich", sev:"stop", re:/[–—]|\s-\s/g,
+   t:"Gedankenstrich", m:"Satz neu bauen oder Punkt setzen. Sonderzeichen gehören nicht in den Text."},
+  {id:"name", sev:"stop", re:/Black\s+Strategy/gi,
+   t:"Falscher Markenname", m:"Immer Black Strategie, nie Black Strategy."},
+  {id:"recruiting", sev:"stop", re:/\b(Recruiting|Recruitment|Bewerber\w*|Bewerbung\w*|Stellenanzeige\w*|Mitarbeitersuche|Personalmarketing|Jobanzeige\w*)\b/gi,
+   t:"Recruiting-Thema", m:"Kein Angebot von Black Strategie. Über die Menschen im Unternehmen erzählen, ohne das Wort."},
+  {id:"platzhalter", sev:"stop", re:/\[[^\]]{1,60}\]/g,
+   t:"Platzhalter offen", m:"Echte Zahl, echter Zeitraum, echter Fall. Nichts erfinden, sonst nicht veröffentlichen."},
+  {id:"wien", sev:"warn", re:/\bWien\b/g,
+   t:"Falsches Gebiet", m:"Wels, Linz, Oberösterreich. Wien kommt nicht vor."},
+  {id:"guru", sev:"warn", re:/\b(explodier\w*|Game[-\s]?Changer|10x|krass|Geheimnis|revolutionär\w*|unglaublich|viral)\b/gi,
+   t:"Guru-Ton", m:"Argument statt Hyperbel. Die Zielgruppe sind Unternehmerinnen, keine Follower."},
+  {id:"generisch", sev:"warn", re:/(mehr Reichweite|Reichweite steigern|Sichtbarkeit steigern|professionelle[rn]? Auftritt|maßgeschneidert\w*|aus einer Hand|ganzheitlich\w*)/gi,
+   t:"Generischer Agentursatz", m:"Ergebnis benennen, nicht die Leistung. Anfragen, Termine, Patienten."}
+];
+
+function pruefen(p){
+  const text=[p.hook,p.subline,p.cta,p.caption,(p.slides||[]).map(s=>s.head+" "+s.body).join(" ")].join("\n");
+  const res=[];
+  REGELN.forEach(r=>{
+    r.re.lastIndex=0;
+    const hits=[...new Set((text.match(r.re)||[]))];
+    if(hits.length) res.push({sev:r.sev, t:r.t, m:r.m+"  Gefunden: "+hits.slice(0,4).join(", ")});
+  });
+  const hl=(p.hook||"").replace(/\*/g,"").length;
+  if(!hl) res.push({sev:"stop", t:"Kein Hook", m:"Ohne Hook kein Beitrag."});
+  else if(hl>90) res.push({sev:"stop", t:"Hook zu lang", m:hl+" Zeichen. Über 90 liest im Scrollen niemand. Auf unter 60 kürzen."});
+  else if(hl>60) res.push({sev:"warn", t:"Zwei-Sekunden-Test", m:hl+" Zeichen. Unter 60 greift er schneller."});
+  const cap=p.caption||"";
+  if(!/\bCHECK\b|WhatsApp|Praxis-Check|Kommentar/i.test(cap))
+    res.push({sev:"warn", t:"Kein Einstieg", m:"Jeder Beitrag führt auf den Praxis-Check. Keyword CHECK per WhatsApp ans Ende."});
+  const tags=(p.hashtags||"").split(/\s+/).filter(t=>t.startsWith("#")).length;
+  if(p.channel!=="story" && (tags<3||tags>5))
+    res.push({sev:"warn", t:"Hashtags", m:tags+" statt drei bis fünf gezielte."});
+  const lang=cap.split(/\n\s*\n/).some(b=>b.split("\n").length>3);
+  if(lang) res.push({sev:"warn", t:"Block zu lang", m:"Blöcke aus zwei bis drei Zeilen. Sonst wird am Handy nicht gelesen."});
+  if(!p.goal||p.goal==="") res.push({sev:"warn", t:"Kein Ziel", m:"Jede Kreation zahlt auf ein Kampagnenziel ein. Sonst nicht produzieren."});
+  if(!res.length) res.push({sev:"ok", t:"Sauber", m:"Sie-Form, kein Agenturdeutsch, Einstieg gesetzt, Hook greift."});
+  return res;
+}
+
+/* ============================================================
+   5. ANWENDUNG
+   ============================================================ */
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const S={posts:[], activeId:null, slide:0, db:null, downloads:null, sample:null, deleted:[], goals:{}, saving:0};
+
+function aktiv(){ return S.posts.find(p=>p.id===S.activeId) || S.posts[0]; }
+function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.add("on"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("on"),1900); }
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){ return null; } }
+
+/* ---------- Kopfzeile ---------- */
+function kopf(){
+  const heute=new Date(), von=new Date(KAMPAGNE.von+"T12:00:00"), bis=new Date(KAMPAGNE.bis+"T12:00:00");
+  const tag=Math.floor((heute-von)/864e5)+1, ges=Math.floor((bis-von)/864e5)+1;
+  const txt = heute<von ? "startet in "+Math.ceil((von-heute)/864e5)+" Tagen"
+            : heute>bis ? "abgeschlossen"
+            : "Tag "+tag+" von "+ges;
+  $("#camp").innerHTML='<b>Kampagne CHECK</b><span class="num">'+txt+'</span>';
+}
+
+/* ---------- Beitragsliste ---------- */
+function listeZeichnen(){
+  const ul=$("#slots"); ul.innerHTML="";
+  const sortiert=[...S.posts].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  let wk="";
+  sortiert.forEach(p=>{
+    const d=new Date(p.date+"T12:00:00");
+    const mo=new Date(d); mo.setDate(d.getDate()-((d.getDay()+6)%7));
+    const key=iso(mo);
+    if(key!==wk){ wk=key; const li=document.createElement("li"); li.className="wk"; li.textContent="Woche ab "+deDate(key); ul.appendChild(li); }
+    const li=document.createElement("li");
+    const b=document.createElement("button"); b.className="slot"; b.type="button";
+    b.setAttribute("aria-current", p.id===S.activeId ? "true":"false");
+    const schlimm=pruefen(p).some(r=>r.sev==="stop");
+    b.innerHTML='<span class="slot__d">'+String(d.getDate()).padStart(2,"0")+'<small>'+WOCHENTAG[d.getDay()]+'</small></span>'+
+      '<span><span class="slot__t">'+esc((p.hook||"ohne Hook").replace(/\*/g,""))+'</span>'+
+      '<span class="slot__m">'+p.format+' · '+(TYPEN[p.type]||{}).label+
+      (schlimm?' · <i style="color:var(--stop);font-style:normal">STOPP</i>':(p.status==="freigegeben"?' · <i style="color:var(--ok);font-style:normal">FREI</i>':''))+'</span></span>';
+    b.onclick=()=>{ S.activeId=p.id; S.slide=0; ls("bs.active",p.id); allesZeichnen(); };
+    li.appendChild(b); ul.appendChild(li);
+  });
+  $("#slotCount").textContent=S.posts.length;
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ---------- Bühne ---------- */
+function buehneZeichnen(){
+  const p=aktiv(); if(!p) return;
+  const tc=$("#typeChips"); tc.innerHTML="";
+  Object.entries(TYPEN).forEach(([k,v])=>{
+    const b=document.createElement("button"); b.className="chip"; b.type="button";
+    b.setAttribute("aria-pressed", p.type===k?"true":"false"); b.textContent=v.label;
+    b.onclick=()=>{ p.type=k; if(k==="karussell"&&!(p.slides||[]).length) p.slides=standardSlides(p); S.slide=0; bearbeitet(); allesZeichnen(); };
+    tc.appendChild(b);
+  });
+  const sw=$("#presetSw"); sw.innerHTML="";
+  Object.entries(PRESETS).forEach(([k,v])=>{
+    const b=document.createElement("button"); b.type="button"; b.title=v.name;
+    b.style.background=v.bg; b.setAttribute("aria-label",v.name);
+    b.setAttribute("aria-pressed", p.preset===k?"true":"false");
+    b.onclick=()=>{ p.preset=k; bearbeitet(); allesZeichnen(); };
+    sw.appendChild(b);
+  });
+  const sc=$("#slideChips"); sc.innerHTML="";
+  if(p.type==="karussell"){
+    ["Cover",...(p.slides||[]).map((s,i)=>String(i+2).padStart(2,"0"))].forEach((lbl,i)=>{
+      const b=document.createElement("button"); b.className="chip"; b.type="button"; b.textContent=lbl;
+      b.setAttribute("aria-pressed", S.slide===i?"true":"false");
+      b.onclick=()=>{ S.slide=i; buehneZeichnen(); };
+      sc.appendChild(b);
+    });
+  }
+  renderPost($("#cv"), p, S.slide);
+}
+
+/* ---------- Formular ---------- */
+function formularZeichnen(){
+  const p=aktiv(); if(!p) return;
+  const fs=$("#fFormat"); fs.innerHTML="";
+  Object.entries(FORMATE).forEach(([k,v])=>{ const o=document.createElement("option"); o.value=k; o.textContent=v.name; fs.appendChild(o); });
+  const gs=$("#fGoal"); gs.innerHTML="";
+  Object.entries(ZIELE).forEach(([k,v])=>{ const o=document.createElement("option"); o.value=k; o.textContent=v.label+(v.min?" ("+v.min+" bis "+v.max+")":""); gs.appendChild(o); });
+  $$("[data-field]").forEach(el=>{ const v=p[el.dataset.field]; el.value = v==null ? "" : v; });
+  $("#fmtNote").textContent=FORMATE[p.format].note;
+
+  const hl=(p.hook||"").replace(/\*/g,"").length;
+  const hc=$("#hookCnt"); hc.textContent="· "+hl+" Zeichen"; hc.className="cnt"+(hl>90?" bad":hl>60?" mid":"");
+  const tg=(p.hashtags||"").split(/\s+/).filter(t=>t.startsWith("#")).length;
+  const tc2=$("#tagCnt"); tc2.textContent="· "+tg+" von 3 bis 5"; tc2.className="cnt"+((tg<3||tg>5)?" mid":"");
+
+  const lib=$("#hookLib"); lib.innerHTML="";
+  FORMATE[p.format].hooks.forEach(h=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=h;
+    b.onclick=()=>{ p.hook=h; bearbeitet(); allesZeichnen(); };
+    lib.appendChild(b);
+  });
+
+  const sec=$("#slideSec"); sec.hidden = p.type!=="karussell";
+  if(!sec.hidden){
+    const box=$("#slideEdit"); box.innerHTML="";
+    (p.slides||[]).forEach((sl,i)=>{
+      const c=document.createElement("div"); c.className="slidecard";
+      c.innerHTML='<header><span class="lab">Slide '+String(i+2).padStart(2,"0")+'</span></header>';
+      const h=document.createElement("input"); h.type="text"; h.value=sl.head||""; h.placeholder="Überschrift";
+      h.oninput=()=>{ sl.head=h.value; bearbeitet(); buehneZeichnen(); pruefungZeichnen(); };
+      const t=document.createElement("textarea"); t.rows=3; t.value=sl.body||""; t.placeholder="Zwei bis drei Zeilen";
+      t.oninput=()=>{ sl.body=t.value; bearbeitet(); buehneZeichnen(); pruefungZeichnen(); };
+      const del=document.createElement("button"); del.className="mini"; del.textContent="Entfernen";
+      del.onclick=()=>{ p.slides.splice(i,1); S.slide=0; bearbeitet(); allesZeichnen(); };
+      c.querySelector("header").appendChild(del);
+      c.appendChild(h); c.appendChild(t); box.appendChild(c);
+    });
+  }
+}
+
+/* ---------- Freigabe-Check ---------- */
+function pruefungZeichnen(){
+  const p=aktiv(); if(!p) return;
+  const res=pruefen(p);
+  const stop=res.filter(r=>r.sev==="stop").length, warn=res.filter(r=>r.sev==="warn").length;
+  const v=$("#verdict");
+  v.innerHTML = stop ? '<span class="pill pill--stop">Stopp</span><b>NICHT VERÖFFENTLICHEN</b>'
+              : warn ? '<span class="pill pill--warn">Prüfen</span><b>'+warn+' OFFEN</b>'
+              : '<span class="pill pill--ok">Frei</span><b>BEREIT ZUM POSTEN</b>';
+  const ul=$("#checkList"); ul.innerHTML="";
+  res.forEach(r=>{
+    const li=document.createElement("li"); li.className="check "+(r.sev==="ok"?"":r.sev);
+    li.innerHTML='<i></i><span><b>'+esc(r.t)+'</b><span>'+esc(r.m)+'</span></span>';
+    ul.appendChild(li);
+  });
+}
+
+function allesZeichnen(){ listeZeichnen(); buehneZeichnen(); formularZeichnen(); pruefungZeichnen(); planZeichnen(); }
+</script>
+
+<script>
+"use strict";
+
+/* ============================================================
+   6. SPEICHERN, EXPORT, CLAUDE, PLAN
+   ============================================================ */
+
+let speicherTimer=null;
+function bearbeitet(){
+  const p=aktiv(); if(!p) return;
+  zustand("off","nicht gesichert");
+  clearTimeout(speicherTimer);
+  speicherTimer=setTimeout(()=>sichern(p), 700);
+}
+function zustand(k,t){ const d=$("#saveDot"); d.className="dot "+k; $("#saveTxt").textContent=t; }
+
+function sauber(p){
+  return {date:p.date, channel:p.channel, format:p.format, type:p.type, preset:p.preset,
+    tag:p.tag||"", num:p.num||"", ticker:p.ticker||"", goal:p.goal||"", status:p.status||"idee",
+    hook:p.hook||"", subline:p.subline||"", cta:p.cta||"", caption:p.caption||"",
+    hashtags:p.hashtags||"", slides:(p.slides||[]).map(s=>({head:s.head||"", body:s.body||""}))};
+}
+async function sichern(p){
+  if(!S.db){ zustand("off","nur in diesem Browser"); return; }
+  try{ await S.db.doc("posts/"+p.id).set(sauber(p)); zustand("on","gesichert"); }
+  catch(e){ zustand("off", e && e.code==="quota_exceeded" ? "Speicher voll" : "nicht gesichert"); }
+}
+async function tombstone(id){
+  S.deleted.push(id);
+  if(!S.db) return;
+  try{ await S.db.doc("posts/"+id).delete(); await S.db.doc("meta/geloescht").set({ids:S.deleted}); }catch(e){}
+}
+async function zieleSichern(){
+  if(!S.db) return;
+  try{ await S.db.doc("kampagne/check").set(S.goals); }catch(e){}
+}
+
+/* ---------- Export ---------- */
+function dateiname(p){ return p.date+"-"+p.format+"-"+(p.type)+(S.slide?"-slide"+(S.slide+1):"")+".png"; }
+async function bildSpeichern(){
+  const p=aktiv(); const cv=$("#cv");
+  const blob=await new Promise(r=>cv.toBlob(r,"image/png"));
+  if(!blob){ toast("Export nicht möglich"); return; }
+  if(S.downloads){
+    try{ await S.downloads.save({filename:dateiname(p), data:blob}); toast("Bild gespeichert"); return; }
+    catch(e){ if(e && e.code==="cancelled") return; }
+  }
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url; a.download=dateiname(p); document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+  toast("Bild gespeichert");
+}
+async function kopieren(text, meldung){
+  try{ await navigator.clipboard.writeText(text); toast(meldung); }
+  catch(e){
+    const ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast(meldung); }catch(_){ toast("Kopieren blockiert"); }
+    ta.remove();
+  }
+}
+function briefing(p){
+  const T=TYPEN[p.type], S2=PRESETS[p.preset];
+  const z=[
+    "CANVA-BRIEFING · BLACK STRATEGIE",
+    "Beitrag: "+deDate(p.date)+" · "+FORMATE[p.format].name+" · "+T.label+" ("+T.w+" x "+T.h+" px)",
+    "",
+    "FARBEN",
+    "Hintergrund "+S2.bg+" · Schrift "+S2.ink+" · Akzent "+S2.akzent+" · Kopfbalken "+S2.bar+" · Ticker "+S2.ticker,
+    "",
+    "SCHRIFTEN",
+    "Titel und Hook: Higuen Regular, Versalien, so groß wie möglich, Zeilenabstand knapp unter 100 Prozent.",
+    "Fließtext und Labels: Montserrat Regular bis Bold.",
+    "(Die Vorschau im Studio nutzt Anton als Stellvertreter für Higuen.)",
+    "",
+    "AUFBAU VON OBEN",
+    "1. Oranger Balken über die volle Breite, 18 px.",
+    "2. Wortmarke BLACK STRATEGIE links, "+(p.channel==="linkedin"?"Rayana · Black Strategie":"@blackstrategie.marketing")+" rechts.",
+    p.tag ? "3. Serien-Tag in Akzentfarbe: "+p.tag : "3. Kein Serien-Tag.",
+    p.num ? "4. Ghost-Nummer "+p.num+" als Kontur, 14 Prozent Deckkraft, rechts unten hinter dem Text." : "4. Keine Ghost-Nummer.",
+    "5. Kurzer oranger Balken, darunter der Hook:",
+    "   "+(p.hook||"").replace(/\*/g,""),
+    p.subline ? "6. Subline: "+p.subline : "6. Keine Subline.",
+    p.cta ? "7. CTA-Rahmen: "+p.cta : "7. Kein CTA-Rahmen.",
+    "8. Ticker-Leiste unten: "+(p.ticker||"")
+  ];
+  if(p.type==="karussell"){
+    z.push("","SLIDES");
+    (p.slides||[]).forEach((s,i)=>z.push(String(i+2).padStart(2,"0")+" "+(s.head||"")+" | "+(s.body||"")));
+  }
+  z.push("","CAPTION","", p.caption||"", "", p.hashtags||"");
+  return z.join("\n");
+}
+
+/* ---------- Claude ---------- */
+const MARKE=[
+"Du schreibst für Black Strategie, eine Social-Media-Agentur in Wels, Oberösterreich. Rayana ist das Gesicht der Marke.",
+"Zielgruppe: Praxen und Ordinationen mit Selbstzahler-Fokus sowie Selbstständige und kleine Dienstleister in Wels, Linz und Oberösterreich.",
+"Sprache: Deutsch, österreichisch, Sie-Form. Rayana spricht als Ich, niemals wir. Nie die Du-Form.",
+"Verboten: Positionierung, Content-Mix, Baustein, Launch, Reporting, Funnel, Touchpoint, Performance, Recruiting und alle Personalthemen, Wien, Gedankenstriche, US-Guru-Ton, generische Agentursätze.",
+"Keine erfundenen Zahlen. Wenn eine Zahl fehlt, setze einen Platzhalter in eckigen Klammern.",
+"Ton: klar, direkt, modern, leicht provokant. Kippt eine Annahme der Leserin. Kein Amtsdeutsch, keine langen Sätze.",
+"Ziel jedes Beitrags: der Praxis-Check. Keyword CHECK per WhatsApp. Kein Formular.",
+"Der Text darf nicht übersetzt klingen und muss beim ersten Hören verständlich sein."
+].join("\n");
+
+function kontext(p){
+  return "Format: "+FORMATE[p.format].name+". "+FORMATE[p.format].note+
+    "\nKanal: "+p.channel+". Darstellung: "+TYPEN[p.type].label+
+    "\nAktueller Hook: "+(p.hook||"keiner")+
+    "\nZiel: "+(ZIELE[p.goal]||{label:p.goal}).label;
+}
+async function claudeHooks(btn){
+  const p=aktiv(); if(!S.sample) return;
+  const alt=btn.textContent; btn.disabled=true; btn.textContent="Claude denkt";
+  try{
+    const arr=await S.sample.json(MARKE+"\n\n"+kontext(p)+
+      "\n\nSchreibe drei neue Hooks für diesen Beitrag. Jeder Hook maximal 60 Zeichen, zwei Sätze höchstens, greift in zwei Sekunden."+
+      " Antworte ausschließlich mit einem JSON-Array aus drei Strings.");
+    const lib=$("#hookLib");
+    (Array.isArray(arr)?arr:[]).slice(0,3).forEach(h=>{
+      const b=document.createElement("button"); b.type="button"; b.textContent="✦ "+h;
+      b.onclick=()=>{ p.hook=String(h); bearbeitet(); allesZeichnen(); };
+      lib.prepend(b);
+    });
+    toast("Drei Varianten oben eingefügt");
+  }catch(e){ toast(e&&e.code==="rate_limited" ? "Zu schnell, kurz warten" : "Claude nicht erreichbar"); }
+  btn.disabled=false; btn.textContent=alt;
+}
+async function claudeCaption(btn){
+  const p=aktiv(); if(!S.sample) return;
+  const alt=btn.textContent; btn.disabled=true; btn.textContent="Claude schreibt";
+  const ta=$("#fCaption");
+  try{
+    const r=await S.sample(MARKE+"\n\n"+kontext(p)+
+      "\n\nSchreibe die Caption zu diesem Beitrag. Blöcke aus zwei bis drei Zeilen, leere Zeile dazwischen."+
+      " Letzter Block ist der Aufruf zum Praxis-Check. Danach eine Zeile mit drei bis fünf gezielten Hashtags für Oberösterreich."+
+      " Antworte nur mit der Caption, ohne Einleitung.",
+      {onText:({text})=>{ ta.value=text; }});
+    p.caption=r.text.trim(); ta.value=p.caption; bearbeitet(); pruefungZeichnen(); formularZeichnen();
+  }catch(e){ toast("Claude nicht erreichbar"); }
+  btn.disabled=false; btn.textContent=alt;
+}
+async function claudeSlides(btn){
+  const p=aktiv(); if(!S.sample) return;
+  const alt=btn.textContent; btn.disabled=true; btn.textContent="Claude baut";
+  try{
+    const arr=await S.sample.json(MARKE+"\n\n"+kontext(p)+
+      "\n\nBaue vier Karussell-Slides nach dem Cover. Jede Slide: kurze Überschrift in Versalien geeignet,"+
+      " dazu zwei bis drei Zeilen Text. Letzte Slide ist der Aufruf zum Praxis-Check."+
+      " Antworte ausschließlich mit einem JSON-Array aus Objekten mit den Feldern head und body.");
+    if(Array.isArray(arr)&&arr.length){
+      p.slides=arr.slice(0,6).map(s=>({head:String(s.head||""), body:String(s.body||"")}));
+      S.slide=0; bearbeitet(); allesZeichnen(); toast("Gerüst eingefügt");
+    }
+  }catch(e){ toast("Claude nicht erreichbar"); }
+  btn.disabled=false; btn.textContent=alt;
+}
+
+/* ---------- Plan-Ansicht ---------- */
+function planZeichnen(){
+  const g=$("#goals"); g.innerHTML="";
+  const geplant={}; S.posts.forEach(p=>{ geplant[p.goal]=(geplant[p.goal]||0)+1; });
+  Object.entries(ZIELE).forEach(([k,z])=>{
+    const ist=S.goals[k]||0;
+    const pct=z.min?Math.min(100,Math.round(ist/z.min*100)):0;
+    const d=document.createElement("div"); d.className="goal";
+    d.innerHTML='<h4>'+z.label+'</h4>'+
+      (z.min?'<div><span class="val num">'+ist+'</span><span class="tgt">von '+z.min+(z.max!==z.min?" bis "+z.max:"")+'</span></div>'
+            :'<div><span class="val num">'+(geplant[k]||0)+'</span><span class="tgt">Beiträge</span></div>')+
+      (z.min?'<div class="bar"><i class="'+(pct>=100?"done":"")+'" style="width:'+pct+'%"></i></div>':'<div class="bar"></div>')+
+      '<div class="step"></div>';
+    const step=d.querySelector(".step");
+    if(z.min){
+      [["−",-1],["+",1]].forEach(([t,v])=>{
+        const b=document.createElement("button"); b.type="button"; b.textContent=t; b.setAttribute("aria-label",z.label+(v>0?" erhöhen":" verringern"));
+        b.onclick=()=>{ S.goals[k]=Math.max(0,(S.goals[k]||0)+v); zieleSichern(); planZeichnen(); };
+        step.appendChild(b);
+      });
+    }
+    const sp=document.createElement("span"); sp.className="hint"; sp.style.alignSelf="center";
+    sp.textContent=(geplant[k]||0)+" geplant"; step.appendChild(sp);
+    g.appendChild(d);
+  });
+
+  const tb=$("#planBody"); tb.innerHTML="";
+  const sortiert=[...S.posts].sort((a,b)=>a.date<b.date?-1:1);
+  let wk="", frei=0, offen=0, stopp=0;
+  sortiert.forEach(p=>{
+    const d=new Date(p.date+"T12:00:00"); const mo=new Date(d); mo.setDate(d.getDate()-((d.getDay()+6)%7));
+    if(iso(mo)!==wk){ wk=iso(mo); const tr=document.createElement("tr"); tr.className="wkrow";
+      tr.innerHTML='<td colspan="7">Woche ab '+deDate(wk)+'</td>'; tb.appendChild(tr); }
+    const res=pruefen(p), hatStop=res.some(r=>r.sev==="stop"), hatWarn=res.some(r=>r.sev==="warn");
+    if(hatStop) stopp++; if(p.status==="freigegeben"||p.status==="veroeffentlicht") frei++; else offen++;
+    const tr=document.createElement("tr"); tr.className="post";
+    tr.innerHTML='<td class="num">'+deDate(p.date)+'</td><td>'+(p.channel==="linkedin"?"LinkedIn":p.channel==="ads"?"Meta Ads":p.channel==="story"?"Story":"Instagram")+'</td>'+
+      '<td>'+FORMATE[p.format].name+'</td><td class="tdhook">'+esc((p.hook||"").replace(/\*/g,""))+'</td>'+
+      '<td>'+((ZIELE[p.goal]||{}).label||"")+'</td><td>'+p.status+'</td>'+
+      '<td><span class="pill '+(hatStop?"pill--stop":hatWarn?"pill--warn":"pill--ok")+'">'+(hatStop?"Stopp":hatWarn?"Prüfen":"Frei")+'</span></td>';
+    tr.onclick=()=>{ S.activeId=p.id; S.slide=0; ls("bs.active",p.id); tabWechsel("studio"); allesZeichnen(); };
+    tb.appendChild(tr);
+  });
+  $("#planFertig").textContent=frei; $("#planOffen").textContent=offen; $("#planStop").textContent=stopp;
+}
+function tabWechsel(t){
+  const st=t==="studio";
+  $("#viewStudio").hidden=!st; $("#viewPlan").hidden=st;
+  $("#tabStudio").setAttribute("aria-selected",st?"true":"false");
+  $("#tabPlan").setAttribute("aria-selected",st?"false":"true");
+  ls("bs.tab",t);
+  if(st) buehneZeichnen();
+}
+
+/* ---------- Start ---------- */
+function verdrahten(){
+  $$("[data-field]").forEach(el=>{
+    el.addEventListener("input",()=>{
+      const p=aktiv(); if(!p) return;
+      const f=el.dataset.field;
+      p[f]=el.value;
+      if(f==="format"){ const F=FORMATE[el.value]; p.tag=F.tag; p.ticker=F.ticker; p.goal=F.goal; p.preset=F.preset; }
+      if(f==="channel"&&HASHTAGS[el.value]!==undefined&&!p.hashtags) p.hashtags=HASHTAGS[el.value];
+      bearbeitet();
+      if(f==="format"||f==="channel"||f==="date"||f==="status"){ allesZeichnen(); }
+      else { buehneZeichnen(); pruefungZeichnen(); listeZeichnen();
+             const hl=(p.hook||"").replace(/\*/g,"").length, hc=$("#hookCnt");
+             hc.textContent="· "+hl+" Zeichen"; hc.className="cnt"+(hl>90?" bad":hl>60?" mid":"");
+             const tg=(p.hashtags||"").split(/\s+/).filter(x=>x.startsWith("#")).length, t2=$("#tagCnt");
+             t2.textContent="· "+tg+" von 3 bis 5"; t2.className="cnt"+((tg<3||tg>5)?" mid":""); }
+    });
+  });
+  $("#tabStudio").onclick=()=>tabWechsel("studio");
+  $("#tabPlan").onclick=()=>tabWechsel("plan");
+  $("#addPost").onclick=()=>{
+    const p=neuerPost({date:iso(new Date())}); S.posts.push(p); S.activeId=p.id; S.slide=0;
+    bearbeitet(); allesZeichnen(); toast("Beitrag angelegt");
+  };
+  $("#delPost").onclick=()=>{
+    const p=aktiv(); if(!p) return;
+    if(!confirm("Beitrag vom "+deDate(p.date)+" löschen?")) return;
+    S.posts=S.posts.filter(x=>x.id!==p.id); tombstone(p.id);
+    S.activeId=(S.posts[0]||{}).id; S.slide=0; allesZeichnen();
+  };
+  $("#addSlide").onclick=()=>{ const p=aktiv(); (p.slides=p.slides||[]).push({head:"",body:""}); bearbeitet(); allesZeichnen(); };
+  $("#tplCaption").onclick=()=>{
+    const p=aktiv(); p.caption=FORMATE[p.format].caption(p)+"\n\n"+(p.hashtags||"");
+    bearbeitet(); allesZeichnen(); toast("Vorlage eingesetzt");
+  };
+  $("#dlPng").onclick=bildSpeichern;
+  $("#cpCaption").onclick=()=>{ const p=aktiv(); kopieren((p.caption||"").trim(), "Caption kopiert"); };
+  $("#cpBrief").onclick=()=>kopieren(briefing(aktiv()), "Briefing kopiert");
+  $("#aiHooks").onclick=e=>claudeHooks(e.currentTarget);
+  $("#aiCaption").onclick=e=>claudeCaption(e.currentTarget);
+  $("#aiSlides").onclick=e=>claudeSlides(e.currentTarget);
+}
+
+function start(){
+  kopf();
+  S.posts=startplan();
+  const gemerkt=ls("bs.active");
+  S.activeId = (gemerkt && S.posts.some(p=>p.id===gemerkt)) ? gemerkt : S.posts[0].id;
+  verdrahten();
+  allesZeichnen();
+  if(ls("bs.tab")==="plan") tabWechsel("plan");
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>buehneZeichnen());
+  zustand("off","nur in diesem Browser");
+
+  ["#aiHooks","#aiCaption","#aiSlides"].forEach(s=>{ $(s).disabled=true; $(s).title="Claude wird geladen"; });
+
+  if(window.claude&&claude.use){
+    claude.use("db").then(async db=>{
+      if(!db) return;
+      S.db=db;
+      try{
+        const tot=await db.doc("meta/geloescht").get();
+        S.deleted = (tot.exists&&Array.isArray(tot.data().ids)) ? tot.data().ids : [];
+        const snap=await db.collection("posts").get();
+        const remote={};
+        snap.docs.forEach(d=>{ remote[d.id]=Object.assign({id:d.id, slides:[]}, d.data()); });
+        S.posts=S.posts.filter(p=>S.deleted.indexOf(p.id)<0).map(p=>remote[p.id]?Object.assign(p,remote[p.id]):p);
+        Object.keys(remote).forEach(id=>{ if(!S.posts.some(p=>p.id===id)) S.posts.push(neuerPost(remote[id])); });
+        const z=await db.doc("kampagne/check").get();
+        if(z.exists) S.goals=z.data()||{};
+        if(!S.posts.some(p=>p.id===S.activeId)) S.activeId=S.posts[0].id;
+        allesZeichnen(); zustand("on","gesichert");
+      }catch(e){ zustand("off","nur in diesem Browser"); }
+    });
+    claude.use("downloads").then(d=>{ S.downloads=d; });
+    claude.use("sample").then(s=>{
+      ["#aiHooks","#aiCaption","#aiSlides"].forEach(sel=>{
+        const b=$(sel);
+        if(s){ b.disabled=false; b.title=""; } else { b.hidden=true; }
+      });
+      S.sample=s;
+    });
+  } else {
+    ["#aiHooks","#aiCaption","#aiSlides"].forEach(s=>{ $(s).hidden=true; });
+  }
+}
+start();
+</script>
+</body>
+</html>
