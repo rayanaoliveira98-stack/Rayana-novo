@@ -220,6 +220,15 @@ tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
 .rule{border-left:2px solid var(--roxo); padding-left:12px}
 .rule h5{margin:0 0 4px; font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase}
 .rule p{margin:0; font-size:12px; color:var(--muted); line-height:1.5}
+.phasen{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line)}
+.phase{background:var(--panel); padding:16px; display:flex; flex-direction:column; gap:9px}
+.phase.jetzt{background:var(--panel2); box-shadow:inset 3px 0 0 var(--roxo)}
+.phase header{display:flex; align-items:center; justify-content:space-between; gap:8px}
+.phase h4{margin:0; font-family:"Anton",Impact,sans-serif; font-weight:400; font-size:17px; letter-spacing:.05em}
+.phase .dat{font-size:10px; font-weight:800; letter-spacing:.12em; color:var(--muted); text-transform:uppercase}
+.phase p{margin:0; font-size:12.5px; line-height:1.5; color:var(--muted)}
+.phase .serie{font-size:10px; font-weight:800; letter-spacing:.14em; color:var(--laranja); text-transform:uppercase}
+.phase .gate{border-left:2px solid var(--warn); padding-left:10px; font-size:12px; line-height:1.45; color:var(--muted)}
 .profil{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line)}
 .pbox{background:var(--panel); padding:16px; display:flex; flex-direction:column; gap:10px; align-items:flex-start}
 .pbox h5{margin:0; font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
@@ -303,6 +312,8 @@ tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
       <datalist id="ctaList">
         <option value="Schreiben Sie CHECK per WhatsApp"></option>
         <option value="Praxis-Check anfragen"></option>
+        <option value="Ein Drehtag im Monat. Den Rest übernehme ich."></option>
+        <option value="Vier Plätze für Jänner"></option>
         <option value="Jetzt Termin sichern"></option>
       </datalist>
       <div class="f" style="margin-top:10px">
@@ -362,7 +373,12 @@ tbody tr.post:hover td{background:var(--panel2); cursor:pointer}
 
 <main class="plan" id="viewPlan" role="tabpanel" aria-labelledby="tabPlan" hidden>
   <section>
-    <h2 class="lab" style="margin-bottom:12px">Kampagne CHECK · 15.09. bis 16.10.2026</h2>
+    <h2 class="lab" style="margin-bottom:12px">Drei Phasen · 14.09. bis 12.12.2026</h2>
+    <div class="phasen" id="phasen"></div>
+  </section>
+
+  <section>
+    <h2 class="lab" style="margin-bottom:12px">Placar der 90 Tage</h2>
     <div class="goals" id="goals"></div>
     <p class="hint" style="margin-top:10px">Ist-Zahlen selbst mitzählen. Die Balken zeigen den Weg zum unteren Zielwert.</p>
   </section>
@@ -442,15 +458,31 @@ const PRESETS = {
 };
 
 const ZIELE = {
-  check:     {label:"Check-Anfragen",  min:25, max:35},
-  video:     {label:"Analyse-Videos",  min:15, max:20},
-  termin:    {label:"Termine",         min:6,  max:8},
-  sprint:    {label:"Website-Sprints", min:2,  max:3},
-  paket:     {label:"Aufbau-Paket",    min:1,  max:1},
-  assistent: {label:"ASSISTENT per DM",min:1,  max:1},
-  autoritaet:{label:"Autorität",       min:0,  max:0}
+  check:     {label:"CHECK-Anfragen",   min:80, max:100},
+  video:     {label:"Analyse-Videos",   min:60, max:60},
+  termin:    {label:"Termine",          min:18, max:24},
+  sprint:    {label:"Website-Sprints",  min:6,  max:8},
+  drehtag:   {label:"Drehtag-Kunden",   min:4,  max:4},
+  outbound:  {label:"Outbound-Mails",   min:130,max:130},
+  assistent: {label:"ASSISTENT per DM", min:10, max:10},
+  autoritaet:{label:"Autorität",        min:0,  max:0}
 };
 
+const PHASEN = [
+  {nr:1, von:"2026-09-14", bis:"2026-10-13", name:"Wunde öffnen", serie:"PRAXIS-CHECK",
+   ziel:"Beweisen, dass der Satz Ein Drehtag im Monat eine Anfrage erzeugt. Sonst nichts.",
+   gate:"Tag 30: ab 20 CHECK weiter wie geplant. 10 bis 19 CHECK: Outbound auf 20 pro Woche verdoppeln, Ads verschieben. Unter 10: die Liste der 30 Leads neu bauen, bevor irgendetwas anderes passiert."},
+  {nr:2, von:"2026-10-14", bis:"2026-11-12", name:"Beweisen und verkaufen", serie:"VORHER / NACHHER",
+   ziel:"CHECK in Sprint verwandeln und den ersten Sprint in einen Drehtag im Monat. Ads starten am Tag 31.",
+   gate:"Tag 60: ab 2 Drehtag-Kunden volle Phase 3. Bei einem: ASSISTENT streichen, alles auf den zweiten. Bei null liegt der Engpass im Termin, nicht im Lead."},
+  {nr:3, von:"2026-11-13", bis:"2026-12-12", name:"Autorität und Verlängerung", serie:"SO SIEHT DAS AUS",
+   ziel:"Die Position Social Media Agentur Wels besetzen und die Drehtage im Jänner verkaufen.",
+   gate:"Letzte Woche: vier Plätze Drehtag im Jänner, echte Zahl. CTA bleibt CHECK."}
+];
+function phaseVon(datum){
+  for(const ph of PHASEN){ if(datum>=ph.von && datum<=ph.bis) return ph; }
+  return PHASEN[PHASEN.length-1];
+}
 /* Die fünf festen Instagram-Formate */
 const FORMATE = {
   F1:{
@@ -482,7 +514,7 @@ const FORMATE = {
   },
   F2:{
     name:"F2 Praxis-Check",
-    note:"Die Freitags-Serie. Eine echte Website, sechs Kriterien, eine Punktezahl. Das Material für das Outbound der Folgewoche. Ghost-Nummer hochzählen.",
+    note:"Die Freitags-Serie, 13 Folgen. Eine echte Website, sechs Kriterien, eine Punktezahl. Material für das Outbound der Folgewoche. Ab Folge 10 nur noch Praxen.",
     goal:"check", stil:"editorial", preset:"papier", type:"reel", tag:"PRAXIS-CHECK",
     ticker:"PRAXIS-CHECK • JEDEN FREITAG • GRATIS ANALYSE IN 48 STUNDEN",
     hooks:[
@@ -550,9 +582,9 @@ const FORMATE = {
       "Die meisten Agenturen schicken eine Präsentation und hoffen auf ein Ja.",
       "Ich mache es umgekehrt.",
       "",
-      "Bevor wir sprechen, baue ich eine neue Version Ihrer Startseite.",
+      "Bevor Sie mich sprechen, baue ich eine neue Version Ihrer Startseite.",
       "Sie sehen sie live, in Ihren Farben, mit Ihrem Logo.",
-      "Erst dann reden wir über Zusammenarbeit.",
+      "Erst danach sprechen Sie mit mir über eine Zusammenarbeit.",
       "",
       "Warum? Weil Sie sonst nur über Geschmack entscheiden.",
       "Mit der fertigen Seite entscheiden Sie über ein Ergebnis.",
@@ -585,6 +617,105 @@ const FORMATE = {
       "Vorher sehen Sie kostenlos, wo Ihre Seite heute steht.",
       "Schreiben Sie CHECK per WhatsApp."
     ].join("\n")
+  },
+  F6:{
+    name:"F6 Vorher/Nachher",
+    note:"Phase 2. Zwei Bilder, ein Unterschied. Die alte Seite gegen die neue. Ohne Namen, solange nicht unterschrieben.",
+    goal:"sprint", stil:"foto", preset:"papier", type:"feed", tag:"VORHER / NACHHER",
+    ticker:"EIN DREHTAG IM MONAT • DEN REST ÜBERNEHME ICH",
+    hooks:[
+      "Links die alte Seite. Rechts die neue. Gleiches Unternehmen.",
+      "Diese Startseite hat [Zahl] Anfragen im Monat gekostet.",
+      "Zwei Seiten. Ein Unterschied: die neue fragt nach dem Termin.",
+      "Sieben Tage liegen zwischen diesen beiden Bildern."
+    ],
+    caption:(p)=>[
+      p.hook, "",
+      "Die alte Seite erklärt, wer da arbeitet.",
+      "Die neue sagt, was die Besucherin als Nächstes tun soll.",
+      "", "Geändert habe ich drei Dinge:",
+      "Ein Satz ganz oben, was angeboten wird und für wen.",
+      "Der Terminweg über WhatsApp statt Formular.",
+      "Zwei echte Stimmen statt Stockfotos.",
+      "", "Ihre Seite im Vergleich? Schreiben Sie CHECK per WhatsApp."
+    ].join("\n")
+  },
+  F7:{
+    name:"F7 Drehtag",
+    note:"Phase 2, der wichtigste Beitrag der 90 Tage. Kamera in der Hand, im Betrieb der Kundin. Zeigt, wie wenig sie tun muss.",
+    goal:"drehtag", stil:"cutout", preset:"void", type:"reel", tag:"DREHTAG",
+    ticker:"EIN DREHTAG IM MONAT • DEN REST ÜBERNEHME ICH",
+    hooks:[
+      "Ein Drehtag im Monat. Den Rest übernehme ich.",
+      "So sieht ein Drehtag aus. Vier Stunden, ein Monat Sichtbarkeit.",
+      "[Kundenname] stand vier Stunden vor der Kamera. Danach nie wieder.",
+      "Kein Text schreiben, keine Idee liefern. Einmal im Monat da sein."
+    ],
+    caption:(p)=>[
+      p.hook, "",
+      "Das hier ist ein Drehtag bei [Kundenname] in [Ort].",
+      "Vier Stunden, vier Blöcke, ein Monat Material.",
+      "", "Was die Kundin dafür tut:",
+      "Einen Fragebogen einmal ausfüllen.",
+      "Einen Vormittag freihalten.",
+      "Sonst nichts. Kein Freigabe-Ping, kein Textschreiben am Abend.",
+      "", "Wenn Ihr Marketing gerade mehr von Ihnen verlangt als von mir: Schreiben Sie CHECK per WhatsApp."
+    ].join("\n")
+  },
+  F8:{
+    name:"F8 Ergebnis mit Name",
+    note:"Phase 3. Kunde mit Namen und Gesicht, echte Zahl. Nur veröffentlichen, wenn die Zahl stimmt und die Freigabe da ist.",
+    goal:"drehtag", stil:"foto", preset:"roxo", type:"feed", tag:"ERGEBNIS",
+    ticker:"ERGEBNISSE AUS WELS UND LINZ • BLACK STRATEGIE",
+    hooks:[
+      "[Kundenname]: [Ergebnis] in der ersten Woche. Ein Drehtag.",
+      "Drei Wochen nach dem Drehtag: [Ergebnis].",
+      "[Kundenname] hat seit [Zeitraum] keinen Beitrag mehr selbst gemacht.",
+      "So sieht das aus, wenn jemand sein Marketing abgibt."
+    ],
+    caption:(p)=>[
+      p.hook, "",
+      "[Kundenname], [Branche] in [Ort].",
+      "Vorher: [Ausgangslage in den Worten der Kundin].",
+      "", "Seit [Zeitraum]: ein Drehtag im Monat, den Rest übernehme ich.",
+      "Ergebnis: [Ergebnis].",
+      "", "Vier Plätze für Drehtage im Jänner.",
+      "Schreiben Sie CHECK per WhatsApp."
+    ].join("\n")
+  },
+  F9:{
+    name:"F9 Fragebogen",
+    note:"Phase 3. Eine der zwölf Fragen pro Beitrag, dazu die Antwort einer echten Kundin. Zeigt die Methode, ohne sie zu erklären.",
+    goal:"autoritaet", stil:"editorial", preset:"blau", type:"karussell", tag:"FRAGE",
+    ticker:"ZWÖLF FRAGEN • EIN DREHTAG • DEN REST ÜBERNEHME ICH",
+    hooks:[
+      "Frage [Nr] von 12: [Frage]",
+      "Diese eine Frage entscheidet, ob Ihre Beiträge Anfragen bringen.",
+      "Zwölf Fragen. Danach brauche ich nichts mehr von Ihnen.",
+      "Was ich wissen muss, bevor ich für Sie drehe."
+    ],
+    caption:(p)=>[
+      p.hook, "",
+      "Vor dem ersten Drehtag stelle ich zwölf Fragen.",
+      "Diese hier ist die, bei der die meisten ins Stocken kommen.",
+      "", "[Kundenname] hat geantwortet: [Antwort].",
+      "Genau daraus ist [Ergebnis] geworden.",
+      "", "Die restlichen elf Fragen gibt es beim Praxis-Check.",
+      "Schreiben Sie CHECK per WhatsApp."
+    ].join("\n")
+  },
+  F0:{
+    name:"F0 Story",
+    note:"Dienstag und Donnerstag. Eine Frage mit Sticker oder eine echte Zahl aus der Kampagne. Transparenz ist in Wels Autorität.",
+    goal:"check", stil:"editorial", preset:"laranja", type:"story", tag:"FRAGE",
+    ticker:"ANTWORT PER STICKER ODER DM",
+    hooks:[
+      "Was hält Sie gerade am meisten auf?",
+      "Wie viele Stunden im Monat kostet Sie Ihr eigenes Marketing?",
+      "Diese Woche: [Zahl] CHECK-Anfragen, [Zahl] Videos, [Zahl] Termine.",
+      "Wer soll nächsten Freitag im Praxis-Check sein?"
+    ],
+    caption:(p)=>p.hook
   }
 };
 
@@ -594,6 +725,8 @@ const STILE = {
   foto:{name:"Foto",      note:"Bild oben im Rahmen, Aussage unten. Für Beweis und Gesicht."},
   cutout:{name:"Cutout",  note:"Aussage oben, freigestellte Person auf der Farbfläche unten."}
 };
+
+
 
 const TYPEN = {
   reel:     {label:"Reel-Cover", w:1080, h:1920},
@@ -615,36 +748,39 @@ const HASHTAGS = {
    Montag F1 · Mittwoch F4/F3 · Donnerstag LinkedIn · Freitag F2
    ============================================================ */
 
-const KAMPAGNE = {von:"2026-09-15", bis:"2026-10-16"};
+const KAMPAGNE = {von:"2026-09-14", bis:"2026-12-12"};
 const WOCHENTAG = ["So","Mo","Di","Mi","Do","Fr","Sa"];
 const STATUS = {idee:"Idee", entwurf:"Entwurf", freigegeben:"Freigegeben", veroeffentlicht:"Veröffentlicht"};
-const MO_ROT = ["F1","F5","F1","F3","F1"];
-const MI_ROT = ["F4","F3","F5","F4","F3"];
-const DO_ROT = ["F3","F1","F4","F5","F1"];
 
 function iso(d){ return d.toISOString().slice(0,10); }
 function deDate(s){ const d=new Date(s+"T12:00:00"); return WOCHENTAG[d.getDay()]+" "+String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."; }
 
+/* Die fixe Woche, 13 mal wiederholt.
+   Mo Feed Wunde · Di Story · Mi Feed Ablauf oder Einwand · Do LinkedIn Ich-Form · Fr PRAXIS-CHECK */
 function startplan(){
   const out=[]; let checkNr=1, woche=0;
   const d=new Date(KAMPAGNE.von+"T12:00:00"), end=new Date(KAMPAGNE.bis+"T12:00:00");
   while(d<=end){
-    const wd=d.getDay();
-    let fmt=null, kanal="instagram", typ=null;
-    if(wd===1){ fmt=MO_ROT[woche%MO_ROT.length]; typ="reel"; }
-    else if(wd===3){ fmt=MI_ROT[woche%MI_ROT.length]; typ="karussell"; }
-    else if(wd===4){ fmt=DO_ROT[woche%DO_ROT.length]; kanal="linkedin"; typ="linkedin"; }
-    else if(wd===5){ fmt="F2"; typ="reel"; }
+    const wd=d.getDay(), datum=iso(d), ph=phaseVon(datum), schluss=datum>="2026-12-07";
+    let fmt=null, kanal="instagram";
+    if(wd===1)      fmt = schluss ? "F5" : (ph.nr===1?"F1":ph.nr===2?"F6":"F8");
+    else if(wd===2){ fmt = "F0"; kanal="story"; }
+    else if(wd===3) fmt = schluss ? "F5" : (ph.nr===1?(woche%2?"F5":"F4"):ph.nr===2?"F7":"F9");
+    else if(wd===4){ fmt = ph.nr===1?(woche%2?"F3":"F1"):"F3"; kanal="linkedin"; }
+    else if(wd===5) fmt = "F2";
     if(fmt){
       const F=FORMATE[fmt];
       const nr = fmt==="F2" ? String(checkNr++).padStart(2,"0") : String(out.length+1).padStart(2,"0");
+      const hook = schluss && fmt==="F5"
+        ? "Vier Plätze für Drehtage im Jänner."
+        : F.hooks[(woche+wd)%F.hooks.length];
       out.push(neuerPost({
-        id:iso(d)+"-"+fmt.toLowerCase(),
-        date:iso(d), channel:kanal, format:fmt, type:typ,
-        preset:kanal==="linkedin" ? "papier" : F.preset, stil:F.stil,
-        tag:F.tag, num:nr, ticker:F.ticker, goal:F.goal,
-        hook:F.hooks[(woche+wd)%F.hooks.length],
-        hashtags:HASHTAGS[kanal]
+        id:datum+"-"+fmt.toLowerCase(),
+        date:datum, channel:kanal, format:fmt,
+        type: kanal==="linkedin" ? "linkedin" : F.type,
+        preset: kanal==="linkedin" ? "papier" : F.preset,
+        stil:F.stil, tag:F.tag, num:nr, ticker:F.ticker, goal:F.goal,
+        hook:hook, hashtags:HASHTAGS[kanal]
       }));
     }
     if(wd===0) woche++;
@@ -965,6 +1101,8 @@ const REGELN = [
    t:"Falsches Gebiet", m:"Wels, Linz, Oberösterreich. Wien kommt nicht vor."},
   {id:"guru", sev:"warn", re:/\b(explodier\w*|Game[-\s]?Changer|10x|krass|Geheimnis|revolutionär\w*|unglaublich|viral)\b/gi,
    t:"Guru-Ton", m:"Argument statt Hyperbel. Die Zielgruppe sind Unternehmerinnen, keine Follower."},
+  {id:"wunde", sev:"warn", re:/\b(keine Zeit|Zeitmangel|zu wenig Zeit|Zeit sparen|zeitaufwendig|Zeitfresser)\b/gi,
+   t:"Falsche Wunde", m:"Die Wunde ist Marketing, das etwas von der Kundin verlangt. Nicht fehlende Zeit. Sonst verkaufen Sie Bequemlichkeit statt Ergebnis."},
   {id:"kollegen", sev:"warn", re:/\b(Social[-\s]?Media[-\s]?Manager\w*|SMM|Akquise\w*|Content[-\s]?Planung|Redaktionsplan|Algorithmus|Aufrufe|Community[-\s]?Manager|Agenturalltag|Kundenbudget|Kunde fragt)\b/gi,
    t:"Content für Kolleginnen", m:"Das spricht andere Social-Media-Leute an, nicht Ihre Kundin. Die Ärztin interessiert ihr Terminkalender, nicht Ihr Arbeitsalltag."},
   {id:"meme", sev:"warn", re:/(^|\n)\s*(POV:|Ich wenn\b|True fact|Wenn der Kunde)/gi,
@@ -1015,10 +1153,11 @@ function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localSt
 function kopf(){
   const heute=new Date(), von=new Date(KAMPAGNE.von+"T12:00:00"), bis=new Date(KAMPAGNE.bis+"T12:00:00");
   const tag=Math.floor((heute-von)/864e5)+1, ges=Math.floor((bis-von)/864e5)+1;
+  const ph=phaseVon(iso(heute));
   const txt = heute<von ? "startet in "+Math.ceil((von-heute)/864e5)+" Tagen"
             : heute>bis ? "abgeschlossen"
-            : "Tag "+tag+" von "+ges;
-  $("#camp").innerHTML='<b>Kampagne CHECK</b><span class="num">'+txt+'</span>';
+            : "Tag "+tag+" von "+ges+" · Phase "+ph.nr+" "+ph.name;
+  $("#camp").innerHTML='<b>90 Tage</b><span class="num">'+txt+'</span>';
 }
 
 /* ---------- Beitragsliste ---------- */
@@ -1306,6 +1445,20 @@ async function claudeSlides(btn){
 
 /* ---------- Plan-Ansicht ---------- */
 function planZeichnen(){
+  const heute=iso(new Date());
+  const ph=$("#phasen"); ph.innerHTML="";
+  PHASEN.forEach(f=>{
+    const zahl=S.posts.filter(x=>x.date>=f.von&&x.date<=f.bis).length;
+    const laeuft = heute>=f.von&&heute<=f.bis;
+    const d=document.createElement("div"); d.className="phase"+(laeuft?" jetzt":"");
+    d.innerHTML='<header><h4>PHASE '+f.nr+' · '+f.name.toUpperCase()+'</h4>'+
+      '<span class="pill '+(laeuft?"pill--ok":"")+'">'+(laeuft?"läuft":heute>f.bis?"vorbei":"kommt")+'</span></header>'+
+      '<span class="dat">'+deDate(f.von)+' bis '+deDate(f.bis)+' · '+zahl+' Beiträge</span>'+
+      '<span class="serie">Serie: '+f.serie+'</span>'+
+      '<p>'+esc(f.ziel)+'</p>'+
+      '<p class="gate">'+esc(f.gate)+'</p>';
+    ph.appendChild(d);
+  });
   const g=$("#goals"); g.innerHTML="";
   const geplant={}; S.posts.forEach(p=>{ geplant[p.goal]=(geplant[p.goal]||0)+1; });
   Object.entries(ZIELE).forEach(([k,z])=>{
@@ -1336,7 +1489,7 @@ function planZeichnen(){
   sortiert.forEach(p=>{
     const d=new Date(p.date+"T12:00:00"); const mo=new Date(d); mo.setDate(d.getDate()-((d.getDay()+6)%7));
     if(iso(mo)!==wk){ wk=iso(mo); const tr=document.createElement("tr"); tr.className="wkrow";
-      tr.innerHTML='<td colspan="7">Woche ab '+deDate(wk)+'</td>'; tb.appendChild(tr); }
+      tr.innerHTML='<td colspan="7">Woche ab '+deDate(wk)+' · Phase '+phaseVon(wk).nr+' '+phaseVon(wk).name+'</td>'; tb.appendChild(tr); }
     const res=pruefen(p), hatStop=res.some(r=>r.sev==="stop"), hatWarn=res.some(r=>r.sev==="warn");
     if(hatStop) stopp++; if(p.status==="freigegeben"||p.status==="veroeffentlicht") frei++; else offen++;
     const tr=document.createElement("tr"); tr.className="post";
