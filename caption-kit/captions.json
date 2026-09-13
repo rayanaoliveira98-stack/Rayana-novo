@@ -6,7 +6,10 @@
   "styles": {
     "block_2_3": {
       "label": "2–3 Wörter, fett, zentriert",
-      "wordsPerBlock": { "min": 2, "max": 3 },
+      "wordsPerBlock": {
+        "min": 2,
+        "max": 3
+      },
       "align": "center",
       "verticalPosition": 0.62,
       "fontSizeVh": 6.4,
@@ -24,45 +27,330 @@
   "safeArea": {
     "note": "Prozent der Videohoehe/-breite, die von der Plattform-UI verdeckt werden. Untertitel und Icons muessen innerhalb der freien Zone liegen.",
     "formats": {
-      "9:16": { "top": 0.14, "bottom": 0.22, "left": 0.06, "right": 0.06, "note": "Reels/TikTok: unten Caption + Profilname, rechts Buttonleiste, oben Statusbar." },
-      "4:5": { "top": 0.06, "bottom": 0.12, "left": 0.06, "right": 0.06 },
-      "1:1": { "top": 0.06, "bottom": 0.08, "left": 0.06, "right": 0.06 },
-      "16:9": { "top": 0.08, "bottom": 0.12, "left": 0.05, "right": 0.05, "note": "LinkedIn/YouTube — Untertitel hoeher setzen als bei 9:16." }
+      "9:16": {
+        "top": 0.14,
+        "bottom": 0.22,
+        "left": 0.06,
+        "right": 0.06,
+        "note": "Reels/TikTok: unten Caption + Profilname, rechts Buttonleiste, oben Statusbar."
+      },
+      "4:5": {
+        "top": 0.06,
+        "bottom": 0.12,
+        "left": 0.06,
+        "right": 0.06
+      },
+      "1:1": {
+        "top": 0.06,
+        "bottom": 0.08,
+        "left": 0.06,
+        "right": 0.06
+      },
+      "16:9": {
+        "top": 0.08,
+        "bottom": 0.12,
+        "left": 0.05,
+        "right": 0.05,
+        "note": "LinkedIn/YouTube — Untertitel hoeher setzen als bei 9:16."
+      }
     }
   },
   "germanRules": {
     "note": "Maschinenlesbare Regeln fuer die Untertitel-Generierung. Jede Regel ist ein Fehler, den Auto-Untertitel (CapCut, Opus, Submagic) zuverlaessig produzieren.",
     "orthography": [
-      { "id": "eszett", "rule": "In Österreich und Deutschland gilt ß. Nur die Schweiz schreibt ss.", "wrong": ["Strasse", "gross", "heisst"], "right": ["Straße", "groß", "heißt"] },
-      { "id": "umlaute", "rule": "Umlaute nie als ae/oe/ue ersetzen.", "wrong": ["Fachkraefte", "Loesung"], "right": ["Fachkräfte", "Lösung"] },
-      { "id": "nomen_gross", "rule": "Nomen werden großgeschrieben — auch englische Lehnwörter, die als Nomen benutzt werden.", "wrong": ["das content", "mehr leads"], "right": ["der Content", "mehr Leads"] },
-      { "id": "verben_klein", "rule": "Aus Nomen abgeleitete Verben und Adjektive bleiben klein.", "wrong": ["viral Gehen", "Skalieren wir"], "right": ["viral gehen", "skalieren wir"] },
-      { "id": "email", "rule": "E-Mail mit Bindestrich und großem M.", "wrong": ["Email", "E-mail", "eMail"], "right": ["E-Mail"] }
+      {
+        "id": "eszett",
+        "rule": "In Österreich und Deutschland gilt ß. Nur die Schweiz schreibt ss.",
+        "wrong": [
+          "Strasse",
+          "gross",
+          "heisst"
+        ],
+        "right": [
+          "Straße",
+          "groß",
+          "heißt"
+        ]
+      },
+      {
+        "id": "umlaute",
+        "rule": "Umlaute nie als ae/oe/ue ersetzen.",
+        "wrong": [
+          "Fachkraefte",
+          "Loesung"
+        ],
+        "right": [
+          "Fachkräfte",
+          "Lösung"
+        ]
+      },
+      {
+        "id": "nomen_gross",
+        "rule": "Nomen werden großgeschrieben — auch englische Lehnwörter, die als Nomen benutzt werden.",
+        "wrong": [
+          "das content",
+          "mehr leads"
+        ],
+        "right": [
+          "der Content",
+          "mehr Leads"
+        ]
+      },
+      {
+        "id": "verben_klein",
+        "rule": "Aus Nomen abgeleitete Verben und Adjektive bleiben klein.",
+        "wrong": [
+          "viral Gehen",
+          "Skalieren wir"
+        ],
+        "right": [
+          "viral gehen",
+          "skalieren wir"
+        ]
+      },
+      {
+        "id": "email",
+        "rule": "E-Mail mit Bindestrich und großem M.",
+        "wrong": [
+          "Email",
+          "E-mail",
+          "eMail"
+        ],
+        "right": [
+          "E-Mail"
+        ]
+      }
     ],
     "compounds": [
-      { "id": "durchkoppeln", "rule": "Mehrteilige englische Begriffe in deutschen Komposita durchkoppeln — alle Teile mit Bindestrich.", "wrong": ["Social Media Strategie", "Meta Ads Kampagne", "Employer Branding Strategie"], "right": ["Social-Media-Strategie", "Meta-Ads-Kampagne", "Employer-Branding-Strategie"] },
-      { "id": "kein_deppenleerzeichen", "rule": "Deutsche Komposita werden zusammengeschrieben, nicht getrennt.", "wrong": ["Content Plan", "Bewerber Mangel"], "right": ["Contentplan", "Bewerbermangel"] },
-      { "id": "englisch_pur", "rule": "Rein englische Fachbegriffe bleiben getrennt und ohne Bindestrich.", "right": ["Meta Ads", "Employer Branding", "Cost per Lead"] }
+      {
+        "id": "durchkoppeln",
+        "rule": "Mehrteilige englische Begriffe in deutschen Komposita durchkoppeln — alle Teile mit Bindestrich.",
+        "wrong": [
+          "Social Media Strategie",
+          "Meta Ads Kampagne",
+          "Employer Branding Strategie"
+        ],
+        "right": [
+          "Social-Media-Strategie",
+          "Meta-Ads-Kampagne",
+          "Employer-Branding-Strategie"
+        ]
+      },
+      {
+        "id": "kein_deppenleerzeichen",
+        "rule": "Deutsche Komposita werden zusammengeschrieben, nicht getrennt.",
+        "wrong": [
+          "Content Plan",
+          "Bewerber Mangel"
+        ],
+        "right": [
+          "Contentplan",
+          "Bewerbermangel"
+        ]
+      },
+      {
+        "id": "englisch_pur",
+        "rule": "Rein englische Fachbegriffe bleiben getrennt und ohne Bindestrich.",
+        "right": [
+          "Meta Ads",
+          "Employer Branding",
+          "Cost per Lead"
+        ]
+      }
     ],
     "numbers": [
-      { "id": "ziffern", "rule": "Im Untertitel immer Ziffern statt ausgeschriebener Zahlen — schneller erfassbar, spart Platz im 3-Wort-Block.", "wrong": ["dreitausend Euro"], "right": ["3.000 €"] },
-      { "id": "tausender", "rule": "Punkt als Tausendertrennzeichen, Komma als Dezimaltrennzeichen.", "wrong": ["3,000 Euro", "2.5 Prozent"], "right": ["3.000 €", "2,5 %"] },
-      { "id": "einheit_abstand", "rule": "Geschütztes Leerzeichen vor €, %, kg — und der Block darf dort nicht umbrechen.", "right": ["3.000 €", "12 %"] }
+      {
+        "id": "ziffern",
+        "rule": "Im Untertitel immer Ziffern statt ausgeschriebener Zahlen — schneller erfassbar, spart Platz im 3-Wort-Block.",
+        "wrong": [
+          "dreitausend Euro"
+        ],
+        "right": [
+          "3.000 €"
+        ]
+      },
+      {
+        "id": "tausender",
+        "rule": "Punkt als Tausendertrennzeichen, Komma als Dezimaltrennzeichen.",
+        "wrong": [
+          "3,000 Euro",
+          "2.5 Prozent"
+        ],
+        "right": [
+          "3.000 €",
+          "2,5 %"
+        ]
+      },
+      {
+        "id": "einheit_abstand",
+        "rule": "Geschütztes Leerzeichen vor €, %, kg — und der Block darf dort nicht umbrechen.",
+        "right": [
+          "3.000 €",
+          "12 %"
+        ]
+      }
     ],
     "punctuation": [
-      { "id": "kein_satzende", "rule": "Punkte am Blockende weglassen — sie bremsen den Lesefluss und kosten Platz. Frage- und Rufzeichen bleiben, weil sie Tonfall tragen.", "wrong": ["Das ist der Fehler."], "right": ["Das ist der Fehler"] },
-      { "id": "anfuehrung", "rule": "Deutsche Anführungszeichen: „unten und oben“.", "wrong": ["\"Strategie\""], "right": ["„Strategie“"] },
-      { "id": "gedankenstrich", "rule": "Halbgeviertstrich mit Leerzeichen, kein Bindestrich.", "wrong": ["Leads - aber günstig"], "right": ["Leads – aber günstig"] }
+      {
+        "id": "kein_satzende",
+        "rule": "Punkte am Blockende weglassen — sie bremsen den Lesefluss und kosten Platz. Frage- und Rufzeichen bleiben, weil sie Tonfall tragen.",
+        "wrong": [
+          "Das ist der Fehler."
+        ],
+        "right": [
+          "Das ist der Fehler"
+        ]
+      },
+      {
+        "id": "anfuehrung",
+        "rule": "Deutsche Anführungszeichen: „unten und oben“.",
+        "wrong": [
+          "\"Strategie\""
+        ],
+        "right": [
+          "„Strategie“"
+        ]
+      },
+      {
+        "id": "gedankenstrich",
+        "rule": "Halbgeviertstrich mit Leerzeichen, kein Bindestrich.",
+        "wrong": [
+          "Leads - aber günstig"
+        ],
+        "right": [
+          "Leads – aber günstig"
+        ]
+      }
     ],
     "segmentation": [
-      { "id": "sinneinheit", "rule": "Blöcke nie mitten in einer Sinneinheit trennen. Artikel, Präposition und Nomen bleiben zusammen.", "wrong": ["'mit der' | 'Zielgruppe reden'"], "right": ["'mit der Zielgruppe' | 'reden'"] },
-      { "id": "verbklammer", "rule": "Deutsche Verbklammer beachten: trennbares Präfix möglichst im selben oder direkt folgenden Block.", "right": ["'wir bauen' | 'den Funnel auf'"] },
-      { "id": "keyword_am_block", "rule": "Ein Keyword mit Icon steht nie als letztes Wort eines Blocks — sonst verschwindet das Icon, bevor es gelesen ist. Block so schneiden, dass das Keyword mittig sitzt.", "priority": "hoch" }
+      {
+        "id": "sinneinheit",
+        "rule": "Blöcke nie mitten in einer Sinneinheit trennen. Artikel, Präposition und Nomen bleiben zusammen.",
+        "wrong": [
+          "'mit der' | 'Zielgruppe reden'"
+        ],
+        "right": [
+          "'mit der Zielgruppe' | 'reden'"
+        ]
+      },
+      {
+        "id": "verbklammer",
+        "rule": "Deutsche Verbklammer beachten: trennbares Präfix möglichst im selben oder direkt folgenden Block.",
+        "right": [
+          "'wir bauen' | 'den Funnel auf'"
+        ]
+      },
+      {
+        "id": "keyword_am_block",
+        "rule": "Ein Keyword mit Icon steht nie als letztes Wort eines Blocks — sonst verschwindet das Icon, bevor es gelesen ist. Block so schneiden, dass das Keyword mittig sitzt.",
+        "priority": "hoch"
+      }
     ],
     "tone": [
-      { "id": "du_form", "rule": "Konsequent Du-Form über das ganze Video. Mischung aus Du und Sie wirkt unsicher.", "default": "du" },
-      { "id": "gendern", "rule": "Wenn gegendert wird, dann konsequent und in einer Form (Doppelpunkt). Halbe Gendersprache fällt negativ auf.", "default": "aus", "form": "doppelpunkt" },
-      { "id": "at_vokabular", "rule": "Österreichisches Vokabular verwenden, wenn die Zielgruppe in AT sitzt.", "pairs": [["Lehre", "Ausbildung (DE)"], ["Jänner", "Januar (DE)"], ["heuer", "dieses Jahr (DE)"], ["Bewerbungsgespräch", "Vorstellungsgespräch (DE)"]] }
+      {
+        "id": "du_form",
+        "rule": "Konsequent Du-Form über das ganze Video. Mischung aus Du und Sie wirkt unsicher.",
+        "default": "du"
+      },
+      {
+        "id": "gendern",
+        "rule": "Wenn gegendert wird, dann konsequent und in einer Form (Doppelpunkt). Halbe Gendersprache fällt negativ auf.",
+        "default": "aus",
+        "form": "doppelpunkt"
+      },
+      {
+        "id": "at_vokabular",
+        "rule": "Österreichisches Vokabular verwenden, wenn die Zielgruppe in AT sitzt.",
+        "pairs": [
+          [
+            "Lehre",
+            "Ausbildung (DE)"
+          ],
+          [
+            "Jänner",
+            "Januar (DE)"
+          ],
+          [
+            "heuer",
+            "dieses Jahr (DE)"
+          ],
+          [
+            "Bewerbungsgespräch",
+            "Vorstellungsgespräch (DE)"
+          ]
+        ]
+      }
     ]
+  },
+  "activePaceProfile": "hook_15_30",
+  "paceProfiles": {
+    "note": "Tempo-Profile. Sie ueberschreiben Blockdauer, Schriftgroesse und Icon-Dichte. Rayana faehrt 15-30 s Hooks und 30-60 s Standard — beide Profile sind darauf kalibriert.",
+    "hook_15_30": {
+      "label": "15–30 s Hook-Reel",
+      "use": "Hohes Sprechtempo, harte Betonung, schneller Blockwechsel. Fuer Reels und TikTok, die in 2 Sekunden stoppen muessen.",
+      "minBlockMs": 300,
+      "maxBlockMs": 900,
+      "wordsPerBlock": {
+        "min": 2,
+        "max": 3
+      },
+      "fontSizeVh": 7.2,
+      "verticalPosition": 0.6,
+      "transition": "push_up",
+      "density": {
+        "maxIconsPer10s": 4,
+        "maxIconsPerBlock": 1,
+        "minGapBetweenIconsMs": 900,
+        "hookWindowMs": 2000,
+        "hookWindowMaxIcons": 1
+      },
+      "note": "Hoehere Icon-Dichte ist hier richtig: bei 25 Sekunden Laufzeit sind 4 Icons pro 10 s ein Rhythmus, kein Chaos. Das Hook-Fenster bleibt trotzdem bei genau einem Icon — in den ersten 2 Sekunden konkurriert nichts mit dem Gesicht und dem ersten Satz."
+    },
+    "standard_30_60": {
+      "label": "30–60 s Standard",
+      "use": "Ausgewogenes Tempo fuer Erklaer-Reels, Employer-Branding und Case-Videos.",
+      "minBlockMs": 420,
+      "maxBlockMs": 1400,
+      "wordsPerBlock": {
+        "min": 2,
+        "max": 3
+      },
+      "fontSizeVh": 6.4,
+      "verticalPosition": 0.62,
+      "transition": "push_up",
+      "density": {
+        "maxIconsPer10s": 3,
+        "maxIconsPerBlock": 1,
+        "minGapBetweenIconsMs": 1200,
+        "hookWindowMs": 2000,
+        "hookWindowMaxIcons": 1
+      },
+      "note": "Ueber 30 Sekunden braucht das Auge mehr Luft zwischen den Icons, sonst kippt es von Rhythmus in Hektik."
+    }
+  },
+  "activeGenderProfile": "by_audience",
+  "genderProfiles": {
+    "note": "Gendern wird nach Zielgruppe geschaltet, nicht pauschal. Der Renderer waehlt pro Video ein audience-Flag; Keywords mit displayVariants liefern die passende Form.",
+    "by_audience": {
+      "label": "Nach Zielgruppe getrennt",
+      "audiences": {
+        "b2c_bewerber": {
+          "label": "Bewerber-Content (B2C)",
+          "mode": "doppelpunkt",
+          "variant": "gendered",
+          "rationale": "Wer sich bewirbt, liest die Anzeige als Signal fuer die Unternehmenskultur. Gegenderte Ansprache senkt hier die Hemmschwelle — besonders in Pflege, Handel und Buero.",
+          "blockBudget": "Gegenderte Formen sind laenger. Bei wordsPerBlock max 3 faellt dadurch haeufiger ein Wort in den Folgeblock — minBlockMs entsprechend nicht unter 320 ms setzen."
+        },
+        "b2b_unternehmen": {
+          "label": "Unternehmens-Content (B2B)",
+          "mode": "aus",
+          "variant": "neutral",
+          "rationale": "Geschaeftsfuehrer und Personalverantwortliche entscheiden nach Kosten, Tempo und Verfuegbarkeit. Kuerzere Bloecke, hoehere Lesegeschwindigkeit."
+        }
+      },
+      "consistency": "Innerhalb eines Videos wird nie gemischt. Halbe Gendersprache faellt negativ auf und wirkt unsicher — schlimmer als beide Reinformen.",
+      "form": "doppelpunkt",
+      "formNote": "Doppelpunkt statt Sternchen: wird von Screenreadern sauberer gelesen und bricht die Typografie im fetten Blocksatz weniger auf."
+    }
   }
 }

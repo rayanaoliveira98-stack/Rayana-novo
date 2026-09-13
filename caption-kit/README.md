@@ -176,3 +176,44 @@ Dann `node caption-kit/validate.mjs`. Der Validator fängt ab:
 `captions.json → safeArea` als Anteil der Videofläche. Bei 9:16 sind unten 22 % gesperrt: Caption, Profilname, Musiktitel. `verticalPosition: 0.62` liegt bewusst darüber — Untertitel im unteren Drittel, aber oberhalb der Plattform-UI.
 
 Für LinkedIn und YouTube (16:9) den Untertitel höher setzen, dort ist die Sperrzone anders geschnitten.
+
+---
+
+## Die App: `caption-app/`
+
+`caption-app/index.html` im Browser öffnen — kein Server, kein Build, kein Install. Doppelklick reicht.
+
+**Was sie macht:** Skript rein → Blöcke geschnitten, Grammatik geprüft, Keywords erkannt, Icons zugeordnet, animiert auf einer echten 9:16-Bühne.
+
+| Bedienelement | Funktion |
+|---|---|
+| Skript | Voiceover-Text. Alles rechnet live neu |
+| Marke | Black Strategie ↔ Neutral, Farben und Typo schalten sofort um |
+| Tempo | 15–30 s Hook ↔ 30–60 s Standard — ändert Blockdauer, Schriftgröße, Icon-Dichte |
+| Zielgruppe | Bewerber-Content gendert (`Bewerber:innen`), Unternehmens-Content nicht |
+| Übergang | `push_up`, `scale_through`, `word_swap` |
+| Safe Area | Blendet die Plattform-Sperrzonen ein |
+| Aufnahmemodus | Oberfläche weg, Bühne auf Vollbild — Bildschirmaufnahme starten |
+| SRT / JSON | Export mit Timing, Betonung und Icon-Zuordnung pro Block |
+
+**Grammatik-Check** läuft live gegen das Regelwerk aus `captions.json`: ss statt ß, umschriebene Umlaute, „Email", Deppenleerzeichen, ausgeschriebene Zahlen, falsche Anführungszeichen, Sie-Form im Du-Video, „Communities", „Followers", „Contents".
+
+**Blockschnitt** respektiert deutsche Sinneinheiten: ein Block endet nie auf Artikel, Präposition oder Konjunktion — und nie auf einem Keyword mit Icon, weil das Icon sonst verschwindet, bevor es gelesen ist.
+
+**Die Timings sind geschätzt** (≈45 ms pro Zeichen), nicht aus Audio gemessen. Für den Schnitt reicht das als Vorlage; wer frame-genau will, nimmt die JSON-Ausgabe und zieht die Zeiten auf die echte Tonspur.
+
+### Bibliothek ändern
+
+```bash
+# 1. Keyword ergänzen in caption-kit/keywords.json
+# 2. Prüfen
+node caption-kit/validate.mjs
+# 3. In die App übernehmen
+node caption-kit/build-bundle.mjs
+```
+
+`caption-app/library.js` ist generiert — nie von Hand bearbeiten.
+
+### Schriften
+
+Die App lädt **Archivo** von Google Fonts. Ohne Internet fällt sie auf die System-Grotesk zurück — Layout und Timing bleiben identisch, nur der Schriftschnitt ändert sich.

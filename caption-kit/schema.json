@@ -3,47 +3,140 @@
   "$id": "https://black-strategie.at/caption-kit/schema.json",
   "title": "Caption Kit — Keyword-Bibliothek",
   "type": "object",
-  "required": ["version", "language", "defaults", "density", "matching", "keywords"],
+  "required": [
+    "version",
+    "language",
+    "defaults",
+    "density",
+    "matching",
+    "keywords"
+  ],
   "properties": {
-    "$schema": { "type": "string" },
-    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
-    "language": { "type": "string" },
-    "updated": { "type": "string", "format": "date" },
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "language": {
+      "type": "string"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
     "defaults": {
       "type": "object",
-      "required": ["captionStyle", "iconStyle", "motion", "accent", "priority"],
+      "required": [
+        "captionStyle",
+        "iconStyle",
+        "motion",
+        "accent",
+        "priority"
+      ],
       "properties": {
-        "captionStyle": { "type": "string" },
-        "iconStyle": { "type": "string", "enum": ["line"] },
-        "motion": { "type": "string" },
-        "accent": { "type": "string" },
-        "priority": { "type": "integer", "minimum": 1, "maximum": 3 }
+        "captionStyle": {
+          "type": "string"
+        },
+        "iconStyle": {
+          "type": "string",
+          "enum": [
+            "line"
+          ]
+        },
+        "motion": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        }
       }
     },
     "density": {
       "type": "object",
-      "required": ["maxIconsPer10s", "maxIconsPerBlock", "minGapBetweenIconsMs", "fallbackWhenSuppressed"],
+      "required": [
+        "maxIconsPer10s",
+        "maxIconsPerBlock",
+        "minGapBetweenIconsMs",
+        "fallbackWhenSuppressed"
+      ],
       "properties": {
-        "note": { "type": "string" },
-        "maxIconsPer10s": { "type": "integer", "minimum": 1, "maximum": 8 },
-        "maxIconsPerBlock": { "type": "integer", "minimum": 1, "maximum": 2 },
-        "minGapBetweenIconsMs": { "type": "integer", "minimum": 0 },
-        "fallbackWhenSuppressed": { "type": "string", "enum": ["emphasis_only", "none"] },
-        "hookWindowMs": { "type": "integer", "minimum": 0 },
-        "hookWindowMaxIcons": { "type": "integer", "minimum": 0 }
+        "note": {
+          "type": "string"
+        },
+        "maxIconsPer10s": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "maxIconsPerBlock": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "minGapBetweenIconsMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fallbackWhenSuppressed": {
+          "type": "string",
+          "enum": [
+            "emphasis_only",
+            "none"
+          ]
+        },
+        "hookWindowMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hookWindowMaxIcons": {
+          "type": "integer",
+          "minimum": 0
+        }
       }
     },
     "matching": {
       "type": "object",
-      "required": ["mode", "caseSensitive", "inflectionSuffixes"],
+      "required": [
+        "mode",
+        "caseSensitive",
+        "inflectionSuffixes"
+      ],
       "properties": {
-        "mode": { "type": "string", "enum": ["word", "phrase"] },
-        "caseSensitive": { "type": "boolean" },
-        "normalizeUmlauts": { "type": "boolean" },
-        "note": { "type": "string" },
-        "inflectionSuffixes": { "type": "array", "items": { "type": "string" } },
-        "compoundMatch": { "type": "boolean" },
-        "compoundNote": { "type": "string" }
+        "mode": {
+          "type": "string",
+          "enum": [
+            "word",
+            "phrase"
+          ]
+        },
+        "caseSensitive": {
+          "type": "boolean"
+        },
+        "normalizeUmlauts": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string"
+        },
+        "inflectionSuffixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compoundMatch": {
+          "type": "boolean"
+        },
+        "compoundNote": {
+          "type": "string"
+        }
       }
     },
     "keywords": {
@@ -51,26 +144,130 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "match", "icon", "category", "priority", "display"],
+        "required": [
+          "id",
+          "match",
+          "icon",
+          "category",
+          "priority",
+          "display"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
-          "match": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
-          "icon": { "type": "string", "description": "muss ein Key aus icons.json sein" },
-          "category": { "type": "string", "enum": ["ki", "social", "recruiting", "branche", "ads", "business", "emotion", "lokal"] },
-          "priority": { "type": "integer", "minimum": 1, "maximum": 3, "description": "3 = bekommt das Icon im Zweifel, 1 = weicht zuerst" },
-          "display": { "type": "string", "minLength": 1, "description": "So erscheint das Wort im Untertitel — grammatisch korrekt" },
-          "motion": { "type": "string", "description": "optionaler Override des categoryPresets aus motion.json" },
-          "accent": { "type": "string", "description": "optionaler Token-Override aus brands.json" },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "match": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "icon": {
+            "type": "string",
+            "description": "muss ein Key aus icons.json sein"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "ki",
+              "social",
+              "recruiting",
+              "branche",
+              "ads",
+              "business",
+              "emotion",
+              "lokal"
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "3 = bekommt das Icon im Zweifel, 1 = weicht zuerst"
+          },
+          "display": {
+            "type": "string",
+            "minLength": 1,
+            "description": "So erscheint das Wort im Untertitel — grammatisch korrekt"
+          },
+          "motion": {
+            "type": "string",
+            "description": "optionaler Override des categoryPresets aus motion.json"
+          },
+          "accent": {
+            "type": "string",
+            "description": "optionaler Token-Override aus brands.json"
+          },
           "grammar": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "type": { "type": "string", "enum": ["nomen", "verb", "adjektiv", "eigenname", "abkuerzung"] },
-              "genus": { "type": ["string", "null"], "enum": ["m", "f", "n", null] },
-              "artikel": { "type": ["string", "null"], "enum": ["der", "die", "das", null] },
-              "plural": { "type": ["string", "null"] },
-              "note": { "type": "string" }
+              "type": {
+                "type": "string",
+                "enum": [
+                  "nomen",
+                  "verb",
+                  "adjektiv",
+                  "eigenname",
+                  "abkuerzung"
+                ]
+              },
+              "genus": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "m",
+                  "f",
+                  "n",
+                  null
+                ]
+              },
+              "artikel": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "der",
+                  "die",
+                  "das",
+                  null
+                ]
+              },
+              "plural": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          },
+          "displayVariants": {
+            "type": "object",
+            "description": "Zielgruppenabhaengige Schreibweise. Der Renderer waehlt ueber genderProfiles.audiences[...].variant.",
+            "required": [
+              "neutral",
+              "gendered"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "neutral": {
+                "type": "string",
+                "minLength": 1
+              },
+              "gendered": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }

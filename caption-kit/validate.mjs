@@ -136,3 +136,46 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(`\nAlles konsistent.${warnings.length ? ` ${warnings.length} Hinweis(e).` : ''}`);
+
+// ── Profile (nachtraeglich ergaenzt) ────────────────────────────────────────
+const profileErrors = [];
+const pace = captions.paceProfiles?.[captions.activePaceProfile];
+if (!pace) profileErrors.push(`captions.json: activePaceProfile "${captions.activePaceProfile}" existiert nicht.`);
+for (const [id, pr] of Object.entries(captions.paceProfiles || {})) {
+  if (id === 'note') continue;
+  if (pr.minBlockMs >= pr.maxBlockMs) profileErrors.push(`captions.json: paceProfile "${id}" minBlockMs >= maxBlockMs.`);
+  if (!motion.captionTransitions.variants[pr.transition]) profileErrors.push(`captions.json: paceProfile "${id}" nutzt unbekannten Uebergang "${pr.transition}".`);
+  const d = pr.density || {};
+  if (d.maxIconsPerBlock > 1) profileErrors.push(`captions.json: paceProfile "${id}" erlaubt mehr als 1 Icon pro Block — widerspricht der Dichteregel.`);
+  if (d.hookWindowMaxIcons > 1) profileErrors.push(`captions.json: paceProfile "${id}" laesst mehr als 1 Icon im Hook-Fenster zu.`);
+  // Bei maxIconsPer10s Icons darf minGapBetweenIconsMs nicht laenger sein als das Fenster hergibt.
+  if (d.maxIconsPer10s && d.minGapBetweenIconsMs && d.maxIconsPer10s * d.minGapBetweenIconsMs > 10000) {
+    profileErrors.push(`captions.json: paceProfile "${id}" ist in sich widerspruechlich — ${d.maxIconsPer10s} Icons mit ${d.minGapBetweenIconsMs} ms Abstand passen nicht in 10 s.`);
+  }
+  const sa = captions.safeArea.formats['9:16'];
+  if (pr.verticalPosition >= 1 - sa.bottom) profileErrors.push(`captions.json: paceProfile "${id}" verticalPosition liegt bei 9:16 unter der Plattform-UI.`);
+}
+
+const gp = captions.genderProfiles?.[captions.activeGenderProfile];
+if (!gp) profileErrors.push(`captions.json: activeGenderProfile "${captions.activeGenderProfile}" existiert nicht.`);
+else {
+  for (const [aid, a] of Object.entries(gp.audiences || {})) {
+    if (!['neutral', 'gendered'].includes(a.variant)) profileErrors.push(`captions.json: audience "${aid}" hat unbekannte variant "${a.variant}".`);
+  }
+  const needsGendered = Object.values(gp.audiences || {}).some((a) => a.variant === 'gendered');
+  if (needsGendered) {
+    const withVariants = keywords.keywords.filter((k) => k.displayVariants);
+    if (!withVariants.length) profileErrors.push('captions.json: ein Profil verlangt gegenderte Formen, aber kein Keyword hat displayVariants.');
+    for (const k of withVariants) {
+      if (k.displayVariants.neutral !== k.display) profileErrors.push(`keywords.json: "${k.id}" displayVariants.neutral weicht von display ab.`);
+      if (k.displayVariants.gendered === k.displayVariants.neutral) profileErrors.push(`keywords.json: "${k.id}" hat identische Varianten — dann weglassen.`);
+    }
+  }
+}
+
+if (profileErrors.length) {
+  for (const e of profileErrors) console.log(`FEHLER   ${e}`);
+  console.log(`\n${profileErrors.length} Fehler in den Profilen.`);
+  process.exit(1);
+}
+console.log(`Profile        Tempo: ${captions.activePaceProfile} (${Object.keys(captions.paceProfiles).length - 1} verfügbar) · Gendern: ${captions.activeGenderProfile}`);

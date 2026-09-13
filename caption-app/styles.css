@@ -1,0 +1,109 @@
+:root {
+  --paper: #000; --ink: #fff; --ink-muted: #8e8e93; --accent: #d4b483;
+  --accent-ink: #000; --signal: #ff3b30; --shadow: rgba(0,0,0,.7);
+  --ui-bg: #0d0d0f; --ui-panel: #161619; --ui-line: #262629; --ui-text: #e8e8ea;
+  --ui-dim: #85858c; --font-caption: "Archivo", "Inter Tight", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ui-bg); color: var(--ui-text);
+  font: 14px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif; }
+
+.shell { display: grid; grid-template-columns: 380px 1fr; min-height: 100vh; }
+.panel { background: var(--ui-panel); border-right: 1px solid var(--ui-line);
+  padding: 20px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto;
+  max-height: 100vh; }
+.stagewrap { display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+h1 { font: 700 15px/1.2 var(--font-caption); margin: 0; letter-spacing: -.01em; }
+h1 small { display: block; color: var(--ui-dim); font-weight: 400; font-size: 11px;
+  letter-spacing: 0; margin-top: 4px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--ui-dim); }
+textarea, select { width: 100%; background: #0a0a0c; color: var(--ui-text);
+  border: 1px solid var(--ui-line); border-radius: 8px; padding: 10px 11px;
+  font: inherit; font-size: 13px; }
+textarea { min-height: 132px; resize: vertical; line-height: 1.55; }
+textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+button { flex: 1; min-width: 84px; background: #1e1e22; color: var(--ui-text);
+  border: 1px solid var(--ui-line); border-radius: 8px; padding: 9px 12px;
+  font: 600 13px/1 inherit; cursor: pointer; transition: background .15s, border-color .15s; }
+button:hover { background: #26262b; border-color: #3a3a40; }
+button.primary { background: var(--accent); color: #000; border-color: var(--accent); }
+button.primary:hover { filter: brightness(1.08); }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat { background: #0a0a0c; border: 1px solid var(--ui-line); border-radius: 8px;
+  padding: 9px 10px; }
+.stat b { display: block; font: 700 17px/1.1 var(--font-caption); color: var(--ink); }
+.stat span { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--ui-dim); }
+
+.checks { display: flex; flex-direction: column; gap: 6px; }
+.check { background: #1a1410; border: 1px solid #3a2b1c; border-left: 2px solid var(--accent);
+  border-radius: 6px; padding: 8px 10px; font-size: 12px; line-height: 1.45; }
+.check b { color: var(--accent); font-weight: 700; }
+.check.ok { background: #0d1a12; border-color: #1d3a28; border-left-color: #35d07f; }
+.check.ok b { color: #35d07f; }
+
+/* ── Bühne 9:16 ───────────────────────────────────────────────────────── */
+.stage { position: relative; aspect-ratio: 9/16; height: min(88vh, 900px);
+  background: var(--paper); border-radius: 14px; overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0,0,0,.6); }
+.stage::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.05), transparent 60%); }
+/* Dauerhafte Drift — verhindert, dass das Bild in Sprechpausen einfriert. */
+.ambient { position: absolute; inset: -6%; background:
+  radial-gradient(60% 40% at 30% 25%, rgba(212,180,131,.13), transparent 70%),
+  radial-gradient(50% 40% at 75% 70%, rgba(255,255,255,.07), transparent 70%);
+  animation: kenburns 12s cubic-bezier(.45,0,.55,1) infinite alternate; }
+@keyframes kenburns {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.06) translate(-1.5%, 1.2%); }
+}
+.safe { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .2s; }
+.safe.on { opacity: 1; }
+.safe i { position: absolute; left: 0; right: 0; background: rgba(255,59,48,.1);
+  border-block: 1px dashed rgba(255,59,48,.35); }
+
+.track { position: absolute; left: 6%; right: 6%; transform: translateY(-50%);
+  display: grid; place-items: center; }
+/* Alle Bloecke teilen sich dieselbe Gitterzelle — der ausgehende und der
+   eingehende Block liegen damit exakt uebereinander statt untereinander. */
+.block { grid-area: 1/1; width: 100%; text-align: center; position: relative;
+  font-family: var(--font-caption); font-weight: 800; letter-spacing: -.02em;
+  line-height: 1.06; color: var(--ink); text-shadow: 0 2px 18px var(--shadow);
+  will-change: transform, opacity, filter; }
+.block .w { display: inline-block; margin: 0 .14em; }
+.block .w.em { color: var(--accent); }
+/* Idle-Drift: laeuft weiter, nachdem die Einblendung fertig ist. */
+.block .inner { display: block; animation: breathe 2600ms cubic-bezier(.45,0,.55,1) infinite alternate; }
+@keyframes breathe {
+  from { transform: scale(1) translateY(0) rotate(-.3deg); }
+  to   { transform: scale(1.035) translateY(-3px) rotate(.3deg); }
+}
+.icon { position: absolute; left: 50%; bottom: 100%; margin-bottom: .22em;
+  width: 1.6em; height: 1.6em;
+  color: var(--accent); will-change: transform, opacity, filter; }
+.icon .inner { display: block; width: 100%; height: 100%;
+  animation: breathe 3000ms cubic-bezier(.45,0,.55,1) infinite alternate; }
+.icon svg { width: 100%; height: 100%; display: block; }
+
+.hint { color: var(--ui-dim); font-size: 11px; line-height: 1.5; }
+.hint code { color: var(--accent); font-size: 11px; }
+
+body.record .panel { display: none; }
+body.record .shell { grid-template-columns: 1fr; }
+body.record { background: #000; }
+body.record .stagewrap { padding: 0; height: 100vh; }
+body.record .stage { height: 100vh; border-radius: 0; box-shadow: none; }
+.exit-record { position: fixed; top: 12px; right: 12px; z-index: 9; display: none;
+  width: auto; flex: none; opacity: .25; }
+body.record .exit-record { display: block; }
+.exit-record:hover { opacity: 1; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .panel { max-height: none; border-right: 0; border-bottom: 1px solid var(--ui-line); }
+  .stage { height: min(70vh, 700px); }
+}

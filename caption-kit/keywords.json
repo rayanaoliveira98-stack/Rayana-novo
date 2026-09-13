@@ -24,93 +24,1443 @@
     "caseSensitive": false,
     "normalizeUmlauts": false,
     "note": "Wortgrenzen-Match auf den Untertitel-Tokens, nicht auf dem Rohtext. Deutsche Beugung wird ueber inflectionSuffixes abgedeckt; feste Eigennamen (GPT, TikTok) stehen explizit in match und werden nie gebeugt.",
-    "inflectionSuffixes": ["", "s", "es", "n", "en", "er", "e", "in", "innen"],
+    "inflectionSuffixes": [
+      "",
+      "s",
+      "es",
+      "n",
+      "en",
+      "er",
+      "e",
+      "in",
+      "innen"
+    ],
     "compoundMatch": true,
     "compoundNote": "Treffer auch als Teil eines Kompositums: 'Fachkraeftemangel' triggert 'fachkraefte', 'Werbebudget' triggert 'budget'. Icon sitzt am Kompositum, nicht am Teilwort."
   },
   "keywords": [
-    { "id": "gpt", "match": ["GPT", "ChatGPT", "Chat GPT", "GPT-5"], "icon": "robot", "category": "ki", "priority": 3, "display": "GPT", "grammar": { "type": "eigenname", "note": "Nie beugen, nie kleinschreiben. 'mit GPT', nicht 'mit dem GPT'." } },
-    { "id": "ki", "match": ["KI", "Künstliche Intelligenz", "künstlicher Intelligenz", "AI"], "icon": "sparkle", "category": "ki", "priority": 3, "display": "KI", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die KIs", "note": "Im Deutschen 'KI', nicht 'AI'. Nur bei Marken-/Produktnamen 'AI' stehen lassen." } },
-    { "id": "chatbot", "match": ["Chatbot", "Chat-Bot", "Bot"], "icon": "chat", "category": "ki", "priority": 3, "display": "Chatbot", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Chatbots" } },
-    { "id": "automatisierung", "match": ["Automatisierung", "automatisiert", "automatisieren", "Automation"], "icon": "bolt", "category": "ki", "priority": 2, "display": "Automatisierung", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Automatisierungen" } },
-    { "id": "prompt", "match": ["Prompt", "prompten", "Prompt-Engineering"], "icon": "terminal", "category": "ki", "priority": 2, "display": "Prompt", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Prompts" } },
-    { "id": "algorithmus", "match": ["Algorithmus", "Algorithmen"], "icon": "layers", "category": "ki", "priority": 2, "display": "Algorithmus", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Algorithmen", "note": "Plural ist 'Algorithmen'. 'Algorithmusse' existiert nicht." } },
-    { "id": "workflow", "match": ["Workflow", "Prozess", "Prozesse", "Ablauf"], "icon": "repeat", "category": "ki", "priority": 1, "display": "Workflow", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Workflows" } },
-
-    { "id": "community", "match": ["Community"], "icon": "users", "category": "social", "priority": 3, "display": "Community", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Communitys", "note": "Deutscher Plural laut Duden: 'Communitys' — nicht 'Communities'." } },
-    { "id": "content", "match": ["Content"], "icon": "camera", "category": "social", "priority": 2, "display": "Content", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": null, "note": "Nur Singular. 'Contents' im Deutschen vermeiden — stattdessen 'Content-Formate' oder 'Beitraege'." } },
-    { "id": "reel", "match": ["Reel"], "icon": "play", "category": "social", "priority": 3, "display": "Reel", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Reels" } },
-    { "id": "story", "match": ["Story", "Stories"], "icon": "play", "category": "social", "priority": 1, "display": "Story", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Storys", "note": "Deutscher Plural: 'Storys'. 'Stories' nur, wenn Instagram-Feature als Eigenname gemeint ist." } },
-    { "id": "hook", "match": ["Hook", "Aufhänger", "Einstieg"], "icon": "magnet", "category": "social", "priority": 3, "display": "Hook", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Hooks" } },
-    { "id": "reichweite", "match": ["Reichweite"], "icon": "trending", "category": "social", "priority": 3, "display": "Reichweite", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null, "note": "Kein Plural im Marketing-Kontext." } },
-    { "id": "follower", "match": ["Follower", "Followerin", "Abonnenten"], "icon": "users", "category": "social", "priority": 2, "display": "Follower", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Follower", "note": "Plural ohne -s: '10.000 Follower', nicht 'Followers'." } },
-    { "id": "viral", "match": ["viral", "Viralität"], "icon": "fire", "category": "social", "priority": 3, "display": "viral", "grammar": { "type": "adjektiv", "note": "Kleinschreibung: 'viral gehen'. Gross nur als Nomen: 'die Viralitaet'." } },
-    { "id": "engagement", "match": ["Engagement", "Interaktion", "Interaktionen"], "icon": "heart", "category": "social", "priority": 2, "display": "Engagement", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null } },
-    { "id": "trend", "match": ["Trend", "Trendthema"], "icon": "fire", "category": "social", "priority": 2, "display": "Trend", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Trends" } },
-    { "id": "sichtbarkeit", "match": ["Sichtbarkeit", "sichtbar"], "icon": "eye", "category": "social", "priority": 2, "display": "Sichtbarkeit", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null } },
-    { "id": "instagram", "match": ["Instagram", "Insta", "IG"], "icon": "instagram", "category": "social", "priority": 2, "display": "Instagram", "grammar": { "type": "eigenname", "note": "Immer 'Instagram' ausschreiben im Untertitel. 'Insta' nur, wenn es so gesprochen wird." } },
-    { "id": "tiktok", "match": ["TikTok", "Tik Tok"], "icon": "tiktok", "category": "social", "priority": 2, "display": "TikTok", "grammar": { "type": "eigenname", "note": "Binnenmajuskel: TikTok. Nicht 'Tiktok', nicht 'TIKTOK'." } },
-    { "id": "linkedin", "match": ["LinkedIn", "Linked In"], "icon": "linkedin", "category": "social", "priority": 2, "display": "LinkedIn", "grammar": { "type": "eigenname", "note": "Binnenmajuskel: LinkedIn." } },
-
-    { "id": "bewerber", "match": ["Bewerber", "Bewerberin", "Kandidat", "Kandidatin"], "icon": "user-check", "category": "recruiting", "priority": 3, "display": "Bewerber", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Bewerber", "note": "Plural identisch mit Singular. Gendern optional — wenn, dann konsequent im ganzen Video: 'Bewerber:innen'." } },
-    { "id": "bewerbung", "match": ["Bewerbung", "Bewerbungen"], "icon": "document", "category": "recruiting", "priority": 2, "display": "Bewerbung", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Bewerbungen" } },
-    { "id": "recruiting", "match": ["Recruiting", "Recruitment", "Personalsuche", "Mitarbeitersuche"], "icon": "search", "category": "recruiting", "priority": 3, "display": "Recruiting", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null } },
-    { "id": "mitarbeiter", "match": ["Mitarbeiter", "Mitarbeiterin", "Mitarbeitende", "Personal"], "icon": "users", "category": "recruiting", "priority": 3, "display": "Mitarbeiter", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Mitarbeiter" } },
-    { "id": "fachkraefte", "match": ["Fachkraft", "Fachkräfte", "Fachkräftemangel", "Personalmangel"], "icon": "wrench", "category": "recruiting", "priority": 3, "display": "Fachkräfte", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Fachkräfte", "note": "Umlaut im Plural: Fachkraft → Fachkraefte." } },
-    { "id": "job", "match": ["Job", "Stelle", "Stellen", "Position"], "icon": "briefcase", "category": "recruiting", "priority": 3, "display": "Job", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Jobs" } },
-    { "id": "team", "match": ["Team"], "icon": "users", "category": "recruiting", "priority": 2, "display": "Team", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Teams" } },
-    { "id": "lebenslauf", "match": ["Lebenslauf", "Lebensläufe", "CV"], "icon": "document", "category": "recruiting", "priority": 2, "display": "Lebenslauf", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Lebensläufe" } },
-    { "id": "vorstellungsgespraech", "match": ["Vorstellungsgespräch", "Bewerbungsgespräch", "Interview"], "icon": "calendar", "category": "recruiting", "priority": 2, "display": "Vorstellungsgespräch", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Vorstellungsgespräche" } },
-    { "id": "lehre", "match": ["Lehre", "Lehrling", "Lehrlinge", "Ausbildung"], "icon": "graduation", "category": "recruiting", "priority": 2, "display": "Lehre", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Lehren", "note": "AT-Begriff. In DE-Zielgruppen 'Ausbildung' verwenden." } },
-    { "id": "employer_branding", "match": ["Employer Branding", "Arbeitgebermarke"], "icon": "crown", "category": "recruiting", "priority": 2, "display": "Employer Branding", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null, "note": "Zwei Woerter, beide gross. Zusammensetzung mit deutschem Wort mit Bindestrich: 'Employer-Branding-Strategie'." } },
-    { "id": "pflege", "match": ["Pflege", "Pflegekraft", "Pflegekräfte", "Pflegepersonal"], "icon": "heart", "category": "branche", "priority": 2, "display": "Pflege", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null } },
-    { "id": "handwerk", "match": ["Handwerk", "Handwerker", "Monteur", "Techniker"], "icon": "wrench", "category": "branche", "priority": 2, "display": "Handwerk", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null } },
-    { "id": "logistik", "match": ["Logistik", "Lager", "Stapler", "Lagerlogistik"], "icon": "truck", "category": "branche", "priority": 2, "display": "Logistik", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null } },
-
-    { "id": "meta_ads", "match": ["Meta Ads", "Meta-Ads", "Facebook Ads", "Ads", "Anzeigen", "Werbeanzeigen"], "icon": "megaphone", "category": "ads", "priority": 3, "display": "Meta Ads", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Ads", "note": "Kompositum mit deutschem Wort immer durchkoppeln: 'Meta-Ads-Kampagne', 'Meta-Ads-Budget'." } },
-    { "id": "kampagne", "match": ["Kampagne", "Kampagnen"], "icon": "megaphone", "category": "ads", "priority": 2, "display": "Kampagne", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Kampagnen" } },
-    { "id": "budget", "match": ["Budget", "Werbebudget", "Tagesbudget"], "icon": "coins", "category": "ads", "priority": 2, "display": "Budget", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Budgets" } },
-    { "id": "zielgruppe", "match": ["Zielgruppe", "Zielgruppen", "Audience"], "icon": "target", "category": "ads", "priority": 3, "display": "Zielgruppe", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Zielgruppen" } },
-    { "id": "conversion", "match": ["Conversion", "Conversions", "Conversion Rate", "Abschlussrate"], "icon": "cursor", "category": "ads", "priority": 3, "display": "Conversion", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Conversions" } },
-    { "id": "klick", "match": ["Klick", "Klickrate", "CTR"], "icon": "cursor", "category": "ads", "priority": 2, "display": "Klick", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Klicks", "note": "Deutsch mit K: 'Klick'. 'Click' nur in englischen Fachbegriffen wie 'Cost per Click'." } },
-    { "id": "retargeting", "match": ["Retargeting", "Remarketing"], "icon": "repeat", "category": "ads", "priority": 2, "display": "Retargeting", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null } },
-    { "id": "funnel", "match": ["Funnel", "Trichter", "Sales Funnel", "Verkaufstrichter"], "icon": "funnel", "category": "ads", "priority": 3, "display": "Funnel", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Funnels" } },
-    { "id": "cpl", "match": ["CPL", "Cost per Lead", "Kosten pro Lead", "Leadkosten"], "icon": "euro", "category": "ads", "priority": 2, "display": "CPL", "grammar": { "type": "abkuerzung", "genus": "m", "artikel": "der", "note": "Bei erster Nennung im Video einmal ausschreiben: 'CPL — Kosten pro Lead'." } },
-    { "id": "test", "match": ["A/B-Test", "A/B Test", "Split-Test", "Testing", "testen"], "icon": "chart", "category": "ads", "priority": 1, "display": "A/B-Test", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die A/B-Tests", "note": "Mit Bindestrich: 'A/B-Test'." } },
-
-    { "id": "leads", "match": ["Lead", "Leads", "Anfrage", "Anfragen"], "icon": "magnet", "category": "business", "priority": 3, "display": "Leads", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Leads" } },
-    { "id": "kunden", "match": ["Kunde", "Kunden", "Kundin", "Kundinnen"], "icon": "users", "category": "business", "priority": 3, "display": "Kunden", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Kunden", "note": "Schwache Deklination: 'des Kunden', 'dem Kunden' — nie 'dem Kunde'." } },
-    { "id": "umsatz", "match": ["Umsatz", "Umsätze", "Gewinn"], "icon": "trending", "category": "business", "priority": 3, "display": "Umsatz", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Umsätze" } },
-    { "id": "wachstum", "match": ["Wachstum", "wachsen", "skalieren", "Skalierung"], "icon": "rocket", "category": "business", "priority": 3, "display": "Wachstum", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null, "note": "Kein Plural." } },
-    { "id": "strategie", "match": ["Strategie", "Strategien", "strategisch"], "icon": "brain", "category": "business", "priority": 3, "display": "Strategie", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Strategien" } },
-    { "id": "marke", "match": ["Marke", "Marken", "Branding", "Brand"], "icon": "crown", "category": "business", "priority": 3, "display": "Marke", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Marken" } },
-    { "id": "positionierung", "match": ["Positionierung", "positionieren", "Alleinstellung", "USP"], "icon": "target", "category": "business", "priority": 2, "display": "Positionierung", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Positionierungen" } },
-    { "id": "angebot", "match": ["Angebot", "Angebote", "Offer", "Paket"], "icon": "gift", "category": "business", "priority": 2, "display": "Angebot", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Angebote" } },
-    { "id": "verkauf", "match": ["Verkauf", "verkaufen", "Abschluss", "Sales"], "icon": "check-circle", "category": "business", "priority": 2, "display": "Verkauf", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Verkäufe" } },
-    { "id": "termin", "match": ["Termin", "Termine", "Erstgespräch", "Call"], "icon": "calendar", "category": "business", "priority": 3, "display": "Termin", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Termine" } },
-    { "id": "autoritaet", "match": ["Autorität", "Marktführer", "Expertenstatus", "Expertin"], "icon": "crown", "category": "business", "priority": 2, "display": "Autorität", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null } },
-    { "id": "vertrauen", "match": ["Vertrauen", "Glaubwürdigkeit", "Seriosität"], "icon": "shield", "category": "business", "priority": 2, "display": "Vertrauen", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null } },
-    { "id": "website", "match": ["Website", "Homepage", "Landingpage"], "icon": "globe", "category": "business", "priority": 2, "display": "Website", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Websites", "note": "'Website' = gesamter Auftritt, 'Webseite' = einzelne Unterseite. Im Untertitel fast immer 'Website'." } },
-    { "id": "newsletter", "match": ["Newsletter", "E-Mail", "E-Mails", "Mail"], "icon": "mail", "category": "business", "priority": 1, "display": "Newsletter", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Newsletter", "note": "'E-Mail' mit Bindestrich und grossem M. Nicht 'Email', nicht 'E-mail'." } },
-    { "id": "link_in_bio", "match": ["Link in Bio", "Link", "Bio"], "icon": "link", "category": "business", "priority": 1, "display": "Link in Bio", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Links" } },
-
-    { "id": "fehler", "match": ["Fehler"], "icon": "warning", "category": "emotion", "priority": 3, "display": "Fehler", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Fehler", "note": "Plural identisch mit Singular." } },
-    { "id": "achtung", "match": ["Achtung", "Warnung", "Vorsicht", "Stopp"], "icon": "warning", "category": "emotion", "priority": 3, "display": "Achtung", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null } },
-    { "id": "geheimnis", "match": ["Geheimnis", "Geheimnisse", "geheim", "exklusiv"], "icon": "lock", "category": "emotion", "priority": 3, "display": "Geheimnis", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Geheimnisse" } },
-    { "id": "loesung", "match": ["Lösung", "Lösungen", "lösen"], "icon": "key", "category": "emotion", "priority": 3, "display": "Lösung", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Lösungen" } },
-    { "id": "problem", "match": ["Problem", "Probleme"], "icon": "x-circle", "category": "emotion", "priority": 3, "display": "Problem", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Probleme" } },
-    { "id": "ergebnis", "match": ["Ergebnis", "Ergebnisse", "Resultat", "Zahlen"], "icon": "chart", "category": "emotion", "priority": 3, "display": "Ergebnis", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Ergebnisse" } },
-    { "id": "beweis", "match": ["Beweis", "beweisen", "Case Study", "Fallbeispiel"], "icon": "check-circle", "category": "emotion", "priority": 2, "display": "Beweis", "grammar": { "type": "nomen", "genus": "m", "artikel": "der", "plural": "die Beweise" } },
-    { "id": "zeit", "match": ["Zeit", "Stunden", "Minuten", "Sekunden"], "icon": "clock", "category": "emotion", "priority": 2, "display": "Zeit", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Zeiten" } },
-    { "id": "geld", "match": ["Geld", "Euro", "€", "Gehalt"], "icon": "euro", "category": "emotion", "priority": 3, "display": "Geld", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": null, "note": "Kein Plural. Betraege im Untertitel als Ziffern: '3.000 €' — Punkt als Tausendertrennzeichen, Leerzeichen vor €." } },
-    { "id": "idee", "match": ["Idee", "Ideen", "Tipp", "Tipps"], "icon": "lightbulb", "category": "emotion", "priority": 2, "display": "Idee", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Ideen" } },
-    { "id": "psychologie", "match": ["Psychologie", "psychologisch", "Mindset"], "icon": "brain", "category": "emotion", "priority": 2, "display": "Psychologie", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null } },
-    { "id": "qualitaet", "match": ["Qualität", "Premium", "hochwertig"], "icon": "star", "category": "emotion", "priority": 2, "display": "Qualität", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": null } },
-    { "id": "video", "match": ["Video", "Videos", "Dreh", "filmen"], "icon": "camera", "category": "emotion", "priority": 1, "display": "Video", "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Videos" } },
-    { "id": "stimme", "match": ["Stimme", "Voiceover", "Podcast"], "icon": "mic", "category": "emotion", "priority": 1, "display": "Stimme", "grammar": { "type": "nomen", "genus": "f", "artikel": "die", "plural": "die Stimmen" } },
-
-    { "id": "oesterreich", "match": ["Österreich", "österreichisch", "Austria"], "icon": "pin", "category": "lokal", "priority": 2, "display": "Österreich", "grammar": { "type": "eigenname", "note": "Adjektiv klein: 'oesterreichische Unternehmen'." } },
-    { "id": "region_ooe", "match": ["Wels", "Oberösterreich", "OÖ", "Linz"], "icon": "pin", "category": "lokal", "priority": 2, "display": "Oberösterreich", "grammar": { "type": "eigenname", "note": "'OÖ' nur in Untertiteln fuer lokale Zielgruppen — sonst ausschreiben." } },
-    { "id": "lokal", "match": ["lokal", "regional", "in der Nähe", "vor Ort"], "icon": "pin", "category": "lokal", "priority": 2, "display": "lokal", "grammar": { "type": "adjektiv", "note": "Kleinschreibung." } }
+    {
+      "id": "gpt",
+      "match": [
+        "GPT",
+        "ChatGPT",
+        "Chat GPT",
+        "GPT-5"
+      ],
+      "icon": "robot",
+      "category": "ki",
+      "priority": 3,
+      "display": "GPT",
+      "grammar": {
+        "type": "eigenname",
+        "note": "Nie beugen, nie kleinschreiben. 'mit GPT', nicht 'mit dem GPT'."
+      }
+    },
+    {
+      "id": "ki",
+      "match": [
+        "KI",
+        "Künstliche Intelligenz",
+        "künstlicher Intelligenz",
+        "AI"
+      ],
+      "icon": "sparkle",
+      "category": "ki",
+      "priority": 3,
+      "display": "KI",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die KIs",
+        "note": "Im Deutschen 'KI', nicht 'AI'. Nur bei Marken-/Produktnamen 'AI' stehen lassen."
+      }
+    },
+    {
+      "id": "chatbot",
+      "match": [
+        "Chatbot",
+        "Chat-Bot",
+        "Bot"
+      ],
+      "icon": "chat",
+      "category": "ki",
+      "priority": 3,
+      "display": "Chatbot",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Chatbots"
+      }
+    },
+    {
+      "id": "automatisierung",
+      "match": [
+        "Automatisierung",
+        "automatisiert",
+        "automatisieren",
+        "Automation"
+      ],
+      "icon": "bolt",
+      "category": "ki",
+      "priority": 2,
+      "display": "Automatisierung",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Automatisierungen"
+      }
+    },
+    {
+      "id": "prompt",
+      "match": [
+        "Prompt",
+        "prompten",
+        "Prompt-Engineering"
+      ],
+      "icon": "terminal",
+      "category": "ki",
+      "priority": 2,
+      "display": "Prompt",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Prompts"
+      }
+    },
+    {
+      "id": "algorithmus",
+      "match": [
+        "Algorithmus",
+        "Algorithmen"
+      ],
+      "icon": "layers",
+      "category": "ki",
+      "priority": 2,
+      "display": "Algorithmus",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Algorithmen",
+        "note": "Plural ist 'Algorithmen'. 'Algorithmusse' existiert nicht."
+      }
+    },
+    {
+      "id": "workflow",
+      "match": [
+        "Workflow",
+        "Prozess",
+        "Prozesse",
+        "Ablauf"
+      ],
+      "icon": "repeat",
+      "category": "ki",
+      "priority": 1,
+      "display": "Workflow",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Workflows"
+      }
+    },
+    {
+      "id": "community",
+      "match": [
+        "Community"
+      ],
+      "icon": "users",
+      "category": "social",
+      "priority": 3,
+      "display": "Community",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Communitys",
+        "note": "Deutscher Plural laut Duden: 'Communitys' — nicht 'Communities'."
+      }
+    },
+    {
+      "id": "content",
+      "match": [
+        "Content"
+      ],
+      "icon": "camera",
+      "category": "social",
+      "priority": 2,
+      "display": "Content",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": null,
+        "note": "Nur Singular. 'Contents' im Deutschen vermeiden — stattdessen 'Content-Formate' oder 'Beitraege'."
+      }
+    },
+    {
+      "id": "reel",
+      "match": [
+        "Reel"
+      ],
+      "icon": "play",
+      "category": "social",
+      "priority": 3,
+      "display": "Reel",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Reels"
+      }
+    },
+    {
+      "id": "story",
+      "match": [
+        "Story",
+        "Stories"
+      ],
+      "icon": "play",
+      "category": "social",
+      "priority": 1,
+      "display": "Story",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Storys",
+        "note": "Deutscher Plural: 'Storys'. 'Stories' nur, wenn Instagram-Feature als Eigenname gemeint ist."
+      }
+    },
+    {
+      "id": "hook",
+      "match": [
+        "Hook",
+        "Aufhänger",
+        "Einstieg"
+      ],
+      "icon": "magnet",
+      "category": "social",
+      "priority": 3,
+      "display": "Hook",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Hooks"
+      }
+    },
+    {
+      "id": "reichweite",
+      "match": [
+        "Reichweite"
+      ],
+      "icon": "trending",
+      "category": "social",
+      "priority": 3,
+      "display": "Reichweite",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null,
+        "note": "Kein Plural im Marketing-Kontext."
+      }
+    },
+    {
+      "id": "follower",
+      "match": [
+        "Follower",
+        "Followerin",
+        "Abonnenten"
+      ],
+      "icon": "users",
+      "category": "social",
+      "priority": 2,
+      "display": "Follower",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Follower",
+        "note": "Plural ohne -s: '10.000 Follower', nicht 'Followers'."
+      },
+      "displayVariants": {
+        "neutral": "Follower",
+        "gendered": "Follower:innen"
+      }
+    },
+    {
+      "id": "viral",
+      "match": [
+        "viral",
+        "Viralität"
+      ],
+      "icon": "fire",
+      "category": "social",
+      "priority": 3,
+      "display": "viral",
+      "grammar": {
+        "type": "adjektiv",
+        "note": "Kleinschreibung: 'viral gehen'. Gross nur als Nomen: 'die Viralitaet'."
+      }
+    },
+    {
+      "id": "engagement",
+      "match": [
+        "Engagement",
+        "Interaktion",
+        "Interaktionen"
+      ],
+      "icon": "heart",
+      "category": "social",
+      "priority": 2,
+      "display": "Engagement",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null
+      }
+    },
+    {
+      "id": "trend",
+      "match": [
+        "Trend",
+        "Trendthema"
+      ],
+      "icon": "fire",
+      "category": "social",
+      "priority": 2,
+      "display": "Trend",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Trends"
+      }
+    },
+    {
+      "id": "sichtbarkeit",
+      "match": [
+        "Sichtbarkeit",
+        "sichtbar"
+      ],
+      "icon": "eye",
+      "category": "social",
+      "priority": 2,
+      "display": "Sichtbarkeit",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null
+      }
+    },
+    {
+      "id": "instagram",
+      "match": [
+        "Instagram",
+        "Insta",
+        "IG"
+      ],
+      "icon": "instagram",
+      "category": "social",
+      "priority": 2,
+      "display": "Instagram",
+      "grammar": {
+        "type": "eigenname",
+        "note": "Immer 'Instagram' ausschreiben im Untertitel. 'Insta' nur, wenn es so gesprochen wird."
+      }
+    },
+    {
+      "id": "tiktok",
+      "match": [
+        "TikTok",
+        "Tik Tok"
+      ],
+      "icon": "tiktok",
+      "category": "social",
+      "priority": 2,
+      "display": "TikTok",
+      "grammar": {
+        "type": "eigenname",
+        "note": "Binnenmajuskel: TikTok. Nicht 'Tiktok', nicht 'TIKTOK'."
+      }
+    },
+    {
+      "id": "linkedin",
+      "match": [
+        "LinkedIn",
+        "Linked In"
+      ],
+      "icon": "linkedin",
+      "category": "social",
+      "priority": 2,
+      "display": "LinkedIn",
+      "grammar": {
+        "type": "eigenname",
+        "note": "Binnenmajuskel: LinkedIn."
+      }
+    },
+    {
+      "id": "bewerber",
+      "match": [
+        "Bewerber",
+        "Bewerberin",
+        "Kandidat",
+        "Kandidatin"
+      ],
+      "icon": "user-check",
+      "category": "recruiting",
+      "priority": 3,
+      "display": "Bewerber",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Bewerber",
+        "note": "Plural identisch mit Singular. Gendern optional — wenn, dann konsequent im ganzen Video: 'Bewerber:innen'."
+      },
+      "displayVariants": {
+        "neutral": "Bewerber",
+        "gendered": "Bewerber:innen"
+      }
+    },
+    {
+      "id": "bewerbung",
+      "match": [
+        "Bewerbung",
+        "Bewerbungen"
+      ],
+      "icon": "document",
+      "category": "recruiting",
+      "priority": 2,
+      "display": "Bewerbung",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Bewerbungen"
+      }
+    },
+    {
+      "id": "recruiting",
+      "match": [
+        "Recruiting",
+        "Recruitment",
+        "Personalsuche",
+        "Mitarbeitersuche"
+      ],
+      "icon": "search",
+      "category": "recruiting",
+      "priority": 3,
+      "display": "Recruiting",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null
+      }
+    },
+    {
+      "id": "mitarbeiter",
+      "match": [
+        "Mitarbeiter",
+        "Mitarbeiterin",
+        "Mitarbeitende",
+        "Personal"
+      ],
+      "icon": "users",
+      "category": "recruiting",
+      "priority": 3,
+      "display": "Mitarbeiter",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Mitarbeiter"
+      },
+      "displayVariants": {
+        "neutral": "Mitarbeiter",
+        "gendered": "Mitarbeiter:innen"
+      }
+    },
+    {
+      "id": "fachkraefte",
+      "match": [
+        "Fachkraft",
+        "Fachkräfte",
+        "Fachkräftemangel",
+        "Personalmangel"
+      ],
+      "icon": "wrench",
+      "category": "recruiting",
+      "priority": 3,
+      "display": "Fachkräfte",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Fachkräfte",
+        "note": "Umlaut im Plural: Fachkraft → Fachkraefte."
+      }
+    },
+    {
+      "id": "job",
+      "match": [
+        "Job",
+        "Stelle",
+        "Stellen",
+        "Position"
+      ],
+      "icon": "briefcase",
+      "category": "recruiting",
+      "priority": 3,
+      "display": "Job",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Jobs"
+      }
+    },
+    {
+      "id": "team",
+      "match": [
+        "Team"
+      ],
+      "icon": "users",
+      "category": "recruiting",
+      "priority": 2,
+      "display": "Team",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Teams"
+      }
+    },
+    {
+      "id": "lebenslauf",
+      "match": [
+        "Lebenslauf",
+        "Lebensläufe",
+        "CV"
+      ],
+      "icon": "document",
+      "category": "recruiting",
+      "priority": 2,
+      "display": "Lebenslauf",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Lebensläufe"
+      }
+    },
+    {
+      "id": "vorstellungsgespraech",
+      "match": [
+        "Vorstellungsgespräch",
+        "Bewerbungsgespräch",
+        "Interview"
+      ],
+      "icon": "calendar",
+      "category": "recruiting",
+      "priority": 2,
+      "display": "Vorstellungsgespräch",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Vorstellungsgespräche"
+      }
+    },
+    {
+      "id": "lehre",
+      "match": [
+        "Lehre",
+        "Lehrling",
+        "Lehrlinge",
+        "Ausbildung"
+      ],
+      "icon": "graduation",
+      "category": "recruiting",
+      "priority": 2,
+      "display": "Lehre",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Lehren",
+        "note": "AT-Begriff. In DE-Zielgruppen 'Ausbildung' verwenden."
+      }
+    },
+    {
+      "id": "employer_branding",
+      "match": [
+        "Employer Branding",
+        "Arbeitgebermarke"
+      ],
+      "icon": "crown",
+      "category": "recruiting",
+      "priority": 2,
+      "display": "Employer Branding",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null,
+        "note": "Zwei Woerter, beide gross. Zusammensetzung mit deutschem Wort mit Bindestrich: 'Employer-Branding-Strategie'."
+      }
+    },
+    {
+      "id": "pflege",
+      "match": [
+        "Pflege",
+        "Pflegekraft",
+        "Pflegekräfte",
+        "Pflegepersonal"
+      ],
+      "icon": "heart",
+      "category": "branche",
+      "priority": 2,
+      "display": "Pflege",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null
+      }
+    },
+    {
+      "id": "handwerk",
+      "match": [
+        "Handwerk",
+        "Handwerker",
+        "Monteur",
+        "Techniker"
+      ],
+      "icon": "wrench",
+      "category": "branche",
+      "priority": 2,
+      "display": "Handwerk",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null
+      }
+    },
+    {
+      "id": "logistik",
+      "match": [
+        "Logistik",
+        "Lager",
+        "Stapler",
+        "Lagerlogistik"
+      ],
+      "icon": "truck",
+      "category": "branche",
+      "priority": 2,
+      "display": "Logistik",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null
+      }
+    },
+    {
+      "id": "meta_ads",
+      "match": [
+        "Meta Ads",
+        "Meta-Ads",
+        "Facebook Ads",
+        "Ads",
+        "Anzeigen",
+        "Werbeanzeigen"
+      ],
+      "icon": "megaphone",
+      "category": "ads",
+      "priority": 3,
+      "display": "Meta Ads",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Ads",
+        "note": "Kompositum mit deutschem Wort immer durchkoppeln: 'Meta-Ads-Kampagne', 'Meta-Ads-Budget'."
+      }
+    },
+    {
+      "id": "kampagne",
+      "match": [
+        "Kampagne",
+        "Kampagnen"
+      ],
+      "icon": "megaphone",
+      "category": "ads",
+      "priority": 2,
+      "display": "Kampagne",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Kampagnen"
+      }
+    },
+    {
+      "id": "budget",
+      "match": [
+        "Budget",
+        "Werbebudget",
+        "Tagesbudget"
+      ],
+      "icon": "coins",
+      "category": "ads",
+      "priority": 2,
+      "display": "Budget",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Budgets"
+      }
+    },
+    {
+      "id": "zielgruppe",
+      "match": [
+        "Zielgruppe",
+        "Zielgruppen",
+        "Audience"
+      ],
+      "icon": "target",
+      "category": "ads",
+      "priority": 3,
+      "display": "Zielgruppe",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Zielgruppen"
+      }
+    },
+    {
+      "id": "conversion",
+      "match": [
+        "Conversion",
+        "Conversions",
+        "Conversion Rate",
+        "Abschlussrate"
+      ],
+      "icon": "cursor",
+      "category": "ads",
+      "priority": 3,
+      "display": "Conversion",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Conversions"
+      }
+    },
+    {
+      "id": "klick",
+      "match": [
+        "Klick",
+        "Klickrate",
+        "CTR"
+      ],
+      "icon": "cursor",
+      "category": "ads",
+      "priority": 2,
+      "display": "Klick",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Klicks",
+        "note": "Deutsch mit K: 'Klick'. 'Click' nur in englischen Fachbegriffen wie 'Cost per Click'."
+      }
+    },
+    {
+      "id": "retargeting",
+      "match": [
+        "Retargeting",
+        "Remarketing"
+      ],
+      "icon": "repeat",
+      "category": "ads",
+      "priority": 2,
+      "display": "Retargeting",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null
+      }
+    },
+    {
+      "id": "funnel",
+      "match": [
+        "Funnel",
+        "Trichter",
+        "Sales Funnel",
+        "Verkaufstrichter"
+      ],
+      "icon": "funnel",
+      "category": "ads",
+      "priority": 3,
+      "display": "Funnel",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Funnels"
+      }
+    },
+    {
+      "id": "cpl",
+      "match": [
+        "CPL",
+        "Cost per Lead",
+        "Kosten pro Lead",
+        "Leadkosten"
+      ],
+      "icon": "euro",
+      "category": "ads",
+      "priority": 2,
+      "display": "CPL",
+      "grammar": {
+        "type": "abkuerzung",
+        "genus": "m",
+        "artikel": "der",
+        "note": "Bei erster Nennung im Video einmal ausschreiben: 'CPL — Kosten pro Lead'."
+      }
+    },
+    {
+      "id": "test",
+      "match": [
+        "A/B-Test",
+        "A/B Test",
+        "Split-Test",
+        "Testing",
+        "testen"
+      ],
+      "icon": "chart",
+      "category": "ads",
+      "priority": 1,
+      "display": "A/B-Test",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die A/B-Tests",
+        "note": "Mit Bindestrich: 'A/B-Test'."
+      }
+    },
+    {
+      "id": "leads",
+      "match": [
+        "Lead",
+        "Leads",
+        "Anfrage",
+        "Anfragen"
+      ],
+      "icon": "magnet",
+      "category": "business",
+      "priority": 3,
+      "display": "Leads",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Leads"
+      }
+    },
+    {
+      "id": "kunden",
+      "match": [
+        "Kunde",
+        "Kunden",
+        "Kundin",
+        "Kundinnen"
+      ],
+      "icon": "users",
+      "category": "business",
+      "priority": 3,
+      "display": "Kunden",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Kunden",
+        "note": "Schwache Deklination: 'des Kunden', 'dem Kunden' — nie 'dem Kunde'."
+      },
+      "displayVariants": {
+        "neutral": "Kunden",
+        "gendered": "Kund:innen"
+      }
+    },
+    {
+      "id": "umsatz",
+      "match": [
+        "Umsatz",
+        "Umsätze",
+        "Gewinn"
+      ],
+      "icon": "trending",
+      "category": "business",
+      "priority": 3,
+      "display": "Umsatz",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Umsätze"
+      }
+    },
+    {
+      "id": "wachstum",
+      "match": [
+        "Wachstum",
+        "wachsen",
+        "skalieren",
+        "Skalierung"
+      ],
+      "icon": "rocket",
+      "category": "business",
+      "priority": 3,
+      "display": "Wachstum",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null,
+        "note": "Kein Plural."
+      }
+    },
+    {
+      "id": "strategie",
+      "match": [
+        "Strategie",
+        "Strategien",
+        "strategisch"
+      ],
+      "icon": "brain",
+      "category": "business",
+      "priority": 3,
+      "display": "Strategie",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Strategien"
+      }
+    },
+    {
+      "id": "marke",
+      "match": [
+        "Marke",
+        "Marken",
+        "Branding",
+        "Brand"
+      ],
+      "icon": "crown",
+      "category": "business",
+      "priority": 3,
+      "display": "Marke",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Marken"
+      }
+    },
+    {
+      "id": "positionierung",
+      "match": [
+        "Positionierung",
+        "positionieren",
+        "Alleinstellung",
+        "USP"
+      ],
+      "icon": "target",
+      "category": "business",
+      "priority": 2,
+      "display": "Positionierung",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Positionierungen"
+      }
+    },
+    {
+      "id": "angebot",
+      "match": [
+        "Angebot",
+        "Angebote",
+        "Offer",
+        "Paket"
+      ],
+      "icon": "gift",
+      "category": "business",
+      "priority": 2,
+      "display": "Angebot",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Angebote"
+      }
+    },
+    {
+      "id": "verkauf",
+      "match": [
+        "Verkauf",
+        "verkaufen",
+        "Abschluss",
+        "Sales"
+      ],
+      "icon": "check-circle",
+      "category": "business",
+      "priority": 2,
+      "display": "Verkauf",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Verkäufe"
+      }
+    },
+    {
+      "id": "termin",
+      "match": [
+        "Termin",
+        "Termine",
+        "Erstgespräch",
+        "Call"
+      ],
+      "icon": "calendar",
+      "category": "business",
+      "priority": 3,
+      "display": "Termin",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Termine"
+      }
+    },
+    {
+      "id": "autoritaet",
+      "match": [
+        "Autorität",
+        "Marktführer",
+        "Expertenstatus",
+        "Expertin"
+      ],
+      "icon": "crown",
+      "category": "business",
+      "priority": 2,
+      "display": "Autorität",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null
+      }
+    },
+    {
+      "id": "vertrauen",
+      "match": [
+        "Vertrauen",
+        "Glaubwürdigkeit",
+        "Seriosität"
+      ],
+      "icon": "shield",
+      "category": "business",
+      "priority": 2,
+      "display": "Vertrauen",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null
+      }
+    },
+    {
+      "id": "website",
+      "match": [
+        "Website",
+        "Homepage",
+        "Landingpage"
+      ],
+      "icon": "globe",
+      "category": "business",
+      "priority": 2,
+      "display": "Website",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Websites",
+        "note": "'Website' = gesamter Auftritt, 'Webseite' = einzelne Unterseite. Im Untertitel fast immer 'Website'."
+      }
+    },
+    {
+      "id": "newsletter",
+      "match": [
+        "Newsletter",
+        "E-Mail",
+        "E-Mails",
+        "Mail"
+      ],
+      "icon": "mail",
+      "category": "business",
+      "priority": 1,
+      "display": "Newsletter",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Newsletter",
+        "note": "'E-Mail' mit Bindestrich und grossem M. Nicht 'Email', nicht 'E-mail'."
+      }
+    },
+    {
+      "id": "link_in_bio",
+      "match": [
+        "Link in Bio",
+        "Link",
+        "Bio"
+      ],
+      "icon": "link",
+      "category": "business",
+      "priority": 1,
+      "display": "Link in Bio",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Links"
+      }
+    },
+    {
+      "id": "fehler",
+      "match": [
+        "Fehler"
+      ],
+      "icon": "warning",
+      "category": "emotion",
+      "priority": 3,
+      "display": "Fehler",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Fehler",
+        "note": "Plural identisch mit Singular."
+      }
+    },
+    {
+      "id": "achtung",
+      "match": [
+        "Achtung",
+        "Warnung",
+        "Vorsicht",
+        "Stopp"
+      ],
+      "icon": "warning",
+      "category": "emotion",
+      "priority": 3,
+      "display": "Achtung",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null
+      }
+    },
+    {
+      "id": "geheimnis",
+      "match": [
+        "Geheimnis",
+        "Geheimnisse",
+        "geheim",
+        "exklusiv"
+      ],
+      "icon": "lock",
+      "category": "emotion",
+      "priority": 3,
+      "display": "Geheimnis",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Geheimnisse"
+      }
+    },
+    {
+      "id": "loesung",
+      "match": [
+        "Lösung",
+        "Lösungen",
+        "lösen"
+      ],
+      "icon": "key",
+      "category": "emotion",
+      "priority": 3,
+      "display": "Lösung",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Lösungen"
+      }
+    },
+    {
+      "id": "problem",
+      "match": [
+        "Problem",
+        "Probleme"
+      ],
+      "icon": "x-circle",
+      "category": "emotion",
+      "priority": 3,
+      "display": "Problem",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Probleme"
+      }
+    },
+    {
+      "id": "ergebnis",
+      "match": [
+        "Ergebnis",
+        "Ergebnisse",
+        "Resultat",
+        "Zahlen"
+      ],
+      "icon": "chart",
+      "category": "emotion",
+      "priority": 3,
+      "display": "Ergebnis",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Ergebnisse"
+      }
+    },
+    {
+      "id": "beweis",
+      "match": [
+        "Beweis",
+        "beweisen",
+        "Case Study",
+        "Fallbeispiel"
+      ],
+      "icon": "check-circle",
+      "category": "emotion",
+      "priority": 2,
+      "display": "Beweis",
+      "grammar": {
+        "type": "nomen",
+        "genus": "m",
+        "artikel": "der",
+        "plural": "die Beweise"
+      }
+    },
+    {
+      "id": "zeit",
+      "match": [
+        "Zeit",
+        "Stunden",
+        "Minuten",
+        "Sekunden"
+      ],
+      "icon": "clock",
+      "category": "emotion",
+      "priority": 2,
+      "display": "Zeit",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Zeiten"
+      }
+    },
+    {
+      "id": "geld",
+      "match": [
+        "Geld",
+        "Euro",
+        "€",
+        "Gehalt"
+      ],
+      "icon": "euro",
+      "category": "emotion",
+      "priority": 3,
+      "display": "Geld",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": null,
+        "note": "Kein Plural. Betraege im Untertitel als Ziffern: '3.000 €' — Punkt als Tausendertrennzeichen, Leerzeichen vor €."
+      }
+    },
+    {
+      "id": "idee",
+      "match": [
+        "Idee",
+        "Ideen",
+        "Tipp",
+        "Tipps"
+      ],
+      "icon": "lightbulb",
+      "category": "emotion",
+      "priority": 2,
+      "display": "Idee",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Ideen"
+      }
+    },
+    {
+      "id": "psychologie",
+      "match": [
+        "Psychologie",
+        "psychologisch",
+        "Mindset"
+      ],
+      "icon": "brain",
+      "category": "emotion",
+      "priority": 2,
+      "display": "Psychologie",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null
+      }
+    },
+    {
+      "id": "qualitaet",
+      "match": [
+        "Qualität",
+        "Premium",
+        "hochwertig"
+      ],
+      "icon": "star",
+      "category": "emotion",
+      "priority": 2,
+      "display": "Qualität",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": null
+      }
+    },
+    {
+      "id": "video",
+      "match": [
+        "Video",
+        "Videos",
+        "Dreh",
+        "filmen"
+      ],
+      "icon": "camera",
+      "category": "emotion",
+      "priority": 1,
+      "display": "Video",
+      "grammar": {
+        "type": "nomen",
+        "genus": "n",
+        "artikel": "das",
+        "plural": "die Videos"
+      }
+    },
+    {
+      "id": "stimme",
+      "match": [
+        "Stimme",
+        "Voiceover",
+        "Podcast"
+      ],
+      "icon": "mic",
+      "category": "emotion",
+      "priority": 1,
+      "display": "Stimme",
+      "grammar": {
+        "type": "nomen",
+        "genus": "f",
+        "artikel": "die",
+        "plural": "die Stimmen"
+      }
+    },
+    {
+      "id": "oesterreich",
+      "match": [
+        "Österreich",
+        "österreichisch",
+        "Austria"
+      ],
+      "icon": "pin",
+      "category": "lokal",
+      "priority": 2,
+      "display": "Österreich",
+      "grammar": {
+        "type": "eigenname",
+        "note": "Adjektiv klein: 'oesterreichische Unternehmen'."
+      }
+    },
+    {
+      "id": "region_ooe",
+      "match": [
+        "Wels",
+        "Oberösterreich",
+        "OÖ",
+        "Linz"
+      ],
+      "icon": "pin",
+      "category": "lokal",
+      "priority": 2,
+      "display": "Oberösterreich",
+      "grammar": {
+        "type": "eigenname",
+        "note": "'OÖ' nur in Untertiteln fuer lokale Zielgruppen — sonst ausschreiben."
+      }
+    },
+    {
+      "id": "lokal",
+      "match": [
+        "lokal",
+        "regional",
+        "in der Nähe",
+        "vor Ort"
+      ],
+      "icon": "pin",
+      "category": "lokal",
+      "priority": 2,
+      "display": "lokal",
+      "grammar": {
+        "type": "adjektiv",
+        "note": "Kleinschreibung."
+      }
+    }
   ]
 }
