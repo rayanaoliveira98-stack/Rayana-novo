@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-13",
+  "active": "black_strategie",
+  "note": "Ein Token-System, mehrere Marken. Der Renderer liest nur Token-Namen (accent, ink, paper ...), nie Hex-Werte direkt. Marke wechseln = 'active' umstellen, alles andere zieht mit. Neue Marke = ein weiteres Objekt unter 'brands' mit denselben Token-Keys.",
+  "tokenKeys": ["paper", "ink", "inkMuted", "accent", "accentInk", "signal", "success", "iconColor", "iconBg", "shadow"],
+  "brands": {
+    "neutral": {
+      "label": "Neutral / umschaltbar",
+      "use": "Kundenprojekte, Tests, Marken ohne eigenes Kit. Bewusst farbarm, damit das Video die Farbe traegt.",
+      "color": {
+        "paper": "#0E0E10",
+        "ink": "#FFFFFF",
+        "inkMuted": "#A8A8AE",
+        "accent": "#FFFFFF",
+        "accentInk": "#0E0E10",
+        "signal": "#FF4D2E",
+        "success": "#35D07F",
+        "iconColor": "#FFFFFF",
+        "iconBg": "transparent",
+        "shadow": "rgba(0,0,0,.55)"
+      },
+      "typography": {
+        "display": { "family": "\"Inter Tight\", \"Inter\", \"Helvetica Neue\", Arial, sans-serif", "weight": 800, "tracking": "-0.02em", "lineHeight": 1.04, "case": "none" },
+        "caption": { "family": "\"Inter Tight\", \"Inter\", Arial, sans-serif", "weight": 800, "tracking": "-0.015em", "lineHeight": 1.06 }
+      },
+      "icon": { "strokeWidth": 1.75, "style": "line", "cornerRadius": 0 }
+    },
+    "black_strategie": {
+      "label": "Black Strategie",
+      "use": "Rayanas eigene Marke. Maximaler Kontrast, kein Farbkarneval — die Autoritaet kommt aus Schwarz, Weiss und genau einem Akzent.",
+      "assumption": "Die Hex-Werte unten sind eine begruendete Annahme, kein bestaetigtes Brand-Kit. Sobald du die echten Werte hast: nur dieses eine Objekt ueberschreiben — Keywords, Icons und Motion bleiben unangetastet.",
+      "color": {
+        "paper": "#000000",
+        "ink": "#FFFFFF",
+        "inkMuted": "#8E8E93",
+        "accent": "#D4B483",
+        "accentInk": "#000000",
+        "signal": "#FF3B30",
+        "success": "#35D07F",
+        "iconColor": "#D4B483",
+        "iconBg": "transparent",
+        "shadow": "rgba(0,0,0,.7)"
+      },
+      "typography": {
+        "display": { "family": "\"Archivo\", \"Inter Tight\", \"Helvetica Neue\", Arial, sans-serif", "weight": 800, "tracking": "-0.025em", "lineHeight": 1.02, "case": "none" },
+        "caption": { "family": "\"Archivo\", \"Inter Tight\", Arial, sans-serif", "weight": 800, "tracking": "-0.02em", "lineHeight": 1.05 }
+      },
+      "icon": { "strokeWidth": 1.75, "style": "line", "cornerRadius": 0 }
+    }
+  }
+}

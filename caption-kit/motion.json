@@ -1,0 +1,102 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-13",
+  "fps": 30,
+  "contract": {
+    "name": "no_standstill",
+    "note": "Kernregel: In keinem einzigen Frame darf ein sichtbares Element eine Geschwindigkeit von exakt 0 haben. Untertitel und Icon sind immer in Bewegung — entweder in der Ein-/Ausblendung oder in der Idle-Drift. Das ist der Unterschied zwischen 'animiert' und 'lebendig'.",
+    "rules": [
+      "Jedes sichtbare Element MUSS eine idle-Phase mit Bewegung ungleich null haben.",
+      "Der Ausgang von Block A ueberlappt den Eingang von Block B (overlapMs). Es gibt keinen leeren Frame zwischen zwei Bloecken.",
+      "Keine linearen Easings. Alle Uebergaenge laufen ueber die brand-Kurven unten.",
+      "Kein Hard-Cut auf Untertiteln. Bloecke wechseln ueber Verdraengung, nicht ueber Verschwinden.",
+      "Icons verlassen das Bild nie in dieselbe Richtung, aus der sie gekommen sind — sonst wirkt es wie ein Fehler.",
+      "Hintergrund/Video traegt eine dauerhafte Ken-Burns-Drift (ambient), damit auch in Sprechpausen nichts einfriert."
+    ]
+  },
+  "easings": {
+    "brandOut": { "cubicBezier": [0.16, 1, 0.3, 1], "css": "cubic-bezier(.16,1,.3,1)", "use": "Standard-Eingang. Schnell raus, weich aus — wirkt teuer." },
+    "brandInOut": { "cubicBezier": [0.65, 0, 0.35, 1], "css": "cubic-bezier(.65,0,.35,1)", "use": "Positionswechsel, Verdraengung." },
+    "snap": { "cubicBezier": [0.2, 0.9, 0.1, 1.06], "css": "cubic-bezier(.2,.9,.1,1.06)", "use": "Keyword-Betonung. Minimaler Overshoot, kein Wackel-Cartoon." },
+    "exit": { "cubicBezier": [0.5, 0, 0.75, 0], "css": "cubic-bezier(.5,0,.75,0)", "use": "Ausgang. Beschleunigt raus, nie ausbremsen." },
+    "ambient": { "cubicBezier": [0.45, 0, 0.55, 1], "css": "cubic-bezier(.45,0,.55,1)", "use": "Endlos-Drift, Atmen. Immer mit direction: alternate." }
+  },
+  "durations": {
+    "blockIn": 260,
+    "blockOut": 200,
+    "blockOverlap": 120,
+    "iconIn": 320,
+    "iconHold": 900,
+    "iconOut": 240,
+    "emphasis": 180,
+    "note": "blockOverlap wird von blockOut abgezogen: Block B startet 120 ms bevor Block A weg ist. Deshalb gibt es nie einen leeren Frame."
+  },
+  "presets": {
+    "pop_soft": {
+      "label": "Standard — Keyword und Icon",
+      "in": { "duration": 320, "easing": "brandOut", "from": { "opacity": 0, "scale": 0.72, "y": 14, "blur": 6 }, "to": { "opacity": 1, "scale": 1, "y": 0, "blur": 0 } },
+      "idle": { "loop": true, "duration": 2600, "easing": "ambient", "direction": "alternate", "keyframes": { "scale": [1, 1.035], "y": [0, -3], "rotate": [-0.6, 0.6] } },
+      "out": { "duration": 240, "easing": "exit", "to": { "opacity": 0, "scale": 0.9, "y": -10, "blur": 4 } }
+    },
+    "slam": {
+      "label": "Hook / Fehler / Achtung — harte Betonung in den ersten 2 Sekunden",
+      "in": { "duration": 220, "easing": "snap", "from": { "opacity": 0, "scale": 1.45, "y": 0, "blur": 10 }, "to": { "opacity": 1, "scale": 1, "y": 0, "blur": 0 } },
+      "idle": { "loop": true, "duration": 1800, "easing": "ambient", "direction": "alternate", "keyframes": { "scale": [1, 1.05], "rotate": [-1.2, 1.2] } },
+      "out": { "duration": 200, "easing": "exit", "to": { "opacity": 0, "scale": 1.18, "blur": 8 } }
+    },
+    "slide_in": {
+      "label": "Ruhige Fachbegriffe — Funnel, Workflow, Strategie",
+      "in": { "duration": 340, "easing": "brandOut", "from": { "opacity": 0, "x": -26, "scale": 0.94, "blur": 4 }, "to": { "opacity": 1, "x": 0, "scale": 1, "blur": 0 } },
+      "idle": { "loop": true, "duration": 3200, "easing": "ambient", "direction": "alternate", "keyframes": { "x": [0, 4], "y": [0, -2] } },
+      "out": { "duration": 240, "easing": "exit", "to": { "opacity": 0, "x": 22, "blur": 4 } }
+    },
+    "draw_on": {
+      "label": "Line-Icons mit Strichzeichnung — Premium-Effekt, sparsam einsetzen",
+      "in": { "duration": 520, "easing": "brandInOut", "strokeDashoffset": [1, 0], "from": { "opacity": 0.2, "scale": 0.92 }, "to": { "opacity": 1, "scale": 1 }, "note": "pathLength=1 am SVG setzen, dann stroke-dasharray:1 und stroke-dashoffset animieren." },
+      "idle": { "loop": true, "duration": 3000, "easing": "ambient", "direction": "alternate", "keyframes": { "scale": [1, 1.03], "rotate": [-0.8, 0.8] } },
+      "out": { "duration": 260, "easing": "exit", "to": { "opacity": 0, "scale": 0.88, "blur": 5 } }
+    },
+    "rise": {
+      "label": "Ergebnis, Umsatz, Wachstum — Aufwaertsbewegung als Bedeutungstraeger",
+      "in": { "duration": 380, "easing": "brandOut", "from": { "opacity": 0, "y": 34, "scale": 0.88 }, "to": { "opacity": 1, "y": 0, "scale": 1 } },
+      "idle": { "loop": true, "duration": 2400, "easing": "ambient", "direction": "alternate", "keyframes": { "y": [0, -6], "scale": [1, 1.03] } },
+      "out": { "duration": 220, "easing": "exit", "to": { "opacity": 0, "y": -26, "blur": 5 } }
+    }
+  },
+  "captionTransitions": {
+    "default": "push_up",
+    "variants": {
+      "push_up": { "label": "Block B schiebt Block A nach oben raus", "outgoing": { "y": -22, "opacity": 0, "blur": 5, "duration": 200, "easing": "exit" }, "incoming": { "from": { "y": 20, "opacity": 0, "blur": 5, "scale": 0.96 }, "duration": 260, "easing": "brandOut" }, "overlapMs": 120 },
+      "scale_through": { "label": "Weicher Durchzoom — gut fuer ruhige Passagen", "outgoing": { "scale": 1.08, "opacity": 0, "blur": 6, "duration": 200, "easing": "exit" }, "incoming": { "from": { "scale": 0.9, "opacity": 0, "blur": 6 }, "duration": 280, "easing": "brandOut" }, "overlapMs": 140 },
+      "word_swap": { "label": "Einzelwort tauscht, Block bleibt stehen — hoechste Ruhe bei hoher Sprechgeschwindigkeit", "outgoing": { "opacity": 0, "y": -8, "duration": 140, "easing": "exit" }, "incoming": { "from": { "opacity": 0, "y": 8 }, "duration": 180, "easing": "brandOut" }, "overlapMs": 90 }
+    }
+  },
+  "emphasis": {
+    "note": "Was mit dem aktiven Wort im 2-3-Wort-Block passiert. Laeuft parallel zum Icon, nie stattdessen.",
+    "activeWord": { "duration": 180, "easing": "snap", "scale": 1.08, "colorToken": "accent", "trackingDelta": "-0.01em" },
+    "suppressedKeyword": { "note": "Keyword ohne Icon (Dichteregel greift): nur Farbwechsel, keine Skalierung — sonst konkurrieren zwei Betonungen.", "duration": 160, "easing": "brandOut", "colorToken": "accent" }
+  },
+  "ambient": {
+    "note": "Laeuft dauerhaft im Hintergrund. Verhindert das Einfrieren in Sprechpausen — der haeufigste Grund fuer Absprung nach Sekunde 3.",
+    "kenBurns": { "loop": true, "duration": 12000, "easing": "ambient", "direction": "alternate", "keyframes": { "scale": [1.0, 1.06], "x": [0, -1.5], "y": [0, 1.2] }, "unit": "percent" },
+    "grain": { "opacity": 0.05, "animated": true, "fps": 12, "note": "Bewegtes Korn haelt auch statische Standbilder lebendig." }
+  },
+  "iconPlacement": {
+    "default": "above_block",
+    "variants": {
+      "above_block": { "anchor": "caption", "offsetY": "-1.35em", "align": "center", "size": "1.6em" },
+      "inline_replace": { "anchor": "word", "note": "Icon ersetzt das Wort fuer iconHold ms und blendet dann zurueck zum Wort. Stark bei Einzelbegriffen wie GPT oder Community, unruhig bei Fliesstext.", "size": "1.15em" },
+      "corner_badge": { "anchor": "safeArea", "position": "top_right", "offset": "6%", "size": "9vmin", "note": "Fuer laufende Themen-Marker ueber mehrere Bloecke hinweg." }
+    }
+  },
+  "categoryPresets": {
+    "ki": "draw_on",
+    "social": "pop_soft",
+    "recruiting": "slide_in",
+    "branche": "slide_in",
+    "ads": "pop_soft",
+    "business": "rise",
+    "emotion": "slam",
+    "lokal": "pop_soft"
+  }
+}

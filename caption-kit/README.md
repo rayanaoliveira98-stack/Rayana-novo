@@ -1,0 +1,178 @@
+# Caption Kit
+
+Datenschicht für animierte Untertitel mit Keyword-Icons. Kein Renderer, kein Plugin — reine JSON-Bibliothek, die in jedes Tool geht: eigenes Web-Rendering, After-Effects-Skript, n8n/Zapier-Automation oder ein Caption-Tool mit Custom-Mapping.
+
+**Prinzip:** Du sprichst Deutsch, das Transkript läuft durch die Bibliothek, und definierte Schlagwörter bekommen automatisch ein Line-Icon, eine Betonung und ein Motion-Preset. Untertitel immer auf Deutsch, grammatisch geprüft. Nichts steht jemals still.
+
+---
+
+## Dateien
+
+| Datei | Inhalt |
+|---|---|
+| `keywords.json` | 77 Schlagwörter, 248 Match-Varianten → Icon, Kategorie, Priorität, deutsche Grammatik |
+| `icons.json` | 51 Line-Icons als Inner-SVG, `currentColor`, Strichstärke 1,75 |
+| `motion.json` | Easings, Presets, Übergänge, der `no_standstill`-Vertrag |
+| `captions.json` | 2–3-Wort-Blockstil, Safe Areas pro Format, deutsches Regelwerk |
+| `brands.json` | Farb- und Typo-Tokens: Black Strategie + Neutral, umschaltbar |
+| `schema.json` | JSON Schema für `keywords.json` |
+| `validate.mjs` | Konsistenzprüfung, ohne Abhängigkeiten |
+
+```bash
+node caption-kit/validate.mjs
+```
+
+---
+
+## Pipeline
+
+```
+Audio → Transkript (de-AT)
+      → Blöcke schneiden        (captions.json → styles.block_2_3 + germanRules.segmentation)
+      → Grammatik anwenden      (captions.json → germanRules)
+      → Keywords matchen        (keywords.json → matching)
+      → Dichteregel anwenden    (keywords.json → density)
+      → Motion zuweisen         (motion.json → categoryPresets, presets)
+      → Farben auflösen         (brands.json → brands[active].color)
+      → Render
+```
+
+Der Renderer liest nie Hex-Werte, nur Token-Namen (`accent`, `ink`, `paper`). Marke wechseln heißt: `brands.json → active` umstellen. Sonst nichts.
+
+---
+
+## Match-Logik
+
+`matching.mode: "word"` — Treffer auf Wortgrenzen der Untertitel-Tokens, nicht auf dem Rohtext.
+
+Drei Ebenen:
+
+1. **Exakt** — was in `match` steht: `"GPT"`, `"Meta Ads"`, `"Fachkräftemangel"`.
+2. **Gebeugt** — über `inflectionSuffixes`: `Bewerber` trifft auch `Bewerbern`, `Bewerberinnen`.
+3. **Kompositum** — `compoundMatch: true`: `Werbebudget` triggert `budget`, `Fachkräftemangel` triggert `fachkraefte`. Das Icon sitzt am ganzen Kompositum, nicht am Teilwort.
+
+Eigennamen (`GPT`, `TikTok`, `LinkedIn`) sind als `type: "eigenname"` markiert und werden **nie** gebeugt.
+
+---
+
+## Dichteregel — gegen Icon-Überladung
+
+Das war deine Sorge: zu viele Schlagwörter, zu viele Icons, Bild wird Kirmes. Deshalb `keywords.json → density`:
+
+```
+maxIconsPer10s        3
+maxIconsPerBlock      1
+minGapBetweenIconsMs  1200
+hookWindowMaxIcons    1      (erste 2 Sekunden: genau ein Icon)
+fallbackWhenSuppressed emphasis_only
+```
+
+Wenn mehrere Keywords konkurrieren, gewinnt die höhere `priority` (3 → 1), bei Gleichstand der erste Treffer. **Die Verlierer verschwinden nicht** — sie behalten die farbige Text-Hervorhebung und verlieren nur das Icon. Die Betonung bleibt, die Unruhe geht.
+
+Die `priority` ist damit dein eigentlicher Regler: `Fehler`, `Geheimnis`, `Leads`, `GPT` stehen auf 3 und setzen sich durch. `Video`, `Link`, `Newsletter` stehen auf 1 und weichen zuerst.
+
+---
+
+## Der `no_standstill`-Vertrag
+
+Deine Vorgabe: weiche Übergänge, keine Stillstelle. In `motion.json` ist das kein Stilhinweis, sondern eine Regel, die der Validator prüft:
+
+- Jedes Preset braucht eine **`idle`-Phase** mit `loop: true` und echten Keyframes. Ein Element, das seine Einblendung beendet hat, driftet weiter — Skalierung, Mikro-Rotation, Schwebebewegung. Nie Geschwindigkeit null.
+- Jeder Übergang braucht **`overlapMs > 0`**. Block B startet, bevor Block A weg ist. Es gibt keinen leeren Frame zwischen zwei Untertiteln.
+- **`ambient.kenBurns`** läuft dauerhaft über dem Video — 12 Sekunden, 6 % Zoom, alternierend. Deshalb friert auch eine Sprechpause nicht ein. Genau dort verlierst du sonst den Zuschauer nach Sekunde 3.
+- Keine linearen Easings. Alles läuft über `brandOut` (`cubic-bezier(.16,1,.3,1)`) — schnell raus, weich aus. Das ist der Unterschied zwischen „animiert" und „teuer".
+
+Presets pro Kategorie (`categoryPresets`):
+
+| Kategorie | Preset | Warum |
+|---|---|---|
+| `ki` | `draw_on` | Icon zeichnet sich selbst — Premium, sparsam einsetzen |
+| `emotion` | `slam` | Harte Betonung für Hook, Fehler, Achtung |
+| `business` | `rise` | Aufwärtsbewegung als Bedeutungsträger bei Umsatz, Wachstum |
+| `recruiting`, `branche` | `slide_in` | Ruhig, seriös, B2B-tauglich |
+| `social`, `ads`, `lokal` | `pop_soft` | Standard |
+
+---
+
+## Deutsches Regelwerk
+
+`captions.json → germanRules` ist maschinenlesbar, weil jede dieser Regeln ein Fehler ist, den Auto-Untertitel (CapCut, Submagic, Opus) zuverlässig produzieren:
+
+- **ß statt ss** — Österreich schreibt wie Deutschland. Nur die Schweiz nicht.
+- **Durchkoppeln** — `Social-Media-Strategie`, `Meta-Ads-Kampagne`. Nicht `Social Media Strategie`.
+- **Kein Deppenleerzeichen** — `Contentplan`, nicht `Content Plan`.
+- **Nomen groß, auch englische** — `der Content`, `mehr Leads`.
+- **Zahlen als Ziffern** — `3.000 €`, nicht `dreitausend Euro`. Punkt als Tausender, Komma als Dezimale.
+- **Kein Punkt am Blockende** — bremst den Lesefluss. Frage- und Rufzeichen bleiben, die tragen Tonfall.
+- **Segmentierung nach Sinneinheiten** — `'mit der Zielgruppe' | 'reden'`, nicht `'mit der' | 'Zielgruppe reden'`.
+- **Keyword nie am Blockende** — sonst verschwindet das Icon, bevor es gelesen ist.
+
+**Kein Uppercase.** Bewusste Entscheidung in `styles.block_2_3.textTransform: "none"`: Großbuchstaben zerstören im Deutschen das Signal der Nomen-Großschreibung. Der Leser verliert die Satzstruktur und liest langsamer. Auf Englisch funktioniert Caps, auf Deutsch kostet es Retention.
+
+Einzelne Keywords tragen zusätzlich ihre eigene Grammatik-Notiz — dort, wo es wirklich schiefgeht:
+
+| Keyword | Regel |
+|---|---|
+| `Community` | Plural laut Duden: **Communitys**, nicht „Communities" |
+| `Story` | Plural: **Storys** |
+| `Follower` | Plural ohne -s: **10.000 Follower** |
+| `Content` | Kein Plural. „Contents" existiert im Deutschen nicht |
+| `Kunde` | Schwache Deklination: **dem Kunden**, nie „dem Kunde" |
+| `Algorithmus` | Plural: **Algorithmen** |
+| `Website` | Ganzer Auftritt. **Webseite** ist die einzelne Unterseite |
+| `E-Mail` | Bindestrich, großes M |
+| `Klick` | Deutsch mit K |
+
+Der Validator prüft das mit: Artikel gegen Genus, Groß-/Kleinschreibung gegen Wortart, umschriebene Umlaute im sichtbaren Text.
+
+---
+
+## Marken umschalten
+
+```json
+{ "active": "black_strategie" }
+```
+
+Beide Marken tragen denselben Token-Satz — der Validator erzwingt das, damit der Wechsel nie halb funktioniert.
+
+**Black Strategie:** Schwarz `#000000`, Weiß `#FFFFFF`, ein Akzent `#D4B483`. Kein Farbkarneval — die Autorität kommt aus dem Kontrast.
+
+> Die Hex-Werte sind eine begründete Annahme, kein bestätigtes Brand-Kit. Sobald du die echten Werte hast: nur das Objekt `brands.black_strategie` überschreiben. Keywords, Icons und Motion bleiben unangetastet.
+
+**Neutral:** bewusst farbarm, damit das Video die Farbe trägt. Für Kundenprojekte und Tests.
+
+Neue Marke = ein weiteres Objekt mit denselben Token-Keys. STAFF24 oder FITARY sind damit jeweils ein Copy-Paste-Block, kein Umbau.
+
+---
+
+## Keyword ergänzen
+
+```json
+{
+  "id": "employer_value",
+  "match": ["Arbeitgeberversprechen", "EVP"],
+  "icon": "shield",
+  "category": "recruiting",
+  "priority": 2,
+  "display": "Arbeitgeberversprechen",
+  "grammar": { "type": "nomen", "genus": "n", "artikel": "das", "plural": "die Arbeitgeberversprechen" }
+}
+```
+
+Dann `node caption-kit/validate.mjs`. Der Validator fängt ab:
+
+- unbekannte Icon-Referenzen
+- doppelte IDs und kollidierende Match-Varianten
+- Artikel, der nicht zum Genus passt
+- Nomen klein / Adjektiv groß geschrieben
+- umschriebene Umlaute im sichtbaren Text
+- Motion-Presets ohne `idle`-Phase oder Übergänge ohne Überlappung
+- Untertitel-Position, die in der Plattform-Sperrzone liegt
+
+---
+
+## Safe Areas
+
+`captions.json → safeArea` als Anteil der Videofläche. Bei 9:16 sind unten 22 % gesperrt: Caption, Profilname, Musiktitel. `verticalPosition: 0.62` liegt bewusst darüber — Untertitel im unteren Drittel, aber oberhalb der Plattform-UI.
+
+Für LinkedIn und YouTube (16:9) den Untertitel höher setzen, dort ist die Sperrzone anders geschnitten.
