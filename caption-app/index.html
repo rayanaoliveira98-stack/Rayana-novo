@@ -6,7 +6,7 @@
 <title>Caption Studio — Black Strategie</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800&family=Playfair+Display:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,6 +17,11 @@
     <div class="field">
       <label for="script">Skript / Voiceover-Text</label>
       <textarea id="script" spellcheck="false"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="style">Untertitel-Stil</label>
+      <select id="style"></select>
     </div>
 
     <div class="row">
@@ -39,6 +44,12 @@
         <label for="transition">Übergang</label>
         <select id="transition"></select>
       </div>
+    </div>
+
+    <div class="field">
+      <label for="banner">Hook-Banner (steht dauerhaft oben)</label>
+      <input id="banner" type="text" placeholder="Antwort in den Kommentaren" autocomplete="off">
+      <select id="banner-preset"></select>
     </div>
 
     <div class="btns">
@@ -77,6 +88,7 @@
     <div class="stage" id="stage">
       <div class="ambient"></div>
       <div class="safe" id="safezone"><i></i><i></i></div>
+      <div class="banner" id="banner-el"></div>
       <div class="track" id="track"></div>
     </div>
   </main>

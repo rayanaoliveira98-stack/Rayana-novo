@@ -21,7 +21,43 @@
       "shadow": "0 2px 18px var(--shadow)",
       "minBlockMs": 420,
       "maxBlockMs": 1400,
-      "note": "minBlockMs verhindert Flackern bei schnellem Sprechen — kuerzere Bloecke werden mit dem Nachbarblock zusammengelegt."
+      "note": "minBlockMs verhindert Flackern bei schnellem Sprechen — kuerzere Bloecke werden mit dem Nachbarblock zusammengelegt.",
+      "overridesPace": false
+    },
+    "single_word_serif": {
+      "label": "Einzelwort, Serif, editorial",
+      "reference": "Analyse eines Reels von @pinksparrowsocial — Einzelwort-Untertitel in hoher Serifenschrift, mittig auf Brusthoehe, dazu ein dauerhaftes Hook-Banner am oberen Rand.",
+      "use": "Premium-Positionierung, Personal Brand, ruhige Autoritaet. Das Gegenteil des fetten CapCut-Sans-Looks — liest sich nach Marke, nicht nach Creator.",
+      "wordsPerBlock": {
+        "min": 1,
+        "max": 1
+      },
+      "align": "center",
+      "verticalPosition": 0.55,
+      "verticalPositionNote": "Bewusst hoeher als der Blockstil: der Untertitel sitzt auf Brusthoehe der sprechenden Person, nicht im unteren Drittel. Der Blick springt damit nicht zwischen Gesicht und Text hin und her.",
+      "fontSizeVh": 5.2,
+      "fontRole": "editorial",
+      "maxLines": 1,
+      "textTransform": "none",
+      "textTransformNote": "Die Referenz schreibt klein („follower\"). Das ist nicht uebertragbar: im Deutschen bleiben Nomen gross, sonst liest es sich wie ein Tippfehler und die Marke wirkt schlampig statt editorial. Der Premium-Effekt kommt hier aus der Serifenschrift und der zurueckhaltenden Groesse — nicht aus der Kleinschreibung.",
+      "activeWordToken": "ink",
+      "inactiveWordToken": "ink",
+      "shadow": "0 2px 14px var(--shadow)",
+      "minBlockMs": 260,
+      "maxBlockMs": 700,
+      "transition": "word_swap",
+      "iconPolicy": "sparse",
+      "iconPolicyNote": "Die Referenz arbeitet vollstaendig ohne Icons und holt trotzdem 6.000 Likes. Die Arbeit macht das Hook-Banner, nicht die Bebilderung. In diesem Stil laeuft die Icon-Dichte deshalb auf 1 pro 10 s — ein Icon wird zum Ereignis statt zum Rhythmus.",
+      "density": {
+        "maxIconsPer10s": 1,
+        "maxIconsPerBlock": 1,
+        "minGapBetweenIconsMs": 4000,
+        "hookWindowMs": 2000,
+        "hookWindowMaxIcons": 0
+      },
+      "functionWordRule": "Einzelwort heisst nicht „jedes Wort einzeln\". Artikel, Praepositionen und Konjunktionen wandern mit dem folgenden Wort in denselben Block — ein Frame, der nur „die\" zeigt, ist im Deutschen eine Leerstelle.",
+      "overridesPace": true,
+      "iconPresetOverride": "draw_on"
     }
   },
   "safeArea": {
@@ -352,5 +388,64 @@
       "form": "doppelpunkt",
       "formNote": "Doppelpunkt statt Sternchen: wird von Screenreadern sauberer gelesen und bricht die Typografie im fetten Blocksatz weniger auf."
     }
-  }
+  },
+  "overlays": {
+    "note": "Dauerhafte Einblendungen, die ueber die gesamte Videolaenge stehen bleiben — unabhaengig vom Untertitel-Takt.",
+    "hookBanner": {
+      "label": "Dauerhaftes Hook- und CTA-Banner",
+      "rationale": "Der staerkste Griff aus der Referenz. Der Call-to-Action steht die ganze Laufzeit oben im Bild. Wer erst bei Sekunde 8 einsteigt, weiss sofort, was zu tun ist — ohne den Anfang gesehen zu haben. Bei Reels, die ueber Explore und Shares laufen, steigt genau dort die Mehrheit ein.",
+      "enabled": true,
+      "verticalPosition": 0.155,
+      "verticalPositionNote": "Direkt unter der oberen Safe Area. Hoeher waere unter der Statusbar, tiefer konkurriert es mit dem Gesicht.",
+      "fontRole": "editorial",
+      "fontSizeVh": 2.9,
+      "colorToken": "accent",
+      "outline": {
+        "width": "0.055em",
+        "colorToken": "paper",
+        "note": "Kontur statt Schlagschatten: haelt den Text auf jedem Hintergrund lesbar, ohne die Schrift zu verschmieren."
+      },
+      "emoji": {
+        "allowed": true,
+        "maxCount": 2,
+        "position": "suffix",
+        "note": "Emoji gehoeren ins Banner, nie in die laufenden Untertitel. Im Banner sind sie funktional — 👇 zeigt auf die Kommentarzeile, 👆 auf den Profilnamen. In den Untertiteln waeren sie Dekoration und wuerden mit den Line-Icons konkurrieren.",
+        "recommended": [
+          "👇",
+          "👆",
+          "🔗",
+          "⬇️"
+        ]
+      },
+      "motion": "banner_float",
+      "examples": [
+        {
+          "text": "Antwort in den Kommentaren",
+          "emoji": "👇👇",
+          "use": "Kommentar-CTA — treibt Reichweite ueber Interaktion"
+        },
+        {
+          "text": "Ganzer Plan in der Bio",
+          "emoji": "🔗",
+          "use": "Lead-CTA — Traffic auf Funnel oder Landingpage"
+        },
+        {
+          "text": "Schreib mir STRATEGIE",
+          "emoji": "👇",
+          "use": "DM-Trigger — hoechste Lead-Qualitaet, direkt im Postfach"
+        },
+        {
+          "text": "Wir stellen ein",
+          "emoji": "👆",
+          "use": "Recruiting — Dauereinblendung auf Bewerber-Content"
+        }
+      ],
+      "fit": {
+        "mode": "shrink_to_one_line",
+        "minFontSizeVh": 1.9,
+        "note": "Das Banner muss einzeilig bleiben. Ein Umbruch reisst das Emoji in die zweite Zeile und das CTA zerfaellt optisch. Der Renderer verkleinert stattdessen bis zur Mindestgroesse."
+      }
+    }
+  },
+  "styleResolution": "Aufloesung zwischen Stil und Tempo-Profil: hat der Stil overridesPace=true, gewinnen seine Werte (er ist ein geschlossener Look). Sonst setzt das Tempo-Profil Blockdauer, Schriftgroesse, Position und Dichte — der Stil liefert nur Typografie und Ausrichtung."
 }

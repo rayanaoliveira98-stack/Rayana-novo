@@ -3,7 +3,18 @@
   "updated": "2026-09-13",
   "active": "black_strategie",
   "note": "Ein Token-System, mehrere Marken. Der Renderer liest nur Token-Namen (accent, ink, paper ...), nie Hex-Werte direkt. Marke wechseln = 'active' umstellen, alles andere zieht mit. Neue Marke = ein weiteres Objekt unter 'brands' mit denselben Token-Keys.",
-  "tokenKeys": ["paper", "ink", "inkMuted", "accent", "accentInk", "signal", "success", "iconColor", "iconBg", "shadow"],
+  "tokenKeys": [
+    "paper",
+    "ink",
+    "inkMuted",
+    "accent",
+    "accentInk",
+    "signal",
+    "success",
+    "iconColor",
+    "iconBg",
+    "shadow"
+  ],
   "brands": {
     "neutral": {
       "label": "Neutral / umschaltbar",
@@ -21,10 +32,32 @@
         "shadow": "rgba(0,0,0,.55)"
       },
       "typography": {
-        "display": { "family": "\"Inter Tight\", \"Inter\", \"Helvetica Neue\", Arial, sans-serif", "weight": 800, "tracking": "-0.02em", "lineHeight": 1.04, "case": "none" },
-        "caption": { "family": "\"Inter Tight\", \"Inter\", Arial, sans-serif", "weight": 800, "tracking": "-0.015em", "lineHeight": 1.06 }
+        "display": {
+          "family": "\"Inter Tight\", \"Inter\", \"Helvetica Neue\", Arial, sans-serif",
+          "weight": 800,
+          "tracking": "-0.02em",
+          "lineHeight": 1.04,
+          "case": "none"
+        },
+        "caption": {
+          "family": "\"Inter Tight\", \"Inter\", Arial, sans-serif",
+          "weight": 800,
+          "tracking": "-0.015em",
+          "lineHeight": 1.06
+        },
+        "editorial": {
+          "family": "\"Instrument Serif\", \"Playfair Display\", Georgia, \"Times New Roman\", serif",
+          "weight": 400,
+          "tracking": "-0.005em",
+          "lineHeight": 1.1,
+          "case": "none"
+        }
       },
-      "icon": { "strokeWidth": 1.75, "style": "line", "cornerRadius": 0 }
+      "icon": {
+        "strokeWidth": 1.75,
+        "style": "line",
+        "cornerRadius": 0
+      }
     },
     "black_strategie": {
       "label": "Black Strategie",
@@ -43,10 +76,33 @@
         "shadow": "rgba(0,0,0,.7)"
       },
       "typography": {
-        "display": { "family": "\"Archivo\", \"Inter Tight\", \"Helvetica Neue\", Arial, sans-serif", "weight": 800, "tracking": "-0.025em", "lineHeight": 1.02, "case": "none" },
-        "caption": { "family": "\"Archivo\", \"Inter Tight\", Arial, sans-serif", "weight": 800, "tracking": "-0.02em", "lineHeight": 1.05 }
+        "display": {
+          "family": "\"Archivo\", \"Inter Tight\", \"Helvetica Neue\", Arial, sans-serif",
+          "weight": 800,
+          "tracking": "-0.025em",
+          "lineHeight": 1.02,
+          "case": "none"
+        },
+        "caption": {
+          "family": "\"Archivo\", \"Inter Tight\", Arial, sans-serif",
+          "weight": 800,
+          "tracking": "-0.02em",
+          "lineHeight": 1.05
+        },
+        "editorial": {
+          "family": "\"Playfair Display\", \"Instrument Serif\", Georgia, serif",
+          "weight": 500,
+          "tracking": "-0.01em",
+          "lineHeight": 1.08,
+          "case": "none",
+          "note": "Hohe Strichkontrast-Serife. Traegt die Premium-Positionierung ohne zusaetzliche Farbe — genau das, was Schwarz-Weiss-Marken brauchen."
+        }
       },
-      "icon": { "strokeWidth": 1.75, "style": "line", "cornerRadius": 0 }
+      "icon": {
+        "strokeWidth": 1.75,
+        "style": "line",
+        "cornerRadius": 0
+      }
     }
   }
 }

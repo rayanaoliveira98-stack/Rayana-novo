@@ -19,11 +19,11 @@ h1 small { display: block; color: var(--ui-dim); font-weight: 400; font-size: 11
   letter-spacing: 0; margin-top: 4px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--ui-dim); }
-textarea, select { width: 100%; background: #0a0a0c; color: var(--ui-text);
+textarea, select, input[type=text] { width: 100%; background: #0a0a0c; color: var(--ui-text);
   border: 1px solid var(--ui-line); border-radius: 8px; padding: 10px 11px;
   font: inherit; font-size: 13px; }
 textarea { min-height: 132px; resize: vertical; line-height: 1.55; }
-textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+textarea:focus, select:focus, input[type=text]:focus { outline: none; border-color: var(--accent); }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .btns { display: flex; gap: 8px; flex-wrap: wrap; }
 button { flex: 1; min-width: 84px; background: #1e1e22; color: var(--ui-text);
@@ -107,3 +107,24 @@ body.record .exit-record { display: block; }
   .panel { max-height: none; border-right: 0; border-bottom: 1px solid var(--ui-line); }
   .stage { height: min(70vh, 700px); }
 }
+
+/* ── Dauerhaftes Hook-Banner ──────────────────────────────────────────────
+   Steht die ganze Laufzeit oben im Bild. Wer erst bei Sekunde 8 einsteigt,
+   sieht den Call-to-Action trotzdem. Die Mikro-Drift ist Pflicht: ein über
+   25 Sekunden absolut statisches Element ist genau die Stillstelle, die der
+   no_standstill-Vertrag verbietet. */
+.banner { position: absolute; left: 7%; right: 7%; text-align: center;
+  font-family: var(--font-editorial); font-weight: 600; color: var(--accent);
+  line-height: 1.15; pointer-events: none; display: none;
+  -webkit-text-stroke: .055em var(--paper); paint-order: stroke fill;
+  animation: bannerfloat 3400ms cubic-bezier(.45,0,.55,1) infinite alternate; }
+.banner.on { display: block; }
+.banner .line { display: inline-block; white-space: nowrap; }
+.banner .emoji { -webkit-text-stroke: 0; margin-left: .3em; }
+@keyframes bannerfloat {
+  from { transform: translateY(0) scale(1) rotate(-.25deg); }
+  to   { transform: translateY(-4px) scale(1.018) rotate(.25deg); }
+}
+.block.editorial { font-family: var(--font-editorial); font-weight: 500;
+  letter-spacing: -.01em; }
+.block.editorial .w.em { color: var(--ink); }

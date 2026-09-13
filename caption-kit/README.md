@@ -217,3 +217,60 @@ node caption-kit/build-bundle.mjs
 ### Schriften
 
 Die App lädt **Archivo** von Google Fonts. Ohne Internet fällt sie auf die System-Grotesk zurück — Layout und Timing bleiben identisch, nur der Schriftschnitt ändert sich.
+
+---
+
+## Referenz-Analyse: @pinksparrowsocial
+
+Ein Reel mit 6.036 Likes, 667 Kommentaren, 4.230 Sends. Die Sends sind die interessante Zahl — sie sind das stärkste Reichweitensignal, und sie liegen hier bei fast 70 % der Likes. Das ist kein Zufall, das ist gebaut.
+
+### Was übernommen wurde
+
+**1. Das dauerhafte Hook-Banner** → `captions.json → overlays.hookBanner`
+
+„Help in the comments 👇👇" steht die **ganze Laufzeit** oben im Bild. Das ist der stärkste Griff im ganzen Video. Wer erst bei Sekunde 8 einsteigt — und bei einem Reel, das über Explore und Shares läuft, ist das die Mehrheit — weiß sofort, was zu tun ist, ohne den Anfang gesehen zu haben.
+
+Die 667 Kommentare kommen daher, nicht aus dem Skript.
+
+In der Bibliothek mit vier Vorlagen hinterlegt, nach CTA-Typ getrennt: Kommentar-Trigger (Reichweite), Bio-Link (Traffic), DM-Trigger (beste Lead-Qualität), Recruiting-Dauereinblendung.
+
+**2. Einzelwort in Serifenschrift** → `captions.json → styles.single_word_serif`
+
+Ein Wort, mittig, hohe Serife, zurückhaltende Größe. Das ist das exakte Gegenteil des fetten CapCut-Sans, den alle fahren — und genau deshalb funktioniert es. Es liest sich nach **Marke**, nicht nach Creator.
+
+**3. Untertitel auf Brusthöhe statt im unteren Drittel**
+
+`verticalPosition: 0.55`. Der Blick springt nicht mehr zwischen Gesicht und Text hin und her. Klingt nach Kleinigkeit, ist aber der Grund, warum das Video ruhig wirkt, obwohl der Text schnell wechselt.
+
+**4. Emoji nur im Banner, nie in den Untertiteln**
+
+👇 ist dort funktional — es zeigt auf die Kommentarzeile. In den laufenden Untertiteln wären Emoji Dekoration und würden mit den Line-Icons konkurrieren. Die Regel steht in `overlays.hookBanner.emoji`.
+
+### Was **nicht** übernommen wurde
+
+**Die Kleinschreibung.** Sie schreibt „follower". Auf Englisch ist das editorial. Auf Deutsch ist es ein Rechtschreibfehler — Nomen bleiben groß, sonst wirkt die Marke schlampig statt hochwertig. Der Premium-Effekt kommt in diesem Stil aus der Serife und der ruhigen Größe, nicht aus der Schreibweise.
+
+**Das Mikrofon im Bild.** Das Wort liegt bei ihr direkt auf dem RØDE-Mikro. Unruhig, und der Untertitel verliert Kontrast. Wenn du mit sichtbarem Mikro drehst, muss der Untertitel darüber sitzen, nicht darauf.
+
+### Die eigentliche Lektion
+
+**Sie benutzt null Icons.** Kein einziges. Und holt trotzdem 6.000 Likes.
+
+Das heißt: Icons sind nicht der Retention-Treiber. Das Banner ist es, und der Schnitt. Deshalb läuft die Icon-Dichte im Stil `single_word_serif` auf **1 pro 10 Sekunden** statt 4 — ein Icon wird zum Ereignis statt zum Rhythmus, und es bekommt `draw_on`, also Zeit, sich zu zeichnen.
+
+Wer Icons streut, weil das Tool sie kann, baut Kirmes. Wer sie setzt, weil ein Begriff sie verdient, baut Marke.
+
+### Im Stil-Vergleich
+
+| | `block_2_3` | `single_word_serif` |
+|---|---|---|
+| Wörter pro Block | 2–3 | 1 (Artikel zieht mit) |
+| Schrift | Grotesk 800 | Serife 500 |
+| Position | 0,60–0,62 | 0,55 |
+| Blockdauer | 300–1400 ms | 260–700 ms |
+| Icons / 10 s | 3–4 | 1 |
+| Übergang | `push_up` | `word_swap` |
+| Wirkung | aggressiv, Performance | ruhig, Autorität |
+| Einsatz | Hooks, Ads, Recruiting-Reels | Personal Brand, Premium, Positionierung |
+
+**Einzelwort heißt nicht „jedes Wort einzeln".** Artikel, Präpositionen und Konjunktionen wandern mit ins Folgewort — ein Frame, der nur „die" zeigt, ist im Deutschen eine Leerstelle. Aus „die falsche Zielgruppe" werden deshalb zwei Blöcke: `die falsche` | `Zielgruppe`, nicht drei.

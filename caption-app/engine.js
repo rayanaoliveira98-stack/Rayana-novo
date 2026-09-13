@@ -62,12 +62,21 @@
 
   /* ---- Tokenisieren und Bloecke schneiden ------------------------------ */
   function tokenize(text) {
-    return text
-      .replace(/\s+/g, ' ')
-      .trim()
-      .split(' ')
-      .filter(Boolean)
-      .map((raw) => ({ raw, clean: raw.replace(/[.,;:!?„“"»«]/g, ''), hardBreak: /[.!?:]$/.test(raw) }));
+    const out = [];
+    for (const raw of text.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean)) {
+      const clean = raw.replace(/[.,;:!?„“"»«]/g, '');
+      // Reine Satzzeichen — etwa ein allein stehender Gedankenstrich — sind
+      // kein Wort. Sie haengen sich an das vorige Wort, statt einen eigenen
+      // Block zu bilden.
+      if (!/[\wäöüßÄÖÜ]/.test(clean) && out.length) {
+        const prev = out[out.length - 1];
+        prev.raw += ' ' + raw;
+        prev.hardBreak = prev.hardBreak || /[.!?:]$/.test(raw);
+        continue;
+      }
+      out.push({ raw, clean, hardBreak: /[.!?:]$/.test(raw) });
+    }
+    return out;
   }
 
   function cutBlocks(tokens, pace) {
@@ -89,15 +98,23 @@
         if (last.hardBreak) return false;
         if (BINDET_NACH_RECHTS.has(norm(last.clean))) return true;
         // Keyword mit Icon nie als letztes Wort — sonst ist das Icon weg,
-        // bevor es gelesen wurde.
-        return !!lookup(last.clean) && n > min;
+        // bevor es gelesen wurde. Im Einzelwort-Stil gilt das nicht: dort IST
+        // das Keyword der ganze Block und steht damit ohnehin allein im Bild.
+        return max > 1 && !!lookup(last.clean) && n > min;
       };
 
-      let guard = 0;
-      while (endsBadly(len) && guard++ < max) {
-        if (len > min) len--;
-        else if (i + len < tokens.length) len++;
-        else break;
+      /* Endet der Block schlecht, werden Alternativen der Reihe nach geprueft:
+         erst kuerzen bis zur Mindestlaenge, dann verlaengern. Deterministisch —
+         ein Wechsel aus Kuerzen und Verlaengern wuerde sonst endlos pendeln
+         (etwa bei „nicht" gefolgt von „weil": beide binden nach rechts). */
+      if (endsBadly(len)) {
+        const room = tokens.length - i;
+        const candidates = [];
+        for (let n = len - 1; n >= min; n--) candidates.push(n);
+        for (let n = len + 1; n <= Math.min(len + 3, room); n++) candidates.push(n);
+        for (const n of candidates) {
+          if (!endsBadly(n)) { len = n; break; }
+        }
       }
 
       blocks.push(tokens.slice(i, i + len));
@@ -116,12 +133,37 @@
   }
 
   /* ---- Aufbereiten ------------------------------------------------------ */
+  /* Stil und Tempo aufloesen. Ein geschlossener Look (overridesPace) setzt
+     seine eigenen Werte durch; sonst bestimmt das Tempo-Profil den Takt und
+     der Stil nur die Typografie. */
+  function resolve(styleId, paceId) {
+    const caps = KIT.captions;
+    const style = caps.styles[styleId];
+    const pace = caps.paceProfiles[paceId];
+    const base = style.overridesPace ? pace : style;
+    const top = style.overridesPace ? style : pace;
+    return {
+      styleId,
+      wordsPerBlock: top.wordsPerBlock || base.wordsPerBlock,
+      minBlockMs: top.minBlockMs != null ? top.minBlockMs : base.minBlockMs,
+      maxBlockMs: top.maxBlockMs != null ? top.maxBlockMs : base.maxBlockMs,
+      fontSizeVh: top.fontSizeVh != null ? top.fontSizeVh : base.fontSizeVh,
+      verticalPosition: top.verticalPosition != null ? top.verticalPosition : base.verticalPosition,
+      transition: top.transition || base.transition,
+      density: top.density || base.density,
+      fontRole: style.fontRole || 'caption',
+      activeWordToken: style.activeWordToken,
+      iconPresetOverride: style.iconPresetOverride || null
+    };
+  }
+
   function compose(text, opts) {
     const caps = KIT.captions;
-    const pace = caps.paceProfiles[opts.pace];
+    const cfg = resolve(opts.style || caps.activeStyle, opts.pace);
+    const pace = cfg;
     const audience = caps.genderProfiles[caps.activeGenderProfile].audiences[opts.audience];
     const variant = audience ? audience.variant : 'neutral';
-    const density = pace.density;
+    const density = cfg.density;
 
     const blocks = cutBlocks(tokenize(text), pace);
 
@@ -159,7 +201,7 @@
           icon = {
             id: cand.kw.icon,
             body: KIT.icons.icons[cand.kw.icon].body,
-            preset: cand.kw.motion || KIT.motion.categoryPresets[cand.kw.category],
+            preset: cfg.iconPresetOverride || cand.kw.motion || KIT.motion.categoryPresets[cand.kw.category],
             keyword: cand.kw.id,
             category: cand.kw.category
           };
@@ -192,7 +234,7 @@
       });
     }
 
-    return { blocks: out, totalMs: t, pace: opts.pace, audience: opts.audience, variant };
+    return { blocks: out, totalMs: t, pace: opts.pace, style: cfg.styleId, cfg, audience: opts.audience, variant };
   }
 
   /* ---- Grammatik- und Typografie-Pruefung ------------------------------- */
@@ -243,10 +285,11 @@
         generator: 'caption-kit',
         library: KIT.keywords.version,
         pace: comp.pace,
+        style: comp.style,
         audience: comp.audience,
         variant: comp.variant,
         totalMs: comp.totalMs,
-        transition: KIT.captions.paceProfiles[comp.pace].transition,
+        transition: comp.cfg.transition,
         blocks: comp.blocks.map((b) => ({
           start: b.start,
           end: b.end,
@@ -260,5 +303,5 @@
     );
   }
 
-  global.CaptionEngine = { compose, check, toSRT, toJSON, lookup, KIT };
+  global.CaptionEngine = { compose, resolve, check, toSRT, toJSON, lookup, KIT };
 })(window);

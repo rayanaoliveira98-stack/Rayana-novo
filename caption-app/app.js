@@ -15,7 +15,8 @@
   const el = {
     script: $('script'), brand: $('brand'), pace: $('pace'), audience: $('audience'),
     transition: $('transition'), track: $('track'), stage: $('stage'), checks: $('checks'),
-    safezone: $('safezone')
+    safezone: $('safezone'), style: $('style'), banner: $('banner'),
+    bannerPreset: $('banner-preset'), bannerEl: $('banner-el')
   };
 
   let comp = null;
@@ -33,11 +34,19 @@
     }
   };
 
+  fill(el.style, Object.entries(KIT.captions.styles).map(([k, v]) => [k, v.label]), KIT.captions.activeStyle);
   fill(el.brand, Object.entries(KIT.brands.brands).map(([k, v]) => [k, v.label]), KIT.brands.active);
   fill(el.pace, Object.entries(KIT.captions.paceProfiles).filter(([k]) => k !== 'note').map(([k, v]) => [k, v.label]), KIT.captions.activePaceProfile);
   const audiences = KIT.captions.genderProfiles[KIT.captions.activeGenderProfile].audiences;
   fill(el.audience, Object.entries(audiences).map(([k, v]) => [k, v.label]), Object.keys(audiences)[0]);
   fill(el.transition, Object.entries(KIT.motion.captionTransitions.variants).map(([k, v]) => [k, v.label.split(' — ')[0]]), KIT.motion.captionTransitions.default);
+
+  const BANNER = KIT.captions.overlays.hookBanner;
+  fill(
+    el.bannerPreset,
+    [['', 'Vorlage wählen …']].concat(BANNER.examples.map((e) => [e.text + ' ' + e.emoji, e.text + ' ' + e.emoji + ' — ' + e.use.split(' — ')[0]])),
+    ''
+  );
 
   /* ---- Marke anwenden --------------------------------------------------- */
   function applyBrand() {
@@ -50,6 +59,44 @@
     r.setProperty('--signal', b.color.signal);
     r.setProperty('--shadow', b.color.shadow);
     r.setProperty('--font-caption', b.typography.caption.family);
+    r.setProperty('--font-editorial', b.typography.editorial.family);
+  }
+
+  /* ---- Hook-Banner ------------------------------------------------------ */
+  // Emoji werden aus dem Text geloest und ohne Kontur gesetzt — eine Kontur
+  // auf einem Farbemoji sieht aus wie ein Druckfehler.
+  const EMOJI = /([\u{1F300}-\u{1FAFF}\u{2190}-\u{21FF}\u{2600}-\u{27BF}\u{FE0F}\u{2B00}-\u{2BFF}]+)\s*$/u;
+
+  function drawBanner() {
+    const raw = el.banner.value.trim();
+    el.bannerEl.classList.toggle('on', !!raw && BANNER.enabled);
+    if (!raw) return;
+    const m = raw.match(EMOJI);
+    const text = m ? raw.slice(0, m.index).trim() : raw;
+    const line = document.createElement('span');
+    line.className = 'line';
+    line.appendChild(document.createTextNode(text));
+    if (m) {
+      const e = document.createElement('span');
+      e.className = 'emoji';
+      e.textContent = m[1].slice(0, BANNER.emoji.maxCount * 2);
+      line.appendChild(e);
+    }
+    el.bannerEl.innerHTML = '';
+    el.bannerEl.appendChild(line);
+    el.bannerEl.style.top = BANNER.verticalPosition * 100 + '%';
+
+    // Auto-Fit: das Banner muss einzeilig bleiben. Ein Umbruch reisst das
+    // Emoji in die zweite Zeile und das CTA zerfaellt optisch.
+    const h = el.stage.clientHeight;
+    let px = (BANNER.fontSizeVh / 100) * h;
+    const minPx = (BANNER.fit.minFontSizeVh / 100) * h;
+    el.bannerEl.style.fontSize = px + 'px';
+    let guard = 0;
+    while (line.scrollWidth > el.bannerEl.clientWidth && px > minPx && guard++ < 30) {
+      px -= Math.max(0.5, px * 0.04);
+      el.bannerEl.style.fontSize = px + 'px';
+    }
   }
 
   /* ---- Safe Area zeichnen ----------------------------------------------- */
@@ -63,11 +110,17 @@
   /* ---- Aufbereiten ------------------------------------------------------ */
   function rebuild() {
     stop();
-    const pace = KIT.captions.paceProfiles[el.pace.value];
-    comp = E.compose(el.script.value, { pace: el.pace.value, audience: el.audience.value });
+    comp = E.compose(el.script.value, {
+      pace: el.pace.value, audience: el.audience.value, style: el.style.value
+    });
+    const cfg = comp.cfg;
 
-    el.track.style.top = pace.verticalPosition * 100 + '%';
-    el.track.style.fontSize = (pace.fontSizeVh / 100) * el.stage.clientHeight + 'px';
+    // Der Stil bringt seinen eigenen Uebergang mit; das Feld folgt ihm.
+    if (el.transition.value !== cfg.transition) el.transition.value = cfg.transition;
+
+    el.track.style.top = cfg.verticalPosition * 100 + '%';
+    el.track.style.fontSize = (cfg.fontSizeVh / 100) * el.stage.clientHeight + 'px';
+    drawBanner();
 
     $('s-blocks').textContent = comp.blocks.length;
     $('s-time').textContent = (comp.totalMs / 1000).toFixed(1).replace('.', ',') + ' s';
@@ -106,7 +159,7 @@
 
   function buildBlockEl(block) {
     const wrap = document.createElement('div');
-    wrap.className = 'block';
+    wrap.className = 'block' + (comp.cfg.fontRole === 'editorial' ? ' editorial' : '');
     wrap.style.fontSize = (fitScale(block) * 100).toFixed(1) + '%';
     const inner = document.createElement('span');
     inner.className = 'inner';
@@ -145,8 +198,10 @@
             { opacity: 0, transform: 'scale(1.08)', filter: 'blur(6px)' }]
     },
     word_swap: {
-      in: [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }],
-      out: [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-8px)' }]
+      in: [{ opacity: 0, transform: 'translateY(16px)', filter: 'blur(3px)' },
+           { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' }],
+      out: [{ opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' },
+            { opacity: 0, transform: 'translateY(-16px)', filter: 'blur(3px)' }]
     }
   };
 
@@ -247,6 +302,11 @@
 
   /* ---- Ereignisse ------------------------------------------------------- */
   el.script.addEventListener('input', rebuild);
+  el.style.addEventListener('change', rebuild);
+  el.banner.addEventListener('input', drawBanner);
+  el.bannerPreset.addEventListener('change', () => {
+    if (el.bannerPreset.value) { el.banner.value = el.bannerPreset.value; drawBanner(); }
+  });
   el.pace.addEventListener('change', rebuild);
   el.audience.addEventListener('change', rebuild);
   el.transition.addEventListener('change', rebuild);
@@ -260,6 +320,7 @@
   window.addEventListener('resize', () => { if (!playing) rebuild(); });
 
   el.script.value = DEMO;
+  el.banner.value = BANNER.examples[0].text + ' ' + BANNER.examples[0].emoji;
   applyBrand();
   drawSafe();
   rebuild();
