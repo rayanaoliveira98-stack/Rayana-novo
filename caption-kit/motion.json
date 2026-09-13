@@ -11,7 +11,9 @@
       "Keine linearen Easings. Alle Uebergaenge laufen ueber die brand-Kurven unten.",
       "Kein Hard-Cut auf Untertiteln. Bloecke wechseln ueber Verdraengung, nicht ueber Verschwinden.",
       "Icons verlassen das Bild nie in dieselbe Richtung, aus der sie gekommen sind — sonst wirkt es wie ein Fehler.",
-      "Hintergrund/Video traegt eine dauerhafte Ken-Burns-Drift (ambient), damit auch in Sprechpausen nichts einfriert."
+      "Hintergrund/Video traegt eine dauerhafte Ken-Burns-Drift (ambient), damit auch in Sprechpausen nichts einfriert.",
+      "Nur transform und opacity animieren. Beide laufen auf der Grafikeinheit; alles andere - vor allem blur - zwingt den Browser, die Flaeche in jedem Frame neu zu zeichnen und ist auf dem Handy die haeufigste Ruckelursache.",
+      "Die Wiedergabe laeuft ueber eine absolute Uhr, nicht ueber verkettete Timer. Verkettete Timer summieren ihren Fehler auf: nach 30 Sekunden liegt der Untertitel sonst sichtbar hinter dem Ton."
     ]
   },
   "easings": {
@@ -80,8 +82,8 @@
     "pop_soft": {
       "label": "Standard — Keyword und Icon",
       "in": {
-        "duration": 320,
-        "easing": "brandOut",
+        "duration": 340,
+        "easing": "springSoft",
         "from": {
           "opacity": 0,
           "scale": 0.72,
@@ -129,8 +131,8 @@
     "slam": {
       "label": "Hook / Fehler / Achtung — harte Betonung in den ersten 2 Sekunden",
       "in": {
-        "duration": 220,
-        "easing": "snap",
+        "duration": 260,
+        "easing": "springSnap",
         "from": {
           "opacity": 0,
           "scale": 1.45,
@@ -173,8 +175,8 @@
     "slide_in": {
       "label": "Ruhige Fachbegriffe — Funnel, Workflow, Strategie",
       "in": {
-        "duration": 340,
-        "easing": "brandOut",
+        "duration": 360,
+        "easing": "springSoft",
         "from": {
           "opacity": 0,
           "x": -26,
@@ -218,7 +220,7 @@
       "label": "Line-Icons mit Strichzeichnung — Premium-Effekt, sparsam einsetzen",
       "in": {
         "duration": 520,
-        "easing": "brandInOut",
+        "easing": "springIcon",
         "strokeDashoffset": [
           1,
           0
@@ -262,8 +264,8 @@
     "rise": {
       "label": "Ergebnis, Umsatz, Wachstum — Aufwaertsbewegung als Bedeutungstraeger",
       "in": {
-        "duration": 380,
-        "easing": "brandOut",
+        "duration": 400,
+        "easing": "springSoft",
         "from": {
           "opacity": 0,
           "y": 34,
@@ -304,8 +306,8 @@
     "banner_float": {
       "label": "Dauerbanner — steht ueber die ganze Laufzeit, bewegt sich trotzdem",
       "in": {
-        "duration": 420,
-        "easing": "brandOut",
+        "duration": 440,
+        "easing": "springSoft",
         "from": {
           "opacity": 0,
           "y": -18,
@@ -367,8 +369,8 @@
             "blur": 5,
             "scale": 0.96
           },
-          "duration": 260,
-          "easing": "brandOut"
+          "duration": 300,
+          "easing": "springSoft"
         },
         "overlapMs": 120
       },
@@ -387,8 +389,8 @@
             "opacity": 0,
             "blur": 6
           },
-          "duration": 280,
-          "easing": "brandOut"
+          "duration": 320,
+          "easing": "springSoft"
         },
         "overlapMs": 140
       },
@@ -396,22 +398,20 @@
         "label": "Einzelwort tauscht, Block bleibt stehen — hoechste Ruhe bei hoher Sprechgeschwindigkeit",
         "outgoing": {
           "opacity": 0,
-          "y": -16,
-          "blur": 3,
+          "y": -22,
           "duration": 120,
           "easing": "exit"
         },
         "incoming": {
           "from": {
             "opacity": 0,
-            "y": 16,
-            "blur": 3
+            "y": 22
           },
-          "duration": 170,
-          "easing": "brandOut"
+          "duration": 200,
+          "easing": "springTight"
         },
         "overlapMs": 60,
-        "note": "Bewusst kurze Ueberlappung. Bei Einzelwoertern liegen aus- und eingehender Text exakt uebereinander — eine lange Blende wuerde als Doppelbelichtung gelesen."
+        "note": "Ohne Weichzeichner. Bei Einzelwoertern liegen aus- und eingehender Text exakt uebereinander; der Versatz trennt sie ausreichend, und die Animation bleibt vollstaendig auf der Grafikeinheit statt in jedem Frame neu gezeichnet zu werden."
       }
     }
   },
@@ -440,7 +440,7 @@
       "direction": "alternate",
       "keyframes": {
         "scale": [
-          1.0,
+          1,
           1.06
         ],
         "x": [
@@ -494,5 +494,49 @@
     "emotion": "slam",
     "lokal": "pop_soft"
   },
-  "categoryPresets_note": "Der Stil single_word_serif ueberschreibt die Kategorie-Presets: alle Icons laufen dort auf draw_on, weil ein einzelnes Icon in diesem Stil ein Ereignis ist und Zeit bekommen darf."
+  "categoryPresets_note": "Der Stil single_word_serif ueberschreibt die Kategorie-Presets: alle Icons laufen dort auf draw_on, weil ein einzelnes Icon in diesem Stil ein Ereignis ist und Zeit bekommen darf.",
+  "springs": {
+    "note": "Aus Federphysik erzeugt, nicht von Hand gesetzt. Neu bauen mit node caption-kit/build-springs.mjs. Die CSS-Funktion linear() gibt es ab Chrome 113, Firefox 112 und Safari 17.2 — ältere Browser ignorieren den Wert und fallen auf das davor deklarierte Easing zurück, die Animation läuft also überall, nur ohne Federcharakteristik.",
+    "fallback": "cubic-bezier(.16,1,.3,1)",
+    "springSoft": {
+      "css": "linear(0,0.026,0.094,0.186,0.29,0.399,0.504,0.603,0.691,0.768,0.833,0.887,0.93,0.963,0.988,1.006,1.019,1.026,1.03,1.032,1.031,1.029,1.026,1.023,1.019,1.016,1.013,1.01,1.008,1.005,1.004,1.002,1.001,1)",
+      "zeta": 0.74,
+      "omega": 19,
+      "naturalDurationMs": 425,
+      "overshootPercent": 3.2,
+      "use": "Standard-Eingang für Untertitelblöcke. Spürbares, aber ruhiges Überschwingen."
+    },
+    "springSnap": {
+      "css": "linear(0,0.06,0.205,0.39,0.58,0.753,0.894,0.999,1.068,1.106,1.119,1.115,1.099,1.077,1.054,1.033,1.015,1.002,0.993,0.988,0.986,0.986,0.988,0.99,0.993,0.996,0.998,1,1.001,1.001,1.002,1.002,1.002,1)",
+      "zeta": 0.56,
+      "omega": 24,
+      "naturalDurationMs": 512,
+      "overshootPercent": 11.9,
+      "use": "Betonung und Hook. Deutlicher Ausschlag, ohne ins Cartoonhafte zu kippen."
+    },
+    "springTight": {
+      "css": "linear(0,0.029,0.101,0.195,0.298,0.401,0.499,0.588,0.667,0.735,0.792,0.839,0.878,0.909,0.934,0.953,0.967,0.978,0.987,0.992,0.997,0.999,1.001,1.002,1.003,1.003,1.003,1.003,1.002,1.002,1.002,1.002,1.001,1)",
+      "zeta": 0.88,
+      "omega": 30,
+      "naturalDurationMs": 288,
+      "overshootPercent": 0.3,
+      "use": "Einzelwort-Stil und schnelle Wechsel. Kaum Überschwingen, dafür sehr schnell am Ziel."
+    },
+    "springIcon": {
+      "css": "linear(0,0.042,0.148,0.287,0.439,0.587,0.72,0.833,0.923,0.991,1.037,1.066,1.08,1.083,1.079,1.07,1.058,1.045,1.033,1.022,1.013,1.006,1,0.996,0.994,0.993,0.993,0.993,0.994,0.995,0.996,0.997,0.998,1)",
+      "zeta": 0.62,
+      "omega": 17,
+      "naturalDurationMs": 604,
+      "overshootPercent": 8.3,
+      "use": "Icons. Langsamer und weicher als der Text, damit das Icon nicht mit dem Wort konkurriert."
+    }
+  },
+  "playback": {
+    "clock": "absolute",
+    "note": "Jeder Block hat einen festen Startzeitpunkt. Der Renderer vergleicht in jedem Bild die verstrichene Zeit mit diesen Zeitpunkten, statt Wartezeiten aneinanderzuhaengen. Damit gibt es keinen auflaufenden Versatz - auch nicht bei 90 Sekunden Laufzeit.",
+    "catchUp": "skip_to_latest",
+    "catchUpNote": "Lag die Seite im Hintergrund, sind mehrere Bloecke gleichzeitig faellig. Dann wird direkt auf den aktuellen gesprungen, statt eine Aufholjagd zu animieren.",
+    "idlePhase": "continuous",
+    "idlePhaseNote": "Die Idle-Drift bekommt einen negativen Startversatz in Hoehe der bereits verstrichenen Zeit. Dadurch setzt jeder neue Block die Schwingung des vorigen fort, statt bei null zu beginnen - sonst atmen alle Bloecke im Gleichtakt und es wirkt mechanisch."
+  }
 }

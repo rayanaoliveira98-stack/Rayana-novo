@@ -274,3 +274,51 @@ Wer Icons streut, weil das Tool sie kann, baut Kirmes. Wer sie setzt, weil ein B
 | Einsatz | Hooks, Ads, Recruiting-Reels | Personal Brand, Premium, Positionierung |
 
 **Einzelwort heißt nicht „jedes Wort einzeln".** Artikel, Präpositionen und Konjunktionen wandern mit ins Folgewort — ein Frame, der nur „die" zeigt, ist im Deutschen eine Leerstelle. Aus „die falsche Zielgruppe" werden deshalb zwei Blöcke: `die falsche` | `Zielgruppe`, nicht drei.
+
+---
+
+## Fluidity: was gemessen wurde und was sich geändert hat
+
+### Der eigentliche Fehler: die Untertitel liefen dem Ton davon
+
+Die Wiedergabe hing an verketteten Timern — jeder Block plante den nächsten mit `setTimeout(dauer - überlappung)`. Dadurch wurde die Überlappung **bei jedem Block erneut** abgezogen statt einmal. Gemessen an einem 15,7-Sekunden-Skript mit 19 Blöcken:
+
+| | Versatz am Ende |
+|---|---|
+| Verkettete Timer (vorher) | **−1.255 ms** |
+| Absolute Uhr (jetzt) | **−9,7 ms** |
+
+Über ein 60-Sekunden-Video wären das rund fünf Sekunden Vorlauf gewesen. Genau das fühlt sich an wie „unrund" — der Text hat keinen Bezug mehr zum Gesprochenen, und kein Easing der Welt repariert das.
+
+Jetzt hat jeder Block einen festen Startzeitpunkt, und in jedem Bild wird die verstrichene Zeit dagegen geprüft. Gemessen über 38,6 Sekunden: **5,6 ms mittlerer Versatz, 11,5 ms maximal** — weniger als ein Einzelbild bei 60 Hz.
+
+### Federkurven statt geratener Bézier-Werte
+
+`caption-kit/build-springs.mjs` simuliert einen gedämpften Schwinger und tastet ihn in Stützpunkte für die CSS-Funktion `linear()` ab. Überschwingen und Ausschwingen entstehen aus der Physik, statt nachgebaut zu werden.
+
+| Kurve | ζ | ω | Überschwingen | Einsatz |
+|---|---|---|---|---|
+| `springSoft` | 0,74 | 19 | 3,2 % | Standard-Blockeingang |
+| `springSnap` | 0,56 | 24 | 11,9 % | Hook, Betonung |
+| `springTight` | 0,88 | 30 | 0,3 % | Einzelwort, schnelle Wechsel |
+| `springIcon` | 0,62 | 17 | 8,3 % | Icons — weicher als der Text |
+
+`linear()` gibt es ab Chrome 113, Firefox 112 und **Safari 17.2** — also auch auf dem iPhone. Ältere Browser ignorieren den Wert und fallen auf das davor deklarierte Easing zurück: die Animation läuft überall, nur ohne Federcharakteristik.
+
+Neu erzeugen: `node caption-kit/build-springs.mjs`.
+
+### Weichzeichner raus, wo es schnell wird
+
+`blur()` zwingt den Browser, die Fläche in jedem Bild neu zu zeichnen — auf dem Handy die teuerste Eigenschaft im Spiel. Bei `word_swap` (200 ms, sehr häufig) ist er ersatzlos raus; die Trennung macht jetzt ein größerer Versatz und kostet nichts. Bei den langsameren Übergängen bleibt er.
+
+Dazu: `will-change` trägt nur noch `transform, opacity`. Jede angemeldete Eigenschaft kostet Grafikspeicher, und `filter` erzwingt zusätzlich eine eigene Ebene.
+
+**Gemessen nach der Umstellung:** 60 fps, Median 16,7 ms, p95 16,7 ms, kein einziges Bild über 32 ms.
+
+### Die Atmung läuft jetzt durch
+
+Jeder neue Block startete seine Idle-Drift bei null — alle Blöcke atmeten im Gleichtakt, was mechanisch wirkt. Jetzt bekommt die Animation einen negativen Startversatz in Höhe der verstrichenen Zeit, die Schwingung des vorigen Blocks läuft also weiter.
+
+### Reduzierte Bewegung
+
+Die Untertitel-Wechsel bleiben — sie tragen Information, nämlich welches Wort gerade gesprochen wird. Abgeschaltet wird nur die Dekoration: Hintergrunddrift, Atmen, Banner-Schweben.

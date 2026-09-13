@@ -20,8 +20,10 @@
   };
 
   let comp = null;
-  let timer = null;
   let playing = false;
+  let raf = null;
+  let clockStart = 0;
+  let nextIdx = 0;
 
   /* ---- Auswahlfelder fuellen ------------------------------------------- */
   const fill = (sel, entries, active) => {
@@ -127,7 +129,7 @@
     $('s-icons').textContent = comp.blocks.filter((b) => b.icon).length;
 
     renderChecks();
-    showBlock(0, false);
+    showBlock(0, false, 0);
   }
 
   function renderChecks() {
@@ -157,12 +159,20 @@
     return 0.68;
   }
 
-  function buildBlockEl(block) {
+  // Die Idle-Drift laeuft ueber alle Bloecke hinweg durch: ein negativer
+  // Startversatz in Hoehe der verstrichenen Zeit setzt die Schwingung des
+  // vorigen Blocks fort. Ohne das atmen alle Bloecke im Gleichtakt und die
+  // Bewegung wirkt mechanisch statt lebendig.
+  const IDLE_MS = { block: 2600, icon: 3000 };
+  const phase = (elapsed, cycle) => '-' + (elapsed % cycle) + 'ms';
+
+  function buildBlockEl(block, elapsed) {
     const wrap = document.createElement('div');
     wrap.className = 'block' + (comp.cfg.fontRole === 'editorial' ? ' editorial' : '');
     wrap.style.fontSize = (fitScale(block) * 100).toFixed(1) + '%';
     const inner = document.createElement('span');
     inner.className = 'inner';
+    inner.style.animationDelay = phase(elapsed || 0, IDLE_MS.block);
     for (const w of block.words) {
       const s = document.createElement('span');
       s.className = 'w' + (w.emphasis ? ' em' : '');
@@ -175,13 +185,25 @@
       const ic = document.createElement('div');
       ic.className = 'icon';
       ic.style.transform = 'translateX(-50%)';
+      ic.firstChildDelay = phase(elapsed || 0, IDLE_MS.icon);
       ic.innerHTML =
         '<span class="inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
         'stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">' + block.icon.body + '</svg></span>';
+      ic.querySelector('.inner').style.animationDelay = ic.firstChildDelay;
       wrap.appendChild(ic);
       wrap._icon = ic;
     }
     return wrap;
+  }
+
+  /* Easing aufloesen: erst die erzeugten Federkurven, dann die Bezier-Kurven.
+     Kennt ein aelterer Browser linear() nicht, faellt er auf das Standard-
+     Easing zurueck — die Animation laeuft, nur ohne Federcharakteristik. */
+  function ease(name) {
+    const sp = KIT.motion.springs;
+    if (sp && sp[name]) return sp[name].css;
+    const e = KIT.motion.easings[name];
+    return e ? e.css : 'ease-out';
   }
 
   const KF = {
@@ -197,11 +219,14 @@
       out: [{ opacity: 1, transform: 'scale(1)', filter: 'blur(0)' },
             { opacity: 0, transform: 'scale(1.08)', filter: 'blur(6px)' }]
     },
+    // Ohne Weichzeichner: blur zwingt den Browser, die Flaeche in jedem Frame
+    // neu zu zeichnen. Bei Einzelwoertern trennt der groessere Versatz genauso
+    // gut und laeuft vollstaendig auf der Grafikeinheit.
     word_swap: {
-      in: [{ opacity: 0, transform: 'translateY(16px)', filter: 'blur(3px)' },
-           { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' }],
-      out: [{ opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' },
-            { opacity: 0, transform: 'translateY(-16px)', filter: 'blur(3px)' }]
+      in: [{ opacity: 0, transform: 'translateY(22px)' },
+           { opacity: 1, transform: 'translateY(0)' }],
+      out: [{ opacity: 1, transform: 'translateY(0)' },
+            { opacity: 0, transform: 'translateY(-22px)' }]
     }
   };
 
@@ -218,7 +243,7 @@
                { opacity: 1, transform: 'translateX(-50%) scale(1)' }]
   };
 
-  function showBlock(i, animate) {
+  function showBlock(i, animate, elapsed) {
     const t = KIT.motion.captionTransitions.variants[el.transition.value];
     const old = el.track.querySelector('.block');
 
@@ -231,26 +256,26 @@
         old.style.zIndex = '0';
         old.animate(KF[el.transition.value].out, {
           duration: Math.min(t.outgoing.duration, room),
-          easing: KIT.motion.easings.exit.css, fill: 'forwards'
+          easing: ease(t.outgoing.easing), fill: 'forwards'
         }).onfinish = () => old.remove();
       } else old.remove();
     }
 
     const block = comp.blocks[i];
     if (!block) return;
-    const node = buildBlockEl(block);
+    const node = buildBlockEl(block, elapsed);
     node.style.zIndex = '1';
     el.track.appendChild(node);
 
     if (animate) {
       node.animate(KF[el.transition.value].in, {
-        duration: t.incoming.duration, easing: KIT.motion.easings.brandOut.css, fill: 'backwards'
+        duration: t.incoming.duration, easing: ease(t.incoming.easing), fill: 'backwards'
       });
       if (node._icon) {
         const preset = block.icon.preset;
         const spec = KIT.motion.presets[preset];
         const anim = node._icon.animate(ICON_IN[preset] || ICON_IN.pop_soft, {
-          duration: spec.in.duration, easing: KIT.motion.easings[spec.in.easing].css, fill: 'backwards'
+          duration: spec.in.duration, easing: ease(spec.in.easing), fill: 'backwards'
         });
         if (preset === 'draw_on') {
           const svg = node._icon.querySelector('svg');
@@ -259,7 +284,7 @@
             p.style.strokeDasharray = '1'; p.style.pathLength = '1';
             p.setAttribute('pathLength', '1');
             p.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
-              duration: spec.in.duration, easing: KIT.motion.easings.brandInOut.css, fill: 'forwards'
+              duration: spec.in.duration, easing: ease('brandInOut'), fill: 'forwards'
             });
           }
         }
@@ -268,29 +293,48 @@
     }
   }
 
-  /* ---- Abspielen -------------------------------------------------------- */
+  /* ---- Abspielen --------------------------------------------------------
+     Absolute Uhr statt verketteter Timer. Jeder Block hat einen festen
+     Startzeitpunkt; in jedem Bild wird die verstrichene Zeit dagegen
+     geprueft. Verkettete setTimeout-Aufrufe summieren dagegen ihren Fehler
+     auf — nach 30 Sekunden liegt der Untertitel sichtbar hinter dem Ton. */
   function play() {
     if (!comp || !comp.blocks.length) return;
     playing = true;
     $('play').textContent = 'Pause';
-    let i = 0;
-    const t = KIT.motion.captionTransitions.variants[el.transition.value];
-    showBlock(0, true);
+    nextIdx = 0;
+    clockStart = performance.now();
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(frame);
+  }
 
-    const step = () => {
-      i++;
-      if (i >= comp.blocks.length) { stop(); showBlock(0, false); return; }
-      showBlock(i, true);
-      // Ueberlappung: der naechste Block startet overlapMs frueher.
-      timer = setTimeout(step, Math.max(120, comp.blocks[i].duration - t.overlapMs));
-    };
-    timer = setTimeout(step, Math.max(120, comp.blocks[0].duration - t.overlapMs));
+  function frame(now) {
+    const t = now - clockStart;
+    const tr = KIT.motion.captionTransitions.variants[el.transition.value];
+
+    // Faellige Bloecke einsammeln. Lag die Seite im Hintergrund, sind mehrere
+    // auf einmal faellig — dann wird direkt auf den aktuellen gesprungen,
+    // statt eine Aufholjagd durchzuanimieren.
+    let due = -1;
+    while (nextIdx < comp.blocks.length && t >= comp.blocks[nextIdx].start - tr.overlapMs) {
+      due = nextIdx;
+      nextIdx++;
+    }
+    if (due >= 0) showBlock(due, true, t);
+
+    if (t >= comp.totalMs) {
+      stop();
+      showBlock(0, false, 0);
+      return;
+    }
+    raf = requestAnimationFrame(frame);
   }
 
   function stop() {
     playing = false;
     $('play').textContent = 'Abspielen';
-    clearTimeout(timer);
+    cancelAnimationFrame(raf);
+    raf = null;
   }
 
   function download(name, text, type) {
@@ -311,7 +355,7 @@
   el.audience.addEventListener('change', rebuild);
   el.transition.addEventListener('change', rebuild);
   el.brand.addEventListener('change', () => { applyBrand(); rebuild(); });
-  $('play').addEventListener('click', () => (playing ? (stop(), showBlock(0, false)) : play()));
+  $('play').addEventListener('click', () => (playing ? (stop(), showBlock(0, false, 0)) : play()));
   $('safe').addEventListener('click', () => el.safezone.classList.toggle('on'));
   $('record').addEventListener('click', () => { document.body.classList.add('record'); setTimeout(() => { rebuild(); play(); }, 60); });
   $('exit-record').addEventListener('click', () => { document.body.classList.remove('record'); setTimeout(rebuild, 60); });
