@@ -1,0 +1,99 @@
+<!-- Einstiegsdatei fuer die veroeffentlichte Fassung (Artifact).
+     Bewusst ohne doctype/html/head/body: die liefert die Huelle beim
+     Veroeffentlichen. Fuer den lokalen Gebrauch index.html oeffnen.
+     Inhalt und Stil sind identisch — beide laden dieselben Dateien. -->
+<title>Caption Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800&family=Playfair+Display:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<div class="shell">
+  <aside class="panel">
+    <h1>Caption Studio<small>Skript rein, animierte Untertitel mit Keyword-Icons raus.</small></h1>
+
+    <div class="field">
+      <label for="script">Skript / Voiceover-Text</label>
+      <textarea id="script" spellcheck="false"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="style">Untertitel-Stil</label>
+      <select id="style"></select>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="brand">Marke</label>
+        <select id="brand"></select>
+      </div>
+      <div class="field">
+        <label for="pace">Tempo</label>
+        <select id="pace"></select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="audience">Zielgruppe</label>
+        <select id="audience"></select>
+      </div>
+      <div class="field">
+        <label for="transition">Übergang</label>
+        <select id="transition"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="banner">Hook-Banner (steht dauerhaft oben)</label>
+      <input id="banner" type="text" placeholder="Antwort in den Kommentaren" autocomplete="off">
+      <select id="banner-preset"></select>
+    </div>
+
+    <div class="btns">
+      <button id="play" class="primary">Abspielen</button>
+      <button id="safe">Safe Area</button>
+      <button id="record">Aufnahmemodus</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b id="s-blocks">0</b><span>Blöcke</span></div>
+      <div class="stat"><b id="s-time">0,0 s</b><span>Laufzeit</span></div>
+      <div class="stat"><b id="s-icons">0</b><span>Icons</span></div>
+    </div>
+
+    <div class="field">
+      <label>Grammatik &amp; Typografie</label>
+      <div class="checks" id="checks"></div>
+    </div>
+
+    <div class="btns">
+      <button id="ex-srt">SRT laden</button>
+      <button id="ex-json">JSON laden</button>
+    </div>
+
+    <p class="hint">
+      Die Bühne ist 9:16 im echten Seitenverhältnis. <b>Aufnahmemodus</b> blendet die
+      Oberfläche aus — dann Bildschirmaufnahme starten und die Datei in deinen Schnitt legen.
+      Die JSON-Ausgabe enthält Timing, Betonung und Icon-Zuordnung pro Block für den Import
+      in jedes andere Tool.<br><br>
+      Bibliothek ändern: <code>caption-kit/*.json</code>, danach
+      <code>node caption-kit/build-bundle.mjs</code>.
+    </p>
+  </aside>
+
+  <main class="stagewrap">
+    <div class="stage" id="stage">
+      <div class="ambient"></div>
+      <div class="safe" id="safezone"><i></i><i></i></div>
+      <div class="banner" id="banner-el"></div>
+      <div class="track" id="track"></div>
+    </div>
+  </main>
+</div>
+<button class="exit-record" id="exit-record">Oberfläche zurück</button>
+<button class="exit-record" id="exit-record">Oberfläche zurück</button>
+
+<script src="library.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
