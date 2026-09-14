@@ -10,7 +10,7 @@ agents/                 → os braços (executam em contexto separado, em parale
 
 Agente sem as duas primeiras camadas produz conteúdo genérico rápido. Por isso elas existem.
 
-## Os 8 agentes
+## Os 9 agentes
 
 | Agente | Para quê | Quando chamar |
 |---|---|---|
