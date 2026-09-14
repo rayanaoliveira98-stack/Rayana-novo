@@ -25,3 +25,13 @@ Relatório completo em **alemão austríaco**, pronto para enviar, com resumo es
 - Mês ruim se reporta com causa e plano, nunca escondido atrás de alcance.
 - Nunca prometer resultado no próximo mês. Prometer teste e aprendizado.
 - Se faltar dado, marcar `[PREENCHER]` em vez de estimar.
+## Conexão obrigatória com as skills de marca
+Antes de produzir, carregue a skill da marca tratada:
+`black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`
+(em disco: `~/.claude/skills/synced/*/<skill>/SKILL.md`)
+
+**Anrede correta** (erro mais comum): Black Strategie = Sie sempre, Rayana fala em Ich, nunca Wir.
+STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
+
+Sem travessão em texto de cliente da Black Strategie. Sem jargão de agência.
+A palavra Recruiting nunca se associa à Black Strategie.

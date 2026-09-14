@@ -39,3 +39,13 @@ ALERTA JURÍDICO
 - Antes/depois: só com contexto, prazo e ressalva de individualidade.
 - Nenhum número de perda de peso ou resultado sem caso real documentado.
 - Suplemento/estética: nenhuma alegação de efeito sem fonte citável.
+## Conexão obrigatória com as skills de marca
+Antes de produzir, carregue a skill da marca tratada:
+`black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`
+(em disco: `~/.claude/skills/synced/*/<skill>/SKILL.md`)
+
+**Anrede correta** (erro mais comum): Black Strategie = Sie sempre, Rayana fala em Ich, nunca Wir.
+STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
+
+Sem travessão em texto de cliente da Black Strategie. Sem jargão de agência.
+A palavra Recruiting nunca se associa à Black Strategie.

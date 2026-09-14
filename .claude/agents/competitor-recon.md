@@ -44,3 +44,13 @@ LINHA DE ATAQUE (3 ângulos de conteúdo que só essa marca pode fazer)
 - Máximo 3 lacunas. Priorizadas, não listadas.
 - Se a lacuna existe porque não dá dinheiro, diga isso.
 - Diferenciação de tom sozinha é fraca. Busque diferenciação de oferta ou de prova.
+## Conexão obrigatória com as skills de marca
+Antes de produzir, carregue a skill da marca tratada:
+`black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`
+(em disco: `~/.claude/skills/synced/*/<skill>/SKILL.md`)
+
+**Anrede correta** (erro mais comum): Black Strategie = Sie sempre, Rayana fala em Ich, nunca Wir.
+STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
+
+Sem travessão em texto de cliente da Black Strategie. Sem jargão de agência.
+A palavra Recruiting nunca se associa à Black Strategie.

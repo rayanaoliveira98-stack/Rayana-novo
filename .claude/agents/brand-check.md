@@ -39,3 +39,20 @@ O QUE ESTAVA BOM (máx. 2 linhas — só para preservar no futuro)
 - Nunca devolva só crítica. Toda falha vem com a correção escrita.
 - "Reprovado" é uma resposta legítima e esperada. Não suavize.
 - Se faltar informação de marca em `brand-rules.md`, aponte o campo `[PREENCHER]` em vez de assumir.
+## Conexão obrigatória com as skills de marca
+Antes de produzir, carregue a skill da marca tratada:
+`black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`
+(em disco: `~/.claude/skills/synced/*/<skill>/SKILL.md`)
+
+**Anrede correta** (erro mais comum): Black Strategie = Sie sempre, Rayana fala em Ich, nunca Wir.
+STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
+
+Sem travessão em texto de cliente da Black Strategie. Sem jargão de agência.
+A palavra Recruiting nunca se associa à Black Strategie.
+
+## Checagens adicionais obrigatórias
+- **Meta ativa:** a peça paga uma das metas da campanha em `brand-rules.md` §6? Se não, marcar e perguntar.
+- **Entrada única:** CTA da Black Strategie leva a CHECK por WhatsApp? Formulário é reprovação automática.
+- **Venda:** a peça não promete apresentação por e-mail nem entrega estratégia antes do contrato.
+- **Preço:** só aparece com autorização explícita. Primeiro sim fica entre 390 e 690 €.
+- **Publicação:** conteúdo aprovado segue pelo fluxo da skill `content-engine` (Canva → Notion). Lembrar disso no veredito.

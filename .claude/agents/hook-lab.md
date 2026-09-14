@@ -37,3 +37,20 @@ REPROVADOS E POR QUÊ (2–3, para calibrar)
 - Proibido começar com "Wusstest du, dass" / "3 Tipps für" / "Als Unternehmer weißt du".
 - Sem pergunta retórica genérica. Pergunta só se for desconfortável.
 - Especificidade sempre vence: profissão, cidade, número, prazo.
+## Conexão obrigatória com as skills de marca
+Antes de produzir, carregue a skill da marca tratada:
+`black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`
+(em disco: `~/.claude/skills/synced/*/<skill>/SKILL.md`)
+
+**Anrede correta** (erro mais comum): Black Strategie = Sie sempre, Rayana fala em Ich, nunca Wir.
+STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
+
+Sem travessão em texto de cliente da Black Strategie. Sem jargão de agência.
+A palavra Recruiting nunca se associa à Black Strategie.
+
+## Proibições de abertura (das skills)
+"Wusstest du, dass" · "3 Tipps für" · "Als Unternehmer weißt du" · "Bist du bereit ins Schwitzen zu kommen?"
+· "Your fitness journey starts here" · "Wir steigern deine Reichweite" · citação motivacional como hook.
+
+Padrão que funciona (Black Strategie): virar uma suposição do público de cabeça para baixo.
+Ex.: "Sie posten jede Woche. Und trotzdem ruft niemand an. Hier ist der Grund."

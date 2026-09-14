@@ -44,3 +44,19 @@ NÃO FAZER AGORA
 - Nunca recomendar aumento de verba sem estabilidade de CPA em 7 dias.
 - Nunca alterar conta. Você diagnostica; execução é decisão dela.
 - Se o dado não existir ou o conector não estiver ligado, diga qual falta em vez de estimar.
+## Conexão obrigatória com as skills de marca
+Antes de produzir, carregue a skill da marca tratada:
+`black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`
+(em disco: `~/.claude/skills/synced/*/<skill>/SKILL.md`)
+
+**Anrede correta** (erro mais comum): Black Strategie = Sie sempre, Rayana fala em Ich, nunca Wir.
+STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
+
+Sem travessão em texto de cliente da Black Strategie. Sem jargão de agência.
+A palavra Recruiting nunca se associa à Black Strategie.
+
+## Metas de referência da casa
+- CPL Meta Ads (Black Strategie, campanha CHECK): **2,50 a 6 €**.
+- Conversão medida em **DM com a palavra CHECK**, nunca em formulário.
+- Campanha CHECK 15.09 a 16.10.2026: 25 a 35 pedidos, 15 a 20 vídeos de análise, 6 a 8 reuniões, 2 a 3 Sprints, 1 Pacote.
+- Se a data da campanha já passou, avisar antes de analisar contra meta vencida.
