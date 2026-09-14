@@ -2,6 +2,9 @@
 
 Tudo em um lugar: marcas, campanha, sistema de outbound, ofertas, agentes e frameworks de decisão.
 
+**Painel visual (abre no celular):** https://claude.ai/code/artifact/c3e665ec-4890-4080-a049-aaea7f8efec6
+Fonte do painel: `.claude/playbook-panel.html`. Ao editar este playbook, atualizar o painel também.
+
 **A única coisa que não está aqui:** os fatos detalhados de cada marca. Eles vivem nas skills
 (`black-strategie-content`, `staff24-content`, `fitary-content`, `content-engine`,
 `meta-ads-kampagne2026`), que carregam sozinhas em qualquer sessão. Copiá-los para cá criaria duas

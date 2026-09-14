@@ -1,0 +1,631 @@
+<title>Black Strategie Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+  :root{
+    --ground:#FAF8F4;
+    --surface:#FFFFFF;
+    --surface-2:#F2EEE8;
+    --ink:#0F0F0E;
+    --ink-2:#4A4550;
+    --ink-3:#7C7585;
+    --line:#E2DCD4;
+    --line-strong:#C9C1B8;
+    --roxo:#8A02D6;
+    --roxo-soft:#F3E4FF;
+    --laranja:#E45C00;
+    --laranja-soft:#FFE9D8;
+    --ok:#127A4C;
+    --ok-soft:#DDF2E7;
+    --crit:#C01E3C;
+    --crit-soft:#FBE1E6;
+    --shadow:0 1px 2px rgba(15,15,14,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F0F0E;
+      --surface:#18161C;
+      --surface-2:#201D27;
+      --ink:#FEFEFE;
+      --ink-2:#C4BDCE;
+      --ink-3:#8E8799;
+      --line:#2C2834;
+      --line-strong:#3E3849;
+      --roxo:#C06BFF;
+      --roxo-soft:#2A1140;
+      --laranja:#FF8A3D;
+      --laranja-soft:#3A1D08;
+      --ok:#4FCB90;
+      --ok-soft:#0E2A1E;
+      --crit:#FF6B85;
+      --crit-soft:#33101A;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F0F0E;
+    --surface:#18161C;
+    --surface-2:#201D27;
+    --ink:#FEFEFE;
+    --ink-2:#C4BDCE;
+    --ink-3:#8E8799;
+    --line:#2C2834;
+    --line-strong:#3E3849;
+    --roxo:#C06BFF;
+    --roxo-soft:#2A1140;
+    --laranja:#FF8A3D;
+    --laranja-soft:#3A1D08;
+    --ok:#4FCB90;
+    --ok-soft:#0E2A1E;
+    --crit:#FF6B85;
+    --crit-soft:#33101A;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:Montserrat,"Segoe UI",system-ui,sans-serif;
+    font-size:15px;
+    line-height:1.6;
+    margin:0;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px;padding-block:0 72px}
+  h1,h2,h3{font-family:"Archivo Black",Impact,system-ui,sans-serif;font-weight:400;text-wrap:balance;letter-spacing:-.01em;margin:0}
+  h1{font-size:clamp(2.1rem,6vw,3.4rem);line-height:1.02;text-transform:uppercase}
+  h2{font-size:clamp(1.25rem,3.2vw,1.7rem);text-transform:uppercase;line-height:1.1}
+  h3{font-size:.98rem;text-transform:uppercase;letter-spacing:.02em}
+  p{margin:0}
+  a{color:var(--roxo)}
+  code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.86em}
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-3);
+  }
+
+  /* header */
+  header.masthead{border-bottom:2px solid var(--ink);padding-block:40px 26px}
+  .masthead .eyebrow{display:block;margin-bottom:14px}
+  .lede{color:var(--ink-2);max-width:62ch;margin-top:16px;font-size:1.02rem}
+  .lede strong{color:var(--ink)}
+
+  /* nav */
+  nav.chips{
+    position:sticky;top:0;z-index:10;background:var(--ground);
+    border-bottom:1px solid var(--line);
+    display:flex;gap:6px;overflow-x:auto;padding-block:10px;
+    scrollbar-width:none;
+  }
+  nav.chips::-webkit-scrollbar{display:none}
+  nav.chips a{
+    flex:0 0 auto;text-decoration:none;color:var(--ink-2);
+    font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 11px;border:1px solid var(--line);border-radius:999px;white-space:nowrap;
+  }
+  nav.chips a:hover{border-color:var(--roxo);color:var(--roxo)}
+  nav.chips a:focus-visible,a:focus-visible{outline:2px solid var(--roxo);outline-offset:2px}
+
+  section{padding-block:44px;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:0}
+  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+  .sec-head .num{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--roxo);font-weight:700}
+  .sec-note{color:var(--ink-3);font-size:.86rem;margin-top:-14px;margin-bottom:20px;max-width:70ch}
+
+  /* campaign */
+  .campaign-bar{
+    display:flex;flex-wrap:wrap;align-items:center;gap:12px;
+    background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--laranja);
+    padding:16px 18px;margin-bottom:22px;
+  }
+  .campaign-bar .dates{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--ink-2)}
+  .pill{
+    font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;padding:4px 9px;border-radius:3px;
+  }
+  .pill.warn{background:var(--laranja-soft);color:var(--laranja)}
+  .pill.ok{background:var(--ok-soft);color:var(--ok)}
+  .pill.crit{background:var(--crit-soft);color:var(--crit)}
+  .pill.roxo{background:var(--roxo-soft);color:var(--roxo)}
+
+  .goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .goal{background:var(--surface);padding:16px 14px}
+  .goal .n{font-family:"Archivo Black",sans-serif;font-size:1.65rem;line-height:1;font-variant-numeric:tabular-nums}
+  .goal .l{font-size:.74rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin-top:7px;font-weight:600}
+
+  .funnel-rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+  .rule{border-top:2px solid var(--ink);padding-top:11px}
+  .rule b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+  .rule span{color:var(--ink-2);font-size:.88rem}
+
+  /* tables */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:.88rem}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{
+    font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-3);background:var(--surface-2);border-bottom:1px solid var(--line-strong);font-weight:700;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td strong{font-weight:700}
+  .num-col{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* brands */
+  .brands{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .brand{background:var(--surface);padding:18px}
+  .brand h3{margin-bottom:3px}
+  .brand .skill{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--roxo);display:block;margin-bottom:14px}
+  .kv{display:flex;gap:8px;font-size:.84rem;padding:6px 0;border-top:1px solid var(--line)}
+  .kv dt{color:var(--ink-3);flex:0 0 74px;text-transform:uppercase;font-size:.68rem;letter-spacing:.06em;padding-top:3px;font-weight:600}
+  .kv dd{margin:0;color:var(--ink-2)}
+  .kv dd b{color:var(--ink)}
+
+  .warnband{
+    background:var(--crit-soft);border:1px solid var(--crit);border-left-width:4px;
+    padding:18px 20px;margin-top:22px;
+  }
+  .warnband h3{color:var(--crit);margin-bottom:8px}
+  .warnband p{color:var(--ink-2);font-size:.9rem;max-width:74ch}
+  .warnband p + p{margin-top:8px}
+
+  /* audit */
+  .audit-cut{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    border:1px solid var(--line);border-top:0;background:var(--surface-2);padding:14px 16px;
+  }
+  .cut-score{font-family:"Archivo Black",sans-serif;font-size:1.5rem;line-height:1}
+  .steps{counter-reset:s;display:grid;gap:0;margin-top:22px;border:1px solid var(--line);background:var(--surface)}
+  .step{display:flex;gap:16px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:0}
+  .step::before{
+    counter-increment:s;content:counter(s,decimal-leading-zero);
+    font-family:"JetBrains Mono",monospace;font-size:.76rem;font-weight:700;color:var(--roxo);
+    flex:0 0 auto;padding-top:2px;
+  }
+  .step b{display:block;font-size:.9rem}
+  .step span{color:var(--ink-2);font-size:.86rem}
+
+  /* offers */
+  .offers{border:1px solid var(--line);background:var(--surface)}
+  .offer{display:flex;gap:16px;align-items:baseline;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .offer:last-child{border-bottom:0}
+  .offer .name{font-weight:700;flex:1 1 180px}
+  .offer .price{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.95rem;white-space:nowrap}
+  .offer .note{flex:1 1 100%;color:var(--ink-3);font-size:.83rem}
+  .ladder-note{margin-top:14px;font-size:.88rem;color:var(--ink-2)}
+
+  ul.hard{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:9px}
+  ul.hard li{padding-left:20px;position:relative;color:var(--ink-2);font-size:.9rem;max-width:78ch}
+  ul.hard li::before{content:"";position:absolute;left:0;top:.62em;width:9px;height:1px;background:var(--roxo)}
+  ul.hard li b{color:var(--ink)}
+
+  /* agents */
+  .agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .agent{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:7px}
+  .agent .nm{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.84rem;color:var(--roxo)}
+  .agent .dl{font-size:.88rem;color:var(--ink)}
+  .agent .wh{font-size:.78rem;color:var(--ink-3);margin-top:auto;padding-top:6px;border-top:1px solid var(--line)}
+  .agent.req{border-left:3px solid var(--laranja)}
+
+  .calls{display:grid;gap:10px;margin-top:22px}
+  .call{background:var(--surface-2);border:1px solid var(--line);padding:12px 14px;font-size:.86rem}
+  .call b{display:block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px;font-family:"JetBrains Mono",monospace}
+  .call span{font-family:"JetBrains Mono",monospace;font-size:.83rem;color:var(--ink-2)}
+
+  /* decision */
+  .formula{
+    font-family:"Archivo Black",sans-serif;font-size:clamp(1.1rem,3.4vw,1.6rem);
+    background:var(--ink);color:var(--ground);padding:18px 20px;text-align:center;letter-spacing:-.01em;
+  }
+  :root[data-theme="dark"] .formula,
+  :root:not([data-theme="light"]) .formula{background:var(--surface-2);color:var(--ink);border:1px solid var(--line-strong)}
+  .bottleneck{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .bn{
+    flex:1 1 120px;border:1px solid var(--line);background:var(--surface);padding:11px 12px;
+  }
+  .bn .i{font-family:"JetBrains Mono",monospace;font-size:.7rem;color:var(--ink-3);font-weight:700}
+  .bn .t{font-weight:700;font-size:.88rem;margin-top:3px}
+  .bn.hot{border-color:var(--laranja);background:var(--laranja-soft)}
+  .bn.hot .t{color:var(--laranja)}
+
+  .hookscore{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:18px}
+  .hs{background:var(--surface);padding:13px 14px}
+  .hs b{display:block;font-size:.82rem}
+  .hs span{font-size:.78rem;color:var(--ink-3)}
+  .cutline{margin-top:14px;font-size:.9rem;color:var(--ink-2)}
+  .cutline b{color:var(--ink)}
+
+  .arc{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:8px;margin-top:20px}
+  .beat{border-top:3px solid var(--roxo);padding-top:10px}
+  .beat .t{font-family:"JetBrains Mono",monospace;font-size:.7rem;color:var(--roxo);font-weight:700}
+  .beat .w{font-weight:700;font-size:.88rem;margin-top:2px}
+  .beat .d{font-size:.8rem;color:var(--ink-3)}
+
+  /* writing */
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+  .banned{border:1px solid var(--crit);background:var(--crit-soft);padding:16px 18px}
+  .banned h3{color:var(--crit);margin-bottom:10px}
+  .banned ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:.87rem;display:grid;gap:6px}
+  .works{border:1px solid var(--ok);background:var(--ok-soft);padding:16px 18px}
+  .works h3{color:var(--ok);margin-bottom:10px}
+  .quote{font-family:"Archivo Black",sans-serif;font-size:1.02rem;line-height:1.3;margin-top:10px}
+  .quote-src{font-size:.78rem;color:var(--ink-3);margin-top:6px}
+
+  /* gaps */
+  .gaps{border:1px solid var(--line);background:var(--surface)}
+  .gap{display:flex;gap:14px;padding:15px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:baseline}
+  .gap:last-child{border-bottom:0}
+  .gap .g-name{font-weight:700;flex:1 1 170px}
+  .gap .g-why{flex:2 1 260px;color:var(--ink-2);font-size:.87rem}
+
+  footer{padding-block:30px;color:var(--ink-3);font-size:.8rem;border-top:2px solid var(--ink)}
+  footer .mono{display:block;margin-top:6px}
+
+  @media (max-width:560px){
+    .wrap{padding:0 16px;padding-block:0 56px}
+    section{padding-block:34px}
+    .kv dt{flex-basis:64px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <span class="eyebrow">Betriebssystem · Operação diária</span>
+  <h1>Black Strategie Playbook</h1>
+  <p class="lede">Marcas, campanha, outbound, ofertas, time de agentes e como decidir. <strong>Os fatos detalhados de cada marca ficam nas skills</strong>, que carregam sozinhas em qualquer sessão. Aqui fica a camada de operação e decisão.</p>
+</header>
+
+<nav class="chips" aria-label="Seções">
+  <a href="#campanha">Campanha</a>
+  <a href="#marcas">Marcas</a>
+  <a href="#outbound">Outbound</a>
+  <a href="#ofertas">Ofertas</a>
+  <a href="#agentes">Agentes</a>
+  <a href="#decisao">Decisão</a>
+  <a href="#hooks">Hooks</a>
+  <a href="#metricas">Métricas</a>
+  <a href="#escrita">Escrita</a>
+  <a href="#falta">O que falta</a>
+</nav>
+
+<section id="campanha">
+  <div class="sec-head"><span class="num">01</span><h2>Campanha ativa · CHECK</h2></div>
+
+  <div class="campaign-bar">
+    <span class="pill warn" id="camp-status">15.09 começa amanhã</span>
+    <span class="dates">15.09.2026 → 16.10.2026</span>
+    <span class="dates" id="camp-left">32 dias de janela</span>
+  </div>
+
+  <div class="goals">
+    <div class="goal"><div class="n">25–35</div><div class="l">Pedidos de Check</div></div>
+    <div class="goal"><div class="n">15–20</div><div class="l">Vídeos de análise</div></div>
+    <div class="goal"><div class="n">6–8</div><div class="l">Reuniões</div></div>
+    <div class="goal"><div class="n">2–3</div><div class="l">Website-Sprints</div></div>
+    <div class="goal"><div class="n">1</div><div class="l">Aufbau-Paket</div></div>
+    <div class="goal"><div class="n">DM</div><div class="l">Soft launch ASSISTENT</div></div>
+  </div>
+
+  <div class="funnel-rules">
+    <div class="rule"><b>Entrada única</b><span>Praxis-Check, palavra-chave <strong>CHECK</strong>, em todos os canais.</span></div>
+    <div class="rule"><b>Resposta</b><span>Só WhatsApp. Formulário nunca.</span></div>
+    <div class="rule"><b>CPL alvo</b><span class="mono">2,50 – 6,00 €</span></div>
+    <div class="rule"><b>Filtro de produção</b><span>Toda peça paga uma dessas metas. Se não paga, perguntar antes de produzir.</span></div>
+  </div>
+</section>
+
+<section id="marcas">
+  <div class="sec-head"><span class="num">02</span><h2>As quatro marcas</h2></div>
+  <p class="sec-note">Anrede é o erro que mais se comete. Não existe padrão único: é por marca e por canal.</p>
+
+  <div class="brands">
+    <article class="brand">
+      <h3>Black Strategie</h3>
+      <span class="skill">black-strategie-content</span>
+      <dl>
+        <div class="kv"><dt>Anrede</dt><dd><b>Sie</b> sempre. Rayana fala em <b>Ich</b>, nunca Wir.</dd></div>
+        <div class="kv"><dt>Área</dt><dd>Wels, Linz, OÖ. <b>Nunca Wien.</b></dd></div>
+        <div class="kv"><dt>Alvo</dt><dd>Praxen com foco Selbstzahler, Selbstständige, KMU</dd></div>
+        <div class="kv"><dt>Erro fatal</dt><dd>soar como agência genérica</dd></div>
+      </dl>
+    </article>
+
+    <article class="brand">
+      <h3>STAFF24</h3>
+      <span class="skill">staff24-content</span>
+      <dl>
+        <div class="kv"><dt>Anrede</dt><dd><b>du</b> no social · <b>Sie</b> no LinkedIn, site e B2B</dd></div>
+        <div class="kv"><dt>Área</dt><dd>Áustria, 17 filiais. Sempre hashtag da cidade.</dd></div>
+        <div class="kv"><dt>Alvo</dt><dd>duplo: empresas (B2B) e candidatos (B2C)</dd></div>
+        <div class="kv"><dt>Erro fatal</dt><dd>esquecer um dos dois públicos</dd></div>
+      </dl>
+    </article>
+
+    <article class="brand">
+      <h3>FITARY</h3>
+      <span class="skill">fitary-content</span>
+      <dl>
+        <div class="kv"><dt>Anrede</dt><dd><b>du</b> · <b>Sie</b> só em pitch B2B</dd></div>
+        <div class="kv"><dt>Área</dt><dd>Wels +15 km</dd></div>
+        <div class="kv"><dt>Alvo</dt><dd>empresários, pais sem tempo, dor de coluna, 40+ longevity, Corporate Health</dd></div>
+        <div class="kv"><dt>Erro fatal</dt><dd>copy de academia barata</dd></div>
+      </dl>
+    </article>
+
+    <article class="brand">
+      <h3>&amp; Beauty</h3>
+      <span class="skill">content-engine</span>
+      <dl>
+        <div class="kv"><dt>Anrede</dt><dd>a definir</dd></div>
+        <div class="kv"><dt>Área</dt><dd>Áustria</dd></div>
+        <div class="kv"><dt>Status</dt><dd><span class="pill warn">perfil incompleto</span></dd></div>
+        <div class="kv"><dt>Erro fatal</dt><dd>produzir antes de fechar o perfil</dd></div>
+      </dl>
+    </article>
+  </div>
+
+  <div class="warnband">
+    <h3>Conflito estrutural · Black Strategie × STAFF24</h3>
+    <p>Rayana é empregada da STAFF24 e dona da Black Strategie. Por isso: <strong>Recruiting nunca é label, nome de oferta ou tema principal da Black Strategie.</strong></p>
+    <p>Tema de pessoal para cliente da agência vira Employer Branding através das pessoas da empresa, sem usar a palavra Recruiting. O agente <code>recruiting-research</code> serve STAFF24 e clientes, nunca o posicionamento da agência.</p>
+  </div>
+</section>
+
+<section id="outbound">
+  <div class="sec-head"><span class="num">03</span><h2>Sistema de outbound</h2></div>
+  <p class="sec-note">O motor principal de lead. Filtro no Google Maps: entra só quem tem <strong>nota ≥ 4,5 e ≥ 40 avaliações</strong>. Nota alta significa negócio que funciona e gargalo digital. Esse é o cliente certo.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Critério</th><th>Nota 1</th><th>Nota 5</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aussehen</strong></td><td>parece 2012, template genérico</td><td>atual, própria, confiável</td></tr>
+        <tr><td><strong>Mobile</strong></td><td>quebra, texto pequeno, lento</td><td>impecável no celular</td></tr>
+        <tr><td><strong>CTA above the fold</strong></td><td>nenhum, ou só "Kontakt" no menu</td><td>ação clara sem rolar</td></tr>
+        <tr><td><strong>Social Proof</strong></td><td>nenhuma prova visível</td><td>avaliações, casos, rostos</td></tr>
+        <tr><td><strong>Angebotsklarheit</strong></td><td>não se entende o que se compra</td><td>oferta clara em 5 segundos</td></tr>
+        <tr><td><strong>Funktion</strong></td><td>link quebrado, formulário morto</td><td>tudo funciona, carrega rápido</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="audit-cut">
+    <span class="cut-score mono">≤ 19</span>
+    <span class="pill ok">é lead</span>
+    <span style="color:var(--ink-2);font-size:.88rem">Soma dos 6 critérios, cada um de 1 a 5. A partir de 20 o site já funciona: descartar.</span>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div><b>Filtrar no Google Maps</b><span>Nota ≥ 4,5 e ≥ 40 avaliações. Praxen com foco Selbstzahler primeiro: Wahlärzte, Ästhetik, Implantologie, Physiotherapie.</span></div></div>
+    <div class="step"><div><b>Auditar o site nos 6 critérios</b><span>Soma ≤ 19 vira lead. Acima disso, descartar sem pena.</span></div></div>
+    <div class="step"><div><b>Construir antes de falar</b><span>Nova versão do site em subdomínio, ou vídeo de análise gravado. O valor vai na frente da conversa.</span></div></div>
+    <div class="step"><div><b>E-mail com vorher/nachher e a Geld-Lücke</b><span>Sie-Form, sem travessão, sem elogio genérico, uma pergunta só. Nenhum preço no primeiro contato.</span></div></div>
+  </div>
+</section>
+
+<section id="ofertas">
+  <div class="sec-head"><span class="num">04</span><h2>Escada de ofertas</h2></div>
+  <p class="sec-note">Única fonte de preço, valores excl. USt. Uma recomendação por lead, nunca um cardápio.</p>
+
+  <div class="offers">
+    <div class="offer"><span class="name">Praxis-Check</span><span class="price">grátis</span><span class="note">Vídeo de análise em 48 h por WhatsApp. É a porta de entrada de todos os canais.</span></div>
+    <div class="offer"><span class="name">Website-Sprint</span><span class="price">690 €</span><span class="note">7 dias. Abatido no Aufbau-Paket.</span></div>
+    <div class="offer"><span class="name">Aufbau-Paket</span><span class="price">1.990 €</span><span class="note">Strategie 690 + Website 1.290 + Profile 390. Separado dá 2.370. Pagamento 50/50.</span></div>
+    <div class="offer"><span class="name">Begleitung · 6 meses</span><span class="price">590 – 890 €/mês</span><span class="note">Schlank 590, Voll 890. Verba de anúncio 200 a 300 €/mês, separada.</span></div>
+    <div class="offer"><span class="name">ASSISTENT · DIY Workshop</span><span class="price">149 € · 97 €</span><span class="note">Launch 97 €, abatido no workshop de 3 h em Wels. Reserva pelo Eversports.</span></div>
+  </div>
+
+  <p class="ladder-note"><strong>Primeiro sim sempre entre 390 e 690 €.</strong></p>
+
+  <ul class="hard">
+    <li><b>Apresentação nunca vai por e-mail.</b> Só em reunião de 30 minutos.</li>
+    <li>Depois da reunião, oferta de <b>uma página</b>: serviços, preço, prazo, próximos passos.</li>
+    <li><b>Estratégia elaborada só depois do contrato</b>, ou vendida à parte como Strategie 690 € e abatida.</li>
+    <li>Duas versões de toda oferta: Terminfassung com mockups (só mostrada) e Versandfassung em PDF reduzido. <b>A .pptx nunca sai.</b></li>
+    <li>A lacuna do cliente se nomeia <b>com as palavras dele da primeira conversa</b>, nunca como crítica.</li>
+    <li>Preço em material público só com autorização explícita.</li>
+  </ul>
+</section>
+
+<section id="agentes">
+  <div class="sec-head"><span class="num">05</span><h2>O time</h2></div>
+  <p class="sec-note">Nove agentes. Os dois com barra laranja são obrigatórios no fluxo, não opcionais.</p>
+
+  <div class="agents">
+    <article class="agent"><span class="nm">prospect-scanner</span><span class="dl">Filtro, auditoria de 6 critérios, Geld-Lücke e e-mail pronto em Sie-Form.</span><span class="wh">Prospecção em lote · Sonnet</span></article>
+    <article class="agent"><span class="nm">competitor-recon</span><span class="dl">O padrão da categoria e as 3 lacunas exploráveis.</span><span class="wh">Antes de posicionamento ou campanha</span></article>
+    <article class="agent"><span class="nm">hook-lab</span><span class="dl">Gera 20 hooks, entrega só os que passam de 8, com variações A/B.</span><span class="wh">Matéria-prima de abertura</span></article>
+    <article class="agent req"><span class="nm">brand-check</span><span class="dl">Veredito e a versão já corrigida. Reprovar é resposta esperada.</span><span class="wh">Obrigatório antes de publicar ou enviar</span></article>
+    <article class="agent"><span class="nm">recruiting-research</span><span class="dl">Motivadores reais, objeções e a linguagem do candidato.</span><span class="wh">STAFF24 e clientes · nunca a agência</span></article>
+    <article class="agent"><span class="nm">trend-scout</span><span class="dl">Tendência filtrada por marca, com a adaptação já escrita.</span><span class="wh">Semanal · Sonnet</span></article>
+    <article class="agent"><span class="nm">performance-analyst</span><span class="dl">Onde o dinheiro vaza e as 3 ações, via Windsor.ai.</span><span class="wh">Antes de escalar verba</span></article>
+    <article class="agent req"><span class="nm">health-fact-check</span><span class="dl">Risco jurídico austríaco e reescrita que mantém a força.</span><span class="wh">Obrigatório em FITARY, clínicas, &amp; Beauty</span></article>
+    <article class="agent"><span class="nm">client-report</span><span class="dl">Relatório que defende o trabalho, não planilha de alcance.</span><span class="wh">Fechamento mensal, renovação</span></article>
+  </div>
+
+  <div class="calls">
+    <div class="call"><b>Direto</b><span>usa o prospect-scanner nesses 12 dentistas de Wels</span></div>
+    <div class="call"><b>Paralelo</b><span>roda em paralelo: competitor-recon nos estúdios de PT de Linz, recruiting-research para Pflegekraft em OÖ, trend-scout da semana</span></div>
+    <div class="call"><b>Encadeado</b><span>hook-lab para FITARY no Instagram → eu escrevo o script → brand-check → health-fact-check</span></div>
+  </div>
+
+  <ul class="hard">
+    <li><b>Copy final não sai de agente.</b> Agente gera matéria-prima e audita; o texto que vai ao ar passa pelo fluxo principal, onde o tom é controlado.</li>
+    <li><b>Agente não tem memória.</b> O que precisa persistir vai para a skill da marca ou para este playbook, nunca fica só no chat.</li>
+    <li>Conteúdo aprovado segue o fluxo da skill <code>content-engine</code>: Canva → calendário Notion da marca.</li>
+  </ul>
+</section>
+
+<section id="decisao">
+  <div class="sec-head"><span class="num">06</span><h2>Como decidir</h2></div>
+  <p class="sec-note">A camada que falta na maioria dos prompts: não o que fazer, mas em que ordem.</p>
+
+  <div class="formula">(Impacto × Confiança) ÷ Esforço</div>
+
+  <div class="tbl-wrap" style="margin-top:18px">
+    <table>
+      <thead><tr><th>Eixo</th><th>Pergunta</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Impacto</strong></td><td>move receita, leads ou candidatos? Ou é métrica de vaidade?</td></tr>
+        <tr><td><strong>Confiança</strong></td><td>temos prova? Dado próprio &gt; caso de mercado &gt; intuição</td></tr>
+        <tr><td><strong>Esforço</strong></td><td>horas mais dependência de terceiro: cliente, filmagem, aprovação</td></tr>
+        <tr><td><strong>Reversibilidade</strong></td><td>se der errado, perde tempo ou queima marca e verba? Baixa reversibilidade vai para revisão manual, independente do score</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="ladder-note"><strong>Máximo 3 recomendações por rodada.</strong> Lista de 10 ideias é fuga de decisão, não estratégia.</p>
+
+  <h3 style="margin-top:30px">Ordem de gargalo</h3>
+  <p class="sec-note" style="margin-top:8px">Nunca sugerir "mais conteúdo" antes de checar a cascata nesta ordem.</p>
+  <div class="bottleneck">
+    <div class="bn"><div class="i">01</div><div class="t">Oferta</div></div>
+    <div class="bn"><div class="i">02</div><div class="t">Posicionamento</div></div>
+    <div class="bn"><div class="i">03</div><div class="t">Prova</div></div>
+    <div class="bn hot"><div class="i">04</div><div class="t">Distribuição</div></div>
+    <div class="bn"><div class="i">05</div><div class="t">Conversão</div></div>
+    <div class="bn"><div class="i">06</div><div class="t">Retenção</div></div>
+  </div>
+  <p class="ladder-note">O gargalo real quase nunca é o 04 — que é exatamente onde todo mundo gasta dinheiro.</p>
+</section>
+
+<section id="hooks">
+  <div class="sec-head"><span class="num">07</span><h2>Hook e conversão</h2></div>
+
+  <h3>Score de hook · 2 pontos por critério</h3>
+  <div class="hookscore">
+    <div class="hs"><b>Tensão imediata</b><span>pergunta aberta, conflito ou risco nas 6 primeiras palavras</span></div>
+    <div class="hs"><b>Especificidade</b><span>número, lugar, profissão, prazo</span></div>
+    <div class="hs"><b>Custo de ignorar</b><span>ela perde algo se rolar a tela?</span></div>
+    <div class="hs"><b>Originalidade</b><span>já vi 50 vezes na categoria? Então zero</span></div>
+    <div class="hs"><b>Encaixe de marca</b><span>sobrevive às regras da marca?</span></div>
+  </div>
+  <p class="cutline"><b>Corte em 8.</b> Abaixo disso não vai para produção. Não se publica o melhor dos ruins.</p>
+
+  <h3 style="margin-top:30px">Estrutura de conversão</h3>
+  <div class="arc">
+    <div class="beat"><div class="t">0–2s</div><div class="w">Interrupção</div><div class="d">tensão, não contexto</div></div>
+    <div class="beat"><div class="t">2–6s</div><div class="w">Identificação</div><div class="d">isso é sobre mim</div></div>
+    <div class="beat"><div class="t">6–15s</div><div class="w">Reenquadramento</div><div class="d">a causa real, diferente do que ele pensa</div></div>
+    <div class="beat"><div class="t">15–25s</div><div class="w">Prova</div><div class="d">caso, número, demonstração</div></div>
+    <div class="beat"><div class="t">25s+</div><div class="w">Caminho</div><div class="d">um passo só, de baixo atrito</div></div>
+  </div>
+
+  <p class="ladder-note" style="margin-top:20px"><strong>Gatilhos, máximo 2 por peça:</strong> contradição do senso comum · erro caro nomeado · bastidor e acesso · identidade · prova concreta · inimigo comum, nunca uma pessoa real.</p>
+</section>
+
+<section id="metricas">
+  <div class="sec-head"><span class="num">08</span><h2>Diagnóstico por métrica</h2></div>
+  <p class="sec-note">O número sozinho não diz nada. Sempre período contra período.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Sintoma</th><th>Causa provável</th><th>Ação</th></tr></thead>
+      <tbody>
+        <tr><td>Alcance alto, salvamento baixo</td><td>entretém, não serve</td><td>trocar ângulo por utilidade específica</td></tr>
+        <tr><td>Retenção cai antes de 3s</td><td>hook fraco, abertura parada</td><td>reescrever hook, cortar o primeiro segundo</td></tr>
+        <tr><td>Retenção cai no meio</td><td>promessa entregue cedo, ritmo lento</td><td>reestruturar em 3 blocos</td></tr>
+        <tr><td>Muito comentário, zero lead</td><td>CTA ausente ou de alto atrito</td><td>CTA único, DM com palavra-chave</td></tr>
+        <tr><td>Lead alto, fechamento baixo</td><td>desalinhamento oferta/anúncio, follow-up lento</td><td>requalificar criativo, medir tempo de resposta</td></tr>
+        <tr><td>CPM subindo, CTR estável</td><td>fadiga de público</td><td>ampliar público antes de trocar criativo</td></tr>
+        <tr><td>CTR caindo, CPM estável</td><td>fadiga de criativo</td><td>novo hook, mesmo corpo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="goals" style="margin-top:20px">
+    <div class="goal"><div class="n">55%</div><div class="l">Retenção 3s mínima</div></div>
+    <div class="goal"><div class="n">25%</div><div class="l">Watch-through mínimo</div></div>
+    <div class="goal"><div class="n">1%</div><div class="l">Salvar + compartilhar</div></div>
+    <div class="goal"><div class="n">0,5%</div><div class="l">Comentários / alcance</div></div>
+  </div>
+  <p class="ladder-note">Números de mercado. <strong>Substituir pelos teus após 30 dias de dado real da campanha CHECK.</strong></p>
+</section>
+
+<section id="escrita">
+  <div class="sec-head"><span class="num">09</span><h2>Regras de escrita</h2></div>
+  <p class="sec-note">Estratégia e diagnóstico em português. Tudo publicável em alemão austríaco.</p>
+
+  <div class="two">
+    <div class="banned">
+      <h3>Nunca</h3>
+      <ul>
+        <li>Travessão e caracteres decorativos em texto de cliente da Black Strategie</li>
+        <li>Jargão de agência: Positionierung, Content-Mix, Baustein, Launch, Reporting, Funnel, Touchpoint, Performance</li>
+        <li>"Wusstest du, dass" · "3 Tipps für" · "Als Unternehmer weißt du"</li>
+        <li>"Wir steigern deine Reichweite" · "Bist du bereit ins Schwitzen zu kommen?"</li>
+        <li>Citação motivacional como hook</li>
+        <li>Emoji como estrutura de lista · mais de um CTA por peça</li>
+      </ul>
+    </div>
+    <div class="works">
+      <h3>Sempre</h3>
+      <ul style="margin:0;padding-left:18px;color:var(--ink-2);font-size:.87rem;display:grid;gap:6px">
+        <li>Dizer o que ela recebe, até quando e quanto custa</li>
+        <li><strong>Teste de tradução:</strong> soa traduzido do português? Reescrever</li>
+        <li><strong>Teste de leitura em voz alta:</strong> a dona de consultório entende na primeira escuta?</li>
+        <li>Virar uma suposição do público de cabeça para baixo</li>
+      </ul>
+      <p class="quote">"Sie posten jede Woche. Und trotzdem ruft niemand an. Hier ist der Grund."</p>
+      <p class="quote-src">O padrão que funciona: tensão, prova de que entende o problema, promessa de causa.</p>
+    </div>
+  </div>
+</section>
+
+<section id="falta">
+  <div class="sec-head"><span class="num">10</span><h2>O que ainda falta</h2></div>
+
+  <div class="gaps">
+    <div class="gap">
+      <span class="g-name">Perfil da &amp; Beauty</span>
+      <span class="g-why">Único perfil vazio. Enquanto estiver assim, todo output da marca sai genérico e é reescrito à mão.</span>
+      <span class="pill warn">10 min</span>
+    </div>
+    <div class="gap">
+      <span class="g-name">Lista de clientes ativos</span>
+      <span class="g-why">Sem ela os agentes trabalham cegos no contexto de setor: nome, setor, cidade, objetivo, canal principal.</span>
+      <span class="pill warn">15 min</span>
+    </div>
+    <div class="gap">
+      <span class="g-name">Benchmarks próprios</span>
+      <span class="g-why">Os números de corte são de mercado, não teus. Só existem depois de 30 dias de dado da campanha CHECK.</span>
+      <span class="pill roxo">depende da campanha</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Playbook operacional da Black Strategie. Fonte no repositório: <code>.claude/PLAYBOOK.md</code>
+  <span class="mono">Fatos de marca nas skills · black-strategie-content · staff24-content · fitary-content · content-engine · meta-ads-kampagne2026</span>
+</footer>
+
+</div>
+
+<script>
+  (function(){
+    var start = new Date(2026,8,15), end = new Date(2026,9,16), now = new Date();
+    var day = 864e5;
+    var status = document.getElementById('camp-status');
+    var left = document.getElementById('camp-left');
+    if(!status || !left) return;
+    var toStart = Math.ceil((start - now)/day), toEnd = Math.ceil((end - now)/day);
+    if(toStart > 1){
+      status.textContent = 'começa em ' + toStart + ' dias';
+      status.className = 'pill roxo';
+      left.textContent = 'janela de 32 dias';
+    } else if(toStart === 1){
+      status.textContent = 'começa amanhã';
+      status.className = 'pill warn';
+      left.textContent = 'janela de 32 dias';
+    } else if(toEnd >= 0){
+      status.textContent = 'em andamento';
+      status.className = 'pill ok';
+      left.textContent = toEnd + (toEnd === 1 ? ' dia restante' : ' dias restantes');
+    } else {
+      status.textContent = 'encerrada · atualizar metas';
+      status.className = 'pill crit';
+      left.textContent = 'terminou há ' + Math.abs(toEnd) + ' dias';
+    }
+  })();
+</script>
