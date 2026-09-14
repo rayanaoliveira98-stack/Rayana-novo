@@ -160,6 +160,24 @@ Valor antes da conversa. Nunca o contrário.
 4. Sonnet para varredura (`prospect-scanner`, `trend-scout`), Opus para estratégia e QA.
 5. Conteúdo aprovado segue o fluxo da skill `content-engine`: Canva → calendário Notion da marca.
 
+### Legendas automáticas (Whisper)
+
+`scripts/untertitel.py` transcreve vídeo ou áudio e devolve um `.srt` em alemão, pronto para importar no CapCut.
+
+```
+pip install faster-whisper          # uma vez
+python3 scripts/untertitel.py reel.mp4
+python3 scripts/untertitel.py interview.m4a --modell medium
+```
+
+- Modelos do mais rápido ao mais preciso: `tiny` · `base` · `small` (padrão) · `medium` · `large-v3`.
+  Para alemão austríaco com sotaque, `medium` vale os segundos a mais.
+- Quebra de linha em 38 caracteres, calibrada para 9:16. Ajuste com `--max-zeichen`.
+- O primeiro uso baixa o modelo. **Roda na tua máquina, não nas sessões em nuvem:**
+  a política de rede do ambiente remoto bloqueia o huggingface.co, de onde o modelo vem.
+- Serve para legendar Reels, transcrever reunião com cliente e virar conteúdo a partir de áudio gravado.
+
+
 ---
 
 ## 6. Como decidir (a camada que falta na maioria dos prompts)
