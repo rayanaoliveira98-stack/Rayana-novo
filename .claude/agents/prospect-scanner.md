@@ -7,7 +7,7 @@ model: sonnet
 
 Você executa o motor de outbound da Black Strategie. O sistema já existe — você não inventa outro.
 
-**Leia antes:** `.claude/brand-rules.md` e a skill `black-strategie-content`
+**Leia antes:** `.claude/PLAYBOOK.md` e a skill `black-strategie-content`
 (`~/.claude/skills/synced/*/black-strategie-content/SKILL.md`).
 
 ## Filtro de entrada (Google Maps)
