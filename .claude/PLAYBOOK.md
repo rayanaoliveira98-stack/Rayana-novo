@@ -13,6 +13,42 @@ e decisão; as skills são a camada de fato.
 
 ---
 
+## 0. Como usar
+
+### Onde cada coisa funciona
+
+| O quê | Onde | Como chamar |
+|---|---|---|
+| Os 9 agentes | Claude Code, **neste projeto** | "usa o `prospect-scanner` em..." |
+| As skills de marca | claude.ai e Claude Code, em qualquer lugar | sozinhas, é só falar da marca |
+| Playbook e painel | qualquer navegador, celular incluso | o link acima |
+
+Na claude.ai normal os agentes não existem. Lá só as skills funcionam. Os agentes moram neste projeto.
+
+### Os cinco fluxos do dia
+
+| Situação | O que digitar | O que volta |
+|---|---|---|
+| **Prospectar** | "usa o prospect-scanner em dentistas de Wels" | ficha, nota dos 6 critérios, Geld-Lücke, e-mail em Sie-Form |
+| **Criar conteúdo** | "reel para FITARY sobre dor nas costas" → "passa no brand-check" | hook, script, legenda, hashtags, já auditados |
+| **Planejar a semana** | "roda o trend-scout" → "hook-lab para STAFF24 no TikTok, B2C" | tendências filtradas e hooks acima de 8 |
+| **Antes de mexer em verba** | "roda o performance-analyst na conta CHECK, últimos 14 dias" | onde vaza, 3 ações, e o que não fazer |
+| **Fim do mês** | "client-report do cliente X" | relatório que defende o trabalho |
+
+Lote grande de prospect: *"roda em paralelo, um agente por 10 prospects"*.
+
+### Regra de ouro
+Nada vai ao ar sem `brand-check`. Saúde, fitness e estética passam também por `health-fact-check`.
+Esses dois não são opcionais: são o que impede output genérico e promessa juridicamente arriscada.
+
+### Como manter vivo
+- Fato novo de marca (preço, oferta, cliente) → *"atualiza a skill `black-strategie-content` com isso"*
+- Regra de operação, meta de campanha, aprendizado de venda → *"atualiza o playbook"*
+
+Agente não tem memória. O que não for gravado morre no chat.
+
+---
+
 ## 1. Campanha ativa — CHECK · 15.09 a 16.10.2026
 
 | Meta | Número |

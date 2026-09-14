@@ -262,6 +262,23 @@
   footer{padding-block:30px;color:var(--ink-3);font-size:.8rem;border-top:2px solid var(--ink)}
   footer .mono{display:block;margin-top:6px}
 
+  /* como usar */
+  .where{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .where div{background:var(--surface);padding:14px 16px}
+  .where b{display:block;font-size:.86rem;margin-bottom:4px}
+  .where span{font-size:.82rem;color:var(--ink-2)}
+  .where code{color:var(--roxo)}
+  .flows{border:1px solid var(--line);background:var(--surface);margin-top:22px}
+  .flow{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(200px,1.4fr) minmax(160px,1fr);gap:16px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .flow:last-child{border-bottom:0}
+  .flow .when{font-weight:700;font-size:.88rem}
+  .flow .say{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--ink);background:var(--surface-2);border-left:2px solid var(--roxo);padding:7px 10px}
+  .flow .get{font-size:.83rem;color:var(--ink-3)}
+  .golden{background:var(--ink);color:var(--ground);padding:18px 20px;margin-top:22px}
+  :root[data-theme="dark"] .golden,:root:not([data-theme="light"]) .golden{background:var(--surface-2);color:var(--ink);border:1px solid var(--line-strong)}
+  .golden b{font-family:"Archivo Black",sans-serif;text-transform:uppercase;font-size:.9rem;display:block;margin-bottom:6px}
+  .golden p{font-size:.89rem;opacity:.9;max-width:76ch}
+  @media (max-width:640px){.flow{grid-template-columns:1fr;gap:8px}}
   @media (max-width:560px){
     .wrap{padding:0 16px;padding-block:0 56px}
     section{padding-block:34px}
@@ -279,6 +296,7 @@
 </header>
 
 <nav class="chips" aria-label="Seções">
+  <a href="#usar">Como usar</a>
   <a href="#campanha">Campanha</a>
   <a href="#marcas">Marcas</a>
   <a href="#outbound">Outbound</a>
@@ -290,6 +308,36 @@
   <a href="#escrita">Escrita</a>
   <a href="#falta">O que falta</a>
 </nav>
+
+<section id="usar">
+  <div class="sec-head"><span class="num">00</span><h2>Como usar</h2></div>
+  <p class="sec-note">O que mais confunde: cada camada funciona num lugar diferente.</p>
+
+  <div class="where">
+    <div><b>Os 9 agentes</b><span>Claude Code, <strong>neste projeto</strong>. Na claude.ai normal eles não existem.</span></div>
+    <div><b>As skills de marca</b><span>claude.ai e Claude Code, em qualquer lugar. Carregam sozinhas quando você fala da marca.</span></div>
+    <div><b>Playbook e painel</b><span>Qualquer navegador, celular incluso. Esta página.</span></div>
+  </div>
+
+  <div class="flows">
+    <div class="flow"><span class="when">Prospectar</span><span class="say">usa o prospect-scanner em dentistas de Wels</span><span class="get">Ficha, nota dos 6 critérios, Geld-Lücke e o e-mail em Sie-Form. Lote grande: "roda em paralelo, um agente por 10 prospects".</span></div>
+    <div class="flow"><span class="when">Criar conteúdo</span><span class="say">reel para FITARY sobre dor nas costas<br>→ passa no brand-check</span><span class="get">Hook, script, legenda e hashtags, já auditados. Saúde vai também para o health-fact-check.</span></div>
+    <div class="flow"><span class="when">Planejar a semana</span><span class="say">roda o trend-scout<br>→ hook-lab para STAFF24 no TikTok, B2C</span><span class="get">Tendências filtradas por marca e só os hooks acima de 8.</span></div>
+    <div class="flow"><span class="when">Antes de mexer em verba</span><span class="say">roda o performance-analyst na conta CHECK, últimos 14 dias</span><span class="get">Onde o dinheiro vaza, as 3 ações e o que não fazer agora.</span></div>
+    <div class="flow"><span class="when">Fim do mês</span><span class="say">client-report do cliente X</span><span class="get">Relatório que defende o trabalho, não planilha de alcance.</span></div>
+  </div>
+
+  <div class="golden">
+    <b>Regra de ouro</b>
+    <p>Nada vai ao ar sem <strong>brand-check</strong>. Saúde, fitness e estética passam também por <strong>health-fact-check</strong>. Esses dois não são opcionais: são o que impede output genérico e promessa juridicamente arriscada.</p>
+  </div>
+
+  <ul class="hard">
+    <li><b>Fato novo de marca</b> (preço, oferta, cliente novo) → "atualiza a skill <code>black-strategie-content</code> com isso"</li>
+    <li><b>Regra de operação, meta de campanha, aprendizado de venda</b> → "atualiza o playbook"</li>
+    <li>Agente não tem memória. <b>O que não for gravado morre no chat.</b></li>
+  </ul>
+</section>
 
 <section id="campanha">
   <div class="sec-head"><span class="num">01</span><h2>Campanha ativa · CHECK</h2></div>
