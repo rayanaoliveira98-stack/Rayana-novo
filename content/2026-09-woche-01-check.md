@@ -27,6 +27,7 @@ Status: nach Brand-Check überarbeitet. Offene Punkte am Ende.
 > Entschieden wird das nicht in der Ordination, sondern am Handy.
 >
 > Ich schaue mir sechs Dinge an und sage Ihnen, an welchen zwei Ihre Seite gerade Anfragen verliert.
+> Heuer schon bei mehr als zehn Ordinationen in Oberösterreich.
 >
 > Schreiben Sie CHECK per WhatsApp. Ihr Analyse-Video kommt innerhalb von 48 Stunden.
 >
@@ -46,8 +47,8 @@ Status: nach Brand-Check überarbeitet. Offene Punkte am Ende.
 > Sechs Punkte entscheiden, ob Ihre Website Patienten bringt.
 
 **Slide 2**
-> Ich vergebe pro Punkt eins bis fünf. Sechs Punkte, dreißig sind möglich.
-> Die meisten Seiten scheitern nicht an allen sechs. Sie scheitern an zweien. Und die zwei kosten jeden Tag Anfragen.
+> Ich habe das heuer bei mehr als zehn Ordinationen in Oberösterreich gemacht.
+> Die meisten Seiten scheitern nicht an allen sechs Punkten. Sie scheitern an zweien. Und die zwei kosten jeden Tag Anfragen.
 
 **Slide 3 · Aussehen**
 > Wirkt die Seite wie Ihre Ordination? Oder wie eine Vorlage aus 2012?
@@ -94,10 +95,12 @@ Status: nach Brand-Check überarbeitet. Offene Punkte am Ende.
 
 ## 3. LINKEDIN · Donnerstag · Ich-Form, Autorität ohne Verkauf
 
-> Ich habe mir diese Woche wieder Praxis-Websites in Oberösterreich angesehen. [PREENCHER: Anzahl und Gebiet, z. B. "sieben Ordinationen zwischen Wels und Linz"]
+> Ich habe heuer mehr als zehn Praxis-Websites in Oberösterreich analysiert.
 >
-> Der häufigste Befund ist nicht schlechtes Design.
-> Es ist Unentschlossenheit.
+> Der Befund wiederholt sich so oft, dass ich ihn inzwischen vorher sehe.
+>
+> Er lautet nicht schlechtes Design.
+> Er lautet Unentschlossenheit.
 >
 > Die Seite will alles gleichzeitig. Seriös wirken. Jede Leistung zeigen. Niemanden ausschließen. Modern aussehen.
 > Am Ende entscheidet sie nichts. Und dann entscheidet der Patient für sie, indem er weitersucht.
@@ -121,5 +124,5 @@ Status: nach Brand-Check überarbeitet. Offene Punkte am Ende.
 2. **Der interne Schwellwert bleibt intern.** Die Lead-Qualifizierung (Summe von 19 oder weniger aus 30) steht in keiner der drei Kreationen und gehört dort auch nicht hin.
 3. **Zum Referenzfall Dr. Enayati wird nichts behauptet**, solange keine Freigabe und keine belegten Zahlen vorliegen.
 4. **Preise:** nur "kostenlos" für den Praxis-Check. Keine weiteren Beträge.
-5. **Offen:** Anzahl der 2026 gelieferten Praxis-Checks. Gibt dem LinkedIn-Post und Slide 2 sofort Beweiskraft.
+5. **Erledigt:** Beweis eingebaut, "mehr als zehn Ordinationen heuer". Eine exakte Zahl wäre stärker als "mehr als": exakt klingt gezählt, "mehr als" klingt aufgerundet. Sobald die genaue Zahl feststeht, an drei Stellen tauschen (Reel-Caption, Slide 2, LinkedIn-Einstieg).
 6. **Offen:** Zahlt der LinkedIn-Post auf "6 bis 8 Termine" ein, oder braucht Woche 1 einen direkteren Post?
