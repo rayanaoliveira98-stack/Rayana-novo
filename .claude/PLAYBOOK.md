@@ -25,6 +25,27 @@ e decisão; as skills são a camada de fato.
 
 Na claude.ai normal os agentes não existem. Lá só as skills funcionam. Os agentes moram neste projeto.
 
+### Limite de rede: o que NÃO funciona na sessão em nuvem
+
+O Claude Code na web roda num contêiner com política de egress restrita. **Nenhum site externo abre**: nem Google Maps, nem site de prospect, nem portal de avaliação. Só passam as APIs da Anthropic e os repositórios de pacote.
+
+Consequência direta, verificada em teste:
+
+| Agente | Na nuvem (claude.ai/code) | No Claude Code local |
+|---|---|---|
+| `prospect-scanner` | **não roda** — não abre site nem Maps | roda completo |
+| `competitor-recon` | parcial — só resumos do WebSearch | roda completo |
+| `trend-scout` | parcial — só resumos do WebSearch | roda completo |
+| `health-fact-check` | parcial — não abre a fonte para conferir | roda completo |
+| `hook-lab` · `brand-check` · `client-report` · `recruiting-research` | rodam normal | rodam normal |
+| `performance-analyst` | roda — MCP não passa pelo bloqueio | roda |
+
+**As duas saídas:**
+1. **Plugin com MCP** (Nimble): servidor MCP não passa pelo egress do contêiner, então dado de negócio local chega mesmo na nuvem. É o desbloqueio do `prospect-scanner` sem trocar de ambiente.
+2. **Claude Code na tua máquina**: sem política de egress, os nove agentes rodam completos.
+
+Regra: prospecção e pesquisa de web séria se faz **local ou via MCP**. Escrita, auditoria e estratégia rodam em qualquer lugar.
+
 ### Os cinco fluxos do dia
 
 | Situação | O que digitar | O que volta |
