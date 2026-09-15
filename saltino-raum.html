@@ -1,0 +1,1697 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#faf9f7}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Saltino Salzspielraum</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Figtree:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --halit:      #FDFBF7;
+    --sole:       #F6ECDE;
+    --sand:       #EDDFCB;
+    --karte:      #FFFFFF;
+    --holz:       #C9A077;
+    --ton:        #A8492F;
+    --ton-weich:  #C4694B;
+    --salbei:     #74886F;
+    --tiefe:      #2A2320;
+    --gedaempft:  #6E6057;
+    --linie:      rgba(42,35,32,.13);
+    --linie-fest: rgba(42,35,32,.22);
+    --schatten:   0 18px 48px -28px rgba(42,35,32,.45);
+    --korn-op:    .04;
+
+    --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --body: "Figtree", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --halit:      #16110E;
+      --sole:       #1E1813;
+      --sand:       #2B221B;
+      --karte:      #211A15;
+      --holz:       #D2AC85;
+      --ton:        #E78C63;
+      --ton-weich:  #C4694B;
+      --salbei:     #9AB093;
+      --tiefe:      #F5ECE1;
+      --gedaempft:  #AE9D90;
+      --linie:      rgba(245,236,225,.14);
+      --linie-fest: rgba(245,236,225,.26);
+      --schatten:   0 18px 48px -28px rgba(0,0,0,.8);
+      --korn-op:    .05;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --halit:      #16110E;
+    --sole:       #1E1813;
+    --sand:       #2B221B;
+    --karte:      #211A15;
+    --holz:       #D2AC85;
+    --ton:        #E78C63;
+    --ton-weich:  #C4694B;
+    --salbei:     #9AB093;
+    --tiefe:      #F5ECE1;
+    --gedaempft:  #AE9D90;
+    --linie:      rgba(245,236,225,.14);
+    --linie-fest: rgba(245,236,225,.26);
+    --schatten:   0 18px 48px -28px rgba(0,0,0,.8);
+    --korn-op:    .05;
+  }
+
+  body {
+    margin: 0;
+    background: var(--halit);
+    color: var(--tiefe);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    opacity: var(--korn-op);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  img { max-width: 100%; }
+
+  ::selection { background: var(--ton); color: var(--halit); }
+
+  :focus-visible {
+    outline: 2px solid var(--ton);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 56px);
+  }
+
+  /* ---------- Typografie ---------- */
+
+  h1, h2, h3, h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: clamp(2.7rem, 7.4vw, 5.4rem);
+    line-height: .95;
+    letter-spacing: -.025em;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+  }
+
+  h2 {
+    font-size: clamp(1.95rem, 4.2vw, 3.2rem);
+    line-height: 1.04;
+    letter-spacing: -.02em;
+    font-variation-settings: "opsz" 96;
+  }
+
+  h1 em, h2 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ton);
+  }
+
+  h3 {
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 1.16rem;
+    letter-spacing: -.01em;
+    line-height: 1.25;
+  }
+
+  p { margin: 0; max-width: 62ch; }
+
+  .marke {
+    font-family: var(--body);
+    font-size: .705rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ton);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .marke::after {
+    content: "";
+    flex: 1;
+    max-width: 64px;
+    height: 1px;
+    background: currentColor;
+    opacity: .45;
+  }
+
+  .lede {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    color: var(--gedaempft);
+    line-height: 1.55;
+  }
+
+  /* ---------- Navigation ---------- */
+
+  .nav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 60;
+    background: color-mix(in srgb, var(--halit) 88%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--linie);
+  }
+
+  .nav__inner {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding: 13px clamp(20px, 5vw, 56px);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .logo {
+    font-family: var(--display);
+    font-size: 1.32rem;
+    font-weight: 600;
+    letter-spacing: -.02em;
+    text-decoration: none;
+    color: var(--tiefe);
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+  }
+
+  .logo span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ton);
+    display: inline-block;
+  }
+
+  .nav__links {
+    margin: 0 0 0 auto;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2.4vw, 30px);
+  }
+
+  .nav__links a {
+    font-size: .855rem;
+    font-weight: 500;
+    color: var(--gedaempft);
+    text-decoration: none;
+    transition: color .18s;
+  }
+
+  .nav__links a:hover { color: var(--tiefe); }
+
+  .nav__links a.btn--voll { color: #FFF7F0; }
+  .nav__links a.btn--voll:hover { color: #FFF7F0; }
+
+  @media (max-width: 720px) {
+    .nav__links li:not(:last-child) { display: none; }
+  }
+
+  /* ---------- Buttons ---------- */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 24px;
+    border-radius: 999px;
+    font-family: var(--body);
+    font-size: .89rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .18s, background .18s, border-color .18s;
+  }
+
+  .btn--voll { background: var(--ton); color: #FFF7F0; }
+  .btn--voll:hover { background: var(--ton-weich); transform: translateY(-1px); }
+
+  .btn--linie {
+    border-color: var(--linie-fest);
+    color: var(--tiefe);
+    background: transparent;
+  }
+  .btn--linie:hover { border-color: var(--ton); color: var(--ton); }
+
+  .btn--klein { padding: 9px 17px; font-size: .8rem; }
+
+  /* ---------- Hero ---------- */
+
+  .hero { padding-block: clamp(56px, 9vw, 112px) clamp(40px, 6vw, 72px); }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, .8fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: end;
+  }
+
+  @media (max-width: 860px) {
+    .hero__grid { grid-template-columns: 1fr; align-items: start; }
+  }
+
+  .hero h1 { margin-top: 20px; }
+
+  .hero__sub { margin-top: 24px; max-width: 46ch; }
+
+  .hero__aktionen {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .fakten {
+    display: grid;
+    gap: 2px;
+    border-top: 1px solid var(--linie-fest);
+  }
+
+  .fakt {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--linie);
+  }
+
+  .fakt__wert {
+    font-family: var(--mono);
+    font-size: 1.32rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--tiefe);
+    letter-spacing: -.03em;
+  }
+
+  .fakt__wert i { font-style: normal; font-size: .78rem; color: var(--gedaempft); margin-left: 2px; }
+
+  .fakt__name {
+    font-size: .82rem;
+    color: var(--gedaempft);
+    text-align: right;
+  }
+
+  /* ---------- Sektionen ---------- */
+
+  section { scroll-margin-top: 80px; }
+
+  .sektion { padding-block: clamp(56px, 8vw, 104px); }
+
+  .sektion--sole { background: var(--sole); }
+
+  .kopf { display: grid; gap: 18px; max-width: 760px; }
+
+  /* ---------- 3D-Raum ---------- */
+
+  .raum { margin-top: clamp(28px, 4vw, 44px); }
+
+  .buehne {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    background: linear-gradient(170deg, var(--sand), var(--sole));
+    border: 1px solid var(--linie);
+    box-shadow: var(--schatten);
+  }
+
+  .buehne__leinwand {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 58vh;
+    min-height: 300px;
+  }
+
+  .buehne__hinweis {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--gedaempft);
+    background: color-mix(in srgb, var(--karte) 78%, transparent);
+    padding: 5px 11px;
+    border-radius: 999px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+  }
+
+  .buehne__fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 10px;
+    text-align: center;
+    padding: 32px;
+    color: var(--gedaempft);
+  }
+
+  .schiene {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+
+  .schiene button {
+    flex: 0 0 auto;
+    display: grid;
+    gap: 3px;
+    text-align: left;
+    padding: 11px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--linie);
+    background: var(--karte);
+    color: var(--gedaempft);
+    font-family: var(--body);
+    cursor: pointer;
+    transition: border-color .18s, color .18s, background .18s;
+  }
+
+  .schiene button:hover { border-color: var(--linie-fest); color: var(--tiefe); }
+
+  .schiene button[aria-pressed="true"] {
+    background: var(--ton);
+    border-color: var(--ton);
+    color: #FFF7F0;
+  }
+
+  .schiene .zn {
+    font-family: var(--mono);
+    font-size: .64rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .65;
+  }
+
+  .schiene .zt { font-size: .93rem; font-weight: 600; letter-spacing: -.01em; }
+
+  .zonentext {
+    margin-top: 26px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .75fr);
+    gap: clamp(20px, 4vw, 52px);
+    align-items: start;
+  }
+
+  @media (max-width: 800px) { .zonentext { grid-template-columns: 1fr; } }
+
+  .zonentext h3 { font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 1.95rem); font-weight: 500; letter-spacing: -.02em; }
+
+  .zonentext p { margin-top: 10px; color: var(--gedaempft); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: .72rem;
+    padding: 6px 12px;
+    border-radius: 7px;
+    background: var(--sand);
+    color: var(--tiefe);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Mechanismus ---------- */
+
+  .schritte {
+    margin-top: clamp(32px, 5vw, 52px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--linie);
+    border-block: 1px solid var(--linie);
+  }
+
+  .schritt { background: var(--halit); padding: 28px clamp(18px, 2.4vw, 30px) 32px; display: grid; gap: 11px; align-content: start; }
+
+  .sektion--sole .schritt { background: var(--sole); }
+
+  .schritt__nr {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--ton);
+    letter-spacing: .1em;
+  }
+
+  .schritt p { font-size: .95rem; color: var(--gedaempft); }
+
+  /* ---------- Messwerte ---------- */
+
+  .messung {
+    margin-top: clamp(32px, 5vw, 56px);
+    background: var(--karte);
+    border: 1px solid var(--linie);
+    border-radius: 18px;
+    padding: clamp(22px, 3.4vw, 36px);
+    box-shadow: var(--schatten);
+  }
+
+  .messung__kopf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--linie);
+  }
+
+  .messung__kopf h3 { font-size: 1.02rem; }
+
+  .stempel {
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--salbei);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .stempel::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--salbei);
+  }
+
+  .werte { display: grid; }
+
+  .wert {
+    display: grid;
+    grid-template-columns: minmax(130px, 1.1fr) minmax(88px, auto) minmax(110px, 1.4fr);
+    align-items: center;
+    gap: clamp(12px, 2.5vw, 28px);
+    padding: 17px 0;
+    border-bottom: 1px solid var(--linie);
+  }
+
+  .wert:last-child { border-bottom: 0; padding-bottom: 0; }
+
+  .wert__name { font-size: .89rem; color: var(--gedaempft); }
+
+  .wert__zahl {
+    font-family: var(--mono);
+    font-size: 1.22rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.03em;
+    text-align: right;
+  }
+
+  .wert__zahl i { font-style: normal; font-size: .72rem; color: var(--gedaempft); margin-left: 3px; }
+
+  .spur {
+    position: relative;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--sand);
+  }
+
+  .spur__band {
+    position: absolute;
+    top: 0; bottom: 0;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--salbei) 42%, transparent);
+  }
+
+  .spur__nadel {
+    position: absolute;
+    top: -4px;
+    width: 2px;
+    height: 14px;
+    border-radius: 1px;
+    background: var(--ton);
+  }
+
+  .messung__fuss {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--linie);
+    font-size: .8rem;
+    color: var(--gedaempft);
+    max-width: 68ch;
+  }
+
+  @media (max-width: 560px) {
+    .wert { grid-template-columns: 1fr auto; }
+    .spur { grid-column: 1 / -1; }
+  }
+
+  /* ---------- Ablauf ---------- */
+
+  .ablauf {
+    margin-top: clamp(32px, 5vw, 52px);
+    display: grid;
+    gap: 0;
+  }
+
+  .stufe {
+    display: grid;
+    grid-template-columns: 62px minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: clamp(14px, 3vw, 36px);
+    padding: 26px 0;
+    border-top: 1px solid var(--linie);
+    align-items: baseline;
+  }
+
+  .stufe:last-child { border-bottom: 1px solid var(--linie); }
+
+  .stufe__nr {
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--ton);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stufe h3 { font-family: var(--display); font-weight: 500; font-size: 1.3rem; letter-spacing: -.02em; }
+
+  .stufe p { color: var(--gedaempft); font-size: .95rem; }
+
+  @media (max-width: 700px) {
+    .stufe { grid-template-columns: 42px 1fr; }
+    .stufe p { grid-column: 2; }
+  }
+
+  /* ---------- Design / Material ---------- */
+
+  .materialgrid {
+    margin-top: clamp(30px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: clamp(22px, 3.5vw, 48px);
+  }
+
+  .farbreihe { display: flex; gap: 0; border-radius: 10px; overflow: hidden; height: 76px; }
+  .farbreihe div { flex: 1; }
+
+  .farbnamen {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: .66rem;
+    color: var(--gedaempft);
+  }
+
+  .materialliste { margin: 0; padding: 0; list-style: none; display: grid; }
+
+  .materialliste li {
+    padding: 11px 0;
+    border-bottom: 1px solid var(--linie);
+    font-size: .92rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .materialliste span { color: var(--gedaempft); font-family: var(--mono); font-size: .74rem; }
+
+  .stimmung { display: flex; flex-wrap: wrap; gap: 8px; align-content: start; }
+
+  .stimmung b {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.1rem;
+    padding: 5px 15px;
+    border: 1px solid var(--linie-fest);
+    border-radius: 999px;
+    color: var(--tiefe);
+  }
+
+  /* ---------- Schluss ---------- */
+
+  .schluss {
+    padding-block: clamp(64px, 9vw, 116px);
+    background: var(--tiefe);
+    color: var(--halit);
+  }
+
+  .schluss h2 { color: var(--halit); }
+  .schluss h2 em { color: var(--holz); }
+  .schluss .marke { color: var(--holz); }
+  .schluss p { color: color-mix(in srgb, var(--halit) 66%, transparent); }
+
+  .schluss__aktionen { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .schluss .btn--voll { background: var(--holz); color: #241C16; }
+  .schluss .btn--voll:hover { background: #E0BE97; }
+  .schluss .btn--linie { border-color: color-mix(in srgb, var(--halit) 34%, transparent); color: var(--halit); }
+  .schluss .btn--linie:hover { border-color: var(--holz); color: var(--holz); }
+
+  .platzhalter {
+    margin-top: 34px;
+    padding-top: 18px;
+    border-top: 1px solid color-mix(in srgb, var(--halit) 18%, transparent);
+    font-family: var(--mono);
+    font-size: .74rem;
+    color: color-mix(in srgb, var(--halit) 52%, transparent);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 26px;
+  }
+
+  .fuss {
+    padding-block: 28px 40px;
+    border-top: 1px solid var(--linie);
+    font-size: .78rem;
+    color: var(--gedaempft);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+
+  /* ---------- Begehbare Tour ---------- */
+
+  .tour { position: relative; background: var(--sole); }
+
+  .tour__auftakt { padding-block: clamp(52px, 7vw, 92px) clamp(28px, 4vw, 48px); }
+  .tour__auftakt .kopf { gap: 16px; }
+
+  .tour__spur { position: relative; height: 480svh; }
+
+  .tour__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 520px;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--sand), var(--sole));
+  }
+
+  .tour__leinwand { display: block; width: 100%; height: 100%; }
+
+  .tour__hud {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 14px;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) clamp(16px, 4vw, 44px) calc(18px + env(safe-area-inset-bottom, 0px));
+    pointer-events: none;
+  }
+
+  .hud__oben {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .hud__zaehler {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--gedaempft);
+    background: color-mix(in srgb, var(--karte) 80%, transparent);
+    padding: 7px 14px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hud__auge {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--karte) 80%, transparent);
+    backdrop-filter: blur(8px);
+    pointer-events: auto;
+  }
+
+  .hud__auge button {
+    border: 0;
+    background: transparent;
+    font-family: var(--body);
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--gedaempft);
+    padding: 8px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .18s, color .18s;
+    white-space: nowrap;
+  }
+
+  .hud__auge button[aria-pressed="true"] { background: var(--ton); color: #FFF7F0; }
+
+  .hud__karte {
+    align-self: end;
+    justify-self: start;
+    max-width: 430px;
+    background: color-mix(in srgb, var(--karte) 88%, transparent);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--linie);
+    border-radius: 18px;
+    padding: 22px 24px 24px;
+    box-shadow: var(--schatten);
+    pointer-events: auto;
+    display: grid;
+    gap: 11px;
+  }
+
+  .hud__karte h3 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    letter-spacing: -.02em;
+  }
+
+  .hud__karte p { font-size: .93rem; color: var(--gedaempft); }
+
+  .hud__unten { display: grid; gap: 10px; }
+
+  .hud__hinweis {
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--gedaempft);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .hud__hinweis::before {
+    content: "";
+    width: 15px; height: 1px;
+    background: var(--ton);
+  }
+
+  .schiene {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    pointer-events: auto;
+    scrollbar-width: none;
+  }
+
+  .schiene::-webkit-scrollbar { display: none; }
+
+  .schiene button {
+    flex: 0 0 auto;
+    display: grid;
+    gap: 2px;
+    text-align: left;
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid var(--linie);
+    background: color-mix(in srgb, var(--karte) 84%, transparent);
+    backdrop-filter: blur(8px);
+    color: var(--gedaempft);
+    font-family: var(--body);
+    cursor: pointer;
+    transition: border-color .18s, color .18s, background .18s;
+  }
+
+  .schiene button:hover { border-color: var(--linie-fest); color: var(--tiefe); }
+
+  .schiene button[aria-pressed="true"] {
+    background: var(--ton);
+    border-color: var(--ton);
+    color: #FFF7F0;
+  }
+
+  .schiene .zn {
+    font-family: var(--mono);
+    font-size: .62rem;
+    letter-spacing: .12em;
+    opacity: .7;
+  }
+
+  .schiene .zt { font-size: .89rem; font-weight: 600; letter-spacing: -.01em; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: .7rem;
+    padding: 5px 11px;
+    border-radius: 7px;
+    background: var(--sand);
+    color: var(--tiefe);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tour__fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 10px;
+    text-align: center;
+    padding: 32px;
+    color: var(--gedaempft);
+  }
+
+  .tour.ist-statisch .tour__spur { height: auto; }
+  .tour.ist-statisch .tour__sticky { display: none; }
+
+  .zonenliste {
+    padding-block: 8px clamp(56px, 8vw, 96px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+    gap: 1px;
+    background: var(--linie);
+    border-block: 1px solid var(--linie);
+  }
+
+  .zonenliste article {
+    background: var(--sole);
+    padding: 26px clamp(18px, 2.4vw, 28px) 30px;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+
+  @media (min-width: 900px) {
+    .zonenliste { grid-template-columns: repeat(3, 1fr); }
+    .zonenliste article:first-child { grid-column: span 2; }
+  }
+
+  .zonenliste .zn { font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; color: var(--ton); }
+  .zonenliste h3 { font-family: var(--display); font-weight: 500; font-size: 1.32rem; letter-spacing: -.02em; }
+  .zonenliste p { font-size: .92rem; color: var(--gedaempft); }
+
+  .kein3d {
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--gedaempft);
+  }
+
+  @media (max-width: 640px) {
+    .hud__karte { max-width: none; padding: 17px 18px 19px; }
+    .hud__karte p { font-size: .87rem; }
+  }
+</style>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="logo" href="#oben">Saltino<span></span></a>
+    <ul class="nav__links">
+      <li><a href="#raum">Der Raum</a></li>
+      <li><a href="#salz">Warum Salz</a></li>
+      <li><a href="#besuch">Dein Besuch</a></li>
+      <li><a href="#design">Design</a></li>
+      <li><a class="btn btn--voll btn--klein" href="#kontakt">Anfragen</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="oben">
+
+  <header class="hero wrap">
+    <div class="hero__grid">
+      <div>
+        <p class="marke">Salzspielraum für Familien</p>
+        <h1>Dein Kind spielt.<br />Seine Lunge macht <em>Urlaub.</em></h1>
+        <p class="lede hero__sub">45 Minuten Meeresluft — versteckt in Salzbergen, einer Holzrutsche und einem kleinen Dino, der schon wartet. Du sitzt daneben mit einem ordentlichen Kaffee.</p>
+        <div class="hero__aktionen">
+          <a class="btn btn--voll" href="#raum">Durch den Raum gehen</a>
+          <a class="btn btn--linie" href="#salz">Warum Salz?</a>
+        </div>
+      </div>
+      <div class="fakten">
+        <div class="fakt"><span class="fakt__wert">45<i>min</i></span><span class="fakt__name">Eine Session</span></div>
+        <div class="fakt"><span class="fakt__wert">0–8<i>J</i></span><span class="fakt__name">Altersbereich</span></div>
+        <div class="fakt"><span class="fakt__wert">149<i>m²</i></span><span class="fakt__name">Gesamtfläche</span></div>
+        <div class="fakt"><span class="fakt__wert">21<i>°C</i></span><span class="fakt__name">Raumtemperatur</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="tour" id="raum">
+  <div class="tour__auftakt">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="marke">Der Raum</p>
+        <h2>Geh einmal durch.<br />Fünf Zonen, <em>eine</em> Fläche.</h2>
+        <p class="lede">Ab hier bewegst du dich mit dem Scrollen durch den Raum — auf deiner Augenhöhe. Ein Klick auf <em style="font-style:normal;color:var(--ton);font-weight:600">Kinderhöhe</em> zeigt dir dieselbe Fläche aus 110 cm: was dein Kind sieht, wenn es hereinkommt.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tour__spur" id="tourSpur">
+    <div class="tour__sticky">
+      <canvas class="tour__leinwand" id="leinwand" aria-label="Begehbares 3D-Modell des Saltino-Raums"></canvas>
+      <div class="tour__fallback" id="fallback" hidden>
+        <strong>3D-Ansicht nicht verfügbar</strong>
+        <span>Dein Browser unterstützt kein WebGL — die Zonen stehen unten als Text.</span>
+      </div>
+      <div class="tour__hud">
+        <div class="hud__oben">
+          <p class="hud__zaehler">Zone <span id="hudNr">01</span> / 05</p>
+          <div class="hud__auge" role="group" aria-label="Augenhöhe wählen">
+            <button type="button" id="augErw" aria-pressed="true">Deine Augenhöhe</button>
+            <button type="button" id="augKind" aria-pressed="false">Kinderhöhe · 110 cm</button>
+          </div>
+        </div>
+        <div class="hud__karte">
+          <h3 id="zoneTitel">Salzspielraum</h3>
+          <p id="zoneText"></p>
+          <div class="chips" id="zoneChips"></div>
+        </div>
+        <div class="hud__unten">
+          <p class="hud__hinweis" id="hudHinweis">Scroll dich durch den Raum · ziehen zum Umsehen</p>
+          <div class="schiene" id="schiene" role="group" aria-label="Zone wählen"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section class="sektion" id="salz">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="marke">Warum Salz</p>
+        <h2>Was in diesen 45 Minuten<br />mit der <em>Luft</em> passiert.</h2>
+        <p class="lede">Kein Nebel, kein Dampf, kein Geruch. Ein Halogenerator mahlt pharmazeutisches Steinsalz zu trockenem Aerosol und gibt es dosiert in den Raum ab.</p>
+      </div>
+
+      <div class="schritte">
+        <div class="schritt">
+          <p class="schritt__nr">Mahlen</p>
+          <h3>Von Kristall zu Aerosol</h3>
+          <p>Reines NaCl wird auf 1–5 µm zermahlen. In dieser Größe bleibt es schwebend statt zu Boden zu fallen.</p>
+        </div>
+        <div class="schritt">
+          <p class="schritt__nr">Dosieren</p>
+          <h3>Konstant, nicht maximal</h3>
+          <p>Der Generator hält den Zielwert. Mehr Salz ist nicht besser — konstant über 45 Minuten ist der Punkt.</p>
+        </div>
+        <div class="schritt">
+          <p class="schritt__nr">Atmen</p>
+          <h3>Tief, weil bewegt</h3>
+          <p>Rutschen, klettern, laufen. Ein spielendes Kind atmet deutlich tiefer als ein stillsitzendes — genau darum ist es ein Spielraum und keine Kabine.</p>
+        </div>
+        <div class="schritt">
+          <p class="schritt__nr">Lüften</p>
+          <h3>Sechsfacher Luftwechsel</h3>
+          <p>Zwischen den Sessions wird die Raumluft sechsmal pro Stunde getauscht. Jede Gruppe startet bei denselben Werten.</p>
+        </div>
+      </div>
+
+      <div class="messung">
+        <div class="messung__kopf">
+          <h3>Raumklima — Zielwerte</h3>
+          <span class="stempel">Sensorik im Spielraum, Messintervall 60 s</span>
+        </div>
+        <div class="werte" id="werte"></div>
+        <p class="messung__fuss">Saltino ist ein Wellness- und Freizeitangebot. Halotherapie ersetzt keine ärztliche Behandlung — bei Atemwegsbeschwerden sprich bitte vorher mit deiner Kinderärztin oder deinem Kinderarzt.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sektion sektion--sole" id="besuch">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="marke">Dein Besuch</p>
+        <h2>Vier Stationen,<br />eine <em>Stunde.</em></h2>
+      </div>
+
+      <div class="ablauf">
+        <div class="stufe">
+          <span class="stufe__nr">01</span>
+          <h3>Ankommen</h3>
+          <p>Schuhe aus, Saltino-Socken an, kurze Einweisung. Jacken und Kinderwagen bleiben im Vorraum — der Salzboden bleibt sauber.</p>
+        </div>
+        <div class="stufe">
+          <span class="stufe__nr">02</span>
+          <h3>Spielen</h3>
+          <p>45 Minuten im Salzspielraum. Du bist entweder mit drin oder im Café mit voller Sichtachse. Beides ist richtig.</p>
+        </div>
+        <div class="stufe">
+          <span class="stufe__nr">03</span>
+          <h3>Runterkommen</h3>
+          <p>Kristall-Höhle oder Lounge. Der Übergang von Toben zu Ruhe ist eingeplant — kein abruptes Ende, kein Drama an der Garderobe.</p>
+        </div>
+        <div class="stufe">
+          <span class="stufe__nr">04</span>
+          <h3>Mitnehmen</h3>
+          <p>Salzlampe, Inhalationszubehör oder der Dino. An der Retail Wall steht nur, was wir selber verwenden würden.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sektion" id="design">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="marke">Designsprache</p>
+        <h2>Nicht Ordination.<br />Nicht Indoorspielplatz. <em>Saltino.</em></h2>
+        <p class="lede">Warmer Minimalismus mit einem Kind im Zentrum. Alles, was laut, bunt oder aus Hartplastik ist, hat den Raum nicht geschafft.</p>
+      </div>
+
+      <div class="materialgrid">
+        <div>
+          <h3>Farbwelt</h3>
+          <div class="farbreihe" style="margin-top:14px">
+            <div style="background:#FDFBF7"></div>
+            <div style="background:#F6ECDE"></div>
+            <div style="background:#EDDFCB"></div>
+            <div style="background:#C9A077"></div>
+            <div style="background:#A8492F"></div>
+            <div style="background:#74886F"></div>
+            <div style="background:#2A2320"></div>
+          </div>
+          <div class="farbnamen"><span>Halit</span><span>Sole</span><span>Ton</span><span>Tiefe</span></div>
+        </div>
+
+        <div>
+          <h3>Materialien</h3>
+          <ul class="materialliste" style="margin-top:14px">
+            <li>Steinsalz, ungefärbt <span>Boden 12 cm</span></li>
+            <li>Eiche massiv, geölt <span>Rutsche, Theke</span></li>
+            <li>Halit-Ziegel, hinterleuchtet <span>Rückwand</span></li>
+            <li>Kalkputz <span>Wände</span></li>
+            <li>Leinen, ungebleicht <span>Textil</span></li>
+            <li>Kork <span>Baby Corner</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Atmosphäre</h3>
+          <div class="stimmung" style="margin-top:14px">
+            <b>ruhig</b><b>warm</b><b>hell</b><b>weich</b><b>hochwertig</b><b>unaufgeregt</b><b>spielend</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="schluss" id="kontakt">
+    <div class="wrap">
+      <p class="marke">Kontakt</p>
+      <h2 style="margin-top:16px">Willst du den Raum<br /><em>vorab sehen?</em></h2>
+      <p class="lede" style="margin-top:22px">Wir zeigen das Konzept, die Zonenplanung und die Kalkulation persönlich. Für Familien: Voranmeldung für die Eröffnungswochen.</p>
+      <div class="schluss__aktionen">
+        <a class="btn btn--voll" href="#raum">Zonen ansehen</a>
+        <a class="btn btn--linie" href="#salz">Konzept lesen</a>
+      </div>
+      <div class="platzhalter">
+        <span>Platzhalter — Standort einsetzen</span>
+        <span>Platzhalter — Telefon einsetzen</span>
+        <span>Platzhalter — E-Mail einsetzen</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="fuss">
+      <span>Saltino — Salzspielraum für Familien. Konzeptstand 2026.</span>
+      <span>Wellnessangebot, keine medizinische Behandlung.</span>
+    </div>
+  </div>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var ZONEN = [
+    {
+      nr: "01", name: "Salzspielraum",
+      text: "Zwölf Zentimeter reines Steinsalz am Boden, Salzberge zum Drüberklettern, eine Holzrutsche und eine Wand aus hinterleuchteten Halit-Ziegeln. Dein Kind merkt nicht, dass es dabei inhaliert.",
+      chips: ["68 m²", "Salzboden 12 cm", "0–8 Jahre", "max. 14 Kinder"],
+      pos: [-1.5, 7.5], blick: [-6.5, 1.2, -2.5]
+    },
+    {
+      nr: "02", name: "Baby Corner",
+      text: "Abgetrennt, leiser, weicher. Eigene Salzkonzentration für die Kleinsten, Korkboden statt Salz, Wickelstation direkt daneben. Du sitzt am Boden mit, nicht daneben.",
+      chips: ["18 m²", "0–3 Jahre", "45 % rF", "Korkboden"],
+      pos: [-7.5, 8.5], blick: [-13, 1.0, 5.5]
+    },
+    {
+      nr: "03", name: "Kristall-Höhle",
+      text: "Der Gegenpol zum Toben. Salzwände, kühles Licht, gedämpfte Akustik. Kinder werden hier von selbst leise — und genau das brauchst du nach 45 Minuten Rutsche.",
+      chips: ["9 m²", "6 Plätze", "Ruhezone", "38 dB(A)"],
+      pos: [-3.0, -3.0], blick: [0, 1.6, -11]
+    },
+    {
+      nr: "04", name: "Soft Lounge Café",
+      text: "Du sitzt, du siehst alles. Specialty Coffee, Matcha, ehrliche Snacks — und keine einzige Ecke, in der dein Kind aus dem Blick verschwindet. Das ist kein Nebenraum, das ist der halbe Grund herzukommen.",
+      chips: ["24 m²", "Sichtachse 100 %", "26 Sitzplätze", "WLAN"],
+      pos: [5.0, 1.5], blick: [11, 1.3, -3.5]
+    },
+    {
+      nr: "05", name: "Retail Wall",
+      text: "Salzlampen, Inhalationszubehör, Dino-Merch. Rund 30 Artikel, kuratiert — hier steht nur, was wir selber verwenden würden. Am Ausgang, bewusst.",
+      chips: ["~30 Artikel", "kuratiert", "Dino-Edition"],
+      pos: [9.5, 11.0], blick: [13.5, 1.5, 8]
+    }
+  ];
+
+  var MESSWERTE = [
+    { name: "NaCl-Aerosol", zahl: "8", einheit: "mg/m³", min: 0, max: 20, von: 5, bis: 12, ist: 8 },
+    { name: "Partikelgröße", zahl: "1–5", einheit: "µm", min: 0, max: 10, von: 1, bis: 5, ist: 3 },
+    { name: "Rel. Luftfeuchte", zahl: "45", einheit: "%", min: 20, max: 80, von: 40, bis: 55, ist: 45 },
+    { name: "Temperatur", zahl: "21", einheit: "°C", min: 14, max: 28, von: 20, bis: 22, ist: 21 },
+    { name: "Luftwechsel", zahl: "6", einheit: "×/h", min: 0, max: 12, von: 5, bis: 8, ist: 6 }
+  ];
+
+  /* ---------- Messwerte ---------- */
+  var werte = document.getElementById("werte");
+  if (werte) {
+    MESSWERTE.forEach(function (m) {
+      var pct = function (v) { return ((v - m.min) / (m.max - m.min)) * 100; };
+      var row = document.createElement("div");
+      row.className = "wert";
+      row.innerHTML =
+        '<span class="wert__name">' + m.name + "</span>" +
+        '<span class="wert__zahl">' + m.zahl + "<i>" + m.einheit + "</i></span>" +
+        '<span class="spur" role="img" aria-label="Zielbereich ' + m.von + " bis " + m.bis + " " + m.einheit + '">' +
+          '<span class="spur__band" style="left:' + pct(m.von).toFixed(1) + "%;width:" + (pct(m.bis) - pct(m.von)).toFixed(1) + '%"></span>' +
+          '<span class="spur__nadel" style="left:' + pct(m.ist).toFixed(1) + '%"></span>' +
+        "</span>";
+      werte.appendChild(row);
+    });
+  }
+
+  /* ---------- Zonen-Schiene ---------- */
+  var schiene = document.getElementById("schiene");
+  var zTitel = document.getElementById("zoneTitel");
+  var zText = document.getElementById("zoneText");
+  var zChips = document.getElementById("zoneChips");
+  var hudNr = document.getElementById("hudNr");
+  var spur = document.getElementById("tourSpur");
+  var tour = document.getElementById("raum");
+  var knoepfe = [];
+
+  ZONEN.forEach(function (z, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.innerHTML = '<span class="zn">' + z.nr + '</span><span class="zt">' + z.name + "</span>";
+    b.addEventListener("click", function () { zuZone(i); });
+    schiene.appendChild(b);
+    knoepfe.push(b);
+  });
+
+  var aktiv = -1;
+  function setzeZone(i) {
+    if (i === aktiv) return;
+    aktiv = i;
+    var z = ZONEN[i];
+    zTitel.textContent = z.name;
+    zText.textContent = z.text;
+    hudNr.textContent = z.nr;
+    zChips.innerHTML = "";
+    z.chips.forEach(function (c) {
+      var s = document.createElement("span");
+      s.className = "chip";
+      s.textContent = c;
+      zChips.appendChild(s);
+    });
+    knoepfe.forEach(function (b, k) { b.setAttribute("aria-pressed", k === i ? "true" : "false"); });
+  }
+  setzeZone(0);
+
+  function bahn() {
+    var oben = spur.getBoundingClientRect().top + window.scrollY;
+    return { oben: oben, laenge: Math.max(1, spur.offsetHeight - window.innerHeight) };
+  }
+
+  function zuZone(i) {
+    var b = bahn();
+    window.scrollTo({ top: b.oben + (i / (ZONEN.length - 1)) * b.laenge, behavior: "smooth" });
+  }
+
+  function fortschritt() {
+    var b = bahn();
+    return Math.min(1, Math.max(0, (window.scrollY - b.oben) / b.laenge));
+  }
+
+  /* ---------- Augenhoehe ---------- */
+  var AUGE = { erw: 1.62, kind: 1.10 };
+  var augHoehe = AUGE.erw;
+  var augZiel = AUGE.erw;
+  var bErw = document.getElementById("augErw");
+  var bKind = document.getElementById("augKind");
+
+  function setzeAuge(h, welcher) {
+    augZiel = h;
+    bErw.setAttribute("aria-pressed", welcher === "erw" ? "true" : "false");
+    bKind.setAttribute("aria-pressed", welcher === "kind" ? "true" : "false");
+  }
+  bErw.addEventListener("click", function () { setzeAuge(AUGE.erw, "erw"); });
+  bKind.addEventListener("click", function () { setzeAuge(AUGE.kind, "kind"); });
+
+  /* ---------- 3D ---------- */
+  var leinwand = document.getElementById("leinwand");
+  var fallback = document.getElementById("fallback");
+  var wenigerBewegung = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function stelleStatisch() {
+    tour.classList.add("ist-statisch");
+    var liste = document.createElement("div");
+    liste.className = "zonenliste wrap";
+    ZONEN.forEach(function (z) {
+      var a = document.createElement("article");
+      var chips = z.chips.map(function (c) { return '<span class="chip">' + c + "</span>"; }).join("");
+      a.innerHTML = '<span class="zn">' + z.nr + "</span><h3>" + z.name + "</h3><p>" + z.text +
+                    '</p><div class="chips">' + chips + "</div>";
+      liste.appendChild(a);
+    });
+    var hinw = document.createElement("p");
+    hinw.className = "kein3d wrap";
+    hinw.textContent = "Der begehbare 3D-Raum braucht WebGL \u2014 dein Browser unterst\u00fctzt es gerade nicht.";
+    tour.appendChild(liste);
+    tour.appendChild(hinw);
+  }
+
+  if (!window.THREE) { stelleStatisch(); return; }
+
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: leinwand, antialias: true, alpha: false });
+  } catch (e) { stelleStatisch(); return; }
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  var szene = new THREE.Scene();
+  var kamera = new THREE.PerspectiveCamera(46, 16 / 9, 0.1, 160);
+
+  var dunkel = window.matchMedia("(prefers-color-scheme: dark)");
+  function grund() {
+    var d = document.documentElement.getAttribute("data-theme");
+    return (d === "dark" || (d !== "light" && dunkel.matches)) ? 0x241B15 : 0xF3E8D8;
+  }
+  function setzeGrund() {
+    var g = grund();
+    szene.background = new THREE.Color(g);
+    szene.fog = new THREE.Fog(g, 16, 62);
+  }
+  setzeGrund();
+  if (dunkel.addEventListener) dunkel.addEventListener("change", setzeGrund);
+
+  var F = {
+    boden: 0xEFE2CF, salz: 0xFBF6EE, wand: 0xF6EFE3, holz: 0xC79A6B,
+    holzDunkel: 0xA87B52, ton: 0xA8492F, salbei: 0x74886F, sand: 0xE3D2B8,
+    ziegel: 0xF2DCC0, kristall: 0x93BCD8, kork: 0xD8B98C
+  };
+
+  function mat(c, r, opt) {
+    var o = { color: c, roughness: r === undefined ? 0.95 : r, metalness: 0 };
+    if (opt) for (var k in opt) o[k] = opt[k];
+    return new THREE.MeshStandardMaterial(o);
+  }
+  function box(w, h, d, c, x, y, z, r) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), c.isMaterial ? c : mat(c));
+    m.position.set(x, y, z);
+    if (r) m.rotation.set(r[0] || 0, r[1] || 0, r[2] || 0);
+    m.castShadow = true; m.receiveShadow = true;
+    szene.add(m); return m;
+  }
+  function kugel(r, c, x, y, z, seg) {
+    var m = new THREE.Mesh(new THREE.SphereGeometry(r, seg || 18, seg ? Math.round(seg * 0.7) : 14), c.isMaterial ? c : mat(c));
+    m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
+    szene.add(m); return m;
+  }
+  function zylinder(rt, rb, h, c, x, y, z, seg) {
+    var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 20), c.isMaterial ? c : mat(c));
+    m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
+    szene.add(m); return m;
+  }
+
+  /* Boden, Waende, Decke */
+  var boden = new THREE.Mesh(new THREE.PlaneGeometry(52, 40), mat(F.boden, 1));
+  boden.rotation.x = -Math.PI / 2; boden.receiveShadow = true; szene.add(boden);
+
+  var salzfeld = new THREE.Mesh(new THREE.CircleGeometry(9.5, 40), mat(F.salz, 1));
+  salzfeld.rotation.x = -Math.PI / 2; salzfeld.position.set(-6, 0.03, -2);
+  salzfeld.receiveShadow = true; szene.add(salzfeld);
+
+  var korkfeld = new THREE.Mesh(new THREE.CircleGeometry(3.6, 32), mat(F.kork, 1));
+  korkfeld.rotation.x = -Math.PI / 2; korkfeld.position.set(-13, 0.04, 6);
+  korkfeld.receiveShadow = true; szene.add(korkfeld);
+
+  box(52, 9, 0.5, F.wand, 0, 4.5, -14.2);
+  box(0.5, 9, 40, F.wand, -20.2, 4.5, 0);
+  box(0.5, 9, 40, F.wand, 20.2, 4.5, 0);
+
+  var decke = new THREE.Mesh(new THREE.PlaneGeometry(52, 40), mat(F.wand, 1));
+  decke.rotation.x = Math.PI / 2; decke.position.y = 8.6; szene.add(decke);
+
+  /* Wolkendecke ueber dem Spielraum */
+  (function () {
+    var wolken = [[-8, -4, 2.2], [-5.4, -2.6, 1.6], [-3, -5, 1.9], [-9.5, -0.5, 1.4], [-6, 1.5, 1.7], [-2, -1, 1.3]];
+    wolken.forEach(function (w) {
+      var m = kugel(w[2], mat(0xFFFCF6, 1), w[0], 8.1, w[1], 16);
+      m.scale.y = 0.42; m.castShadow = false;
+    });
+  })();
+
+  /* Hinterleuchtete Halit-Ziegelwand */
+  (function () {
+    for (var c = 0; c < 12; c++) {
+      for (var r = 0; r < 8; r++) {
+        var t = Math.random() * 0.12;
+        var m = mat(new THREE.Color(F.ziegel).offsetHSL(0, 0, -t), 0.85, {
+          emissive: new THREE.Color(0xE09A54), emissiveIntensity: 0.34 + Math.random() * 0.16
+        });
+        box(0.95, 0.52, 0.3, m, -12.2 + c * 1.02 + (r % 2 ? 0.14 : 0), 0.3 + r * 0.56, -13.75);
+      }
+    }
+    var l = new THREE.PointLight(0xFFAE6B, 1.5, 26, 2);
+    l.position.set(-6.5, 2.6, -12.6); szene.add(l);
+  })();
+
+  /* Salzberge */
+  (function () {
+    var berge = [[-9.5, -5.5, 2.4, 1.1], [-6.6, -6.8, 1.8, 0.8], [-3.4, -4.6, 2.1, 0.95],
+                 [-10.8, -1.2, 1.5, 0.6], [-4.2, -0.4, 1.7, 0.7], [-8.2, 2.4, 2.0, 0.85],
+                 [-1.6, -6.4, 1.3, 0.55], [-12.4, -4.2, 1.6, 0.7], [-2.6, 2.8, 1.4, 0.6]];
+    berge.forEach(function (b) {
+      var m = kugel(1, mat(F.salz, 1), b[0], 0.02, b[1], 14);
+      m.scale.set(b[2], b[3], b[2] * 0.92);
+    });
+  })();
+
+  /* Holzrutsche + Kletterbogen */
+  (function () {
+    box(3.0, 0.28, 2.4, F.holz, -11.4, 1.72, -8.4);
+    box(0.28, 1.72, 0.28, F.holzDunkel, -12.6, 0.86, -9.4);
+    box(0.28, 1.72, 0.28, F.holzDunkel, -10.2, 0.86, -9.4);
+    box(0.28, 1.72, 0.28, F.holzDunkel, -12.6, 0.86, -7.4);
+    box(0.28, 1.72, 0.28, F.holzDunkel, -10.2, 0.86, -7.4);
+    var rutsche = box(2.1, 0.16, 5.4, F.holz, -11.4, 0.95, -5.6);
+    rutsche.rotation.x = 0.44;
+    box(0.14, 0.5, 5.4, F.holzDunkel, -12.4, 1.12, -5.6, [0.44, 0, 0]);
+    box(0.14, 0.5, 5.4, F.holzDunkel, -10.4, 1.12, -5.6, [0.44, 0, 0]);
+
+    var bogen = new THREE.Mesh(new THREE.TorusGeometry(1.8, 0.16, 10, 26, Math.PI), mat(F.holz, 0.8));
+    bogen.position.set(-3.6, 0, -1.2); bogen.castShadow = true; szene.add(bogen);
+    var bogen2 = bogen.clone(); bogen2.position.z = 0.6; szene.add(bogen2);
+    for (var i = 0; i < 5; i++) {
+      var a = Math.PI * (0.14 + i * 0.18);
+      box(0.12, 0.12, 1.9, F.holzDunkel, -3.6 + Math.cos(a) * 1.8, Math.sin(a) * 1.8, -0.3);
+    }
+  })();
+
+  /* Dino-Fussspuren */
+  (function () {
+    for (var i = 0; i < 9; i++) {
+      var s = zylinder(0.26, 0.26, 0.04, mat(F.sand, 1), -13 + i * 1.35, 0.06, 1.6 + Math.sin(i * 0.9) * 1.1, 10);
+      s.castShadow = false;
+    }
+  })();
+
+  /* Dino-Maskottchen */
+  (function () {
+    var g = new THREE.Group();
+    var koerper = new THREE.Mesh(new THREE.SphereGeometry(0.62, 18, 14), mat(F.salbei, 0.85));
+    koerper.scale.set(1.15, 1, 0.92); koerper.position.y = 0.78; koerper.castShadow = true; g.add(koerper);
+    var kopf = new THREE.Mesh(new THREE.SphereGeometry(0.34, 16, 12), mat(F.salbei, 0.85));
+    kopf.position.set(0.55, 1.36, 0); kopf.castShadow = true; g.add(kopf);
+    var schwanz = new THREE.Mesh(new THREE.ConeGeometry(0.26, 1.1, 12), mat(F.salbei, 0.85));
+    schwanz.position.set(-0.86, 0.82, 0); schwanz.rotation.z = Math.PI / 2 + 0.3; g.add(schwanz);
+    [-0.28, 0.28].forEach(function (z) {
+      var bein = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.5, 10), mat(F.salbei, 0.85));
+      bein.position.set(0.1, 0.25, z); bein.castShadow = true; g.add(bein);
+    });
+    var auge = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), mat(0x2A2320, 0.4));
+    auge.position.set(0.8, 1.44, 0.2); g.add(auge);
+    g.position.set(-5.2, 0, 0.8); g.rotation.y = -0.5;
+    szene.add(g);
+  })();
+
+  /* Baby Corner */
+  (function () {
+    var bogen = new THREE.Mesh(new THREE.TorusGeometry(3.4, 0.11, 8, 30, Math.PI * 1.15), mat(F.salbei, 0.9));
+    bogen.rotation.x = -Math.PI / 2; bogen.position.set(-13, 0.42, 6); szene.add(bogen);
+    var bloecke = [[-14.1, 5.2, 0.55, F.holz], [-13.2, 5.6, 0.42, F.salbei], [-12.4, 5.0, 0.48, F.sand],
+                   [-13.8, 6.8, 0.5, F.sand], [-12.6, 7.1, 0.38, F.holz]];
+    bloecke.forEach(function (b) {
+      var m = box(b[2] * 1.6, b[2], b[2] * 1.6, b[3], b[0], b[2] / 2, b[1]);
+      m.rotation.y = Math.random() * 0.8;
+    });
+    box(2.0, 0.42, 1.1, F.holz, -15.4, 0.21, 7.4);
+    var himmel = new THREE.Mesh(new THREE.ConeGeometry(2.0, 1.5, 18, 1, true), mat(0xFFFAF2, 1, { side: THREE.DoubleSide }));
+    himmel.position.set(-13, 3.4, 6); szene.add(himmel);
+  })();
+
+  /* Kristall-Hoehle */
+  (function () {
+    box(7.0, 4.6, 0.4, mat(0x3A2E26, 1), 0, 2.3, -13.4);
+    var arch = new THREE.Mesh(new THREE.TorusGeometry(2.5, 0.42, 12, 28, Math.PI), mat(F.salz, 0.9));
+    arch.position.set(0, 1.5, -12.9); arch.castShadow = true; szene.add(arch);
+    box(0.7, 1.5, 0.7, F.salz, -2.5, 0.75, -12.9);
+    box(0.7, 1.5, 0.7, F.salz, 2.5, 0.75, -12.9);
+    var km = mat(F.kristall, 0.25, { emissive: new THREE.Color(0x4E86AC), emissiveIntensity: 0.85, transparent: true, opacity: 0.85 });
+    var kr = [[-1.3, 0.6, 1.0], [0.2, 0.9, 1.4], [1.4, 0.55, 0.9], [-0.6, 0.35, 0.6], [0.9, 0.4, 0.7]];
+    kr.forEach(function (k) {
+      var m = new THREE.Mesh(new THREE.OctahedronGeometry(k[1], 0), km);
+      m.position.set(k[0], k[2], -13.0); m.rotation.set(0.3, k[0], 0.2); szene.add(m);
+    });
+    var l = new THREE.PointLight(0x7FB6DC, 2.2, 15, 2);
+    l.position.set(0, 1.6, -12.6); szene.add(l);
+  })();
+
+  /* Soft Lounge Cafe */
+  (function () {
+    box(5.6, 1.1, 1.7, F.holz, 11.6, 0.55, -4.6);
+    box(5.9, 0.12, 2.0, mat(0xE8DAC4, 0.6), 11.6, 1.16, -4.6);
+    box(0.4, 3.2, 5.0, F.holzDunkel, 14.6, 1.6, -3.0);
+    for (var s = 0; s < 3; s++) {
+      zylinder(0.32, 0.3, 0.7, F.holz, 9.6 + s * 1.9, 0.35, -2.8, 14);
+    }
+    [[9.0, 1.2], [12.6, 2.4], [15.6, 0.2]].forEach(function (t) {
+      zylinder(0.7, 0.62, 0.72, mat(0xE8DAC4, 0.7), t[0], 0.36, t[1], 16);
+      zylinder(0.28, 0.26, 0.46, F.holz, t[0] - 1.3, 0.23, t[1] + 0.9, 12);
+      zylinder(0.28, 0.26, 0.46, F.holz, t[0] + 1.3, 0.23, t[1] - 0.9, 12);
+    });
+    [[10.2, -4.2], [11.8, -4.2], [13.4, -4.2]].forEach(function (p) {
+      var lampe = kugel(0.3, mat(0xFFF3DF, 0.4, { emissive: new THREE.Color(0xFFC182), emissiveIntensity: 1.2 }), p[0], 3.5, p[1], 14);
+      lampe.castShadow = false;
+      var l = new THREE.PointLight(0xFFC98E, 0.9, 12, 2);
+      l.position.set(p[0], 3.4, p[1]); szene.add(l);
+      box(0.03, 2.4, 0.03, mat(0x5A4A3C, 1), p[0], 4.8, p[1]);
+    });
+  })();
+
+  /* Retail Wall */
+  (function () {
+    box(0.35, 4.2, 7.6, mat(0xE8DAC4, 0.9), 15.2, 2.1, 8);
+    for (var r = 0; r < 3; r++) {
+      box(0.9, 0.1, 7.2, F.holz, 14.6, 0.9 + r * 1.15, 8);
+      for (var i = 0; i < 6; i++) {
+        var farben = [F.ton, F.salbei, F.holz, F.sand];
+        box(0.42, 0.42, 0.3, farben[(i + r) % 4], 14.6, 1.16 + r * 1.15, 5.2 + i * 1.1);
+      }
+    }
+    [[14.6, 5.0], [14.6, 10.6]].forEach(function (p) {
+      var lampe = kugel(0.42, mat(0xF6C79A, 0.5, { emissive: new THREE.Color(0xE07A3C), emissiveIntensity: 0.95 }), p[0], 4.4, p[1], 14);
+      lampe.castShadow = false; lampe.scale.y = 1.35;
+      var l = new THREE.PointLight(0xFF9F5E, 1.0, 11, 2);
+      l.position.set(p[0], 4.4, p[1]); szene.add(l);
+    });
+  })();
+
+  /* Figuren: Kinder und Erwachsene */
+  function figur(x, z, h, oben, unten, dreh) {
+    var g = new THREE.Group();
+    var beine = new THREE.Mesh(new THREE.CylinderGeometry(h * 0.115, h * 0.1, h * 0.44, 12), mat(unten, 0.9));
+    beine.position.y = h * 0.22; beine.castShadow = true; g.add(beine);
+    var rumpf = new THREE.Mesh(new THREE.CylinderGeometry(h * 0.15, h * 0.13, h * 0.38, 12), mat(oben, 0.9));
+    rumpf.position.y = h * 0.63; rumpf.castShadow = true; g.add(rumpf);
+    var kopf = new THREE.Mesh(new THREE.SphereGeometry(h * 0.125, 14, 10), mat(0xE8C6A8, 0.85));
+    kopf.position.y = h * 0.905; kopf.castShadow = true; g.add(kopf);
+    g.position.set(x, 0, z); g.rotation.y = dreh || 0;
+    szene.add(g); return g;
+  }
+
+  figur(-7.4, -3.2, 1.08, F.ton, 0xE8DAC4, 0.6);
+  figur(-4.8, -5.0, 0.98, F.salbei, 0xE8DAC4, -1.2);
+  figur(-10.6, -6.2, 1.12, 0xE0B25C, 0xE8DAC4, 2.4);
+  figur(-6.2, 1.2, 1.70, 0xE8DAC4, 0x6E6057, 0.3);
+  figur(-12.6, 6.9, 0.86, F.holz, 0xE8DAC4, 1.1);
+  figur(-13.6, 5.2, 1.66, F.salbei, 0x6E6057, -0.4);
+  figur(9.9, -3.1, 1.68, 0xE8DAC4, 0x6E6057, 3.0);
+  figur(12.7, 1.6, 1.64, F.ton, 0x6E6057, 2.2);
+
+  /* Licht */
+  szene.add(new THREE.HemisphereLight(0xFFF5E8, 0xDFCEB8, 0.72));
+  var sonne = new THREE.DirectionalLight(0xFFF3E2, 1.05);
+  sonne.position.set(13, 17, 11);
+  sonne.castShadow = true;
+  sonne.shadow.mapSize.width = 1024; sonne.shadow.mapSize.height = 1024;
+  sonne.shadow.camera.left = -24; sonne.shadow.camera.right = 24;
+  sonne.shadow.camera.top = 24; sonne.shadow.camera.bottom = -24;
+  sonne.shadow.camera.far = 60;
+  szene.add(sonne);
+
+  /* Salzaerosol */
+  var staub;
+  (function () {
+    var n = 800, pos = new Float32Array(n * 3), geo = new THREE.BufferGeometry();
+    for (var i = 0; i < n; i++) {
+      pos[i * 3] = -19 + Math.random() * 38;
+      pos[i * 3 + 1] = 0.25 + Math.random() * 5.2;
+      pos[i * 3 + 2] = -13 + Math.random() * 25;
+    }
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    staub = new THREE.Points(geo, new THREE.PointsMaterial({
+      color: 0xFFFFFF, size: 0.07, transparent: true, opacity: 0.5, sizeAttenuation: true, depthWrite: false
+    }));
+    szene.add(staub);
+  })();
+
+  /* Kamera-Steuerung */
+  var gier = 0, neigung = 0, zieheAn = false, letzteX = 0, letzteY = 0;
+  leinwand.style.touchAction = "pan-y";
+  leinwand.addEventListener("pointerdown", function (e) {
+    zieheAn = true; letzteX = e.clientX; letzteY = e.clientY;
+    leinwand.setPointerCapture(e.pointerId);
+    leinwand.style.cursor = "grabbing";
+  });
+  leinwand.addEventListener("pointermove", function (e) {
+    if (!zieheAn) return;
+    gier -= (e.clientX - letzteX) * 0.004;
+    neigung -= (e.clientY - letzteY) * 0.003;
+    gier = Math.max(-0.85, Math.min(0.85, gier));
+    neigung = Math.max(-0.35, Math.min(0.35, neigung));
+    letzteX = e.clientX; letzteY = e.clientY;
+  });
+  function loslassen(e) {
+    zieheAn = false; leinwand.style.cursor = "grab";
+    if (e && e.pointerId !== undefined && leinwand.hasPointerCapture && leinwand.hasPointerCapture(e.pointerId)) {
+      leinwand.releasePointerCapture(e.pointerId);
+    }
+  }
+  leinwand.addEventListener("pointerup", loslassen);
+  leinwand.addEventListener("pointercancel", loslassen);
+  leinwand.addEventListener("pointerleave", loslassen);
+  leinwand.style.cursor = "grab";
+
+  var posA = new THREE.Vector3(), zielA = new THREE.Vector3(), richtung = new THREE.Vector3();
+  var kugelK = new THREE.Spherical();
+
+  function weich(t) { return t * t * (3 - 2 * t); }
+
+  function stelleKamera() {
+    var p = fortschritt() * (ZONEN.length - 1);
+    var i = Math.min(ZONEN.length - 2, Math.floor(p));
+    var t = weich(Math.min(1, Math.max(0, p - i)));
+    var a = ZONEN[i], b = ZONEN[i + 1];
+
+    augHoehe += (augZiel - augHoehe) * 0.12;
+    var versatz = (augHoehe - AUGE.erw) * 0.55;
+
+    posA.set(a.pos[0] + (b.pos[0] - a.pos[0]) * t, augHoehe, a.pos[1] + (b.pos[1] - a.pos[1]) * t);
+    zielA.set(
+      a.blick[0] + (b.blick[0] - a.blick[0]) * t,
+      a.blick[1] + (b.blick[1] - a.blick[1]) * t + versatz,
+      a.blick[2] + (b.blick[2] - a.blick[2]) * t
+    );
+
+    richtung.subVectors(zielA, posA);
+    kugelK.setFromVector3(richtung);
+    kugelK.theta += gier;
+    kugelK.phi = Math.max(0.5, Math.min(Math.PI - 0.5, kugelK.phi + neigung));
+    richtung.setFromSpherical(kugelK);
+
+    kamera.position.copy(posA);
+    kamera.lookAt(posA.x + richtung.x, posA.y + richtung.y, posA.z + richtung.z);
+
+    var fovZiel = augZiel === AUGE.kind ? 54 : 46;
+    if (Math.abs(kamera.fov - fovZiel) > 0.05) {
+      kamera.fov += (fovZiel - kamera.fov) * 0.12;
+      kamera.updateProjectionMatrix();
+    }
+
+    setzeZone(Math.round(p));
+  }
+
+  function groesse() {
+    var w = leinwand.clientWidth, h = leinwand.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    kamera.aspect = w / h;
+    kamera.updateProjectionMatrix();
+  }
+  groesse();
+  window.addEventListener("resize", groesse);
+  if (window.ResizeObserver) new ResizeObserver(groesse).observe(leinwand);
+
+  var uhr = 0;
+  function schleife() {
+    requestAnimationFrame(schleife);
+    if (!wenigerBewegung) {
+      uhr += 0.006;
+      var p = staub.geometry.attributes.position;
+      for (var i = 1; i < p.array.length; i += 3) {
+        p.array[i] += 0.0045;
+        if (p.array[i] > 5.6) p.array[i] = 0.25;
+      }
+      p.needsUpdate = true;
+      if (!zieheAn) gier += Math.sin(uhr) * 0.00018;
+    }
+    stelleKamera();
+    renderer.render(szene, kamera);
+  }
+  schleife();
+
+  var hinweis = document.getElementById("hudHinweis");
+  var gesehen = false;
+  window.addEventListener("scroll", function () {
+    if (gesehen) return;
+    if (fortschritt() > 0.04) {
+      gesehen = true;
+      hinweis.textContent = "Ziehen zum Umsehen · Zone antippen zum Springen";
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>
