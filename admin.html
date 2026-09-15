@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LumiLínguas — Painel administrativo de conteúdo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #F6F3EE; color: #2E2A45; padding: 24px; }
+    h1 { font-size: 24px; margin-bottom: 4px; }
+    .sub { color: #6B6584; margin-bottom: 20px; font-size: 14px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; align-items: center; }
+    select, button, input[type=file] { font-size: 14px; padding: 8px 12px; border-radius: 10px; border: 1px solid #D8D2C8; background: #fff; cursor: pointer; }
+    button.primary { background: #8E6CF0; color: #fff; border-color: #8E6CF0; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid #EEE9E0; text-align: left; vertical-align: top; }
+    th { background: #EFEAFE; position: sticky; top: 0; }
+    td.emoji { font-size: 24px; }
+    .missing { background: #FBE3E1; color: #B33; font-weight: 700; }
+    .var { color: #00A3A3; font-size: 12px; }
+    .report { background: #fff; border-radius: 12px; padding: 14px 18px; margin: 14px 0; font-size: 14px; line-height: 1.6; }
+    .ok { color: #2BB673; font-weight: 700; }
+    .err { color: #E2574C; font-weight: 700; }
+    .play { background: none; border: none; font-size: 16px; cursor: pointer; }
+    .wrap-scroll { max-height: 70vh; overflow: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    code { background: #EFEAFE; padding: 1px 5px; border-radius: 5px; }
+    details { margin: 14px 0; }
+    summary { cursor: pointer; font-weight: 700; }
+    pre { background: #fff; padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 12px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>🛠️ Painel administrativo — LumiLínguas</h1>
+  <p class="sub">Revisão de traduções, áudios (via TTS), imagens e variações regionais · importação de packs por JSON ou CSV</p>
+
+  <div class="toolbar">
+    <label>Idioma:
+      <select id="langSel"></select>
+    </label>
+    <button id="btnValidate" class="primary">Validar todos os packs</button>
+    <label>Importar JSON: <input type="file" id="jsonFile" accept=".json" /></label>
+    <label>Importar CSV: <input type="file" id="csvFile" accept=".csv" /></label>
+    <button id="btnClearCustom">Remover packs importados</button>
+    <button id="btnExport">Exportar pack atual (JSON)</button>
+  </div>
+
+  <div id="report" class="report" style="display:none"></div>
+
+  <div class="wrap-scroll">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th></th><th>Conceito</th><th>▶</th><th>Palavra</th><th>Com artigo</th><th>Plural</th>
+          <th>Adjetivo</th><th>Ação</th><th>Frase</th><th>Pergunta</th><th>Resposta</th><th>Sinônimo</th><th>Variações</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <details>
+    <summary>Formato de importação</summary>
+    <p style="margin:10px 0 4px"><b>JSON</b> — mesmo formato dos packs:</p>
+    <pre>{ "lang": "en", "concepts": { "apple": { "word": "apple", "art": "an apple", "pl": "apples",
+  "adj": "a red apple", "act": "eat an apple", "sen": "I want an apple.",
+  "q": "Where is the apple?", "a": "Here is the apple!", "syn": null, "var": null } } }</pre>
+    <p style="margin:10px 0 4px"><b>CSV</b> — cabeçalho obrigatório (uma linha por conceito):</p>
+    <pre>lang,concept,word,art,pl,adj,act,sen,q,a,syn
+en,apple,apple,an apple,apples,a red apple,eat an apple,I want an apple.,Where is the apple?,Here is the apple!,</pre>
+    <p style="margin-top:8px">Os packs importados ficam em <code>localStorage</code> e são mesclados aos packs de fábrica ao abrir o aplicativo — sem rebuild.</p>
+  </details>
+
+  <script src="js/langs.js"></script>
+  <script src="content/curriculum.js"></script>
+  <script src="content/pack-pt.js"></script>
+  <script src="content/pack-en.js"></script>
+  <script src="content/pack-de.js"></script>
+  <script src="content/pack-es.js"></script>
+  <script src="content/pack-fr.js"></script>
+  <script src="content/pack-it.js"></script>
+  <script src="content/pack-tr.js"></script>
+  <script src="content/pack-zh.js"></script>
+  <script src="content/pack-ja.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var CUR = window.LUMI_CURRICULUM, LANGS = window.LUMI_LANGS, PACKS = window.LUMI_PACKS;
+    var CUSTOM_KEY = 'lumilinguas.customPacks';
+
+    // mescla packs importados
+    function customPacks() {
+      try { return JSON.parse(localStorage.getItem(CUSTOM_KEY)) || {}; } catch (e) { return {}; }
+    }
+    function mergeCustom() {
+      var c = customPacks();
+      Object.keys(c).forEach(function (code) {
+        var base = PACKS[code] || { lang: code, version: 0, concepts: {} };
+        Object.keys(c[code].concepts || {}).forEach(function (id) { base.concepts[id] = c[code].concepts[id]; });
+        PACKS[code] = base;
+      });
+    }
+    mergeCustom();
+
+    var langSel = document.getElementById('langSel');
+    LANGS.codes.forEach(function (code) {
+      var o = document.createElement('option');
+      o.value = code;
+      o.textContent = LANGS.get(code).flag + ' ' + LANGS.get(code).name + (PACKS[code] ? '' : ' (sem pack)');
+      langSel.appendChild(o);
+    });
+
+    function speak(text, code) {
+      if (!window.speechSynthesis) return alert('TTS indisponível neste navegador.');
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = LANGS.get(code).tts[0];
+      u.rate = 0.85;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    }
+
+    function cell(v, cls) {
+      var td = document.createElement('td');
+      if (v === null || v === undefined || v === '') { td.textContent = '—'; }
+      else td.textContent = v;
+      if (cls) td.className = cls;
+      return td;
+    }
+
+    function render() {
+      var code = langSel.value;
+      var pack = PACKS[code];
+      var tb = document.getElementById('tbody');
+      tb.innerHTML = '';
+      CUR.concepts.forEach(function (c) {
+        var e = pack && pack.concepts[c.id];
+        var tr = document.createElement('tr');
+        var em = cell(c.emoji, 'emoji'); tr.appendChild(em);
+        tr.appendChild(cell(c.id + ' (dia ' + c.day + ')'));
+        var tdPlay = document.createElement('td');
+        if (e) {
+          var b = document.createElement('button');
+          b.className = 'play'; b.textContent = '🔊';
+          b.onclick = function () { speak(e.word, code); };
+          tdPlay.appendChild(b);
+        }
+        tr.appendChild(tdPlay);
+        if (!e) {
+          var td = cell('CONCEITO AUSENTE NO PACK', 'missing');
+          td.colSpan = 10;
+          tr.appendChild(td);
+        } else {
+          tr.appendChild(cell(e.word + (e.rom ? ' · ' + e.rom : '')));
+          tr.appendChild(cell(e.art));
+          tr.appendChild(cell(e.pl));
+          tr.appendChild(cell(e.adj));
+          tr.appendChild(cell(e.act));
+          tr.appendChild(cell(e.sen));
+          tr.appendChild(cell(e.q));
+          tr.appendChild(cell(e.a));
+          tr.appendChild(cell(e.syn));
+          var v = document.createElement('td');
+          v.className = 'var';
+          v.textContent = e.var ? Object.keys(e.var).map(function (k) { return k + ': ' + e.var[k]; }).join(' · ') : '—';
+          tr.appendChild(v);
+        }
+        tb.appendChild(tr);
+      });
+    }
+    langSel.onchange = render;
+    render();
+
+    // validação de todos os packs
+    document.getElementById('btnValidate').onclick = function () {
+      var lines = [];
+      var required = ['word', 'sen', 'q', 'a', 'adj', 'act'];
+      LANGS.codes.forEach(function (code) {
+        var pack = PACKS[code];
+        if (!pack) { lines.push('<span class="err">' + code + ': pack ausente</span>'); return; }
+        var missing = [];
+        CUR.concepts.forEach(function (c) {
+          var e = pack.concepts[c.id];
+          if (!e) { missing.push(c.id); return; }
+          required.forEach(function (f) { if (!e[f]) missing.push(c.id + '.' + f); });
+        });
+        lines.push(missing.length
+          ? '<span class="err">' + code + ': ' + missing.length + ' pendências</span> — ' + missing.slice(0, 10).join(', ')
+          : '<span class="ok">' + code + ': completo (' + CUR.concepts.length + ' conceitos)</span>');
+      });
+      var rep = document.getElementById('report');
+      rep.style.display = 'block';
+      rep.innerHTML = lines.join('<br>');
+    };
+
+    function saveCustom(code, concepts) {
+      var c = customPacks();
+      c[code] = c[code] || { lang: code, concepts: {} };
+      Object.keys(concepts).forEach(function (id) { c[code].concepts[id] = concepts[id]; });
+      localStorage.setItem(CUSTOM_KEY, JSON.stringify(c));
+      mergeCustom();
+      render();
+      var rep = document.getElementById('report');
+      rep.style.display = 'block';
+      rep.innerHTML = '<span class="ok">Importação concluída: ' + Object.keys(concepts).length + ' conceitos em "' + code + '". O aplicativo usará o conteúdo importado.</span>';
+    }
+
+    document.getElementById('jsonFile').onchange = function (ev) {
+      var f = ev.target.files[0];
+      if (!f) return;
+      f.text().then(function (txt) {
+        try {
+          var data = JSON.parse(txt);
+          if (!data.lang || !data.concepts) throw new Error('faltam campos lang/concepts');
+          saveCustom(data.lang, data.concepts);
+        } catch (e) { alert('JSON inválido: ' + e.message); }
+      });
+    };
+
+    // CSV simples com suporte a aspas
+    function parseCSV(text) {
+      var rows = [], row = [], cur = '', inQ = false;
+      for (var i = 0; i < text.length; i++) {
+        var ch = text[i];
+        if (inQ) {
+          if (ch === '"' && text[i + 1] === '"') { cur += '"'; i++; }
+          else if (ch === '"') inQ = false;
+          else cur += ch;
+        } else if (ch === '"') inQ = true;
+        else if (ch === ',') { row.push(cur); cur = ''; }
+        else if (ch === '\n' || ch === '\r') {
+          if (cur !== '' || row.length) { row.push(cur); rows.push(row); row = []; cur = ''; }
+          if (ch === '\r' && text[i + 1] === '\n') i++;
+        } else cur += ch;
+      }
+      if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+      return rows;
+    }
+
+    document.getElementById('csvFile').onchange = function (ev) {
+      var f = ev.target.files[0];
+      if (!f) return;
+      f.text().then(function (txt) {
+        var rows = parseCSV(txt);
+        if (!rows.length) return alert('CSV vazio');
+        var head = rows[0].map(function (h) { return h.trim().toLowerCase(); });
+        var need = ['lang', 'concept', 'word'];
+        for (var n = 0; n < need.length; n++) {
+          if (head.indexOf(need[n]) < 0) return alert('CSV precisa da coluna "' + need[n] + '"');
+        }
+        var byLang = {};
+        rows.slice(1).forEach(function (r) {
+          if (!r.length || !r[head.indexOf('lang')]) return;
+          var lang = r[head.indexOf('lang')].trim();
+          var id = r[head.indexOf('concept')].trim();
+          var e = { word: '', art: null, pl: null, adj: '', act: '', sen: '', q: '', a: '', syn: null, var: null };
+          ['word', 'art', 'pl', 'adj', 'act', 'sen', 'q', 'a', 'syn', 'rom'].forEach(function (f2) {
+            var idx = head.indexOf(f2);
+            if (idx >= 0 && r[idx] && r[idx].trim()) e[f2] = r[idx].trim();
+          });
+          byLang[lang] = byLang[lang] || {};
+          byLang[lang][id] = e;
+        });
+        Object.keys(byLang).forEach(function (lang) { saveCustom(lang, byLang[lang]); });
+      });
+    };
+
+    document.getElementById('btnClearCustom').onclick = function () {
+      if (confirm('Remover todos os packs importados? Os packs de fábrica permanecem.')) {
+        localStorage.removeItem(CUSTOM_KEY);
+        location.reload();
+      }
+    };
+
+    document.getElementById('btnExport').onclick = function () {
+      var code = langSel.value;
+      if (!PACKS[code]) return alert('Sem pack para este idioma.');
+      var blob = new Blob([JSON.stringify(PACKS[code], null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'pack-' + code + '.json';
+      a.click();
+    };
+  })();
+  </script>
+</body>
+</html>
