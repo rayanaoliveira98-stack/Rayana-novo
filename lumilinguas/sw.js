@@ -2,7 +2,7 @@
  * Pré-cacheia app + conteúdo; estratégia cache-first (o conteúdo é local).
  * Ao publicar nova versão, troque CACHE_VERSION.
  */
-var CACHE_VERSION = 'lumilinguas-v1';
+var CACHE_VERSION = 'lumilinguas-v2';
 
 var ASSETS = [
   './',
@@ -12,6 +12,7 @@ var ASSETS = [
   'manifest.webmanifest',
   'icons/icon.svg',
   'js/langs.js',
+  'js/fx.js',
   'js/srs.js',
   'js/session.js',
   'js/gate.js',
@@ -19,6 +20,7 @@ var ASSETS = [
   'js/audio.js',
   'js/speech.js',
   'js/activities.js',
+  'js/activities-extra.js',
   'js/parent.js',
   'js/app.js',
   'content/curriculum.js',

@@ -12,7 +12,10 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Sessão diária adaptativa (~11 min) com o ciclo completo: boas-vindas → dificuldades de ontem → revisões SRS → 2-6 conceitos novos → compreensão → repetição oral → jogo → desafio misto → celebração → 4 dicas práticas do dia.
 - Motor SRS com os 7 estados e intervalos 1-3-7-14-30 dias; simplificação após 3 dias de dificuldade; sem punição.
 - Blocos separados por idioma (3-4 anos) e comparação entre idiomas (5-7 anos).
-- 8 modos de atividade: apresentar, ouvir-e-tocar, repetir, som→imagem, encontrar no cenário, qual desapareceu, arrastar, seguir instrução, "quem falou?".
+- 14 modos de atividade: apresentar, ouvir-e-tocar, repetir, som→imagem, encontrar no cenário, qual desapareceu, arrastar, seguir instrução, "quem falou?", **jogo da memória auditiva**, **imite o personagem**, **história interativa**, **música e rima**, **caça ao objeto em casa**.
+- Momento especial do dia em rodízio (história → música → caça em casa), para nenhum dia repetir o anterior.
+- Camada de dinâmica: transição entre atividades, mascote-guia que pensa/escuta/comemora, partículas no toque, estrela que voa para o contador, vibração suave, cenários que respiram, casa com o colecionado flutuando, mapa em trilha serpenteante, adesivos que falam ao toque.
+- Ajuda sem pressão: se a criança fica parada ~9 s, o áudio volta sozinho e a resposta certa pulsa de leve.
 - Voz sintética por idioma (velocidade normal + modo lento 🐢 + repetição por toque).
 - Gravação da voz da família (local, com prioridade sobre TTS).
 - Reconhecimento de fala com avaliação tolerante (3 tentativas, replay lento, "Quase!", marcação silenciosa) **onde o navegador suporta**; fallback honesto "repita junto".
@@ -28,8 +31,8 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 | Reconhecimento de fala | Web Speech API: em Chrome/Android o áudio é processado pelo serviço de fala do sistema (nuvem do SO); Safari/iOS usa o motor local | Produção: motor infantil dedicado on-device (ex.: Vosk/whisper.cpp compilado p/ mobile) com modelos acústicos de voz infantil |
 | Vozes | TTS do sistema — qualidade varia por aparelho; "vozes diferentes" = voz do sistema + gravações da família | Produção: pacotes de áudio gravados por falantes nativos (adultos e crianças), baixáveis por idioma |
 | Ilustrações | Emoji do sistema (originais, sem copyright de terceiros) | Produção: ilustrações originais encomendadas; basta trocar `emoji` por caminho de imagem no currículo |
-| Músicas e rimas originais | Não incluídas (apenas jingles de 3 notas por idioma) | Produção musical original + modo "música" como novo tipo de atividade |
-| Minibiografias/histórias interativas e caça ao objeto em casa | Não incluídas nesta versão | Novo tipo de atividade sobre a mesma infraestrutura (`activities.js`) |
+| Músicas e rimas | Atividade pronta: melodia por idioma + palavra cantada em compasso de três repetições, montada a partir do vocabulário do dia | Produção musical original gravada (canções completas com refrão) no lugar da melodia sintetizada |
+| Histórias interativas | Atividade pronta: 3 cenas narradas com escolha da criança a cada cena, montadas a partir do vocabulário já trabalhado | Roteiros autorais ilustrados por tema, escritos por especialistas, e minibiografias de personagens |
 | Notificação do horário habitual | Horário é salvo, mas não notifica | Notification API + push local no empacotamento nativo |
 | Certificado final personalizado | Jornada e mapa prontos; tela de certificado no dia 60 ainda não desenhada | Tela de certificado imprimível com nome, idiomas e conquistas |
 

@@ -6,7 +6,7 @@
 
   var CUR = g.LUMI_CURRICULUM, LANGS = g.LUMI_LANGS, SRS = g.LUMI_SRS,
       SESSION = g.LUMI_SESSION, AUDIO = g.LUMI_AUDIO, STORE = g.LUMI_STORE,
-      ACT = g.LUMI_ACT;
+      ACT = g.LUMI_ACT, FX = g.LUMI_FX;
 
   var store = STORE.createStore();
   var data = store.load();
@@ -72,8 +72,47 @@
     $('home-day-count').textContent = p.journeyDay;
     // adesivos ganhos aparecem como decoração
     $('home-stickers-preview').textContent = (p.stickers || []).slice(-4).map(function (s) { return s.emoji; }).join(' ');
+    renderHomeSky(p);
     show('screen-home');
     AUDIO.jingle(L.jingle);
+  }
+
+  /* O céu da casa flutua com o que a criança já colecionou — o progresso
+   * vira paisagem, sem número nenhum na tela. */
+  function renderHomeSky(p) {
+    var sky = $('home-sky');
+    sky.innerHTML = '';
+    var pool = (p.stickers || []).map(function (s) { return s.emoji; });
+    if (!pool.length) pool = ['⭐', '☁️', '✨'];
+    for (var i = 0; i < 7; i++) {
+      var s = document.createElement('span');
+      s.className = 'sky-item';
+      s.textContent = pool[i % pool.length];
+      s.style.left = (6 + (i * 13) % 88) + '%';
+      s.style.top = (8 + (i * 29) % 70) + '%';
+      s.style.animationDelay = (i * 0.9) + 's';
+      s.style.animationDuration = (7 + (i % 4) * 2.5) + 's';
+      sky.appendChild(s);
+    }
+  }
+
+  /* Tocar no personagem é conversa, não navegação: ele pula e cumprimenta
+   * no idioma do dia. Convida ao toque sem exigir nada. */
+  function greetCharacter() {
+    var p = profile();
+    if (!p) return;
+    var lang = p.langs[0];
+    var L = LANGS.get(lang);
+    var wrap = $('home-char-wrap');
+    wrap.classList.remove('greet');
+    void wrap.offsetWidth;
+    wrap.classList.add('greet');
+    FX.burstFrom(wrap, [L.color]);
+    FX.buzz(14);
+    AUDIO.jingle(L.jingle);
+    var hello = { pt: 'Oi!', en: 'Hello!', de: 'Hallo!', es: '¡Hola!', fr: 'Bonjour !',
+                  it: 'Ciao!', tr: 'Merhaba!', zh: '你好！', ja: 'こんにちは！' };
+    AUDIO.speak(hello[lang] || hello.pt, ttsTag(lang));
   }
 
   /* ---------- Mapa da jornada (60 dias) ---------- */
@@ -89,18 +128,28 @@
       var dot = document.createElement('div');
       dot.className = 'map-dot' + (day < p.journeyDay ? ' done' : day === p.journeyDay ? ' current' : '');
       dot.style.setProperty('--wk-color', weekColors[i]);
+      // a trilha serpenteia: cada dia se desloca numa onda, virando caminho
+      dot.style.setProperty('--wave', (Math.sin(day * 0.62) * 34).toFixed(1) + 'px');
+      dot.style.setProperty('--in-delay', Math.min(day * 22, 900) + 'ms');
       if (day < p.journeyDay) dot.textContent = '⭐';
       else if (day === p.journeyDay) dot.textContent = LANGS.get(p.langs[0]).character.emoji;
       else dot.textContent = '';
       wrap.appendChild(dot);
       if (CUR.weeks[i].days[1] === day && day < 60) {
         var badge = document.createElement('div');
-        badge.className = 'map-week-badge';
+        badge.className = 'map-week-badge' + (day < p.journeyDay ? ' won' : '');
         badge.textContent = ['🏠', '👨‍👩‍👧', '🍎', '🐶', '👕', '🚗', '😊', '💬', '🏆'][i + 1] || '🏆';
         wrap.appendChild(badge);
       }
     }
     show('screen-map');
+    // leva a criança direto ao ponto onde ela está hoje
+    setTimeout(function () {
+      var cur = wrap.querySelector('.map-dot.current');
+      if (cur && cur.scrollIntoView) {
+        cur.scrollIntoView({ behavior: FX.reduced() ? 'auto' : 'smooth', block: 'center' });
+      }
+    }, 380);
   }
 
   /* ---------- Adesivos ---------- */
@@ -109,10 +158,25 @@
     var p = profile();
     var wrap = $('sticker-grid');
     wrap.innerHTML = '';
-    (p.stickers || []).forEach(function (s) {
+    (p.stickers || []).forEach(function (s, i) {
       var d = document.createElement('div');
       d.className = 'sticker';
       d.textContent = s.emoji;
+      d.style.animationDelay = (i * 45) + 'ms';
+      // tocar no adesivo devolve a palavra que ele guarda
+      if (s.concept && s.lang && g.LUMI_PACKS[s.lang]) {
+        var e = g.LUMI_PACKS[s.lang].concepts[s.concept];
+        if (e) {
+          d.classList.add('speakable');
+          d.onclick = function () {
+            FX.burstFrom(d, [LANGS.get(s.lang).color]);
+            FX.buzz(12);
+            AUDIO.speakConcept(e.word, ttsTag(s.lang), {
+              profileId: p.id, lang: s.lang, conceptId: s.concept
+            });
+          };
+        }
+      }
       wrap.appendChild(d);
     });
     if (!(p.stickers || []).length) {
@@ -138,8 +202,11 @@
       startedAt: now,
       stats: { consecutiveHard: 0, answered: 0, hard: 0, totalMs: 0, avgResponseMs: 0 },
       shortened: false,
-      results: []
+      results: [],
+      stars: 0
     };
+    $('session-star-count').textContent = '0';
+    $('session-progress').style.width = '0%';
     show('screen-session');
     nextStep();
   }
@@ -157,11 +224,12 @@
   function trimForFatigue(steps, fromIdx) {
     // Cansaço detectado: remove jogos/desafios restantes e novos conceitos
     // extras, mantendo só revisões leves e a celebração.
+    var EXTRAS = ['game', 'compare', 'story', 'song', 'home_hunt'];
     var kept = steps.slice(0, fromIdx);
     var newSeen = 0;
     for (var i = fromIdx; i < steps.length; i++) {
       var s = steps[i];
-      if (s.type === 'game' || s.type === 'compare') continue;
+      if (EXTRAS.indexOf(s.type) >= 0) continue;
       if (s.type === 'present') { newSeen++; if (newSeen > 1) { // pula o trio present/listen/repeat
           while (i + 1 < steps.length && (steps[i + 1].type === 'listen_tap' || steps[i + 1].type === 'repeat')) i++;
           continue; } }
@@ -188,6 +256,16 @@
         else r.stats.consecutiveHard = 0;
         applyResult(step, res);
         r.results.push({ step: step, result: res.result, ms: dt });
+
+        // A estrela que voou na tela chega aqui: o contador cresce junto.
+        if (res.result === 'ok' || res.result === 'helped') {
+          r.stars++;
+          var badge = $('session-stars');
+          $('session-star-count').textContent = r.stars;
+          badge.classList.remove('pop');
+          void badge.offsetWidth;
+          badge.classList.add('pop');
+        }
       }
       // barra de progresso suave (sem números que gerem ansiedade)
       $('session-progress').style.width = Math.round(100 * (r.idx + 1) / r.plan.steps.length) + '%';
@@ -235,16 +313,19 @@
     });
 
     // adesivo do dia: o primeiro conceito novo aprendido (ou estrela)
-    var firstNew = null;
+    var firstNew = null, firstLang = null;
     Object.keys(r.plan.newConcepts).some(function (l) {
-      if (r.plan.newConcepts[l].length) { firstNew = r.plan.newConcepts[l][0]; return true; }
+      if (r.plan.newConcepts[l].length) {
+        firstNew = r.plan.newConcepts[l][0]; firstLang = l; return true;
+      }
       return false;
     });
     var emoji = firstNew ? CUR.get(firstNew).emoji : '⭐';
     p.stickers = p.stickers || [];
     if (!p.stickers.some(function (s) { return s.day === p.journeyDay && s.emoji === emoji; })) {
-      p.stickers.push({ day: p.journeyDay, emoji: emoji });
+      p.stickers.push({ day: p.journeyDay, emoji: emoji, concept: firstNew, lang: firstLang });
     }
+    FX.mascotHide();
 
     // avança a jornada uma vez por dia de calendário
     var tk = todayKey();
@@ -278,7 +359,11 @@
       navigator.serviceWorker.register('sw.js').catch(function () {});
     }
 
+    // acessibilidade: com movimento reduzido, os efeitos opcionais saem de cena
+    if (FX.reduced()) document.body.classList.add('reduce-motion');
+
     $('btn-play').onclick = startSession;
+    $('home-char-wrap').onclick = greetCharacter;
     $('btn-map').onclick = renderMap;
     $('btn-stickers').onclick = renderStickers;
     $('btn-map-back').onclick = goHome;
@@ -286,6 +371,7 @@
     $('btn-home-profiles').onclick = renderSplash;
     $('btn-session-exit').onclick = function () {
       AUDIO.stop();
+      FX.mascotHide();
       // exigir gesto de adulto evitaria saídas acidentais; aqui: toque duplo
       running = null;
       goHome();

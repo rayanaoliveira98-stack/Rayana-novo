@@ -6,6 +6,9 @@
 - **Elementos gigantes**: alvos de toque mínimos de 76px na área infantil (botão de play: 120px); emojis-herói de 110-140px.
 - **Pouco texto**: zero texto nas atividades para 3-4 anos; apoio opcional para 5-7.
 - **Animações que explicam**: personagem flutua = "estou com você"; botão pulsa = "toque aqui"; dica animada (👂/🔍/🗣️) = tipo de atividade; confete = fim da sessão. Nada pisca agressivamente.
+- **Movimento com significado** (nunca decorativo): cada atividade entra deslizando e seus elementos aparecem em cascata, para o olho seguir a ordem da tela; o acerto estoura partículas no dedo e manda uma estrela voando até o contador; o balanço suave de um cartão diz "olhe de novo", jamais "errado"; depois de ~9 s parada, a resposta certa pulsa para ajudar sem cobrar.
+- **Mascote-guia sempre presente**: o personagem do idioma acompanha no canto e muda de humor conforme a atividade (pensa na escolha, escuta na fala, comemora no acerto, acena no encorajamento). É a presença que substitui o texto que a criança ainda não lê.
+- **Vibração como terceiro canal**: pulsos curtíssimos confirmam acerto e toque, ajudando quem ouve pouco ou joga com o som desligado.
 - **Ilustração por emoji na demonstração**: originais do sistema, sem personagens ou interfaces copiados de outros aplicativos. Produção: substituir por ilustrações originais encomendadas (a arquitetura só troca strings de emoji por `<img>`).
 
 ## Identidade por idioma
@@ -34,5 +37,5 @@ Avatares infantis com tons de pele variados; personagens-guia são animais (neut
 
 - **Daltonismo**: informação nunca só por cor (personagem + posição + ícone); paleta testada para contraste sobre creme/branco.
 - **Dificuldades motoras**: alvos ≥76px, sem gestos de precisão obrigatórios (arrastar tem alternativa por toque nas demais atividades), sem tempo limite.
-- **Sensibilidade auditiva**: sons curtos e suaves (senoides, ganho ≤0.12), zero sons de erro; `prefers-reduced-motion` desativa todas as animações.
+- **Sensibilidade auditiva**: sons curtos e suaves (senoides, ganho ≤0.12), zero sons de erro; `prefers-reduced-motion` desativa todas as animações e remove partículas, confete e elementos flutuantes (`body.reduce-motion`), mantendo o app inteiro funcional — só parado.
 - **Sem ansiedade**: barra de progresso sem números, sem cronômetro, sem contador de erros visível.

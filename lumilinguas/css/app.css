@@ -356,11 +356,282 @@ button { font-family: inherit; border: 0; cursor: pointer; color: var(--ink); }
 .gate-x { position: absolute; top: 12px; right: 12px; }
 .gate-card .btn-primary { margin-top: 8px; }
 
+/* ==========================================================================
+   DINÂMICA — transições, mascote, partículas e as novas atividades
+   ========================================================================== */
+
+/* ---------- transição entre atividades ---------- */
+
+.stage-in { animation: stageIn .34s cubic-bezier(.2, .9, .3, 1.2) both; }
+.stage-in.stage-from-left { animation-name: stageInLeft; }
+.stage-out { animation: stageOut .22s ease-in both; }
+@keyframes stageIn {
+  from { opacity: 0; transform: translateX(28px) scale(.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes stageInLeft {
+  from { opacity: 0; transform: translateX(-28px) scale(.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes stageOut {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateX(-20px) scale(.97); }
+}
+
+/* filhos entram em cascata: o olho segue a ordem da tela */
+.stagger-in { animation: staggerIn .4s ease both; animation-delay: var(--stagger, 0ms); }
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- mascote reativo ---------- */
+
+.mascot {
+  position: absolute; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom));
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--lang-soft, #EAE3FC);
+  border: 3px solid var(--mascot-color, var(--lang-color, #8E6CF0));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px; z-index: 6; pointer-events: none;
+  box-shadow: 0 4px 14px rgba(46, 42, 69, .14);
+}
+.mascot.m-idle { animation: floaty 3.4s ease-in-out infinite; }
+.mascot.m-think { animation: mascotThink 2.2s ease-in-out infinite; }
+.mascot.m-listen { animation: mascotListen 1.1s ease-in-out infinite; }
+.mascot.m-cheer { animation: mascotCheer .55s ease-in-out 3; }
+.mascot.m-encourage { animation: mascotNod 1s ease-in-out 2; }
+@keyframes mascotThink {
+  0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); }
+}
+@keyframes mascotListen {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 var(--mascot-color, #8E6CF0); }
+  50% { transform: scale(1.07); box-shadow: 0 0 0 10px rgba(142, 108, 240, .16); }
+}
+@keyframes mascotCheer {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(-18px) rotate(-10deg) scale(1.1); }
+  70% { transform: translateY(-4px) rotate(8deg); }
+}
+@keyframes mascotNod {
+  0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px) scale(.96); }
+}
+
+/* ---------- partículas, estrelas, micro-interações ---------- */
+
+.fx-layer { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+.fx-dot {
+  position: absolute; width: 11px; height: 11px; border-radius: 50%;
+  animation: fxPop .72s cubic-bezier(.2, .8, .3, 1) forwards;
+}
+@keyframes fxPop {
+  from { transform: translate(-50%, -50%) scale(.4); opacity: 1; }
+  to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity: 0; }
+}
+
+.fx-star {
+  position: fixed; font-size: 40px; z-index: 61; pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.fx-star.fly { animation: starFly .74s cubic-bezier(.4, 0, .5, 1) forwards; }
+@keyframes starFly {
+  0% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+  25% { transform: translate(-50%, -50%) scale(1.6); }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(.35);
+    opacity: .2;
+  }
+}
+
+/* balanço de convite — nunca um "erro" */
+.nudge { animation: nudge .5s ease; }
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px) rotate(-2deg); }
+  75% { transform: translateX(7px) rotate(2deg); }
+}
+
+.attention { animation: attention 1.1s ease-in-out 2; }
+@keyframes attention {
+  0%, 100% { transform: scale(1); box-shadow: var(--shadow); }
+  50% { transform: scale(1.07); box-shadow: 0 0 0 10px var(--lang-soft, #EAE3FC); }
+}
+
+/* contador de estrelas da sessão */
+.session-stars {
+  display: flex; align-items: center; gap: 5px;
+  background: #fff; border-radius: 999px; padding: 6px 14px 6px 10px;
+  box-shadow: var(--shadow); font-size: 17px; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.session-stars .ss-icon { font-size: 19px; }
+.session-stars.pop { animation: starsPop .5s cubic-bezier(.2, .9, .3, 1.4); }
+@keyframes starsPop {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(1.28) rotate(-5deg); }
+}
+
+/* ---------- casa viva ---------- */
+
+.home-sky { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.sky-item {
+  position: absolute; font-size: 28px; opacity: .3;
+  animation: drift 9s ease-in-out infinite;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) rotate(-6deg); }
+  50% { transform: translate(14px, -22px) rotate(6deg); }
+}
+.home-char-wrap { cursor: pointer; transition: transform .2s ease; }
+.home-char-wrap:active { transform: scale(.95); }
+.home-char-wrap.greet { animation: greet .7s cubic-bezier(.2, .9, .3, 1.3); }
+@keyframes greet {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  30% { transform: translateY(-26px) rotate(-8deg) scale(1.06); }
+  60% { transform: translateY(0) rotate(6deg); }
+}
+
+/* ---------- mapa em trilha ---------- */
+
+.map-dot {
+  transform: translateX(var(--wave, 0));
+  animation: dotIn .45s ease both; animation-delay: var(--in-delay, 0ms);
+}
+@keyframes dotIn {
+  from { opacity: 0; transform: translateX(var(--wave, 0)) scale(.3); }
+  to { opacity: 1; transform: translateX(var(--wave, 0)) scale(1); }
+}
+.map-dot.done { opacity: 1; }
+.map-dot.current {
+  transform: translateX(var(--wave, 0)) scale(1.15);
+  animation: dotIn .45s ease both, pulse 1.6s ease-in-out infinite .5s;
+}
+.map-week-badge.won { animation: pop .5s ease; }
+
+/* adesivos que falam */
+.sticker { animation: pop .45s cubic-bezier(.2, .9, .3, 1.4) both; }
+.sticker.speakable { cursor: pointer; transition: transform .15s ease; }
+.sticker.speakable:active { transform: scale(.9); }
+
+/* ---------- jogo da memória (cartas que viram) ---------- */
+
+.memory-board {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  width: 100%; max-width: 380px;
+}
+.flip-card {
+  background: none; padding: 0; aspect-ratio: 1; perspective: 700px;
+}
+.flip-inner {
+  position: relative; display: block; width: 100%; height: 100%;
+  transition: transform .5s cubic-bezier(.3, .8, .3, 1.1);
+  transform-style: preserve-3d;
+}
+.flip-card.open .flip-inner, .flip-card.done .flip-inner { transform: rotateY(180deg); }
+.flip-back, .flip-front {
+  position: absolute; inset: 0; border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: var(--shadow);
+}
+.flip-back { background: var(--lang-soft, #EAE3FC); }
+.flip-front { background: #fff; transform: rotateY(180deg); }
+.flip-card.done .flip-front { background: #DFF5EA; animation: pop .4s ease; }
+
+/* ---------- imite o personagem ---------- */
+
+.imitate-card { gap: 6px; }
+.imitate-char { font-size: 92px; animation: imitateHop 1.4s ease-in-out infinite; }
+.imitate-gesture { font-size: 62px; animation: imitateHop 1.4s ease-in-out infinite .35s; }
+@keyframes imitateHop {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-14px) rotate(4deg); }
+}
+
+/* ---------- história interativa ---------- */
+
+.story-card { gap: 10px; }
+.story-narrator {
+  font-size: 64px; transition: transform .2s ease;
+}
+.story-narrator.talking { animation: talking .45s ease-in-out infinite; }
+@keyframes talking {
+  0%, 100% { transform: scale(1) rotate(-3deg); } 50% { transform: scale(1.09) rotate(3deg); }
+}
+.story-scene {
+  min-height: 120px; display: flex; align-items: center; justify-content: center;
+  width: 100%; background: linear-gradient(#EAF4FD, #F3FBF5);
+  border-radius: var(--radius-m);
+}
+.story-hero { font-size: 78px; animation: bounceIn .5s ease; }
+.story-choices { margin-top: 4px; }
+
+/* ---------- música e rima ---------- */
+
+.song-card { min-height: 260px; justify-content: center; overflow: hidden; }
+.song-stage { min-height: 120px; display: flex; align-items: center; }
+.song-word { font-size: 96px; animation: songPop .7s ease-in-out infinite alternate; }
+@keyframes songPop {
+  from { transform: scale(1) rotate(-5deg); } to { transform: scale(1.12) rotate(5deg); }
+}
+.song-notes { display: flex; gap: 12px; }
+.song-note { font-size: 26px; animation: noteFloat 1.7s ease-in-out infinite; }
+@keyframes noteFloat {
+  0%, 100% { transform: translateY(0); opacity: .45; }
+  50% { transform: translateY(-16px); opacity: 1; }
+}
+
+/* ---------- caça ao objeto em casa ---------- */
+
+.hunt-card { gap: 10px; }
+.hunt-target { font-size: 104px; animation: huntSearch 2.2s ease-in-out infinite; }
+@keyframes huntSearch {
+  0%, 100% { transform: translateX(-10px) rotate(-5deg); }
+  50% { transform: translateX(10px) rotate(5deg); }
+}
+.hunt-parent-note {
+  font-size: 13px; color: #6B6584; text-align: center;
+  background: #fff; border-radius: 999px; padding: 7px 16px; box-shadow: var(--shadow);
+}
+
+/* ---------- celebração em grupo ---------- */
+
+.troupe { display: flex; gap: 14px; justify-content: center; }
+.troupe-char { font-size: 46px; animation: troupeJump .8s ease-in-out infinite; }
+@keyframes troupeJump {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-20px) rotate(6deg); }
+}
+
+/* onda do microfone ouvindo */
+.wave { display: inline-flex; gap: 4px; align-items: flex-end; height: 24px; }
+.wave i {
+  width: 5px; border-radius: 3px; background: var(--lang-color, #8E6CF0);
+  animation: waveBar .9s ease-in-out infinite;
+}
+.wave i:nth-child(1) { height: 10px; animation-delay: 0s; }
+.wave i:nth-child(2) { height: 18px; animation-delay: .12s; }
+.wave i:nth-child(3) { height: 24px; animation-delay: .24s; }
+.wave i:nth-child(4) { height: 16px; animation-delay: .36s; }
+.wave i:nth-child(5) { height: 9px; animation-delay: .48s; }
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(.45); } 50% { transform: scaleY(1); }
+}
+
+.drop-zone.filled { border-style: solid; background: #DFF5EA; }
+
 /* ---------- acessibilidade ---------- */
 
+/* Movimento reduzido: o app continua inteiro, só para de se mexer. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+body.reduce-motion .fx-layer,
+body.reduce-motion .home-sky,
+body.reduce-motion .song-notes,
+body.reduce-motion .confetti { display: none; }
+body.reduce-motion .flip-card.open .flip-inner,
+body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
 
 @media (min-width: 700px) {
   .session-stage { padding-bottom: 40px; }

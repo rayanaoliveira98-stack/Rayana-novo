@@ -11,6 +11,7 @@
   var LANGS = g.LUMI_LANGS;
   var AUDIO = g.LUMI_AUDIO;
   var SPEECH = g.LUMI_SPEECH;
+  var FX = g.LUMI_FX;
 
   var PRAISE = { pt: 'Muito bem!', en: 'Great job!', de: 'Super gemacht!', es: '¡Muy bien!', fr: 'Très bien !', it: 'Bravissimo!', tr: 'Aferin!', zh: '真棒！', ja: 'すごいね！' };
   var LISTEN_AGAIN = { pt: 'Vamos ouvir de novo!', en: "Let's listen again!", de: 'Hören wir noch einmal!', es: '¡Vamos a escuchar otra vez!', fr: 'On écoute encore une fois !', it: 'Ascoltiamo ancora!', tr: 'Tekrar dinleyelim!', zh: '我们再听一次！', ja: 'もういちど きいてみよう！' };
@@ -59,22 +60,29 @@
     });
   }
 
-  function praiseOverlay(env, lang) {
+  /* Elogio: som + mascote comemorando + estrela que voa para a coleção.
+   * O reforço é sensorial e imediato — a criança não precisa ler nada. */
+  function praiseOverlay(env, lang, sourceEl) {
     AUDIO.chimeGood();
+    FX.buzz([14, 40, 14]);
+    FX.mascotMood('cheer');
     var o = el('div', 'praise-overlay', '<div class="praise-star">⭐</div>');
     document.body.appendChild(o);
     setTimeout(function () { o.classList.add('show'); }, 10);
+    if (sourceEl) FX.starFly(sourceEl, '⭐');
     var msg = PRAISE[lang] || PRAISE.pt;
     return AUDIO.speak(msg, env.ttsTag(lang)).then(function () {
       return new Promise(function (res) {
-        setTimeout(function () { o.remove(); res(); }, 400);
+        setTimeout(function () { o.remove(); FX.mascotMood('idle'); res(); }, 400);
       });
     });
   }
 
   function encourage(env, lang) {
     AUDIO.chimeSoft();
-    return AUDIO.speak(LISTEN_AGAIN[lang] || LISTEN_AGAIN.pt, env.ttsTag(lang));
+    FX.mascotMood('encourage');
+    return AUDIO.speak(LISTEN_AGAIN[lang] || LISTEN_AGAIN.pt, env.ttsTag(lang))
+      .then(function (r) { FX.mascotMood('think'); return r; });
   }
 
   function wordLabel(env, e) {
@@ -121,16 +129,36 @@
       var misses = 0;
       var ids = [conceptId].concat(distractors(conceptId, numOptions - 1));
       var locked = false;
+      var idleTimer = null;
+
+      /* Sem pressa: se a criança ficar parada, o áudio volta sozinho e a
+       * resposta certa pulsa de leve. Ajuda em vez de cobrar. */
+      function armIdleHint() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(function () {
+          if (locked) return;
+          playPrompt();
+          if (misses >= 1) {
+            var right = wrap.querySelector('[data-id="' + conceptId + '"]');
+            FX.highlight(right);
+          }
+          armIdleHint();
+        }, 9000);
+      }
+
       var wrap = optionCards(env, ids, conceptId, function (id, card) {
         if (locked) return;
+        clearTimeout(idleTimer);
         if (id === conceptId) {
           locked = true;
           card.classList.add('correct');
-          praiseOverlay(env, lang).then(function () {
+          FX.burstFrom(card);
+          praiseOverlay(env, lang, card).then(function () {
             resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
           });
         } else {
           card.classList.add('faded');
+          FX.nudge(card);
           misses++;
           if (misses >= 2) {
             locked = true;
@@ -140,12 +168,13 @@
               setTimeout(function () { resolve({ kind: 'listen', result: 'hard' }); }, 700);
             });
           } else {
-            encourage(env, lang).then(playPrompt);
+            encourage(env, lang).then(function () { playPrompt(); armIdleHint(); });
           }
         }
       }, numOptions);
       container.appendChild(wrap);
       playPrompt();
+      armIdleHint();
     });
   }
 
@@ -224,16 +253,20 @@
       var misses = 0, locked = false;
       shuffle([target].concat(others)).forEach(function (c, i) {
         var b = el('button', 'scene-item pos-' + i, c.emoji);
+        // cada objeto respira no seu próprio ritmo: o cenário fica vivo
+        b.style.animationDelay = (i * 0.35) + 's';
         b.onclick = function () {
           if (locked) return;
           if (c.id === step.concept) {
             locked = true;
             b.classList.add('correct');
-            praiseOverlay(env, step.lang).then(function () {
+            FX.burstFrom(b);
+            praiseOverlay(env, step.lang, b).then(function () {
               resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
             });
           } else {
             b.classList.add('faded');
+            FX.nudge(b);
             misses++;
             if (misses >= 3) {
               locked = true;
@@ -327,7 +360,9 @@
             if (id === step.concept) {
               done = true;
               zone.innerHTML = '<span class="landed">' + c.emoji + '</span>';
-              praiseOverlay(env, step.lang).then(function () {
+              zone.classList.add('filled');
+              FX.burstFrom(zone);
+              praiseOverlay(env, step.lang, zone).then(function () {
                 resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
               });
             } else {
@@ -389,9 +424,12 @@
         mic.onclick = function () {
           mic.disabled = true;
           mic.classList.add('listening');
-          status.textContent = '…';
+          FX.mascotMood('listen');
+          FX.buzz(12);
+          status.innerHTML = '<span class="wave"><i></i><i></i><i></i><i></i><i></i></span>';
           SPEECH.listen(env.ttsTag(step.lang), { timeoutMs: 6000 }).then(function (r) {
             mic.classList.remove('listening');
+            status.innerHTML = '';
             attempts++;
             if (r.status === 'unavailable') {
               // sem confiança/suporte: não penalizar — cai no fluxo assistido
@@ -400,7 +438,8 @@
             }
             var grade = r.status === 'heard' ? SPEECH.assess(r.transcript, targets()) : 'try';
             if (grade === 'good') {
-              praiseOverlay(env, step.lang).then(function () { finish(attempts === 1 ? 'ok' : 'ok'); });
+              FX.burstFrom(mic);
+              praiseOverlay(env, step.lang, mic).then(function () { finish('ok'); });
             } else if (attempts >= 3) {
               // marca silenciosamente para revisão, sem constranger
               AUDIO.speak(ALMOST[step.lang] || ALMOST.pt, env.ttsTag(step.lang))
@@ -428,7 +467,8 @@
         card.appendChild(okBtn);
         speakField(env, step.lang, step.concept, 'word', { slow: false });
         okBtn.onclick = function () {
-          praiseOverlay(env, step.lang).then(function () { finish('helped'); });
+          FX.burstFrom(okBtn);
+          praiseOverlay(env, step.lang, okBtn).then(function () { finish('helped'); });
         };
       }
     });
@@ -455,7 +495,9 @@
           if (locked) return;
           if (l === spoken) {
             locked = true;
-            praiseOverlay(env, spoken).then(function () {
+            card.classList.add('correct');
+            FX.burstFrom(card);
+            praiseOverlay(env, spoken, card).then(function () {
               resolve({ kind: 'listen', result: misses === 0 ? 'ok' : 'helped' });
             });
           } else {
@@ -504,18 +546,23 @@
 
   function celebrate(env, step, container) {
     return new Promise(function (resolve) {
+      var lang0 = env.profile.langs[0];
+      var L = LANGS.get(lang0);
       var card = el('div', 'stage-card celebrate-card');
+      // Os personagens de todos os idiomas do dia comemoram juntos.
+      var troupe = el('div', 'troupe');
+      env.profile.langs.forEach(function (l, i) {
+        var c = el('span', 'troupe-char', LANGS.get(l).character.emoji);
+        c.style.animationDelay = (i * 0.14) + 's';
+        troupe.appendChild(c);
+      });
       card.appendChild(el('div', 'hero-emoji bounce', '🎉'));
-      for (var i = 0; i < 14; i++) {
-        var cf = el('div', 'confetti');
-        cf.style.left = (5 + Math.random() * 90) + '%';
-        cf.style.animationDelay = (Math.random() * 0.8) + 's';
-        cf.style.background = ['#F4B400', '#4A6CF7', '#E2574C', '#2BB673', '#8E6CF0'][i % 5];
-        card.appendChild(cf);
-      }
+      card.appendChild(troupe);
+      FX.confetti(card, 22);
       container.appendChild(card);
       AUDIO.chimeGood();
-      var lang0 = env.profile.langs[0];
+      FX.buzz([16, 60, 16, 60, 24]);
+      AUDIO.jingle(L.jingle);
       AUDIO.speak(PRAISE[lang0] || PRAISE.pt, env.ttsTag(lang0)).then(function () {
         setTimeout(function () { resolve({ kind: null, result: null }); }, 1200);
       });
@@ -523,12 +570,37 @@
   }
 
   /* Dispatcher */
-  function run(step, env, container) {
-    container.innerHTML = '';
-    var L = step.lang ? LANGS.get(step.lang) : null;
-    container.parentElement.style.setProperty('--lang-color', L ? L.color : '#8E6CF0');
-    container.parentElement.style.setProperty('--lang-soft', L ? L.colorSoft : '#EAE3FC');
+  /* Humor do mascote por tipo de atividade: ele "pensa" quando a criança
+   * escolhe, "escuta" quando ela fala, some quando o palco já é dele. */
+  var MOODS = {
+    listen_tap: 'think', review: 'think', game: 'think', compare: 'listen',
+    repeat: 'listen', present: 'idle'
+  };
 
+  function run(step, env, container) {
+    var stage = container.parentElement;
+    var L = step.lang ? LANGS.get(step.lang) : null;
+
+    return FX.leave(container).then(function () {
+      container.innerHTML = '';
+      stage.style.setProperty('--lang-color', L ? L.color : '#8E6CF0');
+      stage.style.setProperty('--lang-soft', L ? L.colorSoft : '#EAE3FC');
+
+      // O personagem-guia acompanha a criança, menos quando ele é o conteúdo.
+      if (L && step.type !== 'welcome' && step.type !== 'lang_intro' && step.type !== 'celebrate') {
+        FX.mascot(stage, L.character.emoji, L.color);
+        FX.mascotMood(MOODS[step.type] || 'idle');
+      } else {
+        FX.mascotHide();
+      }
+
+      var result = dispatch(step, env, container);
+      FX.enter(container);
+      return result;
+    });
+  }
+
+  function dispatch(step, env, container) {
     switch (step.type) {
       case 'welcome': return welcome(env, step, container);
       case 'lang_intro': return langIntro(env, step, container);
@@ -540,14 +612,20 @@
         if (step.mode === 'listen') return listenTap(env, step, container, 3);
         return Math.random() < 0.5 ? listenTap(env, step, container) : repeatAloud(env, step, container);
       case 'game':
+        var X = g.LUMI_ACT_EXTRA || {};
         switch (step.game) {
           case 'find_in_scene': return findInScene(env, pickGameStep(step), container);
           case 'missing_image': return missingImage(env, pickGameStep(step), container);
           case 'drag_to_target': return dragToTarget(env, pickGameStep(step), container);
           case 'sound_match': return soundMatch(env, pickGameStep(step), container);
           case 'follow_instruction': return followInstruction(env, pickGameStep(step), container);
+          case 'memory_pairs': return X.memoryPairs(env, step, container);
+          case 'imitate': return X.imitate(env, pickGameStep(step), container);
           default: return listenTap(env, pickGameStep(step), container);
         }
+      case 'story': return g.LUMI_ACT_EXTRA.story(env, step, container);
+      case 'song': return g.LUMI_ACT_EXTRA.song(env, step, container);
+      case 'home_hunt': return g.LUMI_ACT_EXTRA.homeHunt(env, step, container);
       case 'compare': return compare(env, step, container);
       case 'celebrate': return celebrate(env, step, container);
       default: return Promise.resolve({ kind: null, result: null });
@@ -559,5 +637,15 @@
     return { type: step.type, lang: step.lang, concept: ids[Math.floor(Math.random() * ids.length)], concepts: ids };
   }
 
-  g.LUMI_ACT = { run: run, PRAISE: PRAISE };
+  /* Utilitários compartilhados com activities-extra.js (novas atividades
+   * moram lá para manter cada arquivo legível). */
+  g.LUMI_ACT = {
+    run: run, PRAISE: PRAISE,
+    helpers: {
+      el: el, shuffle: shuffle, distractors: distractors, entry: entry,
+      speakField: speakField, praiseOverlay: praiseOverlay, encourage: encourage,
+      wordLabel: wordLabel, replayBar: replayBar, bigNext: bigNext,
+      tapChoice: tapChoice, PRAISE: PRAISE, ALMOST: ALMOST
+    }
+  };
 })(typeof window !== 'undefined' ? window : globalThis);

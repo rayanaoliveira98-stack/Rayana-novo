@@ -20,7 +20,12 @@
 
   /* Atividades de compreensão disponíveis, alternadas por dia para nunca
    * repetir exatamente a mesma sequência em dias consecutivos. */
-  var GAME_POOL = ['find_in_scene', 'missing_image', 'drag_to_target', 'sound_match', 'follow_instruction'];
+  var GAME_POOL = ['find_in_scene', 'missing_image', 'drag_to_target', 'sound_match',
+                   'follow_instruction', 'memory_pairs', 'imitate'];
+
+  /* Momento especial do dia, rodando em ciclo para nenhum dia repetir o
+   * anterior: história, música/rima e caça ao objeto em casa. */
+  var SPECIAL_POOL = ['story', 'song', 'home_hunt'];
 
   function rotate(arr, n) {
     var a = arr.slice();
@@ -94,9 +99,12 @@
     var playable = seen.concat(news);
     if (playable.length >= 3 && !opts.shortened) {
       var game = rotate(GAME_POOL, opts.journeyDay + opts.langIndex)[0];
-      steps.push({ type: 'game', lang: lang, game: game, concepts: playable.slice(-6) });
+      steps.push({
+        type: 'game', lang: lang, game: game,
+        concepts: playable.slice(-6), journeyDay: opts.journeyDay
+      });
     }
-    return { steps: steps, newConcepts: news };
+    return { steps: steps, newConcepts: news, seen: playable };
   }
 
   /* Monta a sessão completa. profile: {age, langs, journeyDay, interests,
@@ -113,6 +121,7 @@
     var budgetTotal = SRS.newConceptBudget(profile.age, langs.length, hardRatio);
     var perLang = Math.max(1, Math.floor(budgetTotal / langs.length));
 
+    var seenAll = [];
     langs.forEach(function (l, idx) {
       var block = langBlock(l, recordsByLang[l] || {}, {
         now: now,
@@ -125,7 +134,20 @@
       if (langs.length > 1) steps.push({ type: 'lang_intro', lang: l });
       steps.push.apply(steps, block.steps);
       allNew[l] = block.newConcepts;
+      if (idx === 0) seenAll = block.seen || [];
     });
+
+    // 7b. Momento especial do dia (história / música / caça em casa).
+    // Sempre no primeiro idioma do dia, para não misturar línguas na narrativa.
+    if (!opts.shortened && seenAll.length >= 2) {
+      var special = rotate(SPECIAL_POOL, profile.journeyDay)[0];
+      steps.push({
+        type: special, lang: langs[0],
+        concept: seenAll[seenAll.length - 1],
+        concepts: seenAll.slice(-4),
+        journeyDay: profile.journeyDay
+      });
+    }
 
     // 8. Desafio misturando conteúdos dominados
     if (!opts.shortened) {
@@ -184,6 +206,7 @@
     parentTips: parentTips,
     shouldShorten: shouldShorten,
     GAME_POOL: GAME_POOL,
+    SPECIAL_POOL: SPECIAL_POOL,
     _rotate: rotate
   };
 

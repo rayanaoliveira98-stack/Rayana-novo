@@ -24,8 +24,15 @@
 | Siga a instrução | Dica 🫲, frase de ação + 3 cartões |
 | Repita em voz alta | Emoji herói, 🎤 grande (ou ✅ "repeti!" sem reconhecimento), 🔊/🐢 |
 | Quem falou? (5-7) | Conceito + 2 personagens de idiomas com borda na cor de cada um |
-| Celebração | 🎉 + confete + elogio falado no idioma |
-| Elogio | Overlay ⭐ + som suave + frase positiva no idioma |
+| Memória auditiva | 6 cartas viradas (3 pares) que giram em 3D; cada carta aberta fala a palavra |
+| Imite o personagem | Personagem + gesto do dia lado a lado, pulando; ✅ confirma que imitou |
+| História interativa | Narrador que "fala", cena ilustrada e 2 escolhas por cena (3 cenas) |
+| Música e rima | Palavra gigante pulsando no ritmo + notas flutuando; 3 repetições em compasso |
+| Caça em casa | Objeto procurado balançando + nota curta para o adulto + 🎉 "achei!" |
+| Celebração | 🎉 + confete + os personagens de todos os idiomas do dia pulando juntos |
+| Elogio | Overlay ⭐ + partículas + estrela que voa para o contador + frase positiva no idioma |
+
+Presentes em toda a sessão: **mascote-guia** no canto (pensa, escuta, comemora, encoraja), **contador de estrelas** no topo e **transição animada** entre atividades.
 
 ## Área dos responsáveis (protegida)
 

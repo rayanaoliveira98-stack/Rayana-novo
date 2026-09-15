@@ -21,7 +21,9 @@
 5. **Máximo 6 conceitos novos/dia**, reduzidos automaticamente com 3-4 idiomas, idade menor ou dificuldade recente (mínimo 2).
 6. **Nunca "errado"**: dificuldades geram reapresentação discreta, revisão antecipada e, após 3 dias, simplificação da atividade (fala → reconhecimento). Sem sons negativos, sem perda de pontos.
 7. **Retenção sobre volume**: a revisão espaçada (1-3-7-14-30 dias) tem prioridade sobre conteúdo novo na fila da sessão.
-8. **Cansaço encurta a sessão**: 3 dificuldades seguidas ou lentidão média > 15 s removem jogos extras e conceitos novos excedentes, mantendo a celebração.
+8. **Cansaço encurta a sessão**: 3 dificuldades seguidas ou lentidão média > 15 s removem jogos extras, o momento especial e conceitos novos excedentes, mantendo a celebração.
+9. **Variedade obrigatória**: 7 jogos em rodízio por dia+idioma e um "momento especial" (história → música → caça ao objeto em casa) que gira a cada dia, para que dois dias seguidos nunca tenham a mesma sequência. O momento especial só usa vocabulário já trabalhado — nada estreia dentro de um jogo.
+10. **Movimento a serviço da compreensão**: a animação explica a atividade e confirma o acerto; nunca cria urgência, contagem regressiva ou punição.
 
 ## Módulos
 
@@ -40,7 +42,9 @@ lumilinguas/
 │   ├── store.js          # ★ persistência, perfis, exportação/exclusão (puro, testado)
 │   ├── audio.js          # TTS, jingles, feedback, gravações da família (IndexedDB)
 │   ├── speech.js         # reconhecimento de fala + avaliação tolerante (assess pura)
+│   ├── fx.js             # efeitos dinâmicos: transições, mascote, partículas, vibração
 │   ├── activities.js     # renderizadores das atividades infantis
+│   ├── activities-extra.js # memória auditiva, imitar, história, música, caça em casa
 │   ├── app.js            # navegação, execução da sessão, adaptação em tempo real
 │   └── parent.js         # onboarding, painel dos responsáveis, gravação de voz
 ├── content/

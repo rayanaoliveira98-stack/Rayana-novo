@@ -36,6 +36,7 @@
       <span class="day-pill">Dia <b id="home-day-count">1</b></span>
       <button id="btn-home-parent" class="btn-round small" aria-label="Área dos responsáveis">⚙️</button>
     </header>
+    <div id="home-sky" class="home-sky" aria-hidden="true"></div>
     <div class="home-center">
       <div id="home-char-wrap" class="home-char-wrap"><span id="home-char" class="home-char">🦊</span></div>
       <button id="btn-play" class="btn-play" aria-label="Brincar">▶</button>
@@ -67,6 +68,9 @@
   <section id="screen-session" class="screen">
     <header class="session-top">
       <div class="progress-track"><div id="session-progress" class="progress-fill"></div></div>
+      <div id="session-stars" class="session-stars" aria-label="Estrelas desta brincadeira">
+        <span class="ss-icon">⭐</span><b id="session-star-count">0</b>
+      </div>
       <button id="btn-session-exit" class="btn-round small" aria-label="Sair">✕</button>
     </header>
     <div id="session-stage" class="session-stage"></div>
@@ -108,6 +112,7 @@
   <script src="content/pack-tr.js"></script>
   <script src="content/pack-zh.js"></script>
   <script src="content/pack-ja.js"></script>
+  <script src="js/fx.js"></script>
   <script src="js/srs.js"></script>
   <script src="js/session.js"></script>
   <script src="js/gate.js"></script>
@@ -115,6 +120,7 @@
   <script src="js/audio.js"></script>
   <script src="js/speech.js"></script>
   <script src="js/activities.js"></script>
+  <script src="js/activities-extra.js"></script>
   <script src="js/parent.js"></script>
   <script src="js/app.js"></script>
 </body>
