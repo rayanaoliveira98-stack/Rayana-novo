@@ -8,6 +8,6 @@ Os fatos detalhados de cada marca ficam nas skills, que carregam sozinhas:
 
 As três regras que mais se erram:
 - Estratégia em português, tudo publicável em **alemão austríaco**.
-- **Anrede não tem padrão único.** Black Strategie = Sie (Rayana fala em Ich, nunca Wir).
+- **Anrede não tem padrão único.** Black Strategie = du, Sie só no pitch (Rayana fala em Ich, nunca Wir).
   STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
 - **Recruiting nunca é label da Black Strategie.** Vira Employer Branding.

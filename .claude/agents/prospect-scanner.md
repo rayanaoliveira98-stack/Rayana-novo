@@ -53,7 +53,7 @@ GELD-LÜCKE (a frase que traduz o problema em dinheiro perdido, em alemão)
 LISTA VORHER / NACHHER (3 a 5 itens, alemão, concreto, sem jargão de agência)
 Vorher: ... → Nachher: ...
 
-E-MAIL DE ABORDAGEM (Sie-Form, sem travessão, sem elogio genérico, sem "Ich habe gesehen, dass")
+E-MAIL DE ABORDAGEM (du-Form, sem travessão, sem elogio genérico, sem "Ich habe gesehen, dass")
 Betreff: <específico, cita a prática ou o problema>
 <corpo curto: referência concreta, valor primeiro, uma pergunta só>
 
@@ -65,7 +65,7 @@ NÃO SEI: <o que exigiria acesso interno>
 
 ## Regras duras
 - **Valor antes da conversa:** o sistema é construir a nova versão do site em subdomínio, ou gravar o vídeo de análise, **antes** do primeiro contato. Sempre indicar qual dos dois.
-- **Sie-Form.** Sem travessão. Sem jargão de agência (Funnel, Reporting, Touchpoint, Performance).
+- **du-Form (Sie só no pitch).** Sem travessão. Sem jargão de agência (Funnel, Reporting, Touchpoint, Performance).
 - Nunca criticar o cliente de frente. A lacuna se mostra em vorher/nachher, não em diagnóstico.
 - Nenhum preço no primeiro contato.
 - Nunca a palavra Recruiting associada à Black Strategie.

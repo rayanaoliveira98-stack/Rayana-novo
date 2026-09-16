@@ -50,7 +50,7 @@ Regra: prospecção e pesquisa de web séria se faz **local ou via MCP**. Escrit
 
 | Situação | O que digitar | O que volta |
 |---|---|---|
-| **Prospectar** | "usa o prospect-scanner em dentistas de Wels" | ficha, nota dos 6 critérios, Geld-Lücke, e-mail em Sie-Form |
+| **Prospectar** | "usa o prospect-scanner em dentistas de Wels" | ficha, nota dos 6 critérios, Geld-Lücke, e-mail em du-Form |
 | **Criar conteúdo** | "reel para FITARY sobre dor nas costas" → "passa no brand-check" | hook, script, legenda, hashtags, já auditados |
 | **Planejar a semana** | "roda o trend-scout" → "hook-lab para STAFF24 no TikTok, B2C" | tendências filtradas e hooks acima de 8 |
 | **Antes de mexer em verba** | "roda o performance-analyst na conta CHECK, últimos 14 dias" | onde vaza, 3 ações, e o que não fazer |
@@ -93,7 +93,7 @@ Agente não tem memória. O que não for gravado morre no chat.
 
 | Marca | Skill | Anrede | Geografia | Erro fatal |
 |---|---|---|---|---|
-| **Black Strategie** | `black-strategie-content` | **Sie** sempre · Rayana fala em **Ich**, nunca Wir | Wels, Linz, OÖ · **nunca Wien** | soar como agência genérica |
+| **Black Strategie** | `black-strategie-content` | **du** · **Sie** só no pitch · Rayana fala em **Ich**, nunca Wir | Wels, Linz, OÖ · **nunca Wien** | soar como agência genérica |
 | **STAFF24** | `staff24-content` | **du** no social · **Sie** no LinkedIn, site e B2B | Áustria, 17 filiais · sempre hashtag regional | esquecer o público duplo B2B + B2C |
 | **FITARY** | `fitary-content` | **du** · **Sie** só em pitch B2B | Wels +15 km | copy de academia barata |
 | **& Beauty** | `content-engine` | a definir | Áustria | perfil ainda incompleto |

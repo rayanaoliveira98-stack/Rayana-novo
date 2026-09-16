@@ -48,7 +48,7 @@ Antes de produzir, carregue a skill da marca tratada:
 `black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`
 (em disco: `~/.claude/skills/synced/*/<skill>/SKILL.md`)
 
-**Anrede correta** (erro mais comum): Black Strategie = Sie sempre, Rayana fala em Ich, nunca Wir.
+**Anrede correta** (erro mais comum): Black Strategie = du, Sie só no pitch, Rayana fala em Ich, nunca Wir.
 STAFF24 = du no social, Sie no LinkedIn/site/B2B. FITARY = du, Sie só em pitch B2B.
 
 Sem travessão em texto de cliente da Black Strategie. Sem jargão de agência.
