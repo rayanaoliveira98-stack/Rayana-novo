@@ -77,11 +77,21 @@ Mesma lógica nas outras marcas: STAFF24 tem sete pilares, a Black Strategie tem
 Nada vai ao ar sem `brand-check`. Saúde, fitness e estética passam também por `health-fact-check`.
 Esses dois não são opcionais: são o que impede output genérico e promessa juridicamente arriscada.
 
-### Como manter vivo
-- Fato novo de marca (preço, oferta, cliente) → *"atualiza a skill `black-strategie-content` com isso"*
-- Regra de operação, meta de campanha, aprendizado de venda → *"atualiza o playbook"*
+### Memória: três níveis
 
-Agente não tem memória. O que não for gravado morre no chat.
+Agente não tem memória entre execuções. A sessão também não. O que dá memória ao sistema são três lugares, e cada um guarda uma coisa:
+
+| Onde | O que guarda | Como alimentar |
+|---|---|---|
+| **Skills** (claude.ai) | fato estável de marca: tom, oferta, preço, CI | *"atualiza a skill `staff24-content` com isso"* |
+| **Este playbook** | regra de operação e decisão | *"atualiza o playbook"* |
+| **`.claude/memoria/`** | o que foi aprendido, decidido e testado, com data | *"grava na memória da STAFF24"* |
+
+Um arquivo de memória por marca, mais um da própria ferramenta. Quando um aprendizado vira regra fixa, ele **sobe** para a skill ou para o playbook e sai da memória. Memória é caderno, não manual.
+
+**O que não existe:** nada entra ali sozinho. Claude Code não lê o histórico dos chats da claude.ai, e nenhum chat se arquiva automaticamente num projeto. A gravação é por pedido explícito, uma frase no fim da conversa.
+
+**Para agrupar chats por marca na claude.ai:** use Projects, um projeto por marca, com a skill da marca anexada. Todo chat daquele projeto já nasce com o contexto certo. O que precisar sobreviver ao chat continua vindo para `.claude/memoria/`.
 
 ---
 

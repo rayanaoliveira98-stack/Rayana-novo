@@ -3,6 +3,8 @@
 **Leia `.claude/PLAYBOOK.md` antes de qualquer tarefa.** Está tudo lá: campanha ativa, marcas,
 sistema de outbound, escada de ofertas, o time de agentes, frameworks de decisão e regras de escrita.
 
+Aprendizados e decisões com data ficam em `.claude/memoria/`, um arquivo por marca.
+
 Os fatos detalhados de cada marca ficam nas skills, que carregam sozinhas:
 `black-strategie-content` · `staff24-content` · `fitary-content` · `content-engine` · `meta-ads-kampagne2026`.
 

@@ -333,9 +333,11 @@
   </div>
 
   <ul class="hard">
-    <li><b>Fato novo de marca</b> (preço, oferta, cliente novo) → "atualiza a skill <code>black-strategie-content</code> com isso"</li>
-    <li><b>Regra de operação, meta de campanha, aprendizado de venda</b> → "atualiza o playbook"</li>
-    <li>Agente não tem memória. <b>O que não for gravado morre no chat.</b></li>
+    <li><b>Fato estável de marca</b> (tom, oferta, preço, CI) → "atualiza a skill <code>staff24-content</code> com isso"</li>
+    <li><b>Regra de operação, meta de campanha</b> → "atualiza o playbook"</li>
+    <li><b>Aprendizado, decisão, resultado de teste</b> → "grava na memória da STAFF24" · vai para <code>.claude/memoria/</code>, um arquivo por marca, com data</li>
+    <li>Quando um aprendizado vira regra fixa, ele <b>sobe</b> para a skill ou para o playbook e sai da memória. Memória é caderno, não manual.</li>
+    <li><b>Nada entra sozinho.</b> Claude Code não lê o histórico da claude.ai e nenhum chat se arquiva automaticamente. A gravação é uma frase no fim da conversa. Para agrupar chats por marca na claude.ai, use Projects, um por marca, com a skill anexada.</li>
   </ul>
 </section>
 
