@@ -51,12 +51,27 @@ Regra: prospecção e pesquisa de web séria se faz **local ou via MCP**. Escrit
 | Situação | O que digitar | O que volta |
 |---|---|---|
 | **Prospectar** | "usa o prospect-scanner em Selbstständige e pequenas empresas de Wels" | ficha, nota dos 6 critérios, Geld-Lücke, e-mail em du-Form |
-| **Criar conteúdo** | "reel para FITARY sobre dor nas costas" → "passa no brand-check" | hook, script, legenda, hashtags, já auditados |
+| **Criar conteúdo** | "reel para FITARY, tema treino" → "passa no brand-check" | hook, script, legenda, hashtags, já auditados |
 | **Planejar a semana** | "roda o trend-scout" → "hook-lab para STAFF24 no TikTok, B2C" | tendências filtradas e hooks acima de 8 |
 | **Antes de mexer em verba** | "roda o performance-analyst na conta CHECK, últimos 14 dias" | onde vaza, 3 ações, e o que não fazer |
 | **Fim do mês** | "client-report do cliente X" | relatório que defende o trabalho |
 
 Lote grande de prospect: *"roda em paralelo, um agente por 10 prospects"*.
+
+**Nunca peça conteúdo com um tema só.** Uma marca que fala de um assunto vira monotema e satura rápido.
+Peça o tema, não o sintoma: *"reel para FITARY, tema treino"* em vez de *"reel sobre dor nas costas"*.
+
+Temas que rotacionam na FITARY:
+
+| Tema | O que é | Exemplo de ângulo |
+|---|---|---|
+| **Gesundheit** | coluna, postura, sono, energia, prevenção | por que a dor volta mesmo depois da fisioterapia |
+| **Training** | técnica, método, progressão, Pad Work | o erro de execução que anula o exercício |
+| **True Facts** | mito contra verdade, o que a indústria vende errado | "Krafttraining macht nicht massig" |
+| **Longevity** | 40+, articulação, envelhecer com força | como quer estar aos 60 |
+| **Bastidor** | Yalcin treinando de verdade, o estúdio, a comunidade | o momento de coaching sem roteiro |
+
+Mesma lógica nas outras marcas: STAFF24 tem sete pilares, a Black Strategie tem cinco formatos F1 a F5. Os pilares estão nas skills.
 
 ### Regra de ouro
 Nada vai ao ar sem `brand-check`. Saúde, fitness e estética passam também por `health-fact-check`.
