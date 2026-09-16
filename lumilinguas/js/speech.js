@@ -88,7 +88,77 @@
     });
   }
 
-  var api = { available: available, listen: listen, assess: assess, _normalize: normalize, _levenshtein: levenshtein };
+
+  /* ---------- Detecção de voz (a criança falou?) ----------
+   * Mede a energia do microfone, sem reconhecer palavra nenhuma. Serve para
+   * o que a especificação pede — "detectar se a criança realmente falou" — e
+   * funciona em qualquer aparelho com microfone, mesmo sem reconhecimento de
+   * fala. É o que permite a escada de produção avançar num celular simples.
+   *
+   * Nada do áudio é gravado, guardado ou enviado: só o volume é observado,
+   * ao vivo, e descartado.
+   */
+  function voiceSupported() {
+    return !!(g.navigator && navigator.mediaDevices && navigator.mediaDevices.getUserMedia &&
+              (g.AudioContext || g.webkitAudioContext));
+  }
+
+  /* Resolve com {spoke, loudMs, peak}. onLevel recebe 0..1 para animar a onda. */
+  function detectVoice(opts) {
+    opts = opts || {};
+    var janela = opts.timeoutMs || 5000;
+    var precisaMs = opts.minVoicedMs || 320;   // ~1/3 de segundo já é uma palavra
+    var limiar = opts.threshold || 0.055;      // acima do ruído de sala típico
+
+    return new Promise(function (resolve) {
+      if (!voiceSupported()) return resolve({ spoke: null, reason: 'unsupported' });
+      var ctx, stream, raf, parado = false;
+
+      function terminar(res) {
+        if (parado) return;
+        parado = true;
+        if (raf) cancelAnimationFrame(raf);
+        try { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {}
+        try { if (ctx && ctx.close) ctx.close(); } catch (e) {}
+        resolve(res);
+      }
+
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function (s) {
+        stream = s;
+        ctx = new (g.AudioContext || g.webkitAudioContext)();
+        var src = ctx.createMediaStreamSource(s);
+        var an = ctx.createAnalyser();
+        an.fftSize = 1024;
+        src.connect(an);
+        var buf = new Float32Array(an.fftSize);
+        var t0 = Date.now(), loudMs = 0, pico = 0, ultimo = t0;
+
+        (function ler() {
+          if (parado) return;
+          an.getFloatTimeDomainData(buf);
+          var soma = 0;
+          for (var i = 0; i < buf.length; i++) soma += buf[i] * buf[i];
+          var rms = Math.sqrt(soma / buf.length);
+          if (rms > pico) pico = rms;
+
+          var agora = Date.now();
+          if (rms >= limiar) loudMs += agora - ultimo;
+          ultimo = agora;
+
+          if (opts.onLevel) opts.onLevel(Math.min(1, rms / (limiar * 4)));
+
+          if (loudMs >= precisaMs) return terminar({ spoke: true, loudMs: loudMs, peak: pico });
+          if (agora - t0 >= janela) return terminar({ spoke: false, loudMs: loudMs, peak: pico });
+          raf = requestAnimationFrame(ler);
+        })();
+      }).catch(function () {
+        terminar({ spoke: null, reason: 'denied' });
+      });
+    });
+  }
+
+  var api = { available: available, listen: listen, assess: assess,
+    voiceSupported: voiceSupported, detectVoice: detectVoice, _normalize: normalize, _levenshtein: levenshtein };
   g.LUMI_SPEECH = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

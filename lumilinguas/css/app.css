@@ -620,6 +620,59 @@ button { font-family: inherit; border: 0; cursor: pointer; color: var(--ink); }
 
 .drop-zone.filled { border-style: solid; background: #DFF5EA; }
 
+
+/* ---------- atividades de produção (a criança fala) ---------- */
+
+.produce-card { gap: 12px; min-height: 300px; justify-content: center; }
+.produce-stage {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 140px;
+}
+.cloze-img, .name-img { font-size: 104px; }
+.name-img { animation: floaty 3s ease-in-out infinite; }
+
+/* o espaço que espera a voz da criança */
+.cloze-gap {
+  font-size: 56px; color: var(--lang-color, #8E6CF0); letter-spacing: 6px;
+  animation: gapWait 1.3s ease-in-out infinite;
+}
+@keyframes gapWait {
+  0%, 100% { opacity: .35; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-6px); }
+}
+.produce-stage.waiting .cloze-img { transform: scale(1.04); }
+
+.use-char { font-size: 72px; animation: talking .6s ease-in-out infinite; }
+.use-bubble {
+  font-size: 56px; background: var(--lang-soft, #EAE3FC);
+  border-radius: 24px 24px 24px 6px; padding: 12px 18px;
+}
+
+/* a onda do microfone reage ao volume real da voz */
+.wave.live i {
+  transform-origin: bottom;
+  animation-duration: .55s;
+  transform: scaleY(var(--live, 1));
+}
+
+/* ---------- escada de produção no painel dos pais ---------- */
+
+.ladder { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.ladder-step {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 12px; background: #F7F4FF;
+  font-size: 14px;
+}
+.ladder-step .ls-bar {
+  height: 10px; border-radius: 999px; background: var(--accent);
+  min-width: 10px; transition: width .4s ease;
+}
+.ladder-step .ls-name { flex: 1; font-weight: 700; }
+.ladder-step .ls-count { font-variant-numeric: tabular-nums; color: #6B6584; }
+.ladder-step.verbal { background: #EAF7F0; }
+.ladder-step.empty { opacity: .45; }
+.ladder-legend { font-size: 13px; color: #6B6584; margin-top: 10px; line-height: 1.6; }
+
 /* ---------- acessibilidade ---------- */
 
 /* Movimento reduzido: o app continua inteiro, só para de se mexer. */
@@ -637,3 +690,9 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
   .session-stage { padding-bottom: 40px; }
   .hero-emoji { font-size: 140px; }
 }
+
+.produce-label:empty { display: none; }
+
+/* a criança tenta primeiro; a ajuda fica ao lado, se ela quiser */
+.produce-actions { display: flex; align-items: center; gap: 18px; }
+.btn-help { background: var(--lang-soft, #EAE3FC); width: 64px; height: 64px; font-size: 28px; }

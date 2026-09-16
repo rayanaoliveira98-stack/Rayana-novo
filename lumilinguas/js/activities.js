@@ -574,7 +574,8 @@
    * escolhe, "escuta" quando ela fala, some quando o palco já é dele. */
   var MOODS = {
     listen_tap: 'think', review: 'think', game: 'think', compare: 'listen',
-    repeat: 'listen', present: 'idle'
+    repeat: 'listen', present: 'idle', tpr: 'think',
+    cloze: 'listen', name_it: 'listen', use_it: 'listen'
   };
 
   function run(step, env, container) {
@@ -600,6 +601,22 @@
     });
   }
 
+  /* Mapa degrau-da-escada → atividade. É por aqui que a progressão
+   * pedagógica vira tela: cada conceito recebe a atividade que corresponde
+   * ao que a criança já consegue fazer com ele. */
+  function byActivity(activity, env, step, container) {
+    switch (activity) {
+      case 'present': return present(env, step, container);
+      case 'listen_tap': return listenTap(env, step, container);
+      case 'tpr': return followInstruction(env, step, container);
+      case 'repeat': return repeatAloud(env, step, container);
+      case 'cloze': return g.LUMI_ACT_PRODUCE.cloze(env, step, container);
+      case 'name_it': return g.LUMI_ACT_PRODUCE.nameIt(env, step, container);
+      case 'use_it': return g.LUMI_ACT_PRODUCE.useIt(env, step, container);
+      default: return listenTap(env, step, container);
+    }
+  }
+
   function dispatch(step, env, container) {
     switch (step.type) {
       case 'welcome': return welcome(env, step, container);
@@ -608,9 +625,10 @@
       case 'listen_tap': return listenTap(env, step, container);
       case 'repeat': return repeatAloud(env, step, container);
       case 'review':
-        // revisão simplificada volta para reconhecimento visual
+        // A revisão não é sorteada: a sessão já decidiu o degrau da escada
+        // em que esta criança está com ESTE conceito (js/ladder.js).
         if (step.mode === 'listen') return listenTap(env, step, container, 3);
-        return Math.random() < 0.5 ? listenTap(env, step, container) : repeatAloud(env, step, container);
+        return byActivity(step.activity || 'listen_tap', env, step, container);
       case 'game':
         var X = g.LUMI_ACT_EXTRA || {};
         switch (step.game) {
@@ -623,6 +641,10 @@
           case 'imitate': return X.imitate(env, pickGameStep(step), container);
           default: return listenTap(env, pickGameStep(step), container);
         }
+      case 'tpr': return followInstruction(env, step, container);
+      case 'cloze': return g.LUMI_ACT_PRODUCE.cloze(env, step, container);
+      case 'name_it': return g.LUMI_ACT_PRODUCE.nameIt(env, step, container);
+      case 'use_it': return g.LUMI_ACT_PRODUCE.useIt(env, step, container);
       case 'story': return g.LUMI_ACT_EXTRA.story(env, step, container);
       case 'song': return g.LUMI_ACT_EXTRA.song(env, step, container);
       case 'home_hunt': return g.LUMI_ACT_EXTRA.homeHunt(env, step, container);
@@ -645,7 +667,7 @@
       el: el, shuffle: shuffle, distractors: distractors, entry: entry,
       speakField: speakField, praiseOverlay: praiseOverlay, encourage: encourage,
       wordLabel: wordLabel, replayBar: replayBar, bigNext: bigNext,
-      tapChoice: tapChoice, PRAISE: PRAISE, ALMOST: ALMOST
+      tapChoice: tapChoice, byActivity: byActivity, PRAISE: PRAISE, ALMOST: ALMOST
     }
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -51,7 +51,15 @@ Gravações: chave `perfil:idioma:conceito` → Blob de áudio. Excluir o perfil
   "streak": 3,              // acertos seguidos
   "struggles": 1,           // dificuldades acumuladas (decaem com acertos)
   "struggleDays": 2,        // dias DISTINTOS com dificuldade (>=3 → simplificar)
-  "lastResult": "ok | hard"
+  "lastResult": "ok | hard",
+  "lastAdvanceDay": 20321,  // dia em que o intervalo já avançou (1x por dia)
+
+  // escada de produção (js/ladder.js)
+  "phase": 4,               // 0 exposure … 6 use
+  "phaseStreak": 1,         // acertos seguidos no degrau atual (2 → sobe)
+  "phaseSince": 0,          // quando entrou neste degrau
+  "spokeEver": true,        // já emitiu som com esta palavra
+  "silentTries": 0          // silêncios seguidos (2 → volta ao degrau corporal)
 }
 ```
 
@@ -82,6 +90,22 @@ Gravações: chave `perfil:idioma:conceito` → Blob de áudio. Excluir o perfil
 4. Reapresentação discreta de 1 erro depois de 3-5 atividades;
 5. Jogo em contexto com conteúdo já visto; desafio misto no fim;
 6. `struggleDays >= 3` → a revisão daquele conceito volta para reconhecimento visual (`mode: 'listen'`).
+
+### Escada de produção
+
+O degrau decide **a atividade do dia** e **o teto do espaçamento**:
+
+| Degrau | Atividade | Espaçamento máximo |
+|---|---|---|
+| exposure / recognize | apresentar / ouça e toque | 1 dia |
+| act / echo | siga a instrução / ouça e repita | 3 dias |
+| cloze | complete a frase | 7 dias |
+| name | fale sozinha | 14 dias |
+| use | responda em conversa | 30 dias |
+
+Sobe com dois acertos seguidos; desce um degrau em dificuldade (piso:
+`recognize`); volta a `act` após dois silêncios. Limitado pelo teto da idade e
+pelo período silencioso. Detalhes e fontes em [DIDATICA.md](DIDATICA.md).
 
 ### Retenção medida
 

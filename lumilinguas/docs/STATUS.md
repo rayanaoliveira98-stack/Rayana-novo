@@ -11,6 +11,12 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Escolha de 1-4 idiomas, alterável depois nas configurações.
 - Sessão diária adaptativa (~11 min) com o ciclo completo: boas-vindas → dificuldades de ontem → revisões SRS → 2-6 conceitos novos → compreensão → repetição oral → jogo → desafio misto → celebração → 4 dicas práticas do dia.
 - Motor SRS com os 7 estados e intervalos 1-3-7-14-30 dias; simplificação após 3 dias de dificuldade; sem punição.
+- **Escada de produção** (`js/ladder.js`): cada palavra sobe sete degraus por criança e idioma — ouvir → reconhecer → responder com o corpo → repetir com modelo → completar a frase → falar sozinha → usar em conversa. A atividade do dia sai do degrau, nunca de sorteio.
+- **A criança fala**: três atividades produtivas novas (completar a frase, nomear sem modelo, responder em conversa), com apoio entregue só depois da tentativa.
+- **Detecção de voz por volume** (`SPEECH.detectVoice`): o app confirma que a criança falou mesmo sem reconhecimento de fala, em qualquer aparelho com microfone. Nada é gravado nem enviado.
+- **Respeito ao desenvolvimento**: período silencioso por idade, teto de exigência por idade (3 anos param em "repete com modelo"), e silêncio tratado como sinal — nunca como erro.
+- **Ritmo controlado**: limite de trabalho em aberto (para de apresentar novidade enquanto há muito a meio caminho) e espaçamento limitado pelo degrau, para a palavra não sumir antes de a criança conseguir falá-la.
+- Aba **🪜 Evolução** no painel dos responsáveis, mostrando quantas palavras estão em cada degrau e quantas já saem da boca da criança.
 - Blocos separados por idioma (3-4 anos) e comparação entre idiomas (5-7 anos).
 - 14 modos de atividade: apresentar, ouvir-e-tocar, repetir, som→imagem, encontrar no cenário, qual desapareceu, arrastar, seguir instrução, "quem falou?", **jogo da memória auditiva**, **imite o personagem**, **história interativa**, **música e rima**, **caça ao objeto em casa**.
 - Momento especial do dia em rodízio (história → música → caça em casa), para nenhum dia repetir o anterior.
@@ -22,13 +28,13 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Painel dos responsáveis: progresso por idioma, estados, retenção 1/3/7/14/30d, dificuldades, histórico, tempo de uso, dicas, configurações, troca de PIN, multi-perfil, exportação JSON e exclusão total.
 - Painel administrativo (`admin.html`): revisão de todos os campos e variações, teste de áudio, validador, importação JSON/CSV sem rebuild, exportação de packs.
 - Offline após a primeira visita (Service Worker) + instalação PWA (iOS/Android).
-- Testes automatizados: SRS, montagem/alternância de sessão, portão parental, integridade dos packs, persistência (28 testes).
+- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (59 testes).
 
 ## ⚠️ Funcional com limitação conhecida
 
 | Item | Situação | Evolução necessária |
 |---|---|---|
-| Reconhecimento de fala | Web Speech API: em Chrome/Android o áudio é processado pelo serviço de fala do sistema (nuvem do SO); Safari/iOS usa o motor local | Produção: motor infantil dedicado on-device (ex.: Vosk/whisper.cpp compilado p/ mobile) com modelos acústicos de voz infantil |
+| Reconhecimento de fala | Web Speech API quando existe; onde não existe, o app usa detecção de voz por volume (sabe que a criança falou, não o que falou) e, sem microfone, ela fala em voz alta e confirma no botão | Produção: motor infantil dedicado on-device (ex.: Vosk/whisper.cpp compilado p/ mobile) com modelos acústicos de voz infantil, para avaliar a pronúncia e não só a presença da fala |
 | Vozes | TTS do sistema — qualidade varia por aparelho; "vozes diferentes" = voz do sistema + gravações da família | Produção: pacotes de áudio gravados por falantes nativos (adultos e crianças), baixáveis por idioma |
 | Ilustrações | Emoji do sistema (originais, sem copyright de terceiros) | Produção: ilustrações originais encomendadas; basta trocar `emoji` por caminho de imagem no currículo |
 | Músicas e rimas | Atividade pronta: melodia por idioma + palavra cantada em compasso de três repetições, montada a partir do vocabulário do dia | Produção musical original gravada (canções completas com refrão) no lugar da melodia sintetizada |

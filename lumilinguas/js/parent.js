@@ -6,7 +6,7 @@
   'use strict';
 
   var LANGS = g.LUMI_LANGS, CUR = g.LUMI_CURRICULUM, SRS = g.LUMI_SRS,
-      GATE = g.LUMI_GATE, AUDIO = g.LUMI_AUDIO;
+      GATE = g.LUMI_GATE, AUDIO = g.LUMI_AUDIO, LADDER = g.LUMI_LADDER;
 
   function APP() { return g.LUMI_APP; }
   function $(id) { return document.getElementById(id); }
@@ -407,7 +407,7 @@
     var tabs = $('parent-tabs');
     tabs.innerHTML = '';
     var TABS = [
-      ['progress', '📊 Progresso'], ['difficulties', '🧩 Dificuldades'], ['sessions', '🕒 Sessões'],
+      ['progress', '📊 Progresso'], ['ladder', '🪜 Evolução'], ['difficulties', '🧩 Dificuldades'], ['sessions', '🕒 Sessões'],
       ['tips', '💡 Dicas de hoje'], ['voice', '🎙️ Voz da família'], ['settings', '⚙️ Configurações'], ['dataTab', '🔐 Dados']
     ];
     TABS.forEach(function (t, i) {
@@ -455,6 +455,58 @@
         body.appendChild(card);
       });
       body.appendChild(el('p', 'ob-note', 'Dia da jornada: ' + p.journeyDay + ' de 60 — fase: ' + CUR.weekForDay(p.journeyDay).title));
+    }
+
+    if (tab === 'ladder') {
+      body.appendChild(el('p', 'ob-note',
+        'Cada palavra sobe degraus conforme a criança consegue mais com ela. ' +
+        'Ela só avança depois de acertar duas vezes seguidas no degrau atual — ' +
+        'e, em dificuldade, recebe de volta um degrau de apoio, nunca todos.'));
+
+      p.langs.forEach(function (lang) {
+        var L = LANGS.get(lang);
+        var recs = data.progress[p.id] && data.progress[p.id][lang] || {};
+        var dist = LADDER.distribution(recs, p);
+        var total = Object.keys(dist).reduce(function (a, k) { return a + dist[k]; }, 0);
+        var teto = LADDER.ceilingForAge(p.age);
+
+        var card = el('div', 'pcard');
+        card.appendChild(el('h3', '', L.flag + ' ' + L.name));
+        if (!total) {
+          card.appendChild(el('p', '', 'Ainda sem palavras trabalhadas neste idioma.'));
+          body.appendChild(card);
+          return;
+        }
+        var escada = el('div', 'ladder');
+        // do degrau mais alto para o mais baixo: o topo é onde se quer chegar
+        LADDER.PHASES.slice().reverse().forEach(function (fase) {
+          var n = dist[fase.id] || 0;
+          var linha = el('div', 'ladder-step' +
+            (fase.verbal ? ' verbal' : '') + (n ? '' : ' empty'));
+          linha.appendChild(el('span', 'ls-name',
+            (fase.verbal ? '🗣️ ' : '👂 ') + fase.label));
+          var barra = el('span', 'ls-bar');
+          barra.style.width = Math.round(4 + (n / total) * 110) + 'px';
+          barra.style.background = fase.verbal ? '#2BB673' : L.color;
+          linha.appendChild(barra);
+          linha.appendChild(el('span', 'ls-count', String(n)));
+          escada.appendChild(linha);
+        });
+        card.appendChild(escada);
+
+        var falando = LADDER.PHASES.filter(function (f) { return f.verbal; })
+          .reduce(function (a, f) { return a + (dist[f.id] || 0); }, 0);
+        card.appendChild(el('p', 'ladder-legend',
+          '<b>' + falando + '</b> de ' + total + ' palavras já saem da boca dela neste idioma. ' +
+          'Para ' + p.age + ' anos, o app pede no máximo “' +
+          LADDER.PHASES[teto].label + '” — acima disso seria cobrança fora de hora.'));
+        body.appendChild(card);
+      });
+
+      body.appendChild(el('p', 'ob-note',
+        'Silêncio numa atividade de fala não conta como erro: o app entende que ' +
+        'a criança ainda está na fase de escuta daquela palavra e volta sozinho ' +
+        'para uma atividade de corpo, sem insistir.'));
     }
 
     if (tab === 'difficulties') {

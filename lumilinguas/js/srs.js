@@ -28,7 +28,8 @@
     return {
       state: 'new', introducedAt: null, lastSeenAt: null, dueAt: null,
       intervalIndex: 0, streak: 0, struggles: 0, struggleDays: 0,
-      lastStruggleDay: null, lastResult: null, createdAt: now || 0
+      lastStruggleDay: null, lastResult: null, lastAdvanceDay: null,
+      createdAt: now || 0
     };
   }
 
@@ -88,9 +89,32 @@
       rec.state = 'mastered';
     }
 
-    // Avança o intervalo de revisão.
-    if (rec.intervalIndex < INTERVALS.length - 1) rec.intervalIndex++;
-    rec.dueAt = now + INTERVALS[rec.intervalIndex] * DAY;
+    /* Avança o intervalo no máximo UMA vez por dia.
+     *
+     * Um conceito aparece várias vezes na mesma sessão (apresentar, ouvir,
+     * repetir, jogo). Se cada aparição empurrasse o intervalo, a palavra
+     * saltaria de "volta amanhã" para "volta em duas semanas" logo no
+     * primeiro dia — a criança nunca mais a encontraria, e a sessão viraria
+     * só conteúdo novo. O espaçamento conta dias de estudo, não telas. */
+    var hoje = dayKey(now);
+    if (rec.lastAdvanceDay !== hoje) {
+      if (rec.intervalIndex < INTERVALS.length - 1) rec.intervalIndex++;
+      rec.dueAt = now + INTERVALS[rec.intervalIndex] * DAY;
+      rec.lastAdvanceDay = hoje;
+    }
+    return rec;
+  }
+
+  /* Limita o espaçamento ao que o degrau da criança permite (ver
+   * ladder.maxIntervalIndex). Chamado logo após record(). */
+  function capInterval(rec, maxIndex, now) {
+    if (typeof maxIndex !== 'number') return rec;
+    if (rec.intervalIndex > maxIndex) {
+      rec.intervalIndex = maxIndex;
+      if (rec.dueAt !== null && rec.lastSeenAt !== null) {
+        rec.dueAt = rec.lastSeenAt + INTERVALS[maxIndex] * DAY;
+      }
+    }
     return rec;
   }
 
@@ -153,6 +177,7 @@
     freshRecord: freshRecord,
     introduce: introduce,
     record: record,
+    capInterval: capInterval,
     dueList: dueList,
     struggleList: struggleList,
     needsSimplification: needsSimplification,

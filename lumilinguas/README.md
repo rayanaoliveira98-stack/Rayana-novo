@@ -45,5 +45,6 @@ Cobertura dos testes: motor de repetição espaçada (intervalos 1-3-7-14-30, es
 | [`docs/FLUXOS.md`](docs/FLUXOS.md) | Fluxo da criança e dos responsáveis |
 | [`docs/TELAS.md`](docs/TELAS.md) | Mapa de telas |
 | [`docs/DESIGN.md`](docs/DESIGN.md) | Sistema visual e acessibilidade |
-| [`docs/MODELO-DE-DADOS.md`](docs/MODELO-DE-DADOS.md) | Modelo de dados e motor de repetição espaçada |
+| [`docs/DIDATICA.md`](docs/DIDATICA.md) | **Base didática da progressão** — por que o app pede o que pede, com fontes |
+| [`docs/MODELO-DE-DADOS.md`](docs/MODELO-DE-DADOS.md) | Modelo de dados, escada de produção e motor de repetição espaçada |
 | [`docs/STATUS.md`](docs/STATUS.md) | O que está pronto × o que depende de serviços externos |

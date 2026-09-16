@@ -17,6 +17,8 @@
     ? require('./srs.js') : g.LUMI_SRS;
   var CUR = (typeof require === 'function' && typeof window === 'undefined')
     ? require('../content/curriculum.js') : g.LUMI_CURRICULUM;
+  var LADDER = (typeof require === 'function' && typeof window === 'undefined')
+    ? require('./ladder.js') : g.LUMI_LADDER;
 
   /* Atividades de compreensão disponíveis, alternadas por dia para nunca
    * repetir exatamente a mesma sequência em dias consecutivos. */
@@ -65,24 +67,60 @@
   function langBlock(lang, records, opts) {
     var steps = [];
     var now = opts.now;
+    var profile = opts.profile;
+
+    /* O degrau de hoje para este conceito — é isto que substitui o sorteio:
+     * a atividade sai do que a criança já consegue fazer com esta palavra. */
+    function atividadeDe(id) {
+      var rec = records[id];
+      if (!rec) return 'listen_tap';
+      return LADDER.activityFor(rec, profile, now);
+    }
 
     // 2. Dificuldades do dia anterior (abrem a sessão, no máx. 2)
     var struggles = SRS.struggleList(records, now).slice(0, 2);
     struggles.forEach(function (id) {
       var simplify = SRS.needsSimplification(records[id]);
-      steps.push({ type: 'review', lang: lang, concept: id, mode: simplify ? 'listen' : 'auto', why: 'struggle' });
+      steps.push({
+        type: 'review', lang: lang, concept: id,
+        mode: simplify ? 'listen' : 'auto',
+        activity: simplify ? 'listen_tap' : atividadeDe(id),
+        why: 'struggle'
+      });
     });
 
-    // 3. Revisão programada (SRS), no máx. 4 por idioma
+    /* Quantas palavras ainda estão "em obras": já foram apresentadas mas a
+     * criança ainda não as produz. É o trabalho em aberto dela. */
+    var emAberto = Object.keys(records).filter(function (id) {
+      var r = records[id];
+      if (!r || r.state === 'new') return false;
+      LADDER.initPhase(r);
+      return r.phase < LADDER.IDX.cloze;
+    }).length;
+
+    /* Limite de obras abertas: enquanto houver muita coisa a meio caminho,
+     * o app para de apresentar novidade e usa o tempo para levar o que já
+     * existe até a boca da criança. Sem isso, a fila cresce mais rápido do
+     * que a criança consolida e nada chega à produção — retenção real vale
+     * mais que número de palavras vistas. */
+    var LIMITE_EM_ABERTO = profile.age <= 4 ? 6 : 10;
+    var espacoParaNovos = emAberto >= LIMITE_EM_ABERTO ? 0 : opts.newBudget;
+
+    // 3. Revisão programada (SRS). Sem conceitos novos, sobra tempo de sessão
+    // e mais palavras antigas voltam — é assim que a escada anda.
+    var maxRevisoes = opts.shortened ? 2 : (espacoParaNovos ? 4 : 8);
     var due = SRS.dueList(records, now)
       .filter(function (id) { return struggles.indexOf(id) < 0; })
-      .slice(0, opts.shortened ? 2 : 4);
+      .slice(0, maxRevisoes);
     due.forEach(function (id) {
-      steps.push({ type: 'review', lang: lang, concept: id, mode: 'auto', why: 'due' });
+      steps.push({
+        type: 'review', lang: lang, concept: id, mode: 'auto',
+        activity: atividadeDe(id), why: 'due'
+      });
     });
 
     // 4-6. Conceitos novos: apresentar → compreender → repetir em voz alta
-    var news = pickNewConcepts(records, opts.journeyDay, opts.newBudget, opts.interests);
+    var news = pickNewConcepts(records, opts.journeyDay, espacoParaNovos, opts.interests);
     news.forEach(function (id, i) {
       steps.push({ type: 'present', lang: lang, concept: id });
       steps.push({ type: 'listen_tap', lang: lang, concept: id });
@@ -90,9 +128,40 @@
       // Reapresentação discreta de um erro 3-5 atividades depois:
       // o app injeta em tempo de execução (ver app.js/adaptive).
       if (i === 0 && struggles.length) {
-        steps.push({ type: 'review', lang: lang, concept: struggles[0], mode: 'listen', why: 'gentle_recheck' });
+        steps.push({
+          type: 'review', lang: lang, concept: struggles[0],
+          mode: 'listen', activity: 'listen_tap', why: 'gentle_recheck'
+        });
       }
     });
+
+    /* Fim de jornada: quando quase tudo já está espaçado em 14-30 dias,
+     * sobram poucas revisões vencidas e a sessão encolheria. Em vez de
+     * encurtar o dia, traz de volta o que a criança já fala, para USAR —
+     * manter em circulação é o que segura a retenção de longo prazo. */
+    var comConceito = steps.filter(function (x) { return x.concept; }).length;
+    var MINIMO_POR_SESSAO = opts.shortened ? 3 : 6;
+    if (comConceito < MINIMO_POR_SESSAO) {
+      var jaUsados = {};
+      steps.forEach(function (x) { if (x.concept) jaUsados[x.concept] = true; });
+      Object.keys(records)
+        .filter(function (id) {
+          var r = records[id];
+          if (!r || r.state === 'new' || jaUsados[id]) return false;
+          LADDER.initPhase(r);
+          return r.phase >= LADDER.IDX.echo;   // já sai da boca dela
+        })
+        .sort(function (a, b) {                 // o menos visto primeiro
+          return (records[a].lastSeenAt || 0) - (records[b].lastSeenAt || 0);
+        })
+        .slice(0, MINIMO_POR_SESSAO - comConceito)
+        .forEach(function (id) {
+          steps.push({
+            type: 'review', lang: lang, concept: id, mode: 'auto',
+            activity: atividadeDe(id), why: 'keep_alive'
+          });
+        });
+    }
 
     // 7. Jogo rápido em contexto (com conteúdo já visto)
     var seen = Object.keys(records).filter(function (k) { return records[k].state !== 'new'; });
@@ -125,6 +194,7 @@
     langs.forEach(function (l, idx) {
       var block = langBlock(l, recordsByLang[l] || {}, {
         now: now,
+        profile: profile,
         journeyDay: profile.journeyDay,
         newBudget: perLang,
         interests: profile.interests,

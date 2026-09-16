@@ -6,7 +6,7 @@
 
   var CUR = g.LUMI_CURRICULUM, LANGS = g.LUMI_LANGS, SRS = g.LUMI_SRS,
       SESSION = g.LUMI_SESSION, AUDIO = g.LUMI_AUDIO, STORE = g.LUMI_STORE,
-      ACT = g.LUMI_ACT, FX = g.LUMI_FX;
+      ACT = g.LUMI_ACT, FX = g.LUMI_FX, LADDER = g.LUMI_LADDER;
 
   var store = STORE.createStore();
   var data = store.load();
@@ -253,12 +253,14 @@
         r.stats.totalMs += dt;
         r.stats.avgResponseMs = r.stats.totalMs / r.stats.answered;
         if (res.result === 'hard') { r.stats.hard++; r.stats.consecutiveHard++; }
-        else r.stats.consecutiveHard = 0;
+        else if (res.result !== 'silent') r.stats.consecutiveHard = 0;
         applyResult(step, res);
         r.results.push({ step: step, result: res.result, ms: dt });
 
         // A estrela que voou na tela chega aqui: o contador cresce junto.
-        if (res.result === 'ok' || res.result === 'helped') {
+        // Tentar já vale estrela — inclusive quando a criança preferiu ouvir
+        // em vez de falar. Participação nunca fica sem reconhecimento.
+        if (res.result === 'ok' || res.result === 'helped' || res.result === 'silent') {
           r.stars++;
           var badge = $('session-stars');
           $('session-star-count').textContent = r.stars;
@@ -287,10 +289,25 @@
     if (!recs[step.concept]) recs[step.concept] = SRS.freshRecord(now);
     var rec = recs[step.concept];
     if (rec.state === 'new') SRS.introduce(rec, now);
-    if (res.result) {
-      SRS.record(rec, res.kind === 'speak' ? 'speak' : 'listen',
-        res.result === 'hard' ? 'hard' : (res.result === 'helped' ? 'helped' : 'ok'), now);
+    if (!res.result) { save(); return; }
+
+    if (res.result === 'silent') {
+      // A criança não falou. Isso NÃO é erro: é o período silencioso dela
+      // ainda em curso. Não marca dificuldade nem adianta revisão — só
+      // registra a passagem e deixa a escada devolver o degrau corporal.
+      rec.lastSeenAt = now;
+      LADDER.record(rec, 'silent', p, now);
+      save();
+      return;
     }
+
+    SRS.record(rec, res.kind === 'speak' ? 'speak' : 'listen',
+      res.result === 'hard' ? 'hard' : (res.result === 'helped' ? 'helped' : 'ok'), now);
+
+    // A escada anda junto: é ela que decide o que esta palavra vai pedir
+    // da criança da próxima vez — e até onde o espaçamento pode se abrir.
+    LADDER.record(rec, res.result, p, now);
+    SRS.capInterval(rec, LADDER.maxIntervalIndex(rec), now);
     save();
   }
 
