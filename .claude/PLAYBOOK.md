@@ -50,7 +50,7 @@ Regra: prospecção e pesquisa de web séria se faz **local ou via MCP**. Escrit
 
 | Situação | O que digitar | O que volta |
 |---|---|---|
-| **Prospectar** | "usa o prospect-scanner em dentistas de Wels" | ficha, nota dos 6 critérios, Geld-Lücke, e-mail em du-Form |
+| **Prospectar** | "usa o prospect-scanner em Selbstständige e pequenas empresas de Wels" | ficha, nota dos 6 critérios, Geld-Lücke, e-mail em du-Form |
 | **Criar conteúdo** | "reel para FITARY sobre dor nas costas" → "passa no brand-check" | hook, script, legenda, hashtags, já auditados |
 | **Planejar a semana** | "roda o trend-scout" → "hook-lab para STAFF24 no TikTok, B2C" | tendências filtradas e hooks acima de 8 |
 | **Antes de mexer em verba** | "roda o performance-analyst na conta CHECK, últimos 14 dias" | onde vaza, 3 ações, e o que não fazer |
@@ -112,8 +112,15 @@ Rayana é empregada da STAFF24 e dona da Black Strategie.
 **Filtro Google Maps:** entra só quem tem **nota ≥ 4,5 E ≥ 40 avaliações**.
 Nota alta significa negócio que funciona e gargalo digital. Esse é o cliente certo.
 
-**Perfil primário:** Praxen e Ordinationen com foco em Selbstzahler — Wahlärzte, Ästhetik, Implantologie, Physiotherapie.
-**Secundário:** Selbstständige e KMU de serviço em Wels e arredores.
+**Perfil: três grupos com o mesmo peso.** A Black Strategie é especializada em negócio pequeno e local, não numa única especialidade médica.
+
+| Grupo | Exemplos | Vocabulário da Geld-Lücke |
+|---|---|---|
+| **Selbstständige** | Coach, Berater, Fotograf, Trainer, Therapeut | Kunden, Anfragen, Aufträge |
+| **Pequenas empresas de serviço** | Handwerk, Kosmetik, Gastro, Steuerberatung, Immobilien, Fitness | Kunden, Aufträge, Buchungen |
+| **Ordinationen e Praxen** | Wahlärzte, Zahnärzte, Ästhetik, Implantologie, Physiotherapie | Patienten, Termine |
+
+Regra: o método é o mesmo para os três. **O que muda é a palavra.** Escrever "Patienten" para um Handwerker mata a credibilidade na primeira linha.
 
 **Auditoria de site — 6 critérios, 1 a 5 cada:**
 
@@ -170,7 +177,7 @@ Valor antes da conversa. Nunca o contrário.
 | `client-report` | relatório que defende o trabalho | fechamento mensal, renovação |
 
 **Como chamar**
-- Direto: "usa o prospect-scanner nesses 12 dentistas de Wels."
+- Direto: "usa o prospect-scanner nesses 12 Selbstständige de Wels." Ou por setor: Physiotherapie, Kosmetik, Handwerk, Steuerberatung, Ordinationen.
 - Paralelo: "roda em paralelo: competitor-recon nos estúdios de PT de Linz, recruiting-research para Pflegekraft em OÖ, trend-scout da semana."
 - Encadeado: "hook-lab para FITARY no Instagram → eu escrevo o script → brand-check → health-fact-check."
 
