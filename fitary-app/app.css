@@ -4,28 +4,37 @@
    ========================================================= */
 
 :root {
-  /* Surfaces */
-  --bg:        #0B0C0E;
-  --surface:   #131519;
-  --surface-2: #181B20;
-  --surface-3: #1F232A;
-  --line:      rgba(255,255,255,.08);
-  --line-2:    rgba(255,255,255,.14);
+  /* --- FITARY Corporate Design (Quelle: Canva Brand Kit / Titelbild, Signatur, Plakate) --- */
+  --brand-green:     #06302B;  /* Hauptfarbe: Hintergrund Titelbild, Signatur, CTA-Flächen */
+  --brand-green-2:   #0E4739;  /* Sekundärgrün: Flächen, Icons */
+  --brand-terracotta:#B3360C;  /* Akzent: Headlines, Buttons (Weiß darauf = 6,1:1) */
+  --brand-white:     #F9FFFF;  /* Markenweiß, leicht kühl */
 
-  /* Ink */
-  --ink:       #F4F5F7;
-  --ink-2:     #A7ADB8;
-  --ink-3:     #6E7684;
+  /* Flächen — vom Markengrün abgeleitet */
+  --bg:        #06302B;
+  --surface:   #0A3B34;
+  --surface-2: #0E4739;
+  --surface-3: #145A4A;
+  --line:      rgba(249,255,255,.10);
+  --line-2:    rgba(249,255,255,.17);
 
-  /* Brand + Status */
-  --flame:     #F2622E;
-  --flame-dim: rgba(242,98,46,.14);
-  --good:      #39D0A0;
-  --good-dim:  rgba(57,208,160,.13);
+  /* Schrift */
+  --ink:       #F9FFFF;
+  --ink-2:     #A9C6BF;
+  --ink-3:     #7FA79E;
+
+  /* Akzent: Terracotta für Flächen, aufgehellt für Text auf Grün (Kontrast 6,1:1) */
+  --flame:     #FF8A50;
+  --flame-fill:#B3360C;
+  --flame-dim: rgba(179,54,12,.26);
+
+  /* Status — mit Label, nie nur Farbe */
+  --good:      #5BE6B4;
+  --good-dim:  rgba(91,230,180,.14);
   --warn:      #F5B23B;
-  --warn-dim:  rgba(245,178,59,.13);
+  --warn-dim:  rgba(245,178,59,.14);
   --crit:      #FF5A5F;
-  --crit-dim:  rgba(255,90,95,.13);
+  --crit-dim:  rgba(255,90,95,.15);
 
   --font-d: 'Archivo', system-ui, sans-serif;
   --font-b: 'Inter', system-ui, sans-serif;
@@ -63,14 +72,17 @@ a { color: inherit; }
   position: sticky; top: 0; height: 100vh;
 }
 .side__brand { display: flex; align-items: center; gap: 11px; padding-left: 6px; }
+.side__logo { height: 34px; width: auto; display: block; }
+.side__logo.is-missing { display: none; }
+.side__logo:not(.is-missing) + .side__mark { display: none; }
 .side__mark {
   width: 34px; height: 34px; border-radius: 10px;
-  background: linear-gradient(135deg, var(--flame), #C4421B);
+  background: linear-gradient(135deg, #C9420F, var(--brand-terracotta));
   display: grid; place-items: center;
   font-family: var(--font-d); font-weight: 800; font-size: 18px; color: #fff;
 }
 .side__name { font-family: var(--font-d); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
-.side__name em { display: block; font-style: normal; font-weight: 500; font-size: 12px; color: var(--ink-3); letter-spacing: .12em; text-transform: uppercase; }
+.side__name em { display: block; font-style: normal; font-weight: 500; font-size: 9.5px; color: var(--ink-3); letter-spacing: .1em; text-transform: uppercase; margin-top: 1px; }
 
 .side__nav { display: flex; flex-direction: column; gap: 3px; }
 .navitem {
@@ -87,7 +99,7 @@ a { color: inherit; }
   background: var(--surface-3); color: var(--ink-2);
   padding: 1px 7px; border-radius: var(--r-pill);
 }
-.navitem.is-active .navitem__badge { background: rgba(242,98,46,.22); color: var(--flame); }
+.navitem.is-active .navitem__badge { background: rgba(179,54,12,.34); color: var(--flame); }
 
 .side__foot { margin-top: auto; }
 .side__studio { font-size: 12px; color: var(--ink-3); line-height: 1.5; margin-bottom: 10px; }
@@ -100,7 +112,7 @@ a { color: inherit; }
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
   padding: 22px 32px; border-bottom: 1px solid var(--line);
   position: sticky; top: 0; z-index: 30;
-  background: rgba(11,12,14,.86); backdrop-filter: blur(14px);
+  background: rgba(6,48,43,.88); backdrop-filter: blur(14px);
 }
 .topbar__eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
 .topbar__title { font-family: var(--font-d); font-size: 23px; font-weight: 700; letter-spacing: -.02em; }
@@ -115,8 +127,8 @@ a { color: inherit; }
   font-size: 13.5px; font-weight: 600; transition: var(--t);
   border: 1px solid transparent; white-space: nowrap;
 }
-.btn--primary { background: var(--flame); color: #fff; }
-.btn--primary:hover { background: #FF7440; transform: translateY(-1px); }
+.btn--primary { background: var(--flame-fill); color: #fff; }
+.btn--primary:hover { background: #C93F11; transform: translateY(-1px); }
 .btn--ghost { border-color: var(--line-2); color: var(--ink-2); }
 .btn--ghost:hover { border-color: var(--ink-3); color: var(--ink); }
 .btn--danger { background: var(--crit-dim); color: var(--crit); }
@@ -232,7 +244,7 @@ a { color: inherit; }
 }
 .rail__step:first-child::before { left: 50%; }
 .rail__step:last-child::before { right: 50%; }
-.rail__step.done::before, .rail__step.now::before { background: rgba(242,98,46,.45); }
+.rail__step.done::before, .rail__step.now::before { background: rgba(255,138,80,.5); }
 .rail__dot {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 12px; height: 12px; border-radius: 50%;
@@ -264,7 +276,7 @@ a { color: inherit; }
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--r-md); padding: 12px; min-height: 160px;
 }
-.calday.is-today { border-color: rgba(242,98,46,.4); background: rgba(242,98,46,.04); }
+.calday.is-today { border-color: rgba(255,138,80,.42); background: rgba(255,138,80,.06); }
 .calday__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
 .calday__dow { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-3); font-weight: 600; }
 .calday__num { font-family: var(--font-d); font-size: 16px; font-weight: 700; }
@@ -339,7 +351,7 @@ a { color: inherit; }
 .toast {
   background: var(--surface-3); border: 1px solid var(--line-2); color: var(--ink);
   padding: 11px 18px; border-radius: var(--r-pill); font-size: 13.5px; font-weight: 500;
-  box-shadow: 0 14px 40px rgba(0,0,0,.5); animation: pop .2s ease;
+  box-shadow: 0 14px 40px rgba(0,0,0,.45); animation: pop .2s ease;
 }
 @keyframes pop { from { transform: translateY(8px); opacity: 0; } }
 

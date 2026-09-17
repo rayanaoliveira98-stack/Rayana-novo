@@ -4,7 +4,7 @@
    Vanilla JS, localStorage. Kein Build, kein Backend.
    ========================================================= */
 
-const KEY = 'fitary.journey.v2';
+const KEY = 'fitary.journey.v3';
 
 /* ---------------- Helpers ---------------- */
 const $  = (s, r = document) => r.querySelector(s);
@@ -147,7 +147,7 @@ function buildSeed() {
       start, plan: s.plan, credits: s.credits, coach: 'Yalcin',
       phone: s.phone, email: s.email, dow: s.dow, time: s.time,
       code: 'FIT-' + (s.name.replace(/[^A-Za-zÄÖÜäöü]/g, '').slice(0, 2) + (100 + i)).toUpperCase(),
-      access: { token: 'fit-' + (1000 + i).toString(36) + Math.random().toString(36).slice(2, 8), issued: iso(t), days: 30 },
+      access: { token: 'fit-' + s.name.split(' ')[0].toLowerCase().replace(/[^a-zäöüß]/g, ''), issued: iso(t), days: 30 },
       fromLead: true, firstContact: start,
       note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: s.stoppedDaysAgo || null
     };
@@ -708,7 +708,7 @@ function barchart(items, { h = 132 } = {}) {
       const x = i * bw + bw * .18, y = h - 20 - bh, bwi = bw * .64;
       return `<g><title>${it.label}: ${it.v} Einheiten</title>
         <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bwi.toFixed(1)}" height="${bh.toFixed(1)}" rx="4"
-              fill="${it.now ? 'var(--flame)' : 'rgba(242,98,46,.42)'}"/>
+              fill="${it.now ? 'var(--flame)' : 'rgba(255,138,80,.45)'}"/>
         <text x="${(x + bwi / 2).toFixed(1)}" y="${h - 6}" text-anchor="middle">${it.label}</text>
         <text x="${(x + bwi / 2).toFixed(1)}" y="${(y - 5).toFixed(1)}" text-anchor="middle" fill="var(--ink-2)">${it.v}</text>
       </g>`;
@@ -742,9 +742,33 @@ const TITLES = {
 const ACCESS = new URLSearchParams(location.search).get('zugang');
 const PORTAL_RAW = ACCESS ? db.clients.find(c =>
   (c.access && c.access.token.toLowerCase() === ACCESS.toLowerCase()) || c.code.toLowerCase() === ACCESS.toLowerCase()) : null;
-const PORTAL = PORTAL_RAW && accessValid(PORTAL_RAW) ? PORTAL_RAW : null;
+let PORTAL = PORTAL_RAW && accessValid(PORTAL_RAW) ? PORTAL_RAW : null;
 /* Jeder ?zugang-Aufruf, der nicht auf einen gültigen Link passt, landet NIE im Studio-Cockpit. */
 const PORTAL_EXPIRED = !!ACCESS && !PORTAL;
+
+/* Demo-Umschalter: die Kundenansicht ohne Query-Parameter öffnen — nötig, sobald die
+   App eingebettet läuft und die URL nicht durchgereicht wird. */
+let PORTAL_DEMO = false;
+try {
+  const pid = sessionStorage.getItem('fitary.portal');
+  if (!PORTAL && !PORTAL_EXPIRED && pid) {
+    const c = client(pid);
+    if (c && accessValid(c)) { PORTAL = c; PORTAL_DEMO = true; }
+  }
+} catch (e) {}
+function openPortal(id) {
+  const c = client(id);
+  if (!accessValid(c)) { toast('Zugang nicht freigeschaltet'); return; }
+  try { sessionStorage.setItem('fitary.portal', id); } catch (e) {}
+  PORTAL = c; PORTAL_DEMO = true; closeAll(); render();
+}
+function leavePortal() {
+  try { sessionStorage.removeItem('fitary.portal'); } catch (e) {}
+  PORTAL = null; PORTAL_DEMO = false;
+  document.body.classList.remove('is-portal');
+  $('#quickBook').textContent = '+ Einheit buchen';
+  render();
+}
 
 function renderExpired() {
   document.body.classList.add('is-portal');
@@ -1036,7 +1060,8 @@ function openClient(id) {
 
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:22px">
       <button class="btn btn--primary" data-act="bookfor" data-id="${c.id}">+ Einheit buchen</button>
-      <button class="btn btn--ghost" data-act="portal" data-id="${c.id}">Kundenansicht öffnen</button>
+      ${c.access ? `<button class="btn btn--ghost" data-act="openportal" data-id="${c.id}">Kundenansicht öffnen</button>` : ''}
+      <button class="btn btn--ghost" data-act="portal" data-id="${c.id}">Handy-Vorschau</button>
       <button class="btn btn--ghost" data-act="access" data-id="${c.id}">${c.access ? 'Zugang teilen' : 'Zugang (ab Start)'}</button>
     </div>
     <p class="card__sub" style="margin-top:12px">${c.phone ? `WhatsApp: +${c.phone} · ` : ''}${c.email}</p>
@@ -1309,7 +1334,7 @@ function accessModal(id) {
       <p class="card__sub" style="word-break:break-all">${link}</p>
     </div>
     <div style="display:grid;gap:8px">
-      <a class="btn btn--primary" href="?zugang=${c.access.token}" target="_blank" rel="noopener" style="justify-content:center">Zugang öffnen (Kundenansicht)</a>
+      <button class="btn btn--primary" data-act="openportal" data-id="${c.id}" style="justify-content:center">Zugang öffnen (Kundenansicht)</button>
       <button class="btn btn--ghost" data-act="copylink" data-link="${link}" style="justify-content:center">Link kopieren</button>
       <button class="btn btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="access" style="justify-content:center">Einladung per WhatsApp erstellen</button>
       <div style="display:flex;gap:8px">
@@ -1574,9 +1599,15 @@ function renderPortal(id) {
   $('#topTitle').textContent = 'Servus, ' + c.name.split(' ')[0];
   $('#quickBook').textContent = '+ Termin anfragen';
   $('#view').innerHTML = `
+    ${PORTAL_DEMO ? `<div class="row" style="margin-bottom:16px;border-color:rgba(255,138,80,.38)">
+      <span class="avatar">👁</span>
+      <div class="row__main"><p class="row__name">Kundenansicht von ${c.name}</p>
+        <p class="row__meta">So sieht ${c.name.split(' ')[0]} den eigenen Zugang — nur eigene Daten, nichts vom Studio.</p></div>
+      <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="leaveportal">Zurück ins Cockpit</button></div>
+    </div>` : ''}
     <div class="grid grid--2">
       <div>
-        ${(c.videos || []).length ? `<div class="card" style="margin-bottom:16px;border-color:${unwatched(c).length ? 'rgba(242,98,46,.4)' : 'var(--line)'}">
+        ${(c.videos || []).length ? `<div class="card" style="margin-bottom:16px;border-color:${unwatched(c).length ? 'rgba(255,138,80,.42)' : 'var(--line)'}">
           <div class="card__head"><div><p class="card__title">Videobotschaft von Yalcin</p>
             <p class="card__sub">${unwatched(c).length ? 'Neu für dich — 60 Sekunden' : 'Alle Videos gesehen'}</p></div>
             ${unwatched(c).length ? '<span class="pill pill--flame">neu</span>' : '<span class="pill pill--good">✓</span>'}</div>
@@ -1711,7 +1742,9 @@ document.addEventListener('click', e => {
       break;
     }
 
-    case 'access':   closeAll(); accessModal(id); break;
+    case 'access':     closeAll(); accessModal(id); break;
+    case 'openportal': openPortal(id); break;
+    case 'leaveportal':leavePortal(); break;
     case 'convert':  closeAll(); convertModal(id); break;
     case 'perfnew':  closeAll(); perfModal(id); break;
     case 'videoadd': closeAll(); videoModal(id); break;

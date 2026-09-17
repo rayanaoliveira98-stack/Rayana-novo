@@ -147,6 +147,34 @@ para o cliente ativo mais confiável (lista de espera) + evento no feed.
 
 ---
 
+## Identidade visual
+
+As cores vêm do **Canva Brand Kit "FITARY"** e das peças oficiais (Titelbild, Signatur,
+Plakate/Flyer) — não de suposição:
+
+| Token | HEX | Uso oficial |
+|---|---|---|
+| `--brand-green` | `#06302B` | Fundo principal (Titelbild, signatur, CTA) |
+| `--brand-green-2` | `#0E4739` | Verde secundário, superfícies |
+| `--brand-terracotta` | `#B3360C` | Headlines e botões (branco sobre ele = 6,1:1) |
+| `--brand-white` | `#F9FFFF` | Texto sobre verde |
+
+Sobre verde escuro o terracota puro perde contraste, então o app usa `#FF8A50` para
+**texto/ícones** de acento (6,1:1) e `#B3360C` para **preenchimentos** com texto branco.
+Status: `#5BE6B4` bom, `#F5B23B` atenção, `#FF5A5F` crítico — sempre com rótulo, nunca só cor.
+
+### Logo
+
+Coloque o arquivo real em **`fitary-app/assets/logo.svg`** (ou `.png`, ajustando o `src`
+em `index.html`). Ele substitui o monograma automaticamente — sem mexer em mais nada.
+Enquanto não existir, o app mostra o monograma "F" em terracota.
+
+### Fontes
+
+Hoje: Archivo (títulos) + Inter (texto). As fontes oficiais do Canva aparecem só como IDs
+internos nas peças, sem nome legível — assim que você passar os nomes, a troca é uma linha
+em `--font-d` / `--font-b`.
+
 ## Estrutura
 
 ```

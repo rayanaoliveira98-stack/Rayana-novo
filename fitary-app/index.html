@@ -10,15 +10,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="app.css" />
 </head>
-<body data-palette="#F2622E,#39D0A0,#F5B23B,#FF5A5F">
+<body data-palette="#B3360C,#5BE6B4,#F5B23B,#FF5A5F">
 
   <div class="shell">
 
     <!-- SIDEBAR -->
     <aside class="side">
+      <!-- Logo: echte Datei unter assets/logo.svg (oder .png) ablegen — sie ersetzt das
+           Monogramm automatisch. Quelle: Canva Brand Kit "FITARY". -->
       <div class="side__brand">
-        <span class="side__mark">F</span>
-        <span class="side__name">FITARY<em>Journey</em></span>
+        <img src="assets/logo.svg" alt="FITARY" class="side__logo" onerror="this.classList.add('is-missing')" />
+        <span class="side__mark" aria-hidden="true">F</span>
+        <span class="side__name">FITARY<em>boutique personal training</em></span>
       </div>
 
       <nav class="side__nav" id="nav">
