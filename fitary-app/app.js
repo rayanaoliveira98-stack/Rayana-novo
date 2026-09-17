@@ -89,6 +89,18 @@ function freeSlots(days = BOOK_HORIZON) {
   return out;
 }
 
+/* Ist genau diese Zeit frei? Gilt auch für Zeiten außerhalb des Stundenrasters,
+   etwa den gewohnten 18:30-Termin einer Kund:in. */
+function slotFree(date, time) {
+  const day = parse(date), win = OPENING[day.getDay()];
+  if (!win) return false;
+  const h = parseInt(time, 10) + (time.slice(3) === '30' ? .5 : 0);
+  if (h < win[0] || h >= win[1]) return false;
+  if ((new Date(`${date}T${time}:00`) - new Date()) / 3600000 < LEAD_HOURS) return false;
+  return !db.bookings.some(b => b.date === date && b.time === time &&
+    (b.status === 'confirmed' || b.status === 'completed'));
+}
+
 /* Beweglichkeits-Assessment — Einstieg in jede FITARY-Journey.
    Score 1–5 (5 = frei beweglich, 1 = deutlich limitiert). */
 const MOBI = [
@@ -1245,10 +1257,12 @@ function availabilityHTML(c, limitDays = 4, perDay = 6, full = false) {
   if (!all.length) return '<p class="empty">In den nächsten Tagen ist alles ausgebucht. Schreib uns — wir finden einen Platz.</p>';
 
   /* Der gewohnte Termin steht oben: feste Zeiten halten Menschen im Training, nicht freie Auswahl. */
-  const habit = all
-    .filter(d => parse(d.date).getDay() === c.dow && d.times.includes(c.time))
-    .slice(0, 2)
-    .map(d => ({ date: d.date, time: c.time }));
+  const habit = [];
+  for (let d = 0; d <= BOOK_HORIZON && habit.length < 2; d++) {
+    const day = addDays(today(), d);
+    if (day.getDay() !== c.dow) continue;
+    if (slotFree(iso(day), c.time)) habit.push({ date: iso(day), time: c.time });
+  }
 
   const rest = (full ? all : all.slice(0, limitDays)).map(d => ({
     date: d.date,
@@ -1257,13 +1271,24 @@ function availabilityHTML(c, limitDays = 4, perDay = 6, full = false) {
   })).filter(d => d.times.length);
 
   const chip = (date, time, primary) =>
-    `<button class="btn btn--sm ${primary ? 'btn--primary' : 'btn--ghost'}" data-act="reqslot" data-id="${c.id}" data-d="${date}" data-t="${time}">${time}${primary ? ' · ' + DOW[parse(date).getDay()] : ''}</button>`;
+    `<button class="btn btn--sm ${primary ? 'btn--primary' : 'btn--ghost'}" data-act="reqslot" data-id="${c.id}" data-d="${date}" data-t="${time}">${primary ? fmtShort(date) + ' · ' + time : time}</button>`;
+
+  /* Läuft die feste Serie schon, wird sie bestätigt statt erneut angeboten. */
+  const fix = db.bookings
+    .filter(b => b.clientId === c.id && b.status === 'confirmed' && b.date >= iso(today()) &&
+                 b.time === c.time && parse(b.date).getDay() === c.dow)
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
 
   return `
     ${habit.length ? `<div style="margin-bottom:14px">
       <p class="metricbox__label" style="margin-bottom:8px">Dein gewohnter Termin — ${DOW[c.dow]} ${c.time}</p>
       <div style="display:flex;gap:7px;flex-wrap:wrap">${habit.map(h => chip(h.date, h.time, true)).join('')}</div>
       <p class="card__sub" style="margin-top:8px">Gleicher Tag, gleiche Zeit — daran hängt dein Ergebnis, nicht an der Lust am Dienstag.</p>
+    </div>`
+    : fix ? `<div class="metricbox" style="margin-bottom:14px">
+      <p class="metricbox__label">Dein fixer Termin läuft</p>
+      <p class="metricbox__val" style="font-size:17px">${DOW[c.dow]} ${c.time}<span style="font-size:12px;color:var(--ink-3);font-weight:500"> · nächster ${fmtDate(fix.date)}</span></p>
+      <p class="card__sub">Unten findest du Zusatztermine, falls du eine Einheit draufsetzen willst.</p>
     </div>` : ''}
 
     ${rest.length ? `<p class="metricbox__label" style="margin:4px 0 6px">Weitere freie Zeiten</p>` : ''}
@@ -1834,9 +1859,7 @@ document.addEventListener('click', e => {
 
     case 'reqslot': {
       const c = client(id), date = el.dataset.d, time = el.dataset.t;
-      const taken = db.bookings.some(x => x.date === date && x.time === time &&
-        (x.status === 'confirmed' || x.status === 'completed'));
-      if (taken) { toast('Der Platz ist gerade vergeben worden'); render(); break; }
+      if (!slotFree(date, time)) { toast('Der Platz ist gerade vergeben worden'); render(); break; }
       const b = { id: uid('b'), clientId: c.id, date, time, type: c.type, coach: c.coach || 'Yalcin',
         status: 'confirmed', reason: null, reminded: false, via: PORTAL ? 'kunde' : 'studio' };
       db.bookings.push(b);
