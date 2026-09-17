@@ -60,6 +60,35 @@ const stageOf = c => {
   return STAGES.slice(1).find(s => w >= s.from && w < s.to) || STAGES[STAGES.length - 1];
 };
 
+/* Öffnungszeiten je Wochentag (0 = Sonntag). Hier anpassen, wenn sich die Zeiten ändern. */
+const OPENING = {
+  1: [6, 21], 2: [6, 21], 3: [6, 21], 4: [6, 21], 5: [6, 20], 6: [8, 14], 0: null
+};
+const SLOT_MIN = 60;          /* Taktung der buchbaren Slots */
+const BOOK_HORIZON = 14;      /* Tage im Voraus buchbar */
+const LEAD_HOURS = 12;        /* Mindestvorlauf für Online-Anfragen */
+
+/* Freie Slots aus Sicht einer Kund:in.
+   Belegte Zeiten werden einfach weggelassen — es wird nie sichtbar, wer dort trainiert. */
+function freeSlots(days = BOOK_HORIZON) {
+  const now = new Date(), out = [];
+  for (let d = 0; d <= days; d++) {
+    const day = addDays(today(), d), key = iso(day);
+    const win = OPENING[day.getDay()];
+    if (!win) continue;
+    const times = [];
+    for (let h = win[0]; h < win[1]; h += SLOT_MIN / 60) {
+      const hh = String(Math.floor(h)).padStart(2, '0') + ':' + (h % 1 ? '30' : '00');
+      if ((new Date(`${key}T${hh}:00`) - now) / 3600000 < LEAD_HOURS) continue;
+      const taken = db.bookings.some(b => b.date === key && b.time === hh &&
+        (b.status === 'confirmed' || b.status === 'completed'));
+      if (!taken) times.push(hh);
+    }
+    if (times.length) out.push({ date: key, times });
+  }
+  return out;
+}
+
 /* Beweglichkeits-Assessment — Einstieg in jede FITARY-Journey.
    Score 1–5 (5 = frei beweglich, 1 = deutlich limitiert). */
 const MOBI = [
@@ -1206,6 +1235,58 @@ function welcomeScript(c) {
 "Deine Werte und dein nächster Termin stehen in deinem persönlichen Zugang. Wir sehen uns in der Plobergerstraße."`;
 }
 
+function availabilityHTML(c, limitDays = 4, perDay = 6, full = false) {
+  const all = freeSlots();
+  if (!c.credits) return `<div class="action action--warn"><div class="action__body">
+    <p class="action__title">Kein Kontingent offen</p>
+    <p class="action__why">Dein Block ist aufgebraucht. Schreib uns kurz — dann verlängern wir und dein fixer Termin bleibt dir erhalten.</p>
+    <div class="action__acts"><a class="btn btn--sm btn--primary" href="https://wa.me/436703565006" target="_blank" rel="noopener">Verlängerung anfragen</a></div>
+  </div></div>`;
+  if (!all.length) return '<p class="empty">In den nächsten Tagen ist alles ausgebucht. Schreib uns — wir finden einen Platz.</p>';
+
+  /* Der gewohnte Termin steht oben: feste Zeiten halten Menschen im Training, nicht freie Auswahl. */
+  const habit = all
+    .filter(d => parse(d.date).getDay() === c.dow && d.times.includes(c.time))
+    .slice(0, 2)
+    .map(d => ({ date: d.date, time: c.time }));
+
+  const rest = (full ? all : all.slice(0, limitDays)).map(d => ({
+    date: d.date,
+    times: (full ? d.times : d.times.slice(0, perDay))
+      .filter(t => !habit.some(h => h.date === d.date && h.time === t))
+  })).filter(d => d.times.length);
+
+  const chip = (date, time, primary) =>
+    `<button class="btn btn--sm ${primary ? 'btn--primary' : 'btn--ghost'}" data-act="reqslot" data-id="${c.id}" data-d="${date}" data-t="${time}">${time}${primary ? ' · ' + DOW[parse(date).getDay()] : ''}</button>`;
+
+  return `
+    ${habit.length ? `<div style="margin-bottom:14px">
+      <p class="metricbox__label" style="margin-bottom:8px">Dein gewohnter Termin — ${DOW[c.dow]} ${c.time}</p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">${habit.map(h => chip(h.date, h.time, true)).join('')}</div>
+      <p class="card__sub" style="margin-top:8px">Gleicher Tag, gleiche Zeit — daran hängt dein Ergebnis, nicht an der Lust am Dienstag.</p>
+    </div>` : ''}
+
+    ${rest.length ? `<p class="metricbox__label" style="margin:4px 0 6px">Weitere freie Zeiten</p>` : ''}
+    ${rest.map(d => `
+      <div style="padding:9px 0;border-bottom:1px solid var(--line)">
+        <p style="font-size:12.5px;font-weight:600;margin-bottom:7px">${fmtDate(d.date)}
+          <span style="color:var(--ink-3);font-weight:500">· ${relDay(d.date)}</span></p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${d.times.map(t => chip(d.date, t, false)).join('')}</div>
+      </div>`).join('')}
+
+    ${!full ? `<button class="btn btn--sm btn--ghost" data-act="availability" data-id="${c.id}" style="margin-top:12px">Alle freien Zeiten ansehen</button>` : ''}
+    <p class="card__sub" style="margin-top:10px">Freie Zeiten laut Studiokalender · ${c.credits} ${c.credits === 1 ? 'Einheit' : 'Einheiten'} auf deinem ${c.plan} · Anfragen bis ${LEAD_HOURS} h vorher.</p>`;
+}
+
+function availabilityModal(id) {
+  const c = client(id);
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">Termin anfragen</p>
+      <p class="panel__meta">Freie Zeiten · ${TYPES[c.type].label}</p></div>
+      <button class="closebtn" data-close>✕</button></div>
+    ${availabilityHTML(c, 14, 99, true)}`);
+}
+
 function playModal(clientId, videoId) {
   const c = client(clientId), v = (c.videos || []).find(x => x.id === videoId);
   if (!v) return;
@@ -1536,7 +1617,7 @@ function portalModal(id) {
           <p class="card__sub">${TYPES[m.next.type].label} · ${m.next.coach} · Plobergerstraße 7</p>
           <div style="display:flex;gap:7px;margin-top:11px">
             <button class="btn btn--sm btn--ghost" data-act="cancelask" data-id="${m.next.id}">Absagen</button>
-            <button class="btn btn--sm btn--ghost" data-act="bookfor" data-id="${c.id}">Zusatztermin</button>
+            <button class="btn btn--sm btn--ghost" data-act="availability" data-id="${c.id}">Zusatztermin</button>
           </div>`
         : `<p class="phone__big" style="color:var(--warn)">Kein Termin gebucht</p>
            <button class="btn btn--sm btn--primary" data-act="bookfor" data-id="${c.id}" style="margin-top:10px">Jetzt buchen</button>`}
@@ -1630,8 +1711,13 @@ function renderPortal(id) {
                 <button class="btn btn--sm btn--ghost" data-act="cancelask" data-id="${m.next.id}">Absagen</button>
               </div></div>
             <p class="card__sub" style="margin-top:10px">Absage bis 24 h vorher: deine Einheit bleibt erhalten.</p>`
-            : `<p class="empty">Aktuell kein Termin gebucht — sag uns, wann es dir passt.</p>
-               <button class="btn btn--primary" data-act="bookfor" data-id="${c.id}" style="width:100%;justify-content:center">Termin anfragen</button>`}
+            : '<p class="empty">Aktuell kein Termin gebucht — such dir unten einen freien Platz aus.</p>'}
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div class="card__head"><div><p class="card__title">Freie Termine</p>
+            <p class="card__sub">Verfügbarkeit im Studio — wähl, was in deine Woche passt</p></div></div>
+          ${availabilityHTML(c)}
         </div>
 
         <div class="card" style="margin-top:16px">
@@ -1744,6 +1830,24 @@ document.addEventListener('click', e => {
 
     case 'access':     closeAll(); accessModal(id); break;
     case 'openportal': openPortal(id); break;
+    case 'availability': availabilityModal(id); break;
+
+    case 'reqslot': {
+      const c = client(id), date = el.dataset.d, time = el.dataset.t;
+      const taken = db.bookings.some(x => x.date === date && x.time === time &&
+        (x.status === 'confirmed' || x.status === 'completed'));
+      if (taken) { toast('Der Platz ist gerade vergeben worden'); render(); break; }
+      const b = { id: uid('b'), clientId: c.id, date, time, type: c.type, coach: c.coach || 'Yalcin',
+        status: 'confirmed', reason: null, reminded: false, via: PORTAL ? 'kunde' : 'studio' };
+      db.bookings.push(b);
+      draft(c.id, 'confirm', b);
+      logEvent('booking', PORTAL
+        ? `Terminanfrage über deinen Zugang: ${fmtDate(date)} ${time}`
+        : `${c.name}: Termin ${fmtDate(date)} ${time} gebucht`, c.id);
+      save(); toast(PORTAL ? 'Angefragt — du bekommst gleich die Bestätigung' : 'Termin gebucht');
+      closeAll(); render();
+      break;
+    }
     case 'leaveportal':leavePortal(); break;
     case 'convert':  closeAll(); convertModal(id); break;
     case 'perfnew':  closeAll(); perfModal(id); break;
@@ -1938,7 +2042,7 @@ document.addEventListener('change', e => {
   if (e.target.id === 'frisk')  { filter.risk  = e.target.value; render(); }
 });
 
-$('#quickBook').addEventListener('click', () => bookModal(PORTAL ? PORTAL.id : undefined));
+$('#quickBook').addEventListener('click', () => PORTAL ? availabilityModal(PORTAL.id) : bookModal());
 $('#feedBtn').addEventListener('click', feedModal);
 $('#resetDemo').addEventListener('click', () => {
   if (!confirm('Alle lokalen Daten zurücksetzen und Demodaten neu laden?')) return;

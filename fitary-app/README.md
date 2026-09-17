@@ -79,6 +79,8 @@ Cada cliente tem um **magic link** com token próprio e validade de 30 dias
 - próxima sessão + botão de **absagen** (cancelar) e pedir sessão extra
 - **Beweglichkeitstest**: baseline → valor atual, item por item, com marcador do ponto de partida
 - jornada, progresso, contingente restante
+- **Freie Termine**: disponibilidade real do calendário do estúdio — horários ocupados
+  simplesmente não aparecem, nunca quem os ocupa
 - feed de updates (só os eventos dele)
 - canal direto: WhatsApp / e-mail do estúdio
 
@@ -168,6 +170,23 @@ Status: `#5BE6B4` bom, `#F5B23B` atenção, `#FF5A5F` crítico — sempre com r�
 Coloque o arquivo real em **`fitary-app/assets/logo.svg`** (ou `.png`, ajustando o `src`
 em `index.html`). Ele substitui o monograma automaticamente — sem mexer em mais nada.
 Enquanto não existir, o app mostra o monograma "F" em terracota.
+
+## Disponibilidade e auto-agendamento
+
+O cliente vê apenas: **o próprio perfil + os horários livres**. Nada de outros clientes.
+
+- `OPENING` define os horários do estúdio por dia da semana (hoje Seg–Qui 06–21, Sex 06–20,
+  Sáb 08–14, Dom fechado) — ajuste ali
+- `SLOT_MIN` (60 min), `BOOK_HORIZON` (14 dias), `LEAD_HOURS` (mínimo 12 h de antecedência)
+- Horário ocupado é **omitido**, não marcado como ocupado: zero vazamento de quem treina quando
+- Sem contingente → em vez de horários, aparece o pedido de renovação
+- Proteção contra corrida: se alguém pegar o horário entre o carregamento e o clique,
+  o app recusa e recarrega
+
+**Decisão de produto importante:** o horário habitual do cliente aparece primeiro, em destaque
+("Dein gewohnter Termin — Di 09:00"), e só abaixo vêm as alternativas, limitadas a 4 dias.
+Lista infinita de horários destrói o termo fixo — e é o termo fixo que sustenta a retenção
+num estúdio boutique. Quem quiser tudo, clica em "Alle freien Zeiten ansehen".
 
 ### Fontes
 
