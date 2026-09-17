@@ -323,5 +323,6 @@ Virar uma suposição do público de cabeça para baixo.
 | Perfil da & Beauty | único perfil vazio; todo output sai genérico | 10 min de resposta → gravar na skill `content-engine` |
 | Lista de clientes ativos | agentes trabalham cegos no contexto de setor | preencher abaixo |
 | Benchmarks próprios | os números de corte são de mercado, não teus | 30 dias de dado da campanha CHECK |
+| Metas mensais da STAFF24 | só existem metas da Black Strategie; peça da STAFF24 não é mensurável | definir candidaturas, cliques ou DMs por mês |
 
 **Clientes ativos:** [PREENCHER: nome, setor, cidade, objetivo, canal principal]
