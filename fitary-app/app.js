@@ -1364,7 +1364,7 @@ function bookModal(clientId) {
       <select id="bkType">${Object.entries(TYPES).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join('')}</select></div>
     <div class="field"><label>Trainer</label><input id="bkCoach" value="Yalcin" /></div>
     <button class="btn btn--primary" data-act="bookSave" style="width:100%;justify-content:center">Buchen & Bestätigung erstellen</button>
-    <p class="card__sub" style="margin-top:10px">Die Bestätigung landet als Entwurf in der Kommunikation — Eversports-Buchung bleibt führend.</p>`);
+    <p class="card__sub" style="margin-top:10px">Die Bestätigung landet als Entwurf in der Kommunikation — der Termin in Offisy bleibt führend.</p>`);
 }
 
 function cancelModal(bookingId) {
