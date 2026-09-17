@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FITARY Journey — Client Cockpit</title>
+  <meta name="description" content="Client Journey Tracking, Buchungen und automatisierte Kundenkommunikation für FITARY Boutique Personal Training, Wels." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body data-palette="#F2622E,#39D0A0,#F5B23B,#FF5A5F">
+
+  <div class="shell">
+
+    <!-- SIDEBAR -->
+    <aside class="side">
+      <div class="side__brand">
+        <span class="side__mark">F</span>
+        <span class="side__name">FITARY<em>Journey</em></span>
+      </div>
+
+      <nav class="side__nav" id="nav">
+        <button class="navitem is-active" data-view="cockpit"><span class="navitem__ico">◈</span> Cockpit</button>
+        <button class="navitem" data-view="clients"><span class="navitem__ico">◎</span> Kund:innen <span class="navitem__badge" id="badgeClients"></span></button>
+        <button class="navitem" data-view="calendar"><span class="navitem__ico">▤</span> Buchungen</button>
+        <button class="navitem" data-view="messages"><span class="navitem__ico">✉</span> Kommunikation <span class="navitem__badge" id="badgeMsg"></span></button>
+        <button class="navitem" data-view="automations"><span class="navitem__ico">⚡</span> Automationen</button>
+      </nav>
+
+      <div class="side__foot">
+        <p class="side__studio">Plobergerstraße 7<br />4600 Wels</p>
+        <button class="linkbtn" id="resetDemo">Demodaten zurücksetzen</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <div>
+          <p class="topbar__eyebrow" id="topEyebrow">Cockpit</p>
+          <h1 class="topbar__title" id="topTitle">Heute im Studio</h1>
+        </div>
+        <div class="topbar__actions">
+          <button class="iconbtn" id="feedBtn" aria-label="Updates">
+            <span>◉</span><span class="dot" id="feedDot"></span>
+          </button>
+          <button class="btn btn--primary" id="quickBook">+ Einheit buchen</button>
+        </div>
+      </header>
+
+      <main class="view" id="view"></main>
+    </div>
+  </div>
+
+  <!-- OVERLAYS -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer__scrim" data-close></div>
+    <div class="drawer__panel" id="drawerPanel"></div>
+  </div>
+
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__scrim" data-close></div>
+    <div class="modal__box" id="modalBox"></div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
