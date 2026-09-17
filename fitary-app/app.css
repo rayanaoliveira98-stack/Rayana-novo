@@ -240,7 +240,7 @@ a { color: inherit; }
 }
 .rail__step.done .rail__dot { background: var(--flame); }
 .rail__step.now .rail__dot { background: var(--flame); box-shadow: 0 0 0 4px var(--flame-dim); }
-.rail__label { font-size: 10.5px; text-align: center; color: var(--ink-3); font-weight: 600; letter-spacing: .02em;
+.rail__label { font-size: 9.8px; text-align: center; color: var(--ink-3); font-weight: 600; letter-spacing: .02em;
   padding: 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rail__step.now .rail__label { color: var(--flame); }
 

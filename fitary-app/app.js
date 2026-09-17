@@ -40,11 +40,14 @@ const TYPES = {
   pt2:  { label: 'Personal Training 2:1',  short: 'PT 2:1',    cap: 2 },
   pad:  { label: 'Pad Work / Fit Boxing',  short: 'Pad Work',  cap: 2 },
   reha: { label: 'Reha & Prävention',      short: 'Reha',      cap: 1 },
-  grp:  { label: 'Gruppentraining',        short: 'Gruppe',    cap: 6 },
-  athl: { label: 'Jugend-Athletik 12–17',  short: 'Athletik',  cap: 4 }
+  grp:  { label: 'Kleingruppe 2–4',        short: 'Kleingruppe', cap: 4 },
+  athl: { label: 'Jugend-Athletik 12–17',  short: 'Athletik',  cap: 4 },
+  mob:  { label: 'Mobiles Training (Wels + 1 €/km)', short: 'Mobil', cap: 1 },
+  bwg:  { label: 'Beweglichkeitstest (Erstkontakt)', short: 'Bewegl.-Test', cap: 1 }
 };
 
 const STAGES = [
+  { id: 'erstkontakt', label: 'Beweglichkeitstest', from: 0, to: 0, desc: 'Erstkontakt: 7 Messpunkte, Befund, Empfehlung' },
   { id: 'onboarding',  label: 'Onboarding',  from: 0,  to: 2,   desc: 'Anamnese, Haltungscheck, Zielbild' },
   { id: 'fundament',   label: 'Fundament',   from: 2,  to: 6,   desc: 'Technik, Mobilität, Basiskraft' },
   { id: 'aufbau',      label: 'Aufbau',      from: 6,  to: 12,  desc: 'Progression, Belastungssteuerung' },
@@ -52,8 +55,9 @@ const STAGES = [
   { id: 'longevity',   label: 'Longevity',   from: 26, to: 999, desc: 'Erhalt, Prävention, Langfristigkeit' }
 ];
 const stageOf = c => {
+  if (c.lead) return STAGES[0];                       /* Erstkontakt: Beweglichkeitstest gebucht, noch kein Programm */
   const w = daysBetween(c.start, iso(today())) / 7;
-  return STAGES.find(s => w >= s.from && w < s.to) || STAGES[STAGES.length - 1];
+  return STAGES.slice(1).find(s => w >= s.from && w < s.to) || STAGES[STAGES.length - 1];
 };
 
 /* Beweglichkeits-Assessment — Einstieg in jede FITARY-Journey.
@@ -67,7 +71,31 @@ const MOBI = [
   { id:'rumpf',  label:'Rumpfstabilität',       hint:'Plank & Rotationskontrolle' },
   { id:'hws',    label:'HWS-Rotation',          hint:'Nacken — Schreibtisch-Haltung' }
 ];
-const RETEST_DAYS = 42; /* Re-Test alle 6 Wochen */
+const RETEST_DAYS = 42; /* Beweglichkeit: Re-Test alle 6 Wochen */
+
+/* Leistungstest — harte Zahlen. dir: 1 = mehr ist besser, -1 = weniger ist besser. */
+const PERF = [
+  { id:'plank',  label:'Plank-Halt',       unit:'sek', dir: 1, info:'Rumpfausdauer — Basis für schmerzfreies Sitzen und jede schwere Übung.' },
+  { id:'push',   label:'Liegestütze',      unit:'Wdh', dir: 1, info:'Oberkörper-Kraftausdauer bei sauberer Technik, ohne Zeitlimit.' },
+  { id:'squat',  label:'Goblet Squat 8RM', unit:'kg',  dir: 1, info:'Beinkraft: Gewicht, das du 8× technisch sauber schaffst.' },
+  { id:'row500', label:'500 m Rudern',     unit:'sek', dir:-1, info:'Anaerobe Ausdauer — Tempo unter Belastung.' },
+  { id:'hr',     label:'Ruhepuls',         unit:'bpm', dir:-1, info:'Erholungsfähigkeit deines Herz-Kreislauf-Systems.' },
+  { id:'bf',     label:'Körperfett',       unit:'%',   dir:-1, info:'Körperkomposition — gemessen, nicht geschätzt.' }
+];
+const PERF_RETEST = 84; /* Leistung: Re-Test alle 12 Wochen */
+const lastPerf = c => (c.performance && c.performance.length) ? c.performance[c.performance.length - 1] : null;
+const basePerf = c => (c.performance && c.performance.length) ? c.performance[0] : null;
+const perfDue  = c => { const l = lastPerf(c); return !l || daysBetween(l.date, iso(today())) >= PERF_RETEST; };
+/* Leistungsindex: mittlere relative Verbesserung gegenüber Baseline, 100 = Ausgangsniveau */
+function perfIndex(c, entry) {
+  const b = basePerf(c); if (!b || !entry) return 100;
+  const avg = PERF.reduce((a, i) => a + ((entry.items[i.id] - b.items[i.id]) / b.items[i.id]) * i.dir, 0) / PERF.length;
+  return Math.round(100 * (1 + avg));
+}
+
+/* Videos: Willkommensnachricht, Testbesprechung, Technik-Clips */
+const VIDEO_KINDS = { welcome:'Willkommensvideo', test:'Testbesprechung', technik:'Technik-Feedback' };
+const unwatched = c => (c.videos || []).filter(v => !v.watched);
 const mobiScore = t => Math.round(MOBI.reduce((a, i) => a + t.items[i.id], 0) / (MOBI.length * 5) * 100);
 const lastTest  = c => (c.mobility && c.mobility.length) ? c.mobility[c.mobility.length - 1] : null;
 const baseTest  = c => (c.mobility && c.mobility.length) ? c.mobility[0] : null;
@@ -94,6 +122,13 @@ const SEED_CLIENTS = [
   { freq:2, name:'Amir Haddad',          segment:'Freizeitsportler', goal:'Körperkomposition, 10 % KFA',           type:'pt1',  dow:1, time:'19:00', weeks:22, credits:8,  plan:'20er-Block', rel:.97, pain:[1,0], kraft:[65,94], kg:[86,79.4], phone:'4367612345609', email:'a.haddad@example.at' }
 ];
 
+const SEED_LEADS = [
+  { name:'Julia Steinbacher', segment:'Eltern, wenig Zeit', goal:'Wiedereinstieg nach Schulter-OP', time:'17:30', inDays: 2,
+    source:'Instagram Reel', phone:'4367612345610', email:'j.steinbacher@example.at' },
+  { name:'Michael Pfeifer',   segment:'Unternehmer',       goal:'Rücken bei 10 h Sitzen',       time:'07:30', inDays: -3,
+    source:'Empfehlung',     phone:'4367612345611', email:'m.pfeifer@example.at' }
+];
+
 function buildSeed() {
   const t = today();
   const clients = [], bookings = [];
@@ -106,8 +141,51 @@ function buildSeed() {
       start, plan: s.plan, credits: s.credits, coach: 'Yalcin',
       phone: s.phone, email: s.email, dow: s.dow, time: s.time,
       code: 'FIT-' + (s.name.replace(/[^A-Za-zÄÖÜäöü]/g, '').slice(0, 2) + (100 + i)).toUpperCase(),
-      note: '', checkins: [], mobility: [], stoppedDaysAgo: s.stoppedDaysAgo || null
+      access: { token: 'fit-' + (1000 + i).toString(36) + Math.random().toString(36).slice(2, 8), issued: iso(t), days: 30 },
+      note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: s.stoppedDaysAgo || null
     };
+
+    /* Leistungstest: Baseline am Start, Re-Test alle 12 Wochen */
+    const k0 = s.kraft[0], gainFactor = (s.kraft[1] - s.kraft[0]) / Math.max(s.kraft[0], 1);
+    const pTests = Math.floor((s.weeks * 7) / PERF_RETEST);
+    const baseItems = {
+      plank:  Math.round(28 + k0 * .7),
+      push:   Math.max(3, Math.round(k0 * .26)),
+      squat:  Math.round(s.kg[0] * .32 + k0 * .22),
+      row500: Math.round(152 - k0 * .32),
+      hr:     Math.round(78 - k0 * .11),
+      bf:     +(31 - k0 * .13).toFixed(1)
+    };
+    for (let k = 0; k <= pTests; k++) {
+      const p = pTests ? k / pTests : 0, g = gainFactor * p;
+      c.performance.push({
+        date: iso(addDays(t, -(s.weeks * 7) + k * PERF_RETEST)),
+        phase: k === 0 ? 'Baseline' : 'Re-Test ' + k,
+        items: {
+          plank:  Math.round(baseItems.plank * (1 + g * .9)),
+          push:   Math.round(baseItems.push * (1 + g * 1.1)),
+          squat:  Math.round(baseItems.squat * (1 + g * .8)),
+          row500: Math.round(baseItems.row500 * (1 - g * .35)),
+          hr:     Math.round(baseItems.hr * (1 - g * .18)),
+          bf:     +(baseItems.bf * (1 - g * .3)).toFixed(1)
+        },
+        note: k === 0 ? 'Ausgangswerte — Grundlage für die Belastungssteuerung.' : 'Re-Test nach 12 Wochen.'
+      });
+    }
+
+    /* Willkommensvideo: bei Neuzugängen noch offen, bei den anderen gesehen */
+    c.videos.push({
+      id: uid('v'), kind: 'welcome', title: 'Willkommen bei FITARY',
+      url: '', date: iso(addDays(t, -s.weeks * 7 + 1)),
+      note: 'Persönliche Begrüßung von Yalcin: Ablauf, Testtermin, was in Woche 1 passiert.',
+      watched: s.weeks > 2, watchedAt: s.weeks > 2 ? iso(addDays(t, -s.weeks * 7 + 2)) : null
+    });
+    if (s.weeks >= 12) c.videos.push({
+      id: uid('v'), kind: 'test', title: 'Besprechung Re-Test',
+      url: '', date: iso(addDays(t, -21)),
+      note: 'Auswertung der Leistungswerte und Plan für die nächsten 12 Wochen.',
+      watched: true, watchedAt: iso(addDays(t, -20))
+    });
 
     /* Beweglichkeitstest: Baseline am Tag 1, danach Re-Test alle 6 Wochen */
     const limit = clamp(5 - s.pain[0] / 2.6, 1.4, 4.2);      /* Ausgangslage aus Schmerz-/Haltungsbild */
@@ -118,7 +196,7 @@ function buildSeed() {
       const items = {};
       MOBI.forEach((it, j) => {
         const v = limit + gain * k + (rand() - .5) * .9 + (j % 3 === 0 ? -.35 : .2);
-        items[it.id] = +clamp(v, 1, 4.8).toFixed(1);
+        items[it.id] = +clamp(v, 1, 4.9 - (j % 4) * .3).toFixed(1);
       });
       c.mobility.push({
         date: iso(addDays(t, -(s.weeks * 7) + k * 42)),
@@ -186,6 +264,35 @@ function buildSeed() {
     clients.push(c);
   });
 
+  /* Erstkontakte: Beweglichkeitstest gebucht bzw. absolviert, Angebot noch offen */
+  SEED_LEADS.forEach((s, i) => {
+    const rand = mulberry32(90210 + i * 31);
+    const d = addDays(t, s.inDays);
+    const c = {
+      id: uid('c'), name: s.name, segment: s.segment, goal: s.goal, type: 'bwg',
+      start: iso(d), plan: 'Erstkontakt', credits: 0, coach: 'Yalcin', lead: true, source: s.source,
+      phone: s.phone, email: s.email, dow: (d.getDay() + 6) % 7 + 1, time: s.time,
+      code: 'FIT-L' + (10 + i),
+      access: { token: 'fit-lead' + (10 + i) + Math.random().toString(36).slice(2, 6), issued: iso(t), days: 30 },
+      note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: null
+    };
+    bookings.push({ id: uid('b'), clientId: c.id, date: iso(d), time: s.time, type: 'bwg',
+      coach: 'Yalcin', status: s.inDays < 0 ? 'completed' : 'confirmed', reason: null, reminded: false });
+
+    /* Erstkontakt bereits absolviert: Befund liegt vor, Angebot noch offen */
+    if (s.inDays < 0) {
+      const items = {};
+      MOBI.forEach((it, j) => { items[it.id] = +clamp(2.6 + (rand() - .5) * 1.4 + (j % 2 ? .3 : -.2), 1, 4.6).toFixed(1); });
+      c.mobility.push({ date: iso(d), phase: 'Baseline', items,
+        note: 'Erstbefund beim Beweglichkeitstest — Grundlage für die Empfehlung.' });
+      c.checkins.push({ date: iso(d), pain: 5.5, kraft: 34, kg: 91 });
+    }
+    c.videos.push({ id: uid('v'), kind: 'welcome', title: 'Willkommen bei FITARY',
+      url: '', date: iso(t), note: 'Begrüßung vor dem Erstkontakt: Ablauf des Beweglichkeitstests.',
+      watched: false, watchedAt: null });
+    clients.push(c);
+  });
+
   return {
     clients, bookings, messages: [], events: [],
     settings: { autos: { reminder: true, cancel: true, winback: true, credits: true, milestone: true, onboarding: true, noshow: true } }
@@ -239,7 +346,8 @@ function metrics(c) {
   const level = score >= 55 ? 'crit' : score >= 30 ? 'warn' : 'good';
 
   const ci = c.checkins;
-  const first = ci[0], now = ci[ci.length - 1];
+  const blank = { date: c.start, pain: 0, kraft: 0, kg: 0 };
+  const first = ci[0] || blank, now = ci[ci.length - 1] || blank;
 
   return { bs, adherence, next, lastDone, inactive, totalDone, cancels30, noshows30, score, level, why, first, now };
 }
@@ -249,8 +357,8 @@ const TPL = {
   confirm: {
     label: 'Buchungsbestätigung', channel: 'WhatsApp',
     build: (c, b) => `Fix eingetragen: ${fmtDate(b.date)} um ${b.time} — ${TYPES[b.type].label} mit ${b.coach}.
-Plobergerstraße 7, Wels. Sei 5 Minuten früher da, wir starten pünktlich.
-Wenn etwas dazwischenkommt: bis 24 h vorher absagen, dann bleibt deine Einheit erhalten.`
+Plobergerstraße 7, Wels. Gratis-Parkplatz direkt vor der Tür, Dusche und Umkleide sind da. Sei 5 Minuten früher, wir starten pünktlich.
+Der Termin liegt in Offisy — absagen kannst du bis 24 h vorher, dann bleibt deine Einheit erhalten.`
   },
   reminder: {
     label: '24h-Erinnerung', channel: 'WhatsApp',
@@ -336,54 +444,128 @@ Nächste Baustelle: ${weak.i.label} — daran arbeiten wir in den nächsten Woch
 Deine Werte stehen in deinem FITARY-Zugang, jederzeit einsehbar.`;
   }
 };
+TPL.welcomeVideo = {
+  label: 'Willkommensvideo senden', channel: 'WhatsApp',
+  build: (c, m) => `${c.name.split(' ')[0]}, ich hab dir ein kurzes Video aufgenommen — 60 Sekunden, nur für dich.
+Drin: wie deine ersten Wochen ablaufen, warum wir mit dem Beweglichkeits- und Leistungstest starten und was ich von dir brauche.
+Du findest es in deinem FITARY-Zugang. Schau es dir vor dem ersten Termin an, dann verlieren wir keine Minute im Studio.`
+};
+TPL.perfInvite = {
+  label: 'Leistungstest / Re-Test', channel: 'WhatsApp',
+  build: (c, m) => {
+    const l = lastPerf(c);
+    return l
+      ? `${c.name.split(' ')[0]}, dein letzter Leistungstest ist ${daysBetween(l.date, iso(today()))} Tage her — Zeit für den Re-Test.
+Gleiche 6 Messwerte wie beim letzten Mal: Plank, Liegestütze, Goblet Squat, 500 m Rudern, Ruhepuls, Körperfett.
+Danach siehst du schwarz auf weiß, was die letzten 12 Wochen gebracht haben. Wann passt es dir?`
+      : `${c.name.split(' ')[0]}, bevor wir Gewichte draufpacken: dein Leistungstest.
+6 Messwerte, 30 Minuten. Daraus kommt deine Belastungssteuerung — und in 12 Wochen der Beweis, dass es funktioniert hat.`;
+  }
+};
+TPL.perfResult = {
+  label: 'Leistungswerte an Kund:in', channel: 'WhatsApp',
+  build: (c, m) => {
+    const b = basePerf(c), l = lastPerf(c);
+    if (!b || !l) return 'Noch kein Leistungstest vorhanden.';
+    const best = PERF.map(i => ({ i, d: ((l.items[i.id] - b.items[i.id]) / b.items[i.id]) * i.dir }))
+      .sort((x, y) => y.d - x.d)[0];
+    return `Deine Leistungswerte, ${c.name.split(' ')[0]}: Index ${perfIndex(c, l)} (Start = 100).
+Stärkster Wert: ${best.i.label} ${b.items[best.i.id]} → ${l.items[best.i.id]} ${best.i.unit} (${(best.d * 100).toFixed(0)} %).
+Alle Zahlen stehen in deinem FITARY-Zugang. Das ist kein Gefühl, das ist gemessen.`;
+  }
+};
+TPL.leadPrep = {
+  label: 'Erstkontakt vorbereiten', channel: 'WhatsApp',
+  build: (c, b) => `${c.name.split(' ')[0]}, ${relDay(b.date)} um ${b.time} ist dein Beweglichkeitstest bei FITARY.
+Was passiert: 7 Messpunkte, ca. 45 Minuten, danach besprechen wir den Befund und was er für dein Training bedeutet — ${c.goal.toLowerCase()}.
+Mitbringen: Trainingsschuhe, bewegliche Kleidung. Parkplatz gratis direkt vor der Tür, Plobergerstraße 7.
+Das ist kein Verkaufsgespräch. Das ist eine Messung.`
+};
+TPL.leadFollow = {
+  label: 'Nach dem Erstkontakt: Empfehlung', channel: 'WhatsApp',
+  build: (c, m) => {
+    const l = lastTest(c);
+    const weak = l ? MOBI.map(i => ({ i, v: l.items[i.id] })).sort((a, b) => a.v - b.v)[0] : null;
+    return `${c.name.split(' ')[0]}, dein Befund vom Beweglichkeitstest: Score ${l ? mobiScore(l) : '—'}/100.
+Größte Limitierung: ${weak ? weak.i.label + ' (' + weak.i.v + '/5)' : '—'} — genau das bremst dich bei „${c.goal}".
+Meine Empfehlung: 2 Einheiten pro Woche über 6 Wochen, danach Re-Test. Dann siehst du schwarz auf weiß, ob es wirkt.
+Ich halte dir ${DOW[c.dow]} ${c.time} frei. Sag nur Ja oder nenn mir einen besseren Termin.`;
+  }
+};
 TPL.access = {
   label: 'Persönlichen Zugang senden', channel: 'WhatsApp',
-  build: (c, m) => `${c.name.split(' ')[0]}, hier ist dein persönlicher FITARY-Zugang:
-Code ${c.code}
+  build: (c, m) => `${c.name.split(' ')[0]}, hier ist dein persönlicher FITARY-Zugang (${c.code}):
+${accessLink(c)}
 
-Darin siehst du nur deine Daten: nächste Einheit, Beweglichkeitswerte, Fortschritt, offenes Kontingent — und du kannst direkt absagen oder einen Zusatztermin anfragen.
+Der Link ist ${c.access.days} Tage gültig und nur für dich. Drin: dein Willkommensvideo, deine Test- und Leistungswerte, die nächste Einheit, dein Kontingent — und du kannst direkt absagen oder einen Zusatztermin anfragen.
 Kein Sammel-Chat, keine Massen-App. Deine Reise, dein Zugang.`
 };
 
 /* ---------------- Aktions-Queue (Automationen) ---------------- */
 const RULES = [
+  { id:'leadfollow', level:'crit', tpl:'leadFollow', title:c=>`${c.name}: Angebot nach Erstkontakt`,
+    desc:'Beweglichkeitstest absolviert, Programm noch offen — hier entscheidet sich der Kunde.',
+    match:(c,m)=> c.lead && m.bs.some(b => b.type === 'bwg' && b.status === 'completed'),
+    why:(c,m)=>{ const b = m.bs.find(x => x.type === 'bwg' && x.status === 'completed');
+      return `Test ${relDay(b.date)} · Quelle ${c.source || '—'} · Score ${lastTest(c) ? mobiScore(lastTest(c)) + '/100' : 'offen'}`; } },
+
+  { id:'leadprep', level:'flame', tpl:'leadPrep', title:c=>`${c.name}: Erstkontakt vorbereiten`,
+    desc:'Beweglichkeitstest steht an — Vorbereitung senkt No-Shows beim wichtigsten Termin.',
+    match:(c,m)=> c.lead && m.next && daysBetween(iso(today()), m.next.date) <= 3,
+    why:(c,m)=>`${fmtDate(m.next.date)} · ${m.next.time} · Quelle ${c.source || '—'}` },
+
   { id:'winback', level:'crit', tpl:'winback', title:c=>`${c.name}: Win-back senden`,
     desc:'Kunde ohne Training seit ≥ 12 Tagen — höchste Churn-Wahrscheinlichkeit.',
-    match:(c,m)=> m.inactive >= 12, why:(c,m)=>`${m.inactive} Tage inaktiv · Adherence ${m.adherence} % · ${m.totalDone} Einheiten investiert` },
+    match:(c,m)=> !c.lead && m.inactive >= 12, why:(c,m)=>`${m.inactive} Tage inaktiv · Adherence ${m.adherence} % · ${m.totalDone} Einheiten investiert` },
 
   { id:'credits', level:'warn', tpl:'credits', title:c=>`${c.name}: Kontingent verlängern`,
     desc:'≤ 2 Einheiten offen — Verlängerung VOR der letzten Einheit ansprechen.',
-    match:(c,m)=> c.credits <= 2 && m.inactive < 21, why:c=>`${c.credits} Einheiten offen · ${c.plan}` },
+    match:(c,m)=> !c.lead && c.credits <= 2 && m.inactive < 21, why:c=>`${c.credits} Einheiten offen · ${c.plan}` },
 
   { id:'noshow', level:'warn', tpl:'noshow', title:c=>`${c.name}: No-Show nachfassen`,
     desc:'Unentschuldigt gefehlt — innerhalb von 24 h ansprechen, sonst bleibt es dabei.',
-    match:(c,m)=> m.noshows30 >= 1 && m.bs.some(b=>b.status==='noshow' && daysBetween(b.date, iso(today())) <= 7),
+    match:(c,m)=> !c.lead && m.noshows30 >= 1 && m.bs.some(b=>b.status==='noshow' && daysBetween(b.date, iso(today())) <= 7),
     why:(c,m)=>`${m.noshows30}× No-Show in 30 Tagen` },
 
   { id:'reminder', level:'flame', tpl:'reminder', title:c=>`${c.name}: 24h-Erinnerung`,
     desc:'Einheit in den nächsten 48 h — Erinnerung senkt No-Shows messbar.',
-    match:(c,m)=> m.next && daysBetween(iso(today()), m.next.date) <= 2 && !m.next.reminded,
+    match:(c,m)=> !c.lead && m.next && daysBetween(iso(today()), m.next.date) <= 2 && !m.next.reminded,
     why:(c,m)=>`${fmtDate(m.next.date)} · ${m.next.time} · ${TYPES[m.next.type].short}` },
 
   { id:'onboarding', level:'good', tpl:'onboarding', title:c=>`${c.name}: Onboarding-Check-in`,
     desc:'Tag 7–18 der Kundenreise — hier entscheidet sich, ob die Gewohnheit hält.',
-    match:(c,m)=> { const d = daysBetween(c.start, iso(today())); return d >= 7 && d <= 18; },
+    match:(c,m)=> { if (c.lead) return false; const d = daysBetween(c.start, iso(today())); return d >= 7 && d <= 18; },
     why:c=>`Tag ${daysBetween(c.start, iso(today()))} der Journey · Stufe ${stageOf(c).label}` },
 
   { id:'milestone', level:'good', tpl:'milestone', title:c=>`${c.name}: Meilenstein + Testimonial`,
     desc:'Vielfaches von 10 Einheiten erreicht — bester Moment für Social Proof.',
-    match:(c,m)=> m.totalDone >= 10 && m.totalDone % 10 === 0 && m.inactive <= 10,
+    match:(c,m)=> !c.lead && m.totalDone >= 10 && m.totalDone % 10 === 0 && m.inactive <= 10,
     why:(c,m)=>`${m.totalDone} Einheiten abgeschlossen · Adherence ${m.adherence} %` },
 
   { id:'mobility', level:'flame', tpl:'mobilityInvite', title:c=>`${c.name}: ${lastTest(c) ? 'Re-Test' : 'Beweglichkeitstest'} fällig`,
     desc:'Ohne Messung kein Beweis für Fortschritt — Baseline am Start, Re-Test alle 6 Wochen.',
-    match:(c,m)=> testDue(c) && m.inactive < 21,
+    match:(c,m)=> !c.lead && testDue(c) && m.inactive < 21,
     why:c=>{ const l = lastTest(c); return l ? `Letzter Test vor ${daysBetween(l.date, iso(today()))} Tagen · Score ${mobiScore(l)}/100` : 'Noch kein Eingangsbefund erfasst'; } },
+
+  { id:'performance', level:'flame', tpl:'perfInvite', title:c=>`${c.name}: ${lastPerf(c) ? 'Leistungs-Re-Test' : 'Leistungstest'} fällig`,
+    desc:'Harte Zahlen alle 12 Wochen — ohne Re-Test kein Beweis, ohne Beweis keine Verlängerung.',
+    match:(c,m)=> !c.lead && perfDue(c) && m.inactive < 21,
+    why:c=>{ const l = lastPerf(c); return l ? `Letzter Test vor ${daysBetween(l.date, iso(today()))} Tagen · Index ${perfIndex(c, l)}` : 'Noch keine Ausgangswerte'; } },
+
+  { id:'welcome', level:'good', tpl:'welcomeVideo', title:c=>`${c.name}: Willkommensvideo offen`,
+    desc:'Video nicht gesehen — der persönliche Einstieg entscheidet über die ersten Wochen.',
+    match:(c,m)=> (c.videos || []).some(v => v.kind === 'welcome' && !v.watched) && daysBetween(c.start, iso(today())) >= 2,
+    why:c=>`Seit ${daysBetween(c.start, iso(today()))} Tagen Kund:in · Video noch ungesehen` },
 
   { id:'rebook', level:'warn', tpl:'rebook', title:c=>`${c.name}: Folgetermin fehlt`,
     desc:'Aktiver Kunde ohne nächste Buchung — Lücke schließen, bevor sie Routine wird.',
-    match:(c,m)=> !m.next && m.inactive < 12, why:(c,m)=>`Letzte Einheit ${relDay(m.lastDone ? m.lastDone.date : c.start)}` }
+    match:(c,m)=> !c.lead && !m.next && m.inactive < 12, why:(c,m)=>`Letzte Einheit ${relDay(m.lastDone ? m.lastDone.date : c.start)}` }
 ];
+
+/* Jede Regel ist standardmäßig aktiv — auch neue, die nach einem Update dazukommen.
+   Ohne diese Normalisierung blieben neue Regeln in bestehenden Browserdaten stumm. */
+RULES.forEach(r => { if (db.settings.autos[r.id] === undefined) db.settings.autos[r.id] = true; });
+save();
 
 function queue() {
   const out = [];
@@ -396,14 +578,15 @@ function queue() {
         daysBetween(x.date, iso(today())) <= 7);
       if (recent) return;
       out.push({ ruleId: r.id, level: r.level, tpl: r.tpl, clientId: c.id,
+        rank: r.id === 'leadfollow' ? 0 : r.id === 'leadprep' ? 1 : 2,
         title: r.title(c), desc: r.desc, why: r.why(c, m) });
     });
   });
   const order = { crit: 0, warn: 1, flame: 2, good: 3 };
-  return out.sort((a, b) => order[a.level] - order[b.level]);
+  return out.sort((a, b) => a.rank - b.rank || order[a.level] - order[b.level]);
 }
 
-const BOOKING_TPLS = ['confirm', 'reminder', 'cancelClient', 'cancelStudio', 'waitlist', 'noshow'];
+const BOOKING_TPLS = ['confirm', 'reminder', 'cancelClient', 'cancelStudio', 'waitlist', 'noshow', 'leadPrep'];
 function ctxFor(c, tplId, booking) {
   const m = metrics(c);
   if (!BOOKING_TPLS.includes(tplId)) return m;
@@ -419,6 +602,15 @@ function draft(clientId, tplId, booking) {
     text, status: 'entwurf', date: iso(today()) });
   save();
   return text;
+}
+
+/* ---------------- Zugang (Magic Link) ---------------- */
+const accessValid = c => c.access && c.access.days > 0 && daysBetween(c.access.issued, iso(today())) <= c.access.days;
+const accessLink  = c => `${location.origin}${location.pathname}?zugang=${c.access.token}`;
+const accessExpiry = c => iso(addDays(parse(c.access.issued), c.access.days));
+function rotateAccess(c, days = 30) {
+  c.access = { token: 'fit-' + Math.random().toString(36).slice(2, 12), issued: iso(today()), days };
+  save();
 }
 
 /* ---------------- Charts (inline SVG) ---------------- */
@@ -479,9 +671,27 @@ const TITLES = {
 };
 
 const ACCESS = new URLSearchParams(location.search).get('zugang');
-const PORTAL = ACCESS ? db.clients.find(c => c.code.toLowerCase() === ACCESS.toLowerCase()) : null;
+const PORTAL_RAW = ACCESS ? db.clients.find(c =>
+  (c.access && c.access.token.toLowerCase() === ACCESS.toLowerCase()) || c.code.toLowerCase() === ACCESS.toLowerCase()) : null;
+const PORTAL = PORTAL_RAW && accessValid(PORTAL_RAW) ? PORTAL_RAW : null;
+/* Jeder ?zugang-Aufruf, der nicht auf einen gültigen Link passt, landet NIE im Studio-Cockpit. */
+const PORTAL_EXPIRED = !!ACCESS && !PORTAL;
+
+function renderExpired() {
+  document.body.classList.add('is-portal');
+  $('#topEyebrow').textContent = 'FITARY';
+  $('#topTitle').textContent = 'Zugang abgelaufen';
+  $('#quickBook').style.display = 'none';
+  $('#view').innerHTML = `<div class="card" style="max-width:520px;margin:40px auto;text-align:center">
+    <p class="card__title" style="font-size:19px">Dieser Link ist nicht (mehr) gültig</p>
+    <p class="card__sub" style="margin:10px 0 18px">Aus Datenschutzgründen laufen persönliche Zugänge nach 30 Tagen ab.
+      Fordere einfach einen neuen an — deine Werte und dein Verlauf bleiben erhalten.</p>
+    <a class="btn btn--primary" href="https://wa.me/436703565006" target="_blank" rel="noopener">Neuen Zugang per WhatsApp anfordern</a>
+  </div>`;
+}
 
 function render() {
+  if (PORTAL_EXPIRED) return renderExpired();
   if (PORTAL) return renderPortal(PORTAL.id);
   const [eyebrow, title] = TITLES[VIEW];
   $('#topEyebrow').textContent = eyebrow;
@@ -509,9 +719,12 @@ function viewCockpit() {
   const missRate = past30.length ? Math.round(missed / past30.length * 100) : 0;
 
   const withM = db.clients.map(c => ({ c, m: metrics(c) }));
-  const active = withM.filter(x => x.m.inactive < 21).length;
-  const atRisk = withM.filter(x => x.m.level === 'crit');
-  const renew  = withM.filter(x => x.c.credits <= 2).length;
+  const members = withM.filter(x => !x.c.lead);
+  const leads   = withM.filter(x => x.c.lead);
+  const active = members.filter(x => x.m.inactive < 21).length;
+  const atRisk = members.filter(x => x.m.level === 'crit');
+  const renew  = members.filter(x => x.c.credits <= 2).length;
+  const leadsOpen = leads.length;
 
   const todays = db.bookings.filter(b => b.date === t).sort((a, b) => a.time.localeCompare(b.time));
   const q = queue();
@@ -532,7 +745,8 @@ function viewCockpit() {
   return `
   <div class="grid grid--kpi">
     ${kpi('Einheiten diese Woche', week.length, `${util} % Auslastung (Ziel 80 %)`, util >= 80 ? 'good' : util >= 60 ? 'warn' : 'crit')}
-    ${kpi('Aktive Kund:innen', active, `${db.clients.length - active} inaktiv · ${db.clients.length} gesamt`, active === db.clients.length ? 'good' : 'warn')}
+    ${kpi('Aktive Kund:innen', active, `${members.length - active} inaktiv · ${members.length} gesamt`, active === members.length ? 'good' : 'warn')}
+    ${kpi('Erstkontakte offen', leadsOpen, leadsOpen ? leads.map(x => x.c.name.split(' ')[0]).join(', ') : 'keine Beweglichkeitstests offen', leadsOpen ? 'warn' : '')}
     ${kpi('Ausfallquote 30 T.', missRate + ' %', `${missed} Storni & No-Shows`, missRate <= 10 ? 'good' : missRate <= 18 ? 'warn' : 'crit')}
     ${kpi('Churn-Risiko', atRisk.length, atRisk.length ? atRisk.map(x => x.c.name.split(' ')[0]).join(', ') : 'niemand kritisch', atRisk.length ? 'crit' : 'good')}
     ${kpi('Verlängerung fällig', renew, 'Kontingent ≤ 2 Einheiten', renew ? 'warn' : 'good')}
@@ -642,8 +856,9 @@ function viewClients() {
     <div class="row row--click" data-act="client" data-id="${c.id}">
       <span class="avatar ${m.level === 'crit' ? 'avatar--risk' : m.level === 'good' ? 'avatar--good' : ''}">${initials(c.name)}</span>
       <div class="row__main">
-        <p class="row__name">${c.name} <span class="pill stage-pill">${stageOf(c).label}</span></p>
-        <p class="row__meta">${c.segment} · ${TYPES[c.type].short} · ${m.totalDone} Einheiten · ${c.credits} offen
+        <p class="row__name">${c.name} <span class="pill stage-pill ${c.lead ? 'pill--flame' : ''}">${stageOf(c).label}</span></p>
+        <p class="row__meta">${c.lead ? `Erstkontakt · ${c.source || 'Quelle unbekannt'} · ${TYPES[c.type].short}`
+          : `${c.segment} · ${TYPES[c.type].short} · ${m.totalDone} Einheiten · ${c.credits} offen`}
           ${m.next ? ` · nächste ${relDay(m.next.date)}` : ' · <span style="color:var(--warn)">kein Folgetermin</span>'}</p>
       </div>
       <div class="row__side">
@@ -682,6 +897,17 @@ function openClient(id) {
       <span class="pill ${m.level === 'crit' ? 'pill--crit' : m.level === 'warn' ? 'pill--warn' : 'pill--good'}">Risiko ${m.score}</span>
     </div>
 
+    ${c.lead ? `<div class="action action--crit" style="margin-bottom:18px"><div class="action__body">
+      <p class="action__title">Erstkontakt — Beweglichkeitstest</p>
+      <p class="action__why">${m.bs.some(b => b.status === 'completed')
+        ? 'Test absolviert. Befund liegt vor, Programm noch offen — jetzt entscheidet sich, ob daraus ein:e Kund:in wird.'
+        : `Test gebucht für ${m.next ? fmtDate(m.next.date) + ' · ' + m.next.time : '—'}. Vorbereitung senken No-Shows beim wichtigsten Termin.`}</p>
+      <p class="action__why" style="color:var(--ink-3)">Quelle: ${c.source || 'unbekannt'}</p>
+      <div class="action__acts">
+        <button class="btn btn--sm btn--primary" data-act="convert" data-id="${c.id}">In Kund:in umwandeln</button>
+        <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="${m.bs.some(b => b.status === 'completed') ? 'leadFollow' : 'leadPrep'}">Nachricht erstellen</button>
+      </div></div></div>` : ''}
+
     <p class="section-title">Journey</p>
     <div class="rail">
       ${STAGES.map((s, i) => `
@@ -692,14 +918,18 @@ function openClient(id) {
     </div>
     <p class="card__sub" style="margin-bottom:18px">${st.desc}</p>
 
-    <p class="section-title">Fortschritt seit Start</p>
+    ${ci.length > 1 ? `<p class="section-title">Fortschritt seit Start</p>
     <div class="grid" style="grid-template-columns:repeat(3,1fr)">
       ${metricBox('Schmerz (0–10)', m.now.pain, dPain, dPain <= 0, ci.map(x => x.pain), 'var(--good)')}
       ${metricBox('Kraftindex', m.now.kraft, (dKraft > 0 ? '+' : '') + dKraft, dKraft >= 0, ci.map(x => x.kraft), 'var(--flame)')}
       ${metricBox('Gewicht (kg)', m.now.kg, (dKg > 0 ? '+' : '') + dKg, true, ci.map(x => x.kg), 'var(--ink-2)')}
-    </div>
+    </div>` : ''}
 
     ${mobilitySection(c)}
+
+    ${performanceSection(c)}
+
+    ${videoSection(c)}
 
     <p class="section-title">Verlässlichkeit</p>
     <div class="grid" style="grid-template-columns:repeat(3,1fr)">
@@ -727,7 +957,7 @@ function openClient(id) {
 
     <p class="section-title">Kommunikation</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      ${['winback','credits','milestone','onboarding','rebook'].map(t =>
+      ${['winback','credits','milestone','onboarding','rebook','welcomeVideo','perfResult'].map(t =>
         `<button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="${t}">${TPL[t].label}</button>`).join('')}
     </div>
 
@@ -756,7 +986,7 @@ function mobilitySection(c) {
   const scores = c.mobility.map(mobiScore);
   const delta = mobiScore(l) - mobiScore(b);
 
-  return `<p class="section-title">Beweglichkeitstest · ${c.mobility.length} Messungen</p>
+  return `<p class="section-title">Beweglichkeitstest · ${c.mobility.length} ${c.mobility.length === 1 ? 'Messung' : 'Messungen'}</p>
   <div class="metricbox" style="margin-bottom:12px">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
       <div style="min-width:0">
@@ -791,6 +1021,150 @@ function mobilitySection(c) {
   </div>`;
 }
 
+function performanceSection(c) {
+  const b = basePerf(c), l = lastPerf(c);
+  if (!b) return `<p class="section-title">Leistungstest</p>
+    <div class="action action--warn"><div class="action__body">
+      <p class="action__title">Keine Ausgangswerte</p>
+      <p class="action__why">6 Messwerte, 30 Minuten — ohne Baseline lässt sich in 12 Wochen nichts beweisen.</p>
+      <div class="action__acts">
+        <button class="btn btn--sm btn--primary" data-act="perfnew" data-id="${c.id}">Test erfassen</button>
+        <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="perfInvite">Einladung senden</button>
+      </div></div></div>`;
+
+  const due = perfDue(c), idx = perfIndex(c, l);
+  const series = c.performance.map(e => perfIndex(c, e));
+
+  return `<p class="section-title">Leistungstest · ${c.performance.length} ${c.performance.length === 1 ? 'Messung' : 'Messungen'}</p>
+  <div class="metricbox" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <div style="min-width:0">
+        <p class="metricbox__label">Leistungsindex</p>
+        <p class="metricbox__val" style="white-space:nowrap">100 → ${idx}<span class="${idx >= 100 ? 'delta-good' : 'delta-crit'}">${idx >= 100 ? '+' : ''}${idx - 100} %</span></p>
+        <p class="card__sub">${l.phase} · ${fmtDate(l.date)} ${due ? '· <span style="color:var(--flame)">Re-Test fällig</span>' : `· nächster Re-Test ${relDay(iso(addDays(parse(l.date), PERF_RETEST)))}`}</p>
+      </div>
+      <span style="flex:0 0 132px;max-width:132px">${sparkline(series.length > 1 ? series : [100, idx], { color: 'var(--flame)', w: 132, h: 44 })}</span>
+    </div>
+  </div>
+
+  ${PERF.map(i => {
+    const v0 = b.items[i.id], v1 = l.items[i.id];
+    const rel = ((v1 - v0) / v0) * 100 * i.dir;
+    const tone = rel >= 5 ? 'var(--good)' : rel >= -1 ? 'var(--warn)' : 'var(--crit)';
+    return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)">
+      <div style="width:138px;flex-shrink:0;min-width:0">
+        <p style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${i.label}</p>
+        <p class="card__sub" style="font-size:11px">${i.dir === 1 ? 'mehr ist besser' : 'weniger ist besser'}</p>
+      </div>
+      <span style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden">
+        <span style="position:absolute;inset:0 auto 0 0;width:${clamp(50 + rel * 1.6, 6, 100)}%;background:${tone};border-radius:99px"></span>
+        <span style="position:absolute;top:-2px;bottom:-2px;left:50%;width:2px;background:var(--ink)"></span>
+      </span>
+      <span style="width:104px;text-align:right;font-size:12.5px;color:var(--ink-2)">${v0} → <strong style="color:${tone}">${v1}</strong> ${i.unit}</span>
+      <span style="width:44px;text-align:right;font-size:12px" class="${rel >= 0 ? 'delta-good' : 'delta-crit'}">${rel >= 0 ? '+' : ''}${rel.toFixed(0)} %</span>
+    </div>`;
+  }).join('')}
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+    <button class="btn btn--sm ${due ? 'btn--primary' : 'btn--ghost'}" data-act="perfnew" data-id="${c.id}">Re-Test erfassen</button>
+    <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="perfResult">Werte an Kund:in</button>
+  </div>`;
+}
+
+function videoSection(c) {
+  const vids = c.videos || [];
+  return `<p class="section-title">Videobotschaften · ${vids.filter(v => v.watched).length}/${vids.length} gesehen</p>
+  ${vids.length ? vids.map(v => `
+    <div class="row">
+      <span class="avatar ${v.watched ? 'avatar--good' : 'avatar--risk'}">▶</span>
+      <div class="row__main">
+        <p class="row__name">${v.title}</p>
+        <p class="row__meta">${VIDEO_KINDS[v.kind]} · ${fmtDate(v.date)} · ${v.watched ? 'gesehen ' + (v.watchedAt ? relDay(v.watchedAt) : '') : '<span style="color:var(--warn)">noch nicht gesehen</span>'}</p>
+      </div>
+      <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="play" data-id="${c.id}" data-vid="${v.id}">Ansehen</button></div>
+    </div>`).join('') : '<p class="empty">Noch kein Video hinterlegt.</p>'}
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+    <button class="btn btn--sm btn--ghost" data-act="videoadd" data-id="${c.id}">+ Video hinterlegen</button>
+    <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="welcomeVideo">Video ankündigen</button>
+  </div>`;
+}
+
+function welcomeScript(c) {
+  const st = stageOf(c);
+  return `[0–5 s] Kamera an, kein Intro-Gerede:
+"Servus ${c.name.split(' ')[0]}, Yalcin hier. Willkommen bei FITARY."
+
+[5–20 s] Warum wir messen:
+"Bevor wir irgendein Gewicht anfassen, machen wir zwei Tests: Beweglichkeit — 7 Messpunkte — und Leistung — 6 Werte. Daraus baue ich deinen Plan. Nicht aus einer Vorlage."
+
+[20–35 s] Was ${c.name.split(' ')[0]} erwartet:
+"Ziel: ${c.goal}. In den ersten 6 Wochen geht es um Technik und Regelmäßigkeit, nicht um Rekorde. ${st.label}-Phase heißt: ${st.desc.toLowerCase()}."
+
+[35–50 s] Was ich von dir brauche:
+"Zwei Dinge: komm pünktlich, und sag mir ehrlich, wie es dir zwischen den Einheiten geht. Alles andere ist mein Job."
+
+[50–60 s] CTA:
+"Deine Werte und dein nächster Termin stehen in deinem persönlichen Zugang. Wir sehen uns in der Plobergerstraße."`;
+}
+
+function playModal(clientId, videoId) {
+  const c = client(clientId), v = (c.videos || []).find(x => x.id === videoId);
+  if (!v) return;
+  const isFile = /\.(mp4|webm|mov)(\?|$)/i.test(v.url || '');
+  const player = v.url
+    ? (isFile
+        ? `<video controls playsinline style="width:100%;border-radius:var(--r-md);background:#000" src="${v.url}"></video>`
+        : `<a class="btn btn--primary" href="${v.url}" target="_blank" rel="noopener" style="width:100%;justify-content:center">Video öffnen</a>`)
+    : `<div class="metricbox">
+         <p class="metricbox__label">Video noch nicht aufgenommen — Skript</p>
+         <div class="msg__text" style="margin-top:8px">${welcomeScript(c)}</div>
+         <p class="card__sub" style="margin-top:10px">Aufnehmen, hochladen, Link über „Video hinterlegen“ eintragen — fertig.</p>
+       </div>`;
+
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">${v.title}</p>
+      <p class="panel__meta">${VIDEO_KINDS[v.kind]} · ${fmtDate(v.date)}</p></div>
+      <button class="closebtn" data-close>✕</button></div>
+    ${player}
+    ${v.note ? `<p class="card__sub" style="margin-top:12px">${v.note}</p>` : ''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
+      ${v.watched ? '<span class="pill pill--good">gesehen</span>'
+        : `<button class="btn btn--sm btn--good" data-act="watched" data-id="${c.id}" data-vid="${v.id}">Als gesehen markieren</button>`}
+      ${PORTAL ? `
+        <button class="btn btn--sm btn--ghost" data-act="react" data-id="${c.id}" data-vid="${v.id}" data-r="Alles klar 👍">Alles klar 👍</button>
+        <button class="btn btn--sm btn--ghost" data-act="react" data-id="${c.id}" data-vid="${v.id}" data-r="Ich hab eine Frage">Ich hab eine Frage</button>`
+        : `<button class="btn btn--sm btn--ghost" data-act="videoadd" data-id="${c.id}">Video-Link eintragen</button>`}
+    </div>`);
+}
+
+function videoModal(id) {
+  const c = client(id);
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">Video hinterlegen</p>
+      <p class="panel__meta">${c.name}</p></div><button class="closebtn" data-close>✕</button></div>
+    <div class="field"><label>Art</label>
+      <select id="vdKind">${Object.entries(VIDEO_KINDS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select></div>
+    <div class="field"><label>Titel</label><input id="vdTitle" value="Willkommen bei FITARY" /></div>
+    <div class="field"><label>Video-URL (mp4, Drive, YouTube unlisted …)</label><input id="vdUrl" placeholder="https://…" /></div>
+    <div class="field"><label>Notiz</label><textarea id="vdNote" rows="2" placeholder="Worum geht es im Video?"></textarea></div>
+    <button class="btn btn--primary" data-act="videoSave" data-id="${c.id}" style="width:100%;justify-content:center">Speichern & Kund:in benachrichtigen</button>`);
+}
+
+function perfModal(id) {
+  const c = client(id), l = lastPerf(c);
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">Leistungstest</p>
+      <p class="panel__meta">${c.name} · ${l ? 'Re-Test — Vorwerte in Klammern' : 'Ausgangswerte (Baseline)'}</p></div>
+      <button class="closebtn" data-close>✕</button></div>
+    ${PERF.map(i => `<div class="field">
+      <label>${i.label} (${i.unit}) ${l ? `<span style="color:var(--ink-3);text-transform:none;letter-spacing:0">(zuletzt ${l.items[i.id]})</span>` : ''}</label>
+      <input type="number" step="0.1" id="pf_${i.id}" value="${l ? l.items[i.id] : ''}" />
+      <p class="card__sub" style="font-size:11px;margin-top:4px">${i.info}</p>
+    </div>`).join('')}
+    <div class="field"><label>Notiz</label><textarea id="pfNote" rows="2" placeholder="Beobachtungen, Technik, Konsequenz für den Plan…"></textarea></div>
+    <button class="btn btn--primary" data-act="perfSave" data-id="${c.id}" style="width:100%;justify-content:center">Werte speichern & Ergebnis-Nachricht erstellen</button>`);
+}
+
 function testModal(id) {
   const c = client(id), l = lastTest(c);
   modal(`
@@ -807,24 +1181,54 @@ function testModal(id) {
     <button class="btn btn--primary" data-act="testSave" data-id="${c.id}" style="width:100%;justify-content:center">Test speichern & Ergebnis-Nachricht erstellen</button>`);
 }
 
+function convertModal(id) {
+  const c = client(id);
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">Erstkontakt umwandeln</p>
+      <p class="panel__meta">${c.name} · aus „${c.source || 'unbekannt'}"</p></div>
+      <button class="closebtn" data-close>✕</button></div>
+    <div class="field"><label>Programm</label>
+      <select id="cvPlan">
+        <option>10er-Block</option><option>20er-Block</option>
+        <option>Abo 1x/Woche</option><option>Abo 2x/Woche</option>
+        <option>Reha-Paket</option><option>Corporate Jahresprogramm</option>
+      </select></div>
+    <div class="field-row">
+      <div class="field"><label>Einheiten</label><input type="number" id="cvCredits" value="10" min="1" /></div>
+      <div class="field"><label>Trainingsart</label>
+        <select id="cvType">${Object.entries(TYPES).filter(([k]) => k !== 'bwg').map(([k, v]) => `<option value="${k}">${v.label}</option>`).join('')}</select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Fixer Wochentag</label>
+        <select id="cvDow">${[1,2,3,4,5,6].map(d => `<option value="${d}" ${d === c.dow ? 'selected' : ''}>${DOW[d % 7]}</option>`).join('')}</select></div>
+      <div class="field"><label>Uhrzeit</label><input type="time" id="cvTime" value="${c.time}" /></div>
+    </div>
+    <button class="btn btn--primary" data-act="convertSave" data-id="${c.id}" style="width:100%;justify-content:center">Umwandeln & ersten Termin fixieren</button>
+    <p class="card__sub" style="margin-top:10px">Legt den fixen Termin an, startet die Journey bei „Onboarding" und erstellt die Buchungsbestätigung.</p>`);
+}
+
 function accessModal(id) {
   const c = client(id);
-  const link = `${location.origin}${location.pathname}?zugang=${c.code}`;
+  const link = accessLink(c), valid = accessValid(c);
   modal(`
     <div class="panel__head"><div><p class="panel__name">Persönlicher Zugang</p>
       <p class="panel__meta">${c.name} sieht ausschließlich die eigenen Daten</p></div>
       <button class="closebtn" data-close>✕</button></div>
     <div class="metricbox" style="margin-bottom:14px">
-      <p class="metricbox__label">Zugangscode</p>
-      <p class="metricbox__val" style="letter-spacing:.06em">${c.code}</p>
+      <p class="metricbox__label">Magic Link · ${c.code}</p>
+      <p class="metricbox__val" style="font-size:16px">${valid ? 'gültig bis ' + fmtDate(accessExpiry(c)) : 'abgelaufen / widerrufen'}</p>
       <p class="card__sub" style="word-break:break-all">${link}</p>
     </div>
     <div style="display:grid;gap:8px">
-      <a class="btn btn--primary" href="?zugang=${c.code}" target="_blank" rel="noopener" style="justify-content:center">Zugang öffnen (Kundenansicht)</a>
+      <a class="btn btn--primary" href="?zugang=${c.access.token}" target="_blank" rel="noopener" style="justify-content:center">Zugang öffnen (Kundenansicht)</a>
       <button class="btn btn--ghost" data-act="copylink" data-link="${link}" style="justify-content:center">Link kopieren</button>
-      <button class="btn btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="access" style="justify-content:center">Einladungsnachricht erstellen</button>
+      <button class="btn btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="access" style="justify-content:center">Einladung per WhatsApp erstellen</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn--sm btn--ghost" data-act="rotate" data-id="${c.id}" style="flex:1;justify-content:center">Neuen Link erzeugen</button>
+        <button class="btn btn--sm btn--danger" data-act="revoke" data-id="${c.id}" style="flex:1;justify-content:center">Zugang widerrufen</button>
+      </div>
     </div>
-    <p class="card__sub" style="margin-top:12px">1:1-Kanal zwischen FITARY und Kund:in: Buchungen, Storni, Testergebnisse und Fortschritt — nichts davon ist für andere sichtbar.</p>`);
+    <p class="card__sub" style="margin-top:12px">Zeitlich begrenzter Link statt Passwort: 30 Tage gültig, jederzeit neu ausstellbar oder widerrufbar. In Produktion wird der Token serverseitig signiert und per WhatsApp versendet.</p>`);
 }
 
 function metricBox(label, val, delta, positive, series, color) {
@@ -1083,6 +1487,18 @@ function renderPortal(id) {
   $('#view').innerHTML = `
     <div class="grid grid--2">
       <div>
+        ${(c.videos || []).length ? `<div class="card" style="margin-bottom:16px;border-color:${unwatched(c).length ? 'rgba(242,98,46,.4)' : 'var(--line)'}">
+          <div class="card__head"><div><p class="card__title">Videobotschaft von Yalcin</p>
+            <p class="card__sub">${unwatched(c).length ? 'Neu für dich — 60 Sekunden' : 'Alle Videos gesehen'}</p></div>
+            ${unwatched(c).length ? '<span class="pill pill--flame">neu</span>' : '<span class="pill pill--good">✓</span>'}</div>
+          ${c.videos.map(v => `<div class="row">
+            <span class="avatar ${v.watched ? 'avatar--good' : 'avatar--risk'}">▶</span>
+            <div class="row__main"><p class="row__name">${v.title}</p>
+              <p class="row__meta">${VIDEO_KINDS[v.kind]} · ${fmtDate(v.date)}</p></div>
+            <div class="row__side"><button class="btn btn--sm ${v.watched ? 'btn--ghost' : 'btn--primary'}" data-act="play" data-id="${c.id}" data-vid="${v.id}">${v.watched ? 'Nochmal' : 'Ansehen'}</button></div>
+          </div>`).join('')}
+        </div>` : ''}
+
         <div class="card">
           <div class="card__head"><div><p class="card__title">Deine nächste Einheit</p>
             <p class="card__sub">Plobergerstraße 7, 4600 Wels</p></div></div>
@@ -1119,6 +1535,21 @@ function renderPortal(id) {
       </div>
 
       <div>
+        ${basePerf(c) ? `<div class="card" style="margin-bottom:16px">
+          <div class="card__head"><div><p class="card__title">Deine Leistungswerte</p>
+            <p class="card__sub">${lastPerf(c).phase} · ${fmtDate(lastPerf(c).date)}</p></div>
+            <span class="pill ${perfIndex(c, lastPerf(c)) >= 100 ? 'pill--good' : 'pill--warn'}">Index ${perfIndex(c, lastPerf(c))}</span></div>
+          ${PERF.map(i => {
+            const v0 = basePerf(c).items[i.id], v1 = lastPerf(c).items[i.id];
+            const rel = ((v1 - v0) / v0) * 100 * i.dir;
+            return `<div class="row row--click" data-act="perfinfo" data-i="${i.id}" style="padding:10px 12px">
+              <div class="row__main"><p class="row__name" style="font-size:13.5px">${i.label}</p>
+                <p class="row__meta">${v0} → ${v1} ${i.unit}</p></div>
+              <div class="row__side"><span class="pill ${rel >= 0 ? 'pill--good' : 'pill--crit'}">${Math.abs(rel).toFixed(0)} % ${rel >= 0 ? 'besser' : 'schwächer'}</span></div>
+            </div>`; }).join('')}
+          <p class="card__sub" style="margin-top:10px">Tippe einen Wert an, um zu sehen, was er bedeutet.</p>
+        </div>` : ''}
+
         <div class="card">
           <div class="card__head"><div><p class="card__title">Deine Journey</p>
             <p class="card__sub">${st.desc}</p></div><span class="pill pill--flame stage-pill">${st.label}</span></div>
@@ -1126,11 +1557,11 @@ function renderPortal(id) {
             ${STAGES.map((x, i) => `<div class="rail__step ${i < stageIdx ? 'done' : i === stageIdx ? 'now' : ''}">
               <span class="rail__dot"></span><p class="rail__label">${x.label}</p></div>`).join('')}
           </div>
-          <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:18px">
+          ${ci.length > 1 ? `<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:18px">
             ${metricBox('Schmerz', m.now.pain, (m.now.pain - m.first.pain).toFixed(1), m.now.pain <= m.first.pain, ci.map(x => x.pain), 'var(--good)')}
             ${metricBox('Kraftindex', m.now.kraft, '+' + (m.now.kraft - m.first.kraft), true, ci.map(x => x.kraft), 'var(--flame)')}
             ${metricBox('Einheiten', m.totalDone, '', true, [0, m.totalDone], 'var(--ink-2)')}
-          </div>
+          </div>` : ''}
         </div>
 
         <div class="card" style="margin-top:16px">
@@ -1192,6 +1623,86 @@ document.addEventListener('click', e => {
     }
 
     case 'access':   closeAll(); accessModal(id); break;
+    case 'convert':  closeAll(); convertModal(id); break;
+    case 'perfnew':  closeAll(); perfModal(id); break;
+    case 'videoadd': closeAll(); videoModal(id); break;
+    case 'play':     playModal(id, el.dataset.vid); break;
+
+    case 'perfinfo': {
+      const i = PERF.find(x => x.id === el.dataset.i);
+      modal(`<div class="panel__head"><p class="panel__name">${i.label}</p><button class="closebtn" data-close>✕</button></div>
+        <p class="card__sub" style="font-size:14px;color:var(--ink-2)">${i.info}</p>
+        <p class="card__sub" style="margin-top:12px">Richtung: ${i.dir === 1 ? 'mehr ist besser' : 'weniger ist besser'} · Einheit: ${i.unit}</p>`);
+      break;
+    }
+
+    case 'watched': {
+      const c = client(id), v = c.videos.find(x => x.id === el.dataset.vid);
+      v.watched = true; v.watchedAt = iso(today());
+      logEvent('video', `${c.name}: „${v.title}" angesehen`, c.id);
+      save(); toast('Als gesehen markiert'); closeAll(); render();
+      break;
+    }
+
+    case 'react': {
+      const c = client(id), v = c.videos.find(x => x.id === el.dataset.vid);
+      v.watched = true; v.watchedAt = iso(today());
+      logEvent('video', `${c.name} zum Video „${v.title}": „${el.dataset.r}"`, c.id);
+      save(); toast('Deine Rückmeldung ist bei Yalcin'); closeAll(); render();
+      break;
+    }
+
+    case 'videoSave': {
+      const c = client(id);
+      c.videos.push({ id: uid('v'), kind: $('#vdKind').value, title: $('#vdTitle').value || 'Videobotschaft',
+        url: $('#vdUrl').value.trim(), date: iso(today()), note: $('#vdNote').value || '', watched: false, watchedAt: null });
+      draft(c.id, 'welcomeVideo');
+      logEvent('video', `${c.name}: neues Video hinterlegt`, c.id);
+      save(); toast('Video hinterlegt · Ankündigung erstellt'); closeAll(); render();
+      break;
+    }
+
+    case 'perfSave': {
+      const c = client(id), items = {};
+      PERF.forEach(i => { const v = parseFloat($('#pf_' + i.id).value);
+        items[i.id] = isNaN(v) ? (lastPerf(c) ? lastPerf(c).items[i.id] : 0) : v; });
+      const entry = { date: iso(today()), phase: c.performance.length ? 'Re-Test ' + c.performance.length : 'Baseline',
+                      items, note: $('#pfNote').value || '' };
+      c.performance.push(entry);
+      draft(c.id, 'perfResult');
+      logEvent('test', `${c.name}: Leistungstest ${entry.phase} — Index ${perfIndex(c, entry)}`, c.id);
+      save(); toast(`${entry.phase} gespeichert · Index ${perfIndex(c, entry)}`); closeAll(); render();
+      break;
+    }
+
+    case 'rotate': {
+      const c = client(id); rotateAccess(c);
+      logEvent('access', `${c.name}: neuer Zugangslink erstellt (30 Tage gültig)`, c.id);
+      save(); toast('Neuer Magic Link erzeugt'); accessModal(c.id);
+      break;
+    }
+
+    case 'revoke': {
+      const c = client(id); c.access.days = 0;
+      logEvent('access', `${c.name}: Zugang widerrufen`, c.id);
+      save(); toast('Zugang widerrufen'); accessModal(c.id);
+      break;
+    }
+
+    case 'convertSave': {
+      const c = client(id);
+      c.lead = false; c.plan = $('#cvPlan').value; c.credits = parseInt($('#cvCredits').value) || 10;
+      c.type = $('#cvType').value; c.dow = parseInt($('#cvDow').value); c.time = $('#cvTime').value;
+      c.start = iso(today());
+      const first = addDays(startOfWeek(addDays(today(), 7)), (c.dow + 6) % 7);
+      const b = { id: uid('b'), clientId: c.id, date: iso(first), time: c.time, type: c.type,
+        coach: 'Yalcin', status: 'confirmed', reason: null, reminded: false };
+      db.bookings.push(b);
+      draft(c.id, 'confirm', b);
+      logEvent('convert', `${c.name}: aus Erstkontakt zu Kund:in — ${c.plan}, Start ${fmtDate(b.date)}`, c.id);
+      save(); toast('Umgewandelt · erster Termin fixiert'); closeAll(); render();
+      break;
+    }
     case 'testnew':  closeAll(); testModal(id); break;
     case 'copylink': navigator.clipboard?.writeText(el.dataset.link); toast('Link kopiert'); break;
 
