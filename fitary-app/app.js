@@ -43,11 +43,11 @@ const TYPES = {
   grp:  { label: 'Kleingruppe 2–4',        short: 'Kleingruppe', cap: 4 },
   athl: { label: 'Jugend-Athletik 12–17',  short: 'Athletik',  cap: 4 },
   mob:  { label: 'Mobiles Training (Wels + 1 €/km)', short: 'Mobil', cap: 1 },
-  bwg:  { label: 'Beweglichkeitstest (Erstkontakt)', short: 'Bewegl.-Test', cap: 1 }
+  bwg:  { label: 'Kennenlernen + Beweglichkeitstest · 30 Min · gratis', short: 'Kennenlernen', cap: 1 }
 };
 
 const STAGES = [
-  { id: 'erstkontakt', label: 'Beweglichkeitstest', from: 0, to: 0, desc: 'Erstkontakt: 7 Messpunkte, Befund, Empfehlung' },
+  { id: 'erstkontakt', label: 'Kennenlernen', from: 0, to: 0, desc: 'Gratis-Erstkontakt: 30 Minuten, Beweglichkeitstest, Befund, Empfehlung' },
   { id: 'onboarding',  label: 'Onboarding',  from: 0,  to: 2,   desc: 'Anamnese, Haltungscheck, Zielbild' },
   { id: 'fundament',   label: 'Fundament',   from: 2,  to: 6,   desc: 'Technik, Mobilität, Basiskraft' },
   { id: 'aufbau',      label: 'Aufbau',      from: 6,  to: 12,  desc: 'Progression, Belastungssteuerung' },
@@ -125,8 +125,14 @@ const SEED_CLIENTS = [
 const SEED_LEADS = [
   { name:'Julia Steinbacher', segment:'Eltern, wenig Zeit', goal:'Wiedereinstieg nach Schulter-OP', time:'17:30', inDays: 2,
     source:'Instagram Reel', phone:'4367612345610', email:'j.steinbacher@example.at' },
-  { name:'Michael Pfeifer',   segment:'Unternehmer',       goal:'Rücken bei 10 h Sitzen',       time:'07:30', inDays: -3,
-    source:'Empfehlung',     phone:'4367612345611', email:'m.pfeifer@example.at' }
+  { name:'Michael Pfeifer',   segment:'Unternehmer',       goal:'Rücken bei 10 h Sitzen',       time:'07:30', inDays: -1,
+    source:'Empfehlung',     phone:'4367612345611', email:'m.pfeifer@example.at' },
+  { name:'Nadine Hofstätter', segment:'40+ Longevity',     goal:'Knie und Hüfte beweglich halten', time:'10:30', inDays: -6,
+    source:'Google Maps',    phone:'4367612345612', email:'n.hofstaetter@example.at' },
+  { name:'Stefan Leitner',    segment:'Freizeitsportler',  goal:'Schulter nach Sturz',          time:'18:00', inDays: -21,
+    source:'Instagram Reel', phone:'4367612345613', email:'s.leitner@example.at' },
+  { name:'Carina Brunner',    segment:'Eltern, wenig Zeit',goal:'Rücken nach zweiter Schwangerschaft', time:'09:30', inDays: -47,
+    source:'Empfehlung',     phone:'4367612345614', email:'c.brunner@example.at' }
 ];
 
 function buildSeed() {
@@ -142,6 +148,7 @@ function buildSeed() {
       phone: s.phone, email: s.email, dow: s.dow, time: s.time,
       code: 'FIT-' + (s.name.replace(/[^A-Za-zÄÖÜäöü]/g, '').slice(0, 2) + (100 + i)).toUpperCase(),
       access: { token: 'fit-' + (1000 + i).toString(36) + Math.random().toString(36).slice(2, 8), issued: iso(t), days: 30 },
+      fromLead: true, firstContact: start,
       note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: s.stoppedDaysAgo || null
     };
 
@@ -273,7 +280,7 @@ function buildSeed() {
       start: iso(d), plan: 'Erstkontakt', credits: 0, coach: 'Yalcin', lead: true, source: s.source,
       phone: s.phone, email: s.email, dow: (d.getDay() + 6) % 7 + 1, time: s.time,
       code: 'FIT-L' + (10 + i),
-      access: { token: 'fit-lead' + (10 + i) + Math.random().toString(36).slice(2, 6), issued: iso(t), days: 30 },
+      access: null,   /* App-Zugang ist Teil des Programms, nicht des Gratis-Termins */
       note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: null
     };
     bookings.push({ id: uid('b'), clientId: c.id, date: iso(d), time: s.time, type: 'bwg',
@@ -287,9 +294,6 @@ function buildSeed() {
         note: 'Erstbefund beim Beweglichkeitstest — Grundlage für die Empfehlung.' });
       c.checkins.push({ date: iso(d), pain: 5.5, kraft: 34, kg: 91 });
     }
-    c.videos.push({ id: uid('v'), kind: 'welcome', title: 'Willkommen bei FITARY',
-      url: '', date: iso(t), note: 'Begrüßung vor dem Erstkontakt: Ablauf des Beweglichkeitstests.',
-      watched: false, watchedAt: null });
     clients.push(c);
   });
 
@@ -476,25 +480,52 @@ Alle Zahlen stehen in deinem FITARY-Zugang. Das ist kein Gefühl, das ist gemess
 };
 TPL.leadPrep = {
   label: 'Erstkontakt vorbereiten', channel: 'WhatsApp',
-  build: (c, b) => `${c.name.split(' ')[0]}, ${relDay(b.date)} um ${b.time} ist dein Beweglichkeitstest bei FITARY.
-Was passiert: 7 Messpunkte, ca. 45 Minuten, danach besprechen wir den Befund und was er für dein Training bedeutet — ${c.goal.toLowerCase()}.
-Mitbringen: Trainingsschuhe, bewegliche Kleidung. Parkplatz gratis direkt vor der Tür, Plobergerstraße 7.
-Das ist kein Verkaufsgespräch. Das ist eine Messung.`
+  build: (c, b) => `${c.name.split(' ')[0]}, ${relDay(b.date)} um ${b.time} hast du deine 30 Minuten bei FITARY.
+Ablauf: Beweglichkeitstest über 7 Messpunkte, danach sag ich dir ehrlich, woran es bei „${c.goal.toLowerCase()}" liegt — und ob ich der Richtige dafür bin.
+Mitbringen: Trainingsschuhe und bewegliche Kleidung. Gratis-Parkplatz direkt vor der Tür, Plobergerstraße 7.
+Die 30 Minuten kosten dich nichts, aber sie sind für mich blockiert — ich nehme in dieser Zeit niemanden sonst. Bestätige mir kurz mit „passt", dann steht der Termin.`
 };
 TPL.leadFollow = {
-  label: 'Nach dem Erstkontakt: Empfehlung', channel: 'WhatsApp',
+  label: 'Nach dem Erstkontakt: Empfehlung (24–48 h)', channel: 'WhatsApp',
   build: (c, m) => {
     const l = lastTest(c);
     const weak = l ? MOBI.map(i => ({ i, v: l.items[i.id] })).sort((a, b) => a.v - b.v)[0] : null;
-    return `${c.name.split(' ')[0]}, dein Befund vom Beweglichkeitstest: Score ${l ? mobiScore(l) : '—'}/100.
-Größte Limitierung: ${weak ? weak.i.label + ' (' + weak.i.v + '/5)' : '—'} — genau das bremst dich bei „${c.goal}".
-Meine Empfehlung: 2 Einheiten pro Woche über 6 Wochen, danach Re-Test. Dann siehst du schwarz auf weiß, ob es wirkt.
-Ich halte dir ${DOW[c.dow]} ${c.time} frei. Sag nur Ja oder nenn mir einen besseren Termin.`;
+    return `${c.name.split(' ')[0]}, hier ist dein Befund von gestern, schriftlich:
+Beweglichkeits-Score ${l ? mobiScore(l) : '—'}/100. Größte Limitierung: ${weak ? weak.i.label + ' (' + weak.i.v + ' von 5)' : '—'}.
+Das ist der Grund für „${c.goal.toLowerCase()}" — und das wird ohne gezieltes Training nicht besser, sondern mit jedem Jahr enger.
+Meine Empfehlung: 2 Einheiten pro Woche, 6 Wochen, dann Re-Test mit denselben 7 Messpunkten. Danach siehst du schwarz auf weiß, ob es wirkt.
+Mit dem Start bekommst du deinen persönlichen FITARY-Zugang: alle Messwerte, dein Verlauf, deine Termine, Videobotschaften von mir. Den gibt es nur für Kund:innen, nicht für Probetermine.
+Ich halte dir ${DOW[c.dow]} ${c.time} bis Freitag frei — danach geht der Slot an die Warteliste. Ja oder anderer Termin?`;
   }
+};
+TPL.leadFollow2 = {
+  label: 'Erstkontakt: letzte Erinnerung (3–9 Tage)', channel: 'WhatsApp',
+  build: (c, m) => {
+    const l = lastTest(c);
+    const weak = l ? MOBI.map(i => ({ i, v: l.items[i.id] })).sort((a, b) => a.v - b.v)[0] : null;
+    return `${c.name.split(' ')[0]}, ich mach es kurz, weil dein Termin sonst einfach ausläuft:
+${weak ? weak.i.label + ' steht bei ' + weak.i.v + ' von 5' : 'Dein Befund liegt bei mir'}. Du hast die 30 Minuten investiert — den Rest nicht zu machen wäre die einzige Variante, bei der sich nichts ändert.
+${DOW[c.dow]} ${c.time} ist noch frei. Wenn ich bis morgen nichts höre, gebe ich den Platz weiter und melde mich nicht mehr nach — versprochen.`;
+  }
+};
+TPL.leadRevive = {
+  label: 'Kalter Erstkontakt reaktivieren', channel: 'WhatsApp',
+  build: (c, m) => {
+    const d = leadAge(c, m), l = lastTest(c);
+    return `${c.name.split(' ')[0]}, dein Beweglichkeitstest ist ${d} Tage her — Score ${l ? mobiScore(l) : '—'}/100.
+Kein Verkaufsanruf, nur eine ehrliche Frage: hat sich seitdem etwas an „${c.goal.toLowerCase()}" verbessert?
+Wenn ja: top, dann war es das von meiner Seite. Wenn nein: ich mach dir einen Re-Test gratis und wir schauen, was sich in der Zwischenzeit verändert hat. Zwei Wörter reichen: „ja" oder „Re-Test".`;
+  }
+};
+TPL.leadNoshow = {
+  label: 'No-Show beim Gratis-Termin', channel: 'WhatsApp',
+  build: (c, b) => `${c.name.split(' ')[0]}, du warst heute nicht da. Kein Problem und keine Kosten — aber ich hatte die 30 Minuten für dich blockiert.
+Wenn du willst, gebe ich dir einen zweiten Termin. Dann aber einen, den du wirklich schaffst.
+Wenn gerade nicht die richtige Zeit ist: sag einfach kurz Bescheid, dann melde ich mich nicht weiter.`
 };
 TPL.access = {
   label: 'Persönlichen Zugang senden', channel: 'WhatsApp',
-  build: (c, m) => `${c.name.split(' ')[0]}, hier ist dein persönlicher FITARY-Zugang (${c.code}):
+  build: (c, m) => `${c.name.split(' ')[0]}, dein Training startet — und damit ist dein persönlicher FITARY-Zugang freigeschaltet (${c.code}):
 ${accessLink(c)}
 
 Der Link ist ${c.access.days} Tage gültig und nur für dich. Drin: dein Willkommensvideo, deine Test- und Leistungswerte, die nächste Einheit, dein Kontingent — und du kannst direkt absagen oder einen Zusatztermin anfragen.
@@ -503,11 +534,25 @@ Kein Sammel-Chat, keine Massen-App. Deine Reise, dein Zugang.`
 
 /* ---------------- Aktions-Queue (Automationen) ---------------- */
 const RULES = [
-  { id:'leadfollow', level:'crit', tpl:'leadFollow', title:c=>`${c.name}: Angebot nach Erstkontakt`,
-    desc:'Beweglichkeitstest absolviert, Programm noch offen — hier entscheidet sich der Kunde.',
-    match:(c,m)=> c.lead && m.bs.some(b => b.type === 'bwg' && b.status === 'completed'),
-    why:(c,m)=>{ const b = m.bs.find(x => x.type === 'bwg' && x.status === 'completed');
-      return `Test ${relDay(b.date)} · Quelle ${c.source || '—'} · Score ${lastTest(c) ? mobiScore(lastTest(c)) + '/100' : 'offen'}`; } },
+  { id:'leadfollow', level:'crit', tpl:'leadFollow', title:c=>`${c.name}: Empfehlung nach Gratis-Termin`,
+    desc:'Entscheidungsfenster 24–48 h. Der Termin hat nichts gekostet — nur die Nachverfolgung macht daraus Umsatz.',
+    match:(c,m)=> c.lead && leadState(c, m) === 'heiß',
+    why:(c,m)=>`Test ${relDay(leadTest(c, m).date)} · ${c.source || 'Quelle unbekannt'} · Score ${lastTest(c) ? mobiScore(lastTest(c)) + '/100' : 'offen'}` },
+
+  { id:'leadfollow2', level:'crit', tpl:'leadFollow2', title:c=>`${c.name}: letzte Erinnerung`,
+    desc:'3–9 Tage nach dem Gratis-Termin. Eine klare, letzte Ansage schlägt drei halbherzige.',
+    match:(c,m)=> c.lead && leadState(c, m) === 'offen',
+    why:(c,m)=>`Test vor ${leadAge(c, m)} Tagen · ${c.source || 'Quelle unbekannt'} · noch kein Programm` },
+
+  { id:'leadrevive', level:'warn', tpl:'leadRevive', title:c=>`${c.name}: kalter Erstkontakt`,
+    desc:'Verlorener Gratis-Termin. Gratis-Re-Test ist der billigste Weg zurück ins Gespräch.',
+    match:(c,m)=> c.lead && leadState(c, m) === 'kalt',
+    why:(c,m)=>`Test vor ${leadAge(c, m)} Tagen · ${c.source || 'Quelle unbekannt'} · Score ${lastTest(c) ? mobiScore(lastTest(c)) + '/100' : '—'}` },
+
+  { id:'leadnoshow', level:'warn', tpl:'leadNoshow', title:c=>`${c.name}: No-Show beim Gratis-Termin`,
+    desc:'Gratis-Termine haben die höchste No-Show-Quote — genau ein Nachfassen, dann Schluss.',
+    match:(c,m)=> c.lead && m.bs.some(b => b.type === 'bwg' && b.status === 'noshow' && daysBetween(b.date, iso(today())) <= 7),
+    why:(c,m)=>`Termin verpasst · ${c.source || 'Quelle unbekannt'}` },
 
   { id:'leadprep', level:'flame', tpl:'leadPrep', title:c=>`${c.name}: Erstkontakt vorbereiten`,
     desc:'Beweglichkeitstest steht an — Vorbereitung senkt No-Shows beim wichtigsten Termin.',
@@ -578,7 +623,7 @@ function queue() {
         daysBetween(x.date, iso(today())) <= 7);
       if (recent) return;
       out.push({ ruleId: r.id, level: r.level, tpl: r.tpl, clientId: c.id,
-        rank: r.id === 'leadfollow' ? 0 : r.id === 'leadprep' ? 1 : 2,
+        rank: ['leadfollow', 'leadfollow2'].includes(r.id) ? 0 : ['leadprep', 'leadnoshow'].includes(r.id) ? 1 : r.id === 'leadrevive' ? 2 : 3,
         title: r.title(c), desc: r.desc, why: r.why(c, m) });
     });
   });
@@ -586,7 +631,7 @@ function queue() {
   return out.sort((a, b) => a.rank - b.rank || order[a.level] - order[b.level]);
 }
 
-const BOOKING_TPLS = ['confirm', 'reminder', 'cancelClient', 'cancelStudio', 'waitlist', 'noshow', 'leadPrep'];
+const BOOKING_TPLS = ['confirm', 'reminder', 'cancelClient', 'cancelStudio', 'waitlist', 'noshow', 'leadPrep', 'leadNoshow'];
 function ctxFor(c, tplId, booking) {
   const m = metrics(c);
   if (!BOOKING_TPLS.includes(tplId)) return m;
@@ -604,10 +649,34 @@ function draft(clientId, tplId, booking) {
   return text;
 }
 
+/* ---------------- Erstkontakt-Funnel ----------------
+   Der Gratis-Test kostet den Interessenten nichts — also entscheidet die
+   Nachverfolgung, ob daraus Umsatz wird. Diese Helfer machen das Leck sichtbar. */
+const leadTest  = (c, m) => m.bs.find(b => b.type === 'bwg' && b.status === 'completed');
+const leadAge   = (c, m) => { const b = leadTest(c, m); return b ? daysBetween(b.date, iso(today())) : null; };
+const leadState = (c, m) => {
+  const d = leadAge(c, m);
+  if (d === null) return 'geplant';   /* Termin steht noch aus */
+  if (d <= 2)  return 'heiß';         /* Entscheidungsfenster */
+  if (d <= 9)  return 'offen';        /* zweite Chance */
+  return 'kalt';                      /* verloren, solange nichts passiert */
+};
+/* Conversion der letzten 90 Tage: gewonnene Erstkontakte / alle Erstkontakte */
+function conversion90() {
+  const t = iso(today());
+  const won = db.clients.filter(c => !c.lead && c.fromLead && daysBetween(c.firstContact, t) <= 90).length;
+  const open = db.clients.filter(c => c.lead).filter(c => {
+    const m = metrics(c); const b = m.bs.find(x => x.type === 'bwg');
+    return b && Math.abs(daysBetween(b.date, t)) <= 90;
+  }).length;
+  const total = won + open;
+  return { won, open, total, rate: total ? Math.round(won / total * 100) : 0 };
+}
+
 /* ---------------- Zugang (Magic Link) ---------------- */
 const accessValid = c => c.access && c.access.days > 0 && daysBetween(c.access.issued, iso(today())) <= c.access.days;
-const accessLink  = c => `${location.origin}${location.pathname}?zugang=${c.access.token}`;
-const accessExpiry = c => iso(addDays(parse(c.access.issued), c.access.days));
+const accessLink  = c => c.access ? `${location.origin}${location.pathname}?zugang=${c.access.token}` : '—';
+const accessExpiry = c => c.access ? iso(addDays(parse(c.access.issued), c.access.days)) : '—';
 function rotateAccess(c, days = 30) {
   c.access = { token: 'fit-' + Math.random().toString(36).slice(2, 12), issued: iso(today()), days };
   save();
@@ -684,8 +753,9 @@ function renderExpired() {
   $('#quickBook').style.display = 'none';
   $('#view').innerHTML = `<div class="card" style="max-width:520px;margin:40px auto;text-align:center">
     <p class="card__title" style="font-size:19px">Dieser Link ist nicht (mehr) gültig</p>
-    <p class="card__sub" style="margin:10px 0 18px">Aus Datenschutzgründen laufen persönliche Zugänge nach 30 Tagen ab.
-      Fordere einfach einen neuen an — deine Werte und dein Verlauf bleiben erhalten.</p>
+    <p class="card__sub" style="margin:10px 0 18px">Der persönliche FITARY-Bereich wird mit dem Trainingsstart freigeschaltet
+      und ist jeweils 30 Tage gültig. Wenn dein Link abgelaufen ist, fordere einfach einen neuen an —
+      deine Messwerte und dein Verlauf bleiben erhalten.</p>
     <a class="btn btn--primary" href="https://wa.me/436703565006" target="_blank" rel="noopener">Neuen Zugang per WhatsApp anfordern</a>
   </div>`;
 }
@@ -746,7 +816,10 @@ function viewCockpit() {
   <div class="grid grid--kpi">
     ${kpi('Einheiten diese Woche', week.length, `${util} % Auslastung (Ziel 80 %)`, util >= 80 ? 'good' : util >= 60 ? 'warn' : 'crit')}
     ${kpi('Aktive Kund:innen', active, `${members.length - active} inaktiv · ${members.length} gesamt`, active === members.length ? 'good' : 'warn')}
-    ${kpi('Erstkontakte offen', leadsOpen, leadsOpen ? leads.map(x => x.c.name.split(' ')[0]).join(', ') : 'keine Beweglichkeitstests offen', leadsOpen ? 'warn' : '')}
+    ${kpi('Erstkontakte offen', leadsOpen, leadsOpen ? leads.map(x => x.c.name.split(' ')[0]).join(', ') : 'keine Gratis-Termine offen', leadsOpen ? 'warn' : '')}
+    ${(() => { const cv = conversion90();
+      return kpi('Conversion 90 T.', cv.rate + ' %', `${cv.won} von ${cv.total} Erstkontakten gestartet`,
+        cv.rate >= 50 ? 'good' : cv.rate >= 30 ? 'warn' : 'crit'); })()}
     ${kpi('Ausfallquote 30 T.', missRate + ' %', `${missed} Storni & No-Shows`, missRate <= 10 ? 'good' : missRate <= 18 ? 'warn' : 'crit')}
     ${kpi('Churn-Risiko', atRisk.length, atRisk.length ? atRisk.map(x => x.c.name.split(' ')[0]).join(', ') : 'niemand kritisch', atRisk.length ? 'crit' : 'good')}
     ${kpi('Verlängerung fällig', renew, 'Kontingent ≤ 2 Einheiten', renew ? 'warn' : 'good')}
@@ -857,7 +930,7 @@ function viewClients() {
       <span class="avatar ${m.level === 'crit' ? 'avatar--risk' : m.level === 'good' ? 'avatar--good' : ''}">${initials(c.name)}</span>
       <div class="row__main">
         <p class="row__name">${c.name} <span class="pill stage-pill ${c.lead ? 'pill--flame' : ''}">${stageOf(c).label}</span></p>
-        <p class="row__meta">${c.lead ? `Erstkontakt · ${c.source || 'Quelle unbekannt'} · ${TYPES[c.type].short}`
+        <p class="row__meta">${c.lead ? `Erstkontakt (${leadState(c, m)}) · ${c.source || 'Quelle unbekannt'} · ${leadAge(c, m) === null ? 'Termin steht aus' : 'Test vor ' + leadAge(c, m) + ' Tagen'}`
           : `${c.segment} · ${TYPES[c.type].short} · ${m.totalDone} Einheiten · ${c.credits} offen`}
           ${m.next ? ` · nächste ${relDay(m.next.date)}` : ' · <span style="color:var(--warn)">kein Folgetermin</span>'}</p>
       </div>
@@ -902,7 +975,7 @@ function openClient(id) {
       <p class="action__why">${m.bs.some(b => b.status === 'completed')
         ? 'Test absolviert. Befund liegt vor, Programm noch offen — jetzt entscheidet sich, ob daraus ein:e Kund:in wird.'
         : `Test gebucht für ${m.next ? fmtDate(m.next.date) + ' · ' + m.next.time : '—'}. Vorbereitung senken No-Shows beim wichtigsten Termin.`}</p>
-      <p class="action__why" style="color:var(--ink-3)">Quelle: ${c.source || 'unbekannt'}</p>
+      <p class="action__why" style="color:var(--ink-3)">Quelle: ${c.source || 'unbekannt'} · 30 Min gratis · App-Zugang erst mit Trainingsstart</p>
       <div class="action__acts">
         <button class="btn btn--sm btn--primary" data-act="convert" data-id="${c.id}">In Kund:in umwandeln</button>
         <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="${m.bs.some(b => b.status === 'completed') ? 'leadFollow' : 'leadPrep'}">Nachricht erstellen</button>
@@ -964,7 +1037,7 @@ function openClient(id) {
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:22px">
       <button class="btn btn--primary" data-act="bookfor" data-id="${c.id}">+ Einheit buchen</button>
       <button class="btn btn--ghost" data-act="portal" data-id="${c.id}">Kundenansicht öffnen</button>
-      <button class="btn btn--ghost" data-act="access" data-id="${c.id}">Zugang teilen</button>
+      <button class="btn btn--ghost" data-act="access" data-id="${c.id}">${c.access ? 'Zugang teilen' : 'Zugang (ab Start)'}</button>
     </div>
     <p class="card__sub" style="margin-top:12px">${c.phone ? `WhatsApp: +${c.phone} · ` : ''}${c.email}</p>
   `;
@@ -1074,6 +1147,7 @@ function performanceSection(c) {
 function videoSection(c) {
   const vids = c.videos || [];
   return `<p class="section-title">Videobotschaften · ${vids.filter(v => v.watched).length}/${vids.length} gesehen</p>
+  ${!vids.length && c.lead ? '<p class="empty">Videobotschaften gehören zum Programm — sie werden mit dem Trainingsstart freigeschaltet.</p>' : ''}
   ${vids.length ? vids.map(v => `
     <div class="row">
       <span class="avatar ${v.watched ? 'avatar--good' : 'avatar--risk'}">▶</span>
@@ -1082,7 +1156,7 @@ function videoSection(c) {
         <p class="row__meta">${VIDEO_KINDS[v.kind]} · ${fmtDate(v.date)} · ${v.watched ? 'gesehen ' + (v.watchedAt ? relDay(v.watchedAt) : '') : '<span style="color:var(--warn)">noch nicht gesehen</span>'}</p>
       </div>
       <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="play" data-id="${c.id}" data-vid="${v.id}">Ansehen</button></div>
-    </div>`).join('') : '<p class="empty">Noch kein Video hinterlegt.</p>'}
+    </div>`).join('') : (c.lead ? '' : '<p class="empty">Noch kein Video hinterlegt.</p>')}
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
     <button class="btn btn--sm btn--ghost" data-act="videoadd" data-id="${c.id}">+ Video hinterlegen</button>
     <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="welcomeVideo">Video ankündigen</button>
@@ -1209,6 +1283,21 @@ function convertModal(id) {
 
 function accessModal(id) {
   const c = client(id);
+  if (!c.access) {
+    modal(`
+      <div class="panel__head"><div><p class="panel__name">Zugang gesperrt</p>
+        <p class="panel__meta">${c.name} · Erstkontakt</p></div>
+        <button class="closebtn" data-close>✕</button></div>
+      <div class="action action--warn"><div class="action__body">
+        <p class="action__title">Der FITARY-Zugang gehört zum Programm</p>
+        <p class="action__why">Der Gratis-Termin bringt den Befund. Der persönliche Bereich — Messwerte, Verlauf,
+        Termine, Videobotschaften — wird erst mit dem Trainingsstart freigeschaltet. Genau das macht ihn zum Argument,
+        nicht zur Selbstverständlichkeit.</p>
+        <div class="action__acts">
+          <button class="btn btn--sm btn--primary" data-act="convert" data-id="${c.id}">In Kund:in umwandeln & freischalten</button>
+        </div></div></div>`);
+    return;
+  }
   const link = accessLink(c), valid = accessValid(c);
   modal(`
     <div class="panel__head"><div><p class="panel__name">Persönlicher Zugang</p>
@@ -1698,9 +1787,19 @@ document.addEventListener('click', e => {
       const b = { id: uid('b'), clientId: c.id, date: iso(first), time: c.time, type: c.type,
         coach: 'Yalcin', status: 'confirmed', reason: null, reminded: false };
       db.bookings.push(b);
+
+      /* Mit dem Start wird freigeschaltet, was der Gratis-Termin nicht enthält */
+      rotateAccess(c);
+      c.videos.push({ id: uid('v'), kind: 'welcome', title: 'Willkommen bei FITARY',
+        url: '', date: iso(today()),
+        note: 'Persönliche Begrüßung nach dem Start: Ablauf der ersten Wochen und was jetzt gemessen wird.',
+        watched: false, watchedAt: null });
+
       draft(c.id, 'confirm', b);
+      draft(c.id, 'access');
       logEvent('convert', `${c.name}: aus Erstkontakt zu Kund:in — ${c.plan}, Start ${fmtDate(b.date)}`, c.id);
-      save(); toast('Umgewandelt · erster Termin fixiert'); closeAll(); render();
+      logEvent('access', `${c.name}: App-Zugang freigeschaltet (30 Tage gültig)`, c.id);
+      save(); toast('Umgewandelt · Termin fixiert · Zugang freigeschaltet'); closeAll(); render();
       break;
     }
     case 'testnew':  closeAll(); testModal(id); break;

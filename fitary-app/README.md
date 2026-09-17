@@ -18,17 +18,45 @@ Os dados ficam em `localStorage` (demo realista com 9 clientes). Botão
 
 ## O funil, não só a agenda
 
-O **Beweglichkeitstest é o primeiro contato** — o produto de entrada. Por isso a
-jornada começa nele e o app trata lead como estágio próprio:
+O **Kennenlernen com Beweglichkeitstest — 30 minutos, gratuito — é o primeiro contato**
+e o produto de entrada. Por isso a jornada começa nele:
 
-`Beweglichkeitstest (Erstkontakt)` → `Onboarding` → `Fundament` → `Aufbau` → `Performance` → `Longevity`
+`Kennenlernen` → `Onboarding` → `Fundament` → `Aufbau` → `Performance` → `Longevity`
 
-- Erstkontakt agendado → regra **"Erstkontakt vorbereiten"** (prepara, derruba no-show no termo mais caro)
-- Erstkontakt feito → regra **"Angebot nach Erstkontakt"**, topo absoluto da fila de ações,
-  com laudo + maior limitação + recomendação + termo fixo reservado
-- Botão **"In Kund:in umwandeln"**: escolhe programa, contingente, dia/horário fixo,
-  cria a primeira sessão e a confirmação — lead vira cliente em um passo
-- KPI **Erstkontakte offen** no cockpit, com a fonte do lead (Instagram, indicação…)
+Termo gratuito tem duas fraquezas conhecidas: **no-show alto** (não custa nada faltar) e
+**vazamento depois do teste** (não custa nada não voltar). O app ataca as duas.
+
+**Antes do termo**
+- Regra **Erstkontakt vorbereiten**: explica o formato, pede confirmação ativa
+  ("bestätige mir kurz mit passt") e torna explícito que os 30 min estão bloqueados só para a pessoa
+- Regra **No-Show beim Gratis-Termin**: exatamente um follow-up, depois silêncio — sem perseguir
+
+**Depois do termo — três janelas, uma mensagem cada**
+
+| Estado | Janela | Mensagem |
+|---|---|---|
+| `heiß` | 0–2 dias | Laudo por escrito + maior limitação + recomendação + horário reservado até sexta |
+| `offen` | 3–9 dias | Última chamada, com promessa explícita de não insistir de novo |
+| `kalt` | 10+ dias | Reativação com re-teste gratuito — o caminho mais barato de volta à conversa |
+
+**Conversão**
+- Botão **"In Kund:in umwandeln"**: programa, contingente, dia/horário fixo, primeira sessão,
+  confirmação — e **libera o acesso ao app** (ver abaixo)
+- KPI **Conversion 90 T.** no cockpit: quantos dos Erstkontakte viraram cliente.
+  Essa é a métrica do funil gratuito, não o número de testes
+- KPI **Erstkontakte offen** com a fonte de cada lead (Instagram, indicação, Google Maps)
+
+## O app é parte da compra, não do teste
+
+Quem faz o teste gratuito recebe o **laudo**. Quem inicia o programa recebe o **acesso pessoal**:
+magic link, todos os valores, histórico, agenda, videomensagens.
+
+- Lead não tem token de acesso — "Zugang teilen" mostra **Zugang gesperrt** com a explicação
+- Qualquer link inválido cai na tela de acesso não liberado; **nunca** no cockpit do estúdio
+- A conversão gera o token (30 dias), cria o Willkommensvideo e redige duas mensagens:
+  confirmação da primeira sessão e convite do acesso
+- A mensagem de recomendação usa isso como argumento de venda:
+  *"Den gibt es nur für Kund:innen, nicht für Probetermine."*
 
 ## As duas camadas
 
@@ -108,7 +136,10 @@ Sem medição não existe prova de progresso — e sem prova o cliente não reno
 | Leistungstest | sem teste há 84 dias | Sem re-teste não há prova, sem prova não há renovação |
 | Willkommensvideo | vídeo não visto após 2 dias | O início pessoal decide as primeiras semanas |
 | Erstkontakt vorbereiten | teste nos próximos 3 dias | No-show no primeiro contato custa o cliente inteiro |
-| Angebot nach Erstkontakt | teste feito, sem programa | É aqui que o lead vira cliente |
+| Empfehlung nach Gratis-Termin | 0–2 dias após o teste | Janela de decisão; o termo não custou nada, o follow-up é que gera receita |
+| Letzte Erinnerung | 3–9 dias | Uma ansagem clara vence três meio-termos |
+| Kalter Erstkontakt | 10+ dias | Re-teste gratuito reabre a conversa |
+| No-Show Gratis-Termin | faltou ao termo gratuito | Um follow-up, depois silêncio |
 | Folgetermin | cliente ativo sem próxima sessão | Fechar a lacuna antes de virar rotina |
 
 Cancelamento dispara em cadeia: confirmação ao cliente + **oferta do slot livre**
