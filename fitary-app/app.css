@@ -160,6 +160,8 @@ a { color: inherit; }
 
 /* ---------- Cards / Grid ---------- */
 .grid { display: grid; gap: 16px; }
+.grid > * { min-width: 0; }                      /* verhindert, dass Inhalte die Spur aufblähen */
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid--kpi { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 .grid--2 { grid-template-columns: 1.35fr 1fr; align-items: start; }
 
@@ -268,7 +270,7 @@ a { color: inherit; }
 /* ---------- Charts ---------- */
 .chart { width: 100%; overflow: visible; }
 .chart text { font-family: var(--font-b); font-size: 10px; fill: var(--ink-3); }
-.metricbox { border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: var(--surface-2); }
+.metricbox { border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: var(--surface-2); min-width: 0; overflow: hidden; }
 .metricbox__label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
 .metricbox__val { font-family: var(--font-d); font-stretch: 75%; font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin: 3px 0 6px; }
 .metricbox__val span { font-size: 12px; font-weight: 600; margin-left: 6px; }
@@ -397,6 +399,22 @@ a { color: inherit; }
   .topbar { padding: 16px 18px; }
   .topbar__title { font-size: 19px; }
   .view { padding: 18px 18px 92px; }
+  .topbar__eyebrow { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar__title { font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar__actions { gap: 7px; }
+  .topbar__actions .btn { padding: 8px 13px; font-size: 12.5px; }
+  .topbar__mark { height: 26px; }
+  .is-portal .view { padding-bottom: 40px; }
+  .demo-bar .row__meta { display: none; }
+  .demo-bar .avatar { display: none; }
+  .metricbox { padding: 11px; }
+  .metricbox__val { font-size: 17px; }
+  .metricbox__label { font-size: 10px; letter-spacing: .06em; }
+  /* Journey-Schiene: auf dem Handy nur Punkte, die Stufe steht als Pill im Kartenkopf */
+  .rail__label { display: none; }
+  .rail { margin-bottom: 2px; }
+  /* Testbalken auf dem Handy weglassen — die Zahlen tragen die Aussage */
+  .tbar { display: none; }
   .calgrid { grid-template-columns: 1fr; }
   .drawer__panel { padding: 20px 18px 90px; }
   .field-row { grid-template-columns: 1fr; }

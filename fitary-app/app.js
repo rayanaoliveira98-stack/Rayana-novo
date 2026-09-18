@@ -1057,7 +1057,7 @@ function openClient(id) {
     <p class="card__sub" style="margin-bottom:18px">${st.desc}</p>
 
     ${ci.length > 1 ? `<p class="section-title">Fortschritt seit Start</p>
-    <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="grid grid--3">
       ${metricBox('Schmerz (0–10)', m.now.pain, dPain, dPain <= 0, ci.map(x => x.pain), 'var(--good)')}
       ${metricBox('Kraftindex', m.now.kraft, (dKraft > 0 ? '+' : '') + dKraft, dKraft >= 0, ci.map(x => x.kraft), 'var(--flame)')}
       ${metricBox('Gewicht (kg)', m.now.kg, (dKg > 0 ? '+' : '') + dKg, true, ci.map(x => x.kg), 'var(--ink-2)')}
@@ -1070,7 +1070,7 @@ function openClient(id) {
     ${videoSection(c)}
 
     <p class="section-title">Verlässlichkeit</p>
-    <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="grid grid--3">
       <div class="metricbox"><p class="metricbox__label">Adherence</p><p class="metricbox__val">${m.adherence} %</p><p class="card__sub">letzte 8 Wochen</p></div>
       <div class="metricbox"><p class="metricbox__label">Storni 30 T.</p><p class="metricbox__val">${m.cancels30}</p><p class="card__sub">${m.noshows30} No-Shows</p></div>
       <div class="metricbox"><p class="metricbox__label">Letztes Training</p><p class="metricbox__val" style="font-size:16px">${m.lastDone ? relDay(m.lastDone.date) : '—'}</p><p class="card__sub">${m.totalDone} Einheiten gesamt</p></div>
@@ -1145,7 +1145,7 @@ function mobilitySection(c) {
         <p style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${i.label}</p>
         <p class="card__sub" style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${i.hint}</p>
       </div>
-      <span style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden" title="Baseline ${v0} · aktuell ${v1}">
+      <span class="tbar" style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden" title="Baseline ${v0} · aktuell ${v1}">
         <span style="position:absolute;inset:0 auto 0 0;width:${v1 / 5 * 100}%;background:${tone};border-radius:99px"></span>
         <span style="position:absolute;top:-2px;bottom:-2px;left:${v0 / 5 * 100}%;width:2px;background:var(--ink)"></span>
       </span>
@@ -1173,13 +1173,14 @@ function performanceSection(c) {
 
   const due = perfDue(c), idx = perfIndex(c, l);
   const series = c.performance.map(e => perfIndex(c, e));
+  const firstOnly = c.performance.length < 2;
 
   return `<p class="section-title">Leistungstest · ${c.performance.length} ${c.performance.length === 1 ? 'Messung' : 'Messungen'}</p>
   <div class="metricbox" style="margin-bottom:12px">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
       <div style="min-width:0">
-        <p class="metricbox__label">Leistungsindex</p>
-        <p class="metricbox__val" style="white-space:nowrap">100 → ${idx}<span class="${idx >= 100 ? 'delta-good' : 'delta-crit'}">${idx >= 100 ? '+' : ''}${idx - 100} %</span></p>
+        <p class="metricbox__label">${firstOnly ? 'Ausgangswerte erfasst' : 'Leistungsindex'}</p>
+        <p class="metricbox__val" style="white-space:nowrap">${firstOnly ? 'Baseline' : `100 → ${idx}<span class="${idx >= 100 ? 'delta-good' : 'delta-crit'}">${idx >= 100 ? '+' : ''}${idx - 100} %</span>`}</p>
         <p class="card__sub">${l.phase} · ${fmtDate(l.date)} ${due ? '· <span style="color:var(--flame)">Re-Test fällig</span>' : `· nächster Re-Test ${relDay(iso(addDays(parse(l.date), PERF_RETEST)))}`}</p>
       </div>
       <span style="flex:0 0 132px;max-width:132px">${sparkline(series.length > 1 ? series : [100, idx], { color: 'var(--flame)', w: 132, h: 44 })}</span>
@@ -1195,12 +1196,12 @@ function performanceSection(c) {
         <p style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${i.label}</p>
         <p class="card__sub" style="font-size:11px">${i.dir === 1 ? 'mehr ist besser' : 'weniger ist besser'}</p>
       </div>
-      <span style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden">
+      <span class="tbar" style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden">
         <span style="position:absolute;inset:0 auto 0 0;width:${clamp(50 + rel * 1.6, 6, 100)}%;background:${tone};border-radius:99px"></span>
         <span style="position:absolute;top:-2px;bottom:-2px;left:50%;width:2px;background:var(--ink)"></span>
       </span>
-      <span style="width:104px;text-align:right;font-size:12.5px;color:var(--ink-2)">${v0} → <strong style="color:${tone}">${v1}</strong> ${i.unit}</span>
-      <span style="width:44px;text-align:right;font-size:12px" class="${rel >= 0 ? 'delta-good' : 'delta-crit'}">${rel >= 0 ? '+' : ''}${rel.toFixed(0)} %</span>
+      <span style="width:104px;text-align:right;font-size:12.5px;color:var(--ink-2)">${firstOnly ? '' : v0 + ' → '}<strong style="color:${tone}">${v1}</strong> ${i.unit}</span>
+      <span style="width:44px;text-align:right;font-size:12px" class="${rel >= 0 ? 'delta-good' : 'delta-crit'}">${firstOnly ? '' : (rel >= 0 ? '+' : '') + rel.toFixed(0) + ' %'}</span>
     </div>`;
   }).join('')}
 
@@ -1701,11 +1702,11 @@ function renderPortal(id) {
   const ci = c.checkins;
 
   document.body.classList.add('is-portal');
-  $('#topEyebrow').textContent = 'Dein FITARY-Zugang · ' + c.code;
+  $('#topEyebrow').textContent = 'Dein FITARY-Zugang';
   $('#topTitle').textContent = 'Servus, ' + c.name.split(' ')[0];
-  $('#quickBook').textContent = '+ Termin anfragen';
+  $('#quickBook').textContent = window.innerWidth < 520 ? '+ Termin' : '+ Termin anfragen';
   $('#view').innerHTML = `
-    ${PORTAL_DEMO ? `<div class="row" style="margin-bottom:16px;border-color:rgba(255,138,80,.38)">
+    ${PORTAL_DEMO ? `<div class="row demo-bar" style="margin-bottom:16px;border-color:rgba(255,138,80,.38)">
       <span class="avatar">👁</span>
       <div class="row__main"><p class="row__name">Kundenansicht von ${c.name}</p>
         <p class="row__meta">So sieht ${c.name.split(' ')[0]} den eigenen Zugang — nur eigene Daten, nichts vom Studio.</p></div>
@@ -1755,7 +1756,7 @@ function renderPortal(id) {
             const tone = v1 >= 4 ? 'var(--good)' : v1 >= 2.8 ? 'var(--warn)' : 'var(--crit)';
             return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)">
               <span style="width:140px;font-size:13px;font-weight:600">${i.label}</span>
-              <span style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden" title="Start ${v0} · heute ${v1}">
+              <span class="tbar" style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden" title="Start ${v0} · heute ${v1}">
                 <span style="position:absolute;inset:0 auto 0 0;width:${v1 / 5 * 100}%;background:${tone};border-radius:99px"></span>
                 <span style="position:absolute;top:-2px;bottom:-2px;left:${v0 / 5 * 100}%;width:2px;background:var(--ink)"></span></span>
               <span style="width:80px;text-align:right;font-size:12.5px;color:var(--ink-2)">${v0} → <strong style="color:${tone}">${v1}</strong></span>
@@ -1766,20 +1767,27 @@ function renderPortal(id) {
       </div>
 
       <div>
-        ${basePerf(c) ? `<div class="card" style="margin-bottom:16px">
+        ${basePerf(c) ? (() => {
+          const first = c.performance.length < 2;   /* erst Baseline, noch kein Vergleich */
+          const due = iso(addDays(parse(lastPerf(c).date), PERF_RETEST));
+          return `<div class="card" style="margin-bottom:16px">
           <div class="card__head"><div><p class="card__title">Deine Leistungswerte</p>
             <p class="card__sub">${lastPerf(c).phase} · ${fmtDate(lastPerf(c).date)}</p></div>
-            <span class="pill ${perfIndex(c, lastPerf(c)) >= 100 ? 'pill--good' : 'pill--warn'}">Index ${perfIndex(c, lastPerf(c))}</span></div>
+            ${first ? '<span class="pill">Ausgangswerte</span>'
+              : `<span class="pill ${perfIndex(c, lastPerf(c)) >= 100 ? 'pill--good' : 'pill--warn'}">Index ${perfIndex(c, lastPerf(c))}</span>`}</div>
           ${PERF.map(i => {
             const v0 = basePerf(c).items[i.id], v1 = lastPerf(c).items[i.id];
             const rel = ((v1 - v0) / v0) * 100 * i.dir;
             return `<div class="row row--click" data-act="perfinfo" data-i="${i.id}" style="padding:10px 12px">
               <div class="row__main"><p class="row__name" style="font-size:13.5px">${i.label}</p>
-                <p class="row__meta">${v0} → ${v1} ${i.unit}</p></div>
-              <div class="row__side"><span class="pill ${rel >= 0 ? 'pill--good' : 'pill--crit'}">${Math.abs(rel).toFixed(0)} % ${rel >= 0 ? 'besser' : 'schwächer'}</span></div>
+                <p class="row__meta">${first ? v1 + ' ' + i.unit : v0 + ' → ' + v1 + ' ' + i.unit}</p></div>
+              <div class="row__side">${first ? ''
+                : `<span class="pill ${rel >= 0 ? 'pill--good' : 'pill--crit'}">${Math.abs(rel).toFixed(0)} % ${rel >= 0 ? 'besser' : 'schwächer'}</span>`}</div>
             </div>`; }).join('')}
-          <p class="card__sub" style="margin-top:10px">Tippe einen Wert an, um zu sehen, was er bedeutet.</p>
-        </div>` : ''}
+          <p class="card__sub" style="margin-top:10px">${first
+            ? `Das ist dein Startpunkt. Beim Re-Test am ${fmtDate(due)} siehst du schwarz auf weiß, was sich verändert hat.`
+            : 'Tippe einen Wert an, um zu sehen, was er bedeutet.'}</p>
+        </div>`; })() : ''}
 
         <div class="card">
           <div class="card__head"><div><p class="card__title">Deine Journey</p>
@@ -1788,7 +1796,7 @@ function renderPortal(id) {
             ${STAGES.map((x, i) => `<div class="rail__step ${i < stageIdx ? 'done' : i === stageIdx ? 'now' : ''}">
               <span class="rail__dot"></span><p class="rail__label">${x.label}</p></div>`).join('')}
           </div>
-          ${ci.length > 1 ? `<div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:18px">
+          ${ci.length > 1 ? `<div class="grid grid--3" style="margin-top:18px">
             ${metricBox('Schmerz', m.now.pain, (m.now.pain - m.first.pain).toFixed(1), m.now.pain <= m.first.pain, ci.map(x => x.pain), 'var(--good)')}
             ${metricBox('Kraftindex', m.now.kraft, '+' + (m.now.kraft - m.first.kraft), true, ci.map(x => x.kraft), 'var(--flame)')}
             ${metricBox('Einheiten', m.totalDone, '', true, [0, m.totalDone], 'var(--ink-2)')}
