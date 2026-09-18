@@ -14,7 +14,9 @@ npx http-server -p 8080 -c-1 .
 # ou: python3 -m http.server 8080
 ```
 
-Abra `http://localhost:8080` no celular ou no navegador (modo responsivo). No celular, use **"Adicionar à tela inicial"** para instalar como app (iOS/iPadOS/Android). Após a primeira visita, tudo funciona **offline** (Service Worker).
+Abra `http://localhost:8080` no celular ou no navegador (modo responsivo). No celular, use **"Adicionar à tela inicial"** para instalar como app (iOS/iPadOS/Android). Após a primeira visita, tudo funciona **offline** (Service Worker). Detalhes de instalação e o caminho para as lojas em [`docs/LOJAS.md`](docs/LOJAS.md).
+
+A interface dos responsáveis fala **6 idiomas** (português, inglês, alemão, espanhol, italiano e turco) e segue o idioma do aparelho — trocável no onboarding e em Configurações.
 
 - `index.html` — aplicativo (criança + responsáveis)
 - `admin.html` — painel administrativo de conteúdo (revisão de traduções/áudios/variações, importação JSON/CSV)
@@ -47,4 +49,5 @@ Cobertura dos testes: motor de repetição espaçada (intervalos 1-3-7-14-30, es
 | [`docs/DESIGN.md`](docs/DESIGN.md) | Sistema visual e acessibilidade |
 | [`docs/DIDATICA.md`](docs/DIDATICA.md) | **Base didática da progressão** — por que o app pede o que pede, com fontes |
 | [`docs/MODELO-DE-DADOS.md`](docs/MODELO-DE-DADOS.md) | Modelo de dados, escada de produção e motor de repetição espaçada |
+| [`docs/LOJAS.md`](docs/LOJAS.md) | **Instalação e publicação** — PWA no iOS/Android hoje, e o caminho para as lojas |
 | [`docs/STATUS.md`](docs/STATUS.md) | O que está pronto × o que depende de serviços externos |

@@ -6,10 +6,33 @@
 
   var CUR = g.LUMI_CURRICULUM, LANGS = g.LUMI_LANGS, SRS = g.LUMI_SRS,
       SESSION = g.LUMI_SESSION, AUDIO = g.LUMI_AUDIO, STORE = g.LUMI_STORE,
-      ACT = g.LUMI_ACT, FX = g.LUMI_FX, LADDER = g.LUMI_LADDER;
+      ACT = g.LUMI_ACT, FX = g.LUMI_FX, LADDER = g.LUMI_LADDER, T = g.LUMI_I18N;
 
   var store = STORE.createStore();
   var data = store.load();
+
+  /* Idioma da interface: o que o responsável escolheu ou, na primeira vez,
+   * o idioma do aparelho. Guardado junto dos dados, não numa chave solta. */
+  T.setLang(data.parent.uiLang || T.detect());
+
+  /* Aplica o idioma às partes escritas em HTML (o resto é gerado em JS). */
+  function applyUILang() {
+    document.documentElement.lang = T.getLang();
+    var set = function (sel, txt) {
+      var e = document.querySelector(sel);
+      if (e) e.textContent = txt;
+    };
+    set('.tagline', T.t('splash.tagline'));
+    set('#splash-empty p', T.t('splash.setupFirst'));
+    set('#btn-splash-setup', T.t('splash.parents'));
+    set('.parent-title', T.t('panel.title'));
+    [['btn-home-profiles', 'data.profiles'], ['btn-home-parent', 'gate.title'],
+     ['btn-map', 'common.day'], ['btn-session-exit', 'common.back']
+    ].forEach(function (pair) {
+      var b = document.getElementById(pair[0]);
+      if (b) b.setAttribute('aria-label', T.t(pair[1]));
+    });
+  }
 
   function save() { store.save(data); }
 
@@ -427,12 +450,13 @@
     $('btn-splash-setup').onclick = function () { g.LUMI_PARENT.openGate('onboarding'); };
     $('btn-home-parent').onclick = function () { g.LUMI_PARENT.openGate('dashboard'); };
 
-    if (!Object.keys(data.profiles).length) renderSplash();
-    else renderSplash();
+    applyUILang();
+    renderSplash();
   }
 
   g.LUMI_APP = {
     init: init,
+    applyUILang: applyUILang,
     data: function () { return data; },
     store: store,
     save: save,

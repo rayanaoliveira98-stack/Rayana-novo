@@ -10,6 +10,7 @@
 | **Produção verificável em qualquer aparelho** (`SpeechRecognition` + detecção de voz por volume) | Onde há reconhecimento, a avaliação é tolerante à pronúncia infantil; onde não há, a detecção de volume confirma que a criança falou (sem gravar nem enviar nada), e é isso que permite a escada de produção avançar num celular simples. Sem microfone, ela fala em voz alta e confirma — contando como produção com apoio, nunca como fala verificada. |
 | **Conteúdo em packs por idioma** (`content/pack-XX.js`) | Novo idioma = novo arquivo, zero rebuild. O painel administrativo importa packs por JSON/CSV em tempo de execução (mesclados via `localStorage`). |
 | **Módulos puros testáveis** (`srs.js`, `ladder.js`, `session.js`, `gate.js`, `store.js`) | Rodam no navegador **e** no Node (`node --test`): o coração pedagógico tem testes automatizados. |
+| **Duas camadas de idioma** (`i18n.js` × `langs.js`) | O que o adulto lê e o que a criança aprende são independentes: um pai turco configura em turco para a filha aprender japonês. Acrescentar uma língua de interface é acrescentar uma coluna; um teste falha se alguma frase ficar sem tradução. |
 | **Offline-first** (Service Worker, cache-first) | Depois da primeira visita, tudo funciona sem internet — inclusive os áudios (TTS é local ao aparelho). |
 
 ## Decisões pedagógicas
@@ -37,7 +38,8 @@ lumilinguas/
 ├── manifest.webmanifest  # instalação PWA
 ├── css/app.css           # sistema visual
 ├── js/
-│   ├── langs.js          # registro de idiomas (cor, personagem, voz, jingle, variantes)
+│   ├── i18n.js           # ★ idioma da INTERFACE: 6 línguas para os responsáveis
+│   ├── langs.js          # registro de idiomas de APRENDIZAGEM (cor, personagem, voz)
 │   ├── srs.js            # ★ motor de repetição espaçada (puro, testado)
 │   ├── ladder.js         # ★ escada de produção: o degrau de cada palavra (puro, testado)
 │   ├── session.js        # ★ montador da sessão diária adaptativa (puro, testado)

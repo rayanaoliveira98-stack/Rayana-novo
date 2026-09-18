@@ -7,6 +7,8 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 
 - Jornada de 60 dias em 9 fases temáticas; mapa visual; adesivos; celebrações.
 - **36 conceitos completos em 9 idiomas** (pt-BR, EN GB/US, DE padrão/AT, ES europeu/latino, FR, IT, TR, ZH+pinyin, JA+rōmaji) — palavra, artigo, plural, adjetivo, ação, frase, pergunta, resposta, sinônimo, variações regionais, 3 imagens por conceito.
+- **Interface dos responsáveis em 6 idiomas** (português, inglês, alemão, espanhol, italiano e turco), com detecção pelo idioma do aparelho e troca no onboarding e em Configurações. Independente dos 9 idiomas de aprendizagem.
+- **Instalável no iOS e no Android** como PWA: ícones PNG (192/512/maskable e apple-touch 180), meta tags do iOS para abrir em tela cheia, e todo o conteúdo em cache offline.
 - Onboarding completo dos responsáveis (13 passos, incl. consentimento, PIN e teste inicial).
 - Escolha de 1-4 idiomas, alterável depois nas configurações.
 - Sessão diária adaptativa (~11 min) com o ciclo completo: boas-vindas → dificuldades de ontem → revisões SRS → 2-6 conceitos novos → compreensão → repetição oral → jogo → desafio misto → celebração → 4 dicas práticas do dia.
@@ -29,7 +31,7 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Painel dos responsáveis: progresso por idioma, estados, retenção 1/3/7/14/30d, dificuldades, histórico, tempo de uso, dicas, configurações, troca de PIN, multi-perfil, exportação JSON e exclusão total.
 - Painel administrativo (`admin.html`): revisão de todos os campos e variações, teste de áudio, validador, importação JSON/CSV sem rebuild, exportação de packs.
 - Offline após a primeira visita (Service Worker) + instalação PWA (iOS/Android).
-- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência, recuperação de PIN e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (61 testes).
+- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência, recuperação de PIN, cobertura dos 6 idiomas da interface e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (70 testes).
 
 ## ⚠️ Funcional com limitação conhecida
 
@@ -40,7 +42,9 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 | Ilustrações | Emoji do sistema (originais, sem copyright de terceiros) | Produção: ilustrações originais encomendadas; basta trocar `emoji` por caminho de imagem no currículo |
 | Músicas e rimas | Atividade pronta: melodia por idioma + palavra cantada em compasso de três repetições, montada a partir do vocabulário do dia | Produção musical original gravada (canções completas com refrão) no lugar da melodia sintetizada |
 | Histórias interativas | Atividade pronta: 3 cenas narradas com escolha da criança a cada cena, montadas a partir do vocabulário já trabalhado | Roteiros autorais ilustrados por tema, escritos por especialistas, e minibiografias de personagens |
-| Notificação do horário habitual | Horário é salvo, mas não notifica | Notification API + push local no empacotamento nativo |
+| Notificação do horário habitual | Horário é salvo, mas não notifica | `@capacitor/local-notifications` no empacotamento nativo — PWA no iOS não permite notificação local |
+| Publicação nas lojas | `capacitor.config.json` pronto e o app empacota sem build; o passo a passo está em [LOJAS.md](LOJAS.md) | Contas de desenvolvedor (Apple e Google), assinatura dos pacotes e submissão dependem das suas credenciais |
+| Persistência no iOS | `localStorage` pode ser descartado pelo iOS após semanas sem uso | `@capacitor/preferences` no app nativo |
 | Certificado final personalizado | Jornada e mapa prontos; tela de certificado no dia 60 ainda não desenhada | Tela de certificado imprimível com nome, idiomas e conquistas |
 
 ## ⭕ Depende de serviços externos (não incluído por decisão)

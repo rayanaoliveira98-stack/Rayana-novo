@@ -5,10 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>LumiLínguas — 4 idiomas em 60 dias</title>
   <meta name="description" content="Construa uma base de compreensão, vocabulário e pronúncia em até quatro idiomas durante uma jornada de 60 dias." />
-  <meta name="theme-color" content="#8E6CF0" />
+  <meta name="theme-color" content="#7C5CF0" />
   <link rel="manifest" href="manifest.webmanifest" />
+
+  <!-- Ícones: o iOS ignora SVG na tela inicial, então o apple-touch-icon
+       precisa ser PNG; o Android exige PNG 192/512 para instalar. -->
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" sizes="180x180" />
+
+  <!-- iOS: abre em tela cheia, sem a barra do Safari, com a barra de status
+       clara sobre o roxo do app. -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LumiLínguas" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
   <link rel="stylesheet" href="css/fonts.css" />
   <link rel="stylesheet" href="css/app.css" />
 </head>
@@ -106,6 +118,7 @@
   </div>
 
   <!-- Conteúdo e módulos (sem build step: funciona offline e em aparelhos antigos) -->
+  <script src="js/i18n.js"></script>
   <script src="js/langs.js"></script>
   <script src="content/curriculum.js"></script>
   <script src="content/pack-pt.js"></script>

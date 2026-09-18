@@ -19,6 +19,8 @@
     ? require('../content/curriculum.js') : g.LUMI_CURRICULUM;
   var LADDER = (typeof require === 'function' && typeof window === 'undefined')
     ? require('./ladder.js') : g.LUMI_LADDER;
+  var I18N = (typeof require === 'function' && typeof window === 'undefined')
+    ? require('./i18n.js') : g.LUMI_I18N;
 
   /* Atividades de compreensão disponíveis, alternadas por dia para nunca
    * repetir exatamente a mesma sequência em dias consecutivos. */
@@ -240,12 +242,8 @@
   }
 
   /* 10. Dicas práticas do dia para os responsáveis (4, em português). */
-  var TIP_TEMPLATES = [
-    { ctx: 'No café da manhã', make: function (w, ln) { return 'pergunte onde está “' + w + '” em ' + ln + '.'; } },
-    { ctx: 'Ao sair de casa', make: function (w, ln) { return 'diga “' + w + '” em ' + ln + ' apontando para o objeto.'; } },
-    { ctx: 'No carro ou no caminho', make: function (w, ln) { return 'repitam juntos “' + w + '” em ' + ln + '.'; } },
-    { ctx: 'Antes de dormir', make: function (w, ln) { return 'peça que a criança mostre ou fale “' + w + '” em ' + ln + '.'; } }
-  ];
+  /* Quatro momentos do dia, na língua do responsável. */
+  var TIP_KEYS = ['tip.breakfast', 'tip.leaving', 'tip.car', 'tip.bedtime'];
 
   function parentTips(newConcepts, packs, langNames, journeyDay) {
     var tips = [];
@@ -258,9 +256,11 @@
     });
     if (!pairs.length) return tips;
     for (var i = 0; i < 4; i++) {
-      var t = TIP_TEMPLATES[i % TIP_TEMPLATES.length];
       var p = pairs[(journeyDay + i) % pairs.length];
-      tips.push(t.ctx + ', ' + t.make(p.word, langNames[p.lang] || p.lang));
+      tips.push(I18N.t(TIP_KEYS[i % TIP_KEYS.length], {
+        word: p.word,
+        lang: langNames[p.lang] || p.lang
+      }));
     }
     return tips;
   }
