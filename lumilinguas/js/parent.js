@@ -436,25 +436,60 @@
         var recs = data.progress[p.id] && data.progress[p.id][lang] || {};
         var counts = {};
         Object.keys(recs).forEach(function (k) { counts[recs[k].state] = (counts[recs[k].state] || 0) + 1; });
-        var seen = Object.keys(recs).length;
-        var spoken = (counts.spoken || 0) + (counts.mastered || 0);
+        var vistos = Object.keys(recs).length;
+        var falados = (counts.spoken || 0) + (counts.mastered || 0);
+        var reconhece = (counts.recognized || 0) + (counts.repeated_helped || 0) + falados;
+
         var card = el('div', 'pcard');
-        card.appendChild(el('h3', '', L.flag + ' ' + L.name));
-        var ret = [1, 3, 7, 14, 30].map(function (d) {
-          var r = SRS.retentionAt(recs, d);
-          return d + 'd: ' + (r === null ? '—' : Math.round(r * 100) + '%');
-        }).join(' · ');
-        card.appendChild(el('p', '', 'Conceitos vistos: <b>' + seen + '</b> de ' + CUR.concepts.length +
-          ' · reconhece ao ouvir: <b>' + ((counts.recognized || 0) + spoken + (counts.repeated_helped || 0)) + '</b>' +
-          ' · fala sem ajuda: <b>' + spoken + '</b>'));
-        card.appendChild(el('p', 'ob-note', 'Retenção estimada — ' + ret));
-        var states = el('p', 'state-line', Object.keys(counts).map(function (s) {
-          return STATE_LABELS[s] + ': ' + counts[s];
-        }).join(' · ') || 'Ainda sem atividades registradas.');
-        card.appendChild(states);
+        var head = el('div', 'lang-head');
+        head.innerHTML =
+          '<span class="lh-char" style="background:' + L.colorSoft + '">' + L.character.emoji + '</span>' +
+          '<span class="lh-name">' + L.name + '</span>' +
+          '<span class="lh-flag">' + L.flag + '</span>';
+        card.appendChild(head);
+
+        /* Três números que respondem à pergunta do responsável num relance:
+         * quanto ela viu, quanto entende, quanto já fala. */
+        var tiles = el('div', 'stat-row');
+        [[vistos, 'de ' + CUR.concepts.length, 'palavras vistas', L.color],
+         [reconhece, '', 'reconhece ao ouvir', '#3550C4'],
+         [falados, '', 'fala sem ajuda', '#23A96B']
+        ].forEach(function (t) {
+          var tile = el('div', 'stat');
+          tile.innerHTML =
+            '<span class="stat-num" style="color:' + t[3] + '">' + t[0] +
+            (t[1] ? '<span class="stat-of"> ' + t[1] + '</span>' : '') + '</span>' +
+            '<span class="stat-label">' + t[2] + '</span>';
+          tiles.appendChild(tile);
+        });
+        card.appendChild(tiles);
+
+        /* Retenção: uma linha de marcos, não uma frase cheia de travessões. */
+        var ret = el('div', 'retention');
+        ret.appendChild(el('span', 'ret-title', 'Retenção estimada'));
+        var pista = el('div', 'ret-track');
+        [1, 3, 7, 14, 30].forEach(function (d) {
+          var v = SRS.retentionAt(recs, d);
+          var m = el('span', 'ret-mark' + (v === null ? ' pending' : ''));
+          m.innerHTML = '<b>' + (v === null ? '—' : Math.round(v * 100) + '%') + '</b>' +
+                        '<i>' + d + 'd</i>';
+          if (v !== null) {
+            m.style.borderColor = v >= 0.7 ? '#23A96B' : (v >= 0.4 ? '#E09600' : '#E2574C');
+          }
+          pista.appendChild(m);
+        });
+        ret.appendChild(pista);
+        card.appendChild(ret);
         body.appendChild(card);
       });
-      body.appendChild(el('p', 'ob-note', 'Dia da jornada: ' + p.journeyDay + ' de 60 — fase: ' + CUR.weekForDay(p.journeyDay).title));
+
+      var fase = CUR.weekForDay(p.journeyDay);
+      var rodape = el('div', 'pcard journey-card');
+      rodape.innerHTML =
+        '<span class="jc-day">Dia ' + p.journeyDay + '<small>de 60</small></span>' +
+        '<span class="jc-phase"><b>' + fase.title + '</b>' +
+        '<i>fase ' + (CUR.weeks.indexOf(fase) + 1) + ' de ' + CUR.weeks.length + '</i></span>';
+      body.appendChild(rodape);
     }
 
     if (tab === 'ladder') {

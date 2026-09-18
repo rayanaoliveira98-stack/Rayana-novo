@@ -2,13 +2,20 @@
  * Pré-cacheia app + conteúdo; estratégia cache-first (o conteúdo é local).
  * Ao publicar nova versão, troque CACHE_VERSION.
  */
-var CACHE_VERSION = 'lumilinguas-v3';
+var CACHE_VERSION = 'lumilinguas-v4';
 
 var ASSETS = [
   './',
   'index.html',
   'admin.html',
   'css/app.css',
+  'css/fonts.css',
+  'fonts/baloo2-500-latin.woff2',
+  'fonts/baloo2-500-latin-ext.woff2',
+  'fonts/baloo2-700-latin.woff2',
+  'fonts/baloo2-700-latin-ext.woff2',
+  'fonts/baloo2-800-latin.woff2',
+  'fonts/baloo2-800-latin-ext.woff2',
   'manifest.webmanifest',
   'icons/icon.svg',
   'js/langs.js',

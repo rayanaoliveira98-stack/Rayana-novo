@@ -98,11 +98,11 @@
   }
 
   /* Botão de microfone com onda reativa ao volume real da voz. */
-  function micWidget(card) {
+  function micWidget(card, linha) {
     var mic = el('button', 'btn-mic', '🎤');
     mic.setAttribute('aria-label', 'Falar');
     var onda = el('div', 'mic-status', '');
-    card.appendChild(mic);
+    (linha || card).appendChild(mic);
     card.appendChild(onda);
     return {
       mic: mic,
@@ -142,7 +142,13 @@
         if (env.textSupport && !rotulo.innerHTML) rotulo.innerHTML = h().wordLabel(env, e);
       }
 
-      var w = micWidget(card);
+      /* Uma fileira só de ações: repetir a pergunta, falar, confirmar.
+       * Antes eles ficavam em três alturas diferentes e a mão não sabia
+       * onde pousar. */
+      var acoes = el('div', 'produce-actions');
+      card.appendChild(acoes);
+
+      var w = micWidget(card, acoes);
       var tentativas = 0;
       var deuModelo = false;
 
@@ -179,14 +185,12 @@
             // O modelo NÃO vem de graça: continua valendo a hierarquia de
             // apoio — ela tenta primeiro, e só pede ajuda se precisar.
             w.mic.remove();
-            var linha = el('div', 'produce-actions');
             var ajuda = el('button', 'btn-round btn-help', '👂');
             ajuda.setAttribute('aria-label', 'Ouvir a palavra');
             var ok = el('button', 'btn-said', '✅');
             ok.setAttribute('aria-label', 'Eu falei!');
-            linha.appendChild(ajuda);
-            linha.appendChild(ok);
-            card.appendChild(linha);
+            acoes.appendChild(ajuda);
+            acoes.appendChild(ok);
             FX.highlight(ok);
 
             var pediuAjuda = false;
@@ -241,9 +245,7 @@
       var repetir = el('button', 'btn-round btn-replay', '🔁');
       repetir.setAttribute('aria-label', 'Ouvir a pergunta de novo');
       repetir.onclick = function () { cfg.elicia(env, step, e, palco); };
-      var barra = el('div', 'replay-bar');
-      barra.appendChild(repetir);
-      card.appendChild(barra);
+      acoes.insertBefore(repetir, acoes.firstChild);
 
       elicia().then(tentar);
     });

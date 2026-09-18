@@ -584,8 +584,9 @@
 
     return FX.leave(container).then(function () {
       container.innerHTML = '';
-      stage.style.setProperty('--lang-color', L ? L.color : '#8E6CF0');
-      stage.style.setProperty('--lang-soft', L ? L.colorSoft : '#EAE3FC');
+      stage.style.setProperty('--lang-color', L ? L.color : '#7C5CF0');
+      stage.style.setProperty('--lang-soft', L ? L.colorSoft : '#EDE7FE');
+      stage.style.setProperty('--lang-deep', L ? (L.colorDeep || L.color) : '#5B3FC4');
 
       // O personagem-guia acompanha a criança, menos quando ele é o conteúdo.
       if (L && step.type !== 'welcome' && step.type !== 'lang_intro' && step.type !== 'celebrate') {
@@ -596,6 +597,7 @@
       }
 
       var result = dispatch(step, env, container);
+      montarCabecalho(step, container);
       FX.enter(container);
       return result;
     });
@@ -614,6 +616,26 @@
       case 'name_it': return g.LUMI_ACT_PRODUCE.nameIt(env, step, container);
       case 'use_it': return g.LUMI_ACT_PRODUCE.useIt(env, step, container);
       default: return listenTap(env, step, container);
+    }
+  }
+
+  /* Move a dica da tarefa (👂 🔍 🗣️ …) para o balão do personagem.
+   *
+   * Antes ela ficava solta no meio do palco e o topo da tela vazio: a criança
+   * via um ícone sem dono. Agora o personagem do idioma segura a instrução —
+   * fica claro QUEM está pedindo, e a tela ganha começo, meio e fim. */
+  function montarCabecalho(step, container) {
+    var header = document.getElementById('act-header');
+    var bubble = document.getElementById('act-bubble');
+    if (!header || !bubble) return;
+    bubble.innerHTML = '';
+    var hint = container.querySelector('.task-hint');
+    var temMascote = header.querySelector('.mascot');
+    if (hint && temMascote) {
+      bubble.appendChild(hint);          // move (não copia): sai do palco
+      header.classList.add('on');
+    } else {
+      header.classList.toggle('on', !!temMascote);
     }
   }
 

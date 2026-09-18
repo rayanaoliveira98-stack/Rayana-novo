@@ -1,15 +1,62 @@
 # Sistema visual
 
-## Princípios
+## Direção: mundo de papel recortado
 
-- **Alegre e acolhedor**: fundo creme quente (`#FFF9F2`), cartões brancos com sombras suaves, cantos muito arredondados (18-28px).
-- **Elementos gigantes**: alvos de toque mínimos de 76px na área infantil (botão de play: 120px); emojis-herói de 110-140px.
-- **Pouco texto**: zero texto nas atividades para 3-4 anos; apoio opcional para 5-7.
-- **Animações que explicam**: personagem flutua = "estou com você"; botão pulsa = "toque aqui"; dica animada (👂/🔍/🗣️) = tipo de atividade; confete = fim da sessão. Nada pisca agressivamente.
-- **Movimento com significado** (nunca decorativo): cada atividade entra deslizando e seus elementos aparecem em cascata, para o olho seguir a ordem da tela; o acerto estoura partículas no dedo e manda uma estrela voando até o contador; o balanço suave de um cartão diz "olhe de novo", jamais "errado"; depois de ~9 s parada, a resposta certa pulsa para ajudar sem cobrar.
-- **Mascote-guia sempre presente**: o personagem do idioma acompanha no canto e muda de humor conforme a atividade (pensa na escolha, escuta na fala, comemora no acerto, acena no encorajamento). É a presença que substitui o texto que a criança ainda não lê.
-- **Vibração como terceiro canal**: pulsos curtíssimos confirmam acerto e toque, ajudando quem ouve pouco ou joga com o som desligado.
-- **Ilustração por emoji na demonstração**: originais do sistema, sem personagens ou interfaces copiados de outros aplicativos. Produção: substituir por ilustrações originais encomendadas (a arquitetura só troca strings de emoji por `<img>`).
+A criança não está diante de um formulário — está olhando uma cena montada com
+papel colorido. Céu ao fundo, colinas recortadas no rodapé, e peças pousadas
+por cima. Três regras sustentam tudo:
+
+1. **Nada flutua em cinza.** As sombras são sólidas e deslocadas para baixo
+   (`0 6px 0`), como papel empilhado — não borrões genéricos de caixa branca.
+2. **Tudo que se toca afunda.** Cada botão tem espessura real (uma faixa mais
+   escura embaixo) e perde altura no toque: a mão sente que empurrou uma peça.
+3. **A cena é do idioma.** A cor da língua ativa tinge o céu, as bordas e a
+   luz dos objetos — trocar de idioma é entrar em outro lugar, não só ver
+   outra cor.
+
+## Tipografia
+
+**Baloo 2** (SIL Open Font License), servida pelo próprio app em `fonts/` —
+não do Google Fonts, porque o app precisa funcionar offline. Arredondada,
+encorpada e desenhada para telas pequenas. Só latim e latim estendido (68 KB
+por peso); mandarim e japonês usam a fonte do sistema, que os desenha melhor.
+
+O corpo de texto do **painel dos responsáveis** fica na fonte do sistema: lê
+melhor em blocos longos, é o que o adulto já está acostumado a ler no
+aparelho, e não custa download nenhum. Só os títulos e controles ali usam a
+voz da marca.
+
+## Composição da atividade
+
+Cada tela de atividade tem começo, meio e fim:
+
+- **Cabeçalho** — o personagem do idioma segura um balão com o ícone da tarefa.
+  Fica claro *quem* está pedindo *o quê*. Antes o ícone flutuava solto e o topo
+  da tela ficava vazio.
+- **Palco** — a peça central (objeto no prato de luz) e as opções.
+- **Ações** — sempre numa fileira só, na mesma altura, para a mão saber onde
+  pousar.
+
+Cabeçalho e palco são centralizados **como um grupo**, não separadamente: eles
+formam uma cena, não dois blocos distantes.
+
+## Escalas que acompanham a tela
+
+Nada é fixo em pixels onde o espaço varia: os objetos crescem com a altura
+disponível (`clamp` com unidades de viewport) para não boiarem num vazio em
+telas grandes nem estourarem em telas pequenas. Há um ajuste explícito para
+telas baixas (celular pequeno ou paisagem), onde o herói e os botões encolhem.
+
+## Princípios gerais
+
+- **Elementos gigantes**: alvos de toque mínimos de 76px na área infantil
+  (botão de brincar: 124px); objeto em foco de 88 a 124px conforme a tela.
+- **Pouco texto**: zero texto nas atividades para 3-4 anos; apoio opcional
+  para 5-7 — e, nas atividades de fala, a palavra escrita só aparece **depois**
+  da tentativa, senão a criança lê em vez de lembrar.
+- **Ilustração por emoji na demonstração**: originais do sistema, sem
+  personagens ou interfaces copiados. Em produção, trocam-se por ilustrações
+  encomendadas (a arquitetura só troca a string do emoji por um `<img>`).
 
 ## Identidade por idioma
 

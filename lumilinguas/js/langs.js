@@ -10,7 +10,7 @@
   var LANGS = {
     'pt': {
       code: 'pt', name: 'Português (Brasil)', childName: 'Português',
-      color: '#2BB673', colorSoft: '#DFF5EA',
+      color: '#2BB673', colorSoft: '#DFF5EA', colorDeep: '#1B8455',
       character: { name: 'Tuca', emoji: '🦜', species: 'tucano' },
       tts: ['pt-BR'], flag: '🇧🇷',
       jingle: [523, 659, 784], // identidade sonora curta (Hz)
@@ -18,7 +18,7 @@
     },
     'de': {
       code: 'de', name: 'Alemão', childName: 'Deutsch',
-      color: '#F4B400', colorSoft: '#FCF0CC',
+      color: '#F4B400', colorSoft: '#FCF0CC', colorDeep: '#C98A00',
       character: { name: 'Bruno', emoji: '🐻', species: 'urso' },
       tts: ['de-DE', 'de-AT'], flag: '🇩🇪',
       jingle: [392, 494, 587],
@@ -29,7 +29,7 @@
     },
     'en': {
       code: 'en', name: 'Inglês', childName: 'English',
-      color: '#4A6CF7', colorSoft: '#E2E8FE',
+      color: '#4A6CF7', colorSoft: '#E2E8FE', colorDeep: '#3550C4',
       character: { name: 'Finn', emoji: '🦊', species: 'raposa' },
       tts: ['en-GB', 'en-US'], flag: '🇬🇧',
       jingle: [440, 554, 659],
@@ -40,7 +40,7 @@
     },
     'es': {
       code: 'es', name: 'Espanhol', childName: 'Español',
-      color: '#E2574C', colorSoft: '#FBE3E1',
+      color: '#E2574C', colorSoft: '#FBE3E1', colorDeep: '#B83C33',
       character: { name: 'Lola', emoji: '🦙', species: 'lhama' },
       tts: ['es-ES', 'es-419', 'es-MX'], flag: '🇪🇸',
       jingle: [494, 587, 740],
@@ -51,7 +51,7 @@
     },
     'tr': {
       code: 'tr', name: 'Turco', childName: 'Türkçe',
-      color: '#00A3A3', colorSoft: '#D6F2F2',
+      color: '#00A3A3', colorSoft: '#D6F2F2', colorDeep: '#00787A',
       character: { name: 'Kaya', emoji: '🐰', species: 'coelho' },
       tts: ['tr-TR'], flag: '🇹🇷',
       jingle: [415, 523, 622],
@@ -59,7 +59,7 @@
     },
     'fr': {
       code: 'fr', name: 'Francês', childName: 'Français',
-      color: '#8E6CF0', colorSoft: '#EAE3FC',
+      color: '#8E6CF0', colorSoft: '#EAE3FC', colorDeep: '#5B3FC4',
       character: { name: 'Coco', emoji: '🐓', species: 'galo' },
       tts: ['fr-FR'], flag: '🇫🇷',
       jingle: [466, 587, 698],
@@ -67,7 +67,7 @@
     },
     'it': {
       code: 'it', name: 'Italiano', childName: 'Italiano',
-      color: '#3AAE5C', colorSoft: '#DFF2E5',
+      color: '#3AAE5C', colorSoft: '#DFF2E5', colorDeep: '#2A8546',
       character: { name: 'Gigi', emoji: '🦉', species: 'coruja' },
       tts: ['it-IT'], flag: '🇮🇹',
       jingle: [523, 622, 784],
@@ -75,7 +75,7 @@
     },
     'zh': {
       code: 'zh', name: 'Mandarim', childName: '中文',
-      color: '#E58B2F', colorSoft: '#FBEBD9',
+      color: '#E58B2F', colorSoft: '#FBEBD9', colorDeep: '#B96716',
       character: { name: 'Panpan', emoji: '🐼', species: 'panda' },
       tts: ['zh-CN'], flag: '🇨🇳',
       jingle: [440, 523, 659],
@@ -84,7 +84,7 @@
     },
     'ja': {
       code: 'ja', name: 'Japonês', childName: 'にほんご',
-      color: '#E2648F', colorSoft: '#FBE2EC',
+      color: '#E2648F', colorSoft: '#FBE2EC', colorDeep: '#B94668',
       character: { name: 'Momo', emoji: '🦝', species: 'tanuki' },
       tts: ['ja-JP'], flag: '🇯🇵',
       jingle: [494, 622, 740],

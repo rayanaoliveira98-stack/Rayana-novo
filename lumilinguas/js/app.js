@@ -68,7 +68,13 @@
     if (!p) return renderSplash();
     var L = LANGS.get(p.langs[0]);
     $('home-char').textContent = L.character.emoji;
-    $('home-char-wrap').style.background = L.colorSoft;
+    $('home-char-wrap').style.background =
+      'radial-gradient(circle at 50% 36%, #fff 0%, ' + L.colorSoft + ' 100%)';
+    // a cena inteira assume a cor do idioma do dia
+    var casa = $('screen-home');
+    casa.style.setProperty('--lang-color', L.color);
+    casa.style.setProperty('--lang-soft', L.colorSoft);
+    casa.style.setProperty('--lang-deep', L.colorDeep || L.color);
     $('home-day-count').textContent = p.journeyDay;
     // adesivos ganhos aparecem como decoração
     $('home-stickers-preview').textContent = (p.stickers || []).slice(-4).map(function (s) { return s.emoji; }).join(' ');
@@ -121,29 +127,54 @@
     var p = profile();
     var wrap = $('map-path');
     wrap.innerHTML = '';
-    var weekColors = ['#2BB673', '#4A6CF7', '#E2574C', '#F4B400', '#8E6CF0', '#00A3A3', '#E58B2F', '#E2648F', '#3AAE5C'];
-    for (var day = 1; day <= 60; day++) {
-      var wk = CUR.weekForDay(day);
-      var i = CUR.weeks.indexOf(wk);
-      var dot = document.createElement('div');
-      dot.className = 'map-dot' + (day < p.journeyDay ? ' done' : day === p.journeyDay ? ' current' : '');
-      dot.style.setProperty('--wk-color', weekColors[i]);
-      // a trilha serpenteia: cada dia se desloca numa onda, virando caminho
-      dot.style.setProperty('--wave', (Math.sin(day * 0.62) * 34).toFixed(1) + 'px');
-      dot.style.setProperty('--in-delay', Math.min(day * 22, 900) + 'ms');
-      if (day < p.journeyDay) dot.textContent = '⭐';
-      else if (day === p.journeyDay) dot.textContent = LANGS.get(p.langs[0]).character.emoji;
-      else dot.textContent = '';
-      wrap.appendChild(dot);
-      if (CUR.weeks[i].days[1] === day && day < 60) {
-        var badge = document.createElement('div');
-        badge.className = 'map-week-badge' + (day < p.journeyDay ? ' won' : '');
-        badge.textContent = ['🏠', '👨‍👩‍👧', '🍎', '🐶', '👕', '🚗', '😊', '💬', '🏆'][i + 1] || '🏆';
-        wrap.appendChild(badge);
-      }
-    }
+    var weekColors = ['#23A96B', '#3550C4', '#E2574C', '#E09600', '#7C5CF0',
+                      '#00878A', '#D4761F', '#D4548A', '#2A8546'];
+    var marcos = ['🏠', '👨‍👩‍👧', '🍎', '🐶', '👕', '🚗', '😊', '💬', '🏆'];
+
+    /* Sete colunas: cada linha é exatamente uma semana temática, e o marco
+     * da fase fecha a linha. O caminho alterna o sentido a cada semana, como
+     * numa trilha de tabuleiro — e nunca sobra buraco na grade. */
+    var COLUNAS = 7;
+    var linha = 1;
+
+    CUR.weeks.forEach(function (wk, i) {
+      var cor = weekColors[i];
+      var daVolta = i % 2 === 1;   // semanas pares correm ao contrário
+      var dias = [];
+      for (var d = wk.days[0]; d <= wk.days[1]; d++) dias.push(d);
+
+      dias.forEach(function (day, k) {
+        var col = daVolta ? (dias.length - 1 - k) : k;
+        var dot = document.createElement('div');
+        dot.className = 'map-dot' +
+          (day < p.journeyDay ? ' done' : day === p.journeyDay ? ' current' : ' future');
+        dot.style.setProperty('--wk-color', cor);
+        dot.style.gridColumn = String(col + 1);
+        dot.style.gridRow = String(linha);
+        dot.style.setProperty('--curve',
+          (Math.sin((col / (COLUNAS - 1)) * Math.PI) * -6).toFixed(1) + 'px');
+        dot.style.setProperty('--in-delay', Math.min((day - 1) * 14, 900) + 'ms');
+
+        if (day < p.journeyDay) dot.textContent = '⭐';
+        else if (day === p.journeyDay) dot.textContent = LANGS.get(p.langs[0]).character.emoji;
+        else dot.textContent = String(day);
+        dot.title = 'Dia ' + day + ' — ' + wk.title;
+        wrap.appendChild(dot);
+      });
+      linha++;
+
+      // marco da fase: atravessa a trilha inteira, com o tema da semana
+      var badge = document.createElement('div');
+      badge.className = 'map-week-badge' + (p.journeyDay > wk.days[1] ? ' won' : '');
+      badge.style.gridRow = String(linha);
+      badge.style.setProperty('--wk-color', cor);
+      badge.innerHTML = '<span class="mwb-icon">' + (marcos[i] || '🏆') + '</span>' +
+                        '<span class="mwb-name">' + wk.title + '</span>';
+      wrap.appendChild(badge);
+      linha++;
+    });
+
     show('screen-map');
-    // leva a criança direto ao ponto onde ela está hoje
     setTimeout(function () {
       var cur = wrap.querySelector('.map-dot.current');
       if (cur && cur.scrollIntoView) {

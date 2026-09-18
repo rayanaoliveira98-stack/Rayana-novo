@@ -62,9 +62,13 @@
    * texto que a criança ainda não lê. */
   function mascot(parent, emoji, color) {
     if (!parent) return null;
-    if (!mascotEl || !mascotEl.isConnected) {
+    // Vive no cabeçalho da atividade quando há um: ali ele é quem PEDE a
+    // tarefa, e não um enfeite solto no canto da tela.
+    var casa = document.getElementById('act-mascot-slot') || parent;
+    if (!mascotEl || !mascotEl.isConnected || mascotEl.parentElement !== casa) {
+      if (mascotEl && mascotEl.isConnected) mascotEl.remove();
       mascotEl = el('div', 'mascot', '<span class="mascot-face"></span>');
-      parent.appendChild(mascotEl);
+      casa.appendChild(mascotEl);
     }
     if (emoji) mascotEl.querySelector('.mascot-face').textContent = emoji;
     if (color) mascotEl.style.setProperty('--mascot-color', color);
@@ -81,6 +85,8 @@
   function mascotHide() {
     if (mascotEl && mascotEl.isConnected) mascotEl.remove();
     mascotEl = null;
+    var h = document.getElementById('act-header');
+    if (h) h.classList.remove('on');
   }
 
   /* ---------- partículas e estrelas ---------- */
