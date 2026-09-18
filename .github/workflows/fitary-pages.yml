@@ -1,0 +1,48 @@
+name: Deploy FITARY (GitHub Pages)
+
+# Veröffentlicht fitary-app/ im Unterordner /fitary/ des gh-pages-Branches.
+# Läuft zusätzlich nach jedem LumiLínguas-Deploy: dessen Workflow schreibt
+# gh-pages mit --force neu und würde /fitary/ sonst entfernen.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "fitary-app/**"
+      - ".github/workflows/fitary-pages.yml"
+  workflow_run:
+    workflows: ["Deploy LumiLínguas (GitHub Pages)"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-fitary
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: src
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: site
+      - name: App nach /fitary/ kopieren
+        run: |
+          cd site
+          rm -rf fitary && mkdir -p fitary
+          cp ../src/fitary-app/index.html ../src/fitary-app/app.css ../src/fitary-app/app.js fitary/
+          cp -r ../src/fitary-app/assets fitary/
+          rm -f fitary/assets/README.md
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "Deploy FITARY (${GITHUB_SHA})"
+          git push
