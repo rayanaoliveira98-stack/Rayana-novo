@@ -7,7 +7,7 @@
   <meta name="description" content="Client Journey Tracking, Buchungen und automatisierte Kundenkommunikation für FITARY Boutique Personal Training, Wels." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="app.css" />
 </head>
 <body data-palette="#B3360C,#5BE6B4,#F5B23B,#FF5A5F">
@@ -16,12 +16,12 @@
 
     <!-- SIDEBAR -->
     <aside class="side">
-      <!-- Logo: echte Datei unter assets/logo.svg (oder .png) ablegen — sie ersetzt das
-           Monogramm automatisch. Quelle: Canva Brand Kit "FITARY". -->
+      <!-- Offizielles FITARY-Logo, freigestellt aus dem Markenasset -->
       <div class="side__brand">
-        <img src="assets/logo.svg" alt="FITARY" class="side__logo" onerror="this.classList.add('is-missing')" />
+        <img src="assets/logo.png" alt="FITARY" class="side__logo" onerror="this.classList.add('is-missing')" />
         <span class="side__mark" aria-hidden="true">F</span>
         <span class="side__name">FITARY<em>boutique personal training</em></span>
+        <p class="side__tag">boutique personal training</p>
       </div>
 
       <nav class="side__nav" id="nav">
@@ -41,6 +41,7 @@
     <!-- MAIN -->
     <div class="main">
       <header class="topbar">
+        <img src="assets/logo-mark.png" alt="FITARY" class="topbar__mark" onerror="this.remove()" />
         <div>
           <p class="topbar__eyebrow" id="topEyebrow">Cockpit</p>
           <h1 class="topbar__title" id="topTitle">Heute im Studio</h1>

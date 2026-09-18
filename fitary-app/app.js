@@ -935,7 +935,7 @@ function viewCockpit() {
             <span style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden">
               <span style="display:block;height:100%;width:${db.clients.length ? n / db.clients.length * 100 : 0}%;background:var(--flame);border-radius:99px"></span>
             </span>
-            <span style="font-family:var(--font-d);font-weight:700;font-size:13px;width:18px;text-align:right">${n}</span>
+            <span style="font-family:var(--font-d);font-stretch:75%;font-weight:700;font-size:13px;width:18px;text-align:right">${n}</span>
           </div>`).join('')}
       </div>
     </div>
@@ -1470,7 +1470,7 @@ function viewCalendar() {
   return `
   <div class="calnav">
     <button class="btn btn--ghost btn--sm" data-act="week" data-d="-1">← Woche</button>
-    <span style="font-family:var(--font-d);font-weight:700">${fmtShort(iso(days[0]))} – ${fmtShort(iso(days[6]))}</span>
+    <span style="font-family:var(--font-d);font-stretch:75%;font-weight:700">${fmtShort(iso(days[0]))} – ${fmtShort(iso(days[6]))}</span>
     <button class="btn btn--ghost btn--sm" data-act="week" data-d="1">Woche →</button>
     <span class="pill pill--flame">${done} Einheiten · ${Math.round(done / WEEK_CAPACITY * 100)} % Auslastung</span>
     <button class="btn btn--primary btn--sm" data-act="booknew" style="margin-left:auto">+ Buchung</button>
