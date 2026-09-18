@@ -126,7 +126,8 @@ a { color: inherit; }
 }
 .topbar__eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
 .topbar__title { font-family: var(--font-d); font-stretch: 75%; font-size: 23px; font-weight: 700; letter-spacing: -.02em; }
-.topbar__actions { display: flex; align-items: center; gap: 10px; }
+.topbar__actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.is-portal .topbar { justify-content: flex-start; }
 
 .view { padding: 26px 32px 60px; }
 
@@ -451,3 +452,35 @@ a { color: inherit; }
   .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
   .kpi.in, .card.in, .action.in { animation: none; }
 }
+
+
+/* ---------- Kundenzugang: Bereichsnavigation ---------- */
+.ptabs {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 18px;
+  border-bottom: 1px solid var(--line); scrollbar-width: none;
+}
+.ptabs::-webkit-scrollbar { display: none; }
+.ptab {
+  position: relative; padding: 9px 15px; border-radius: var(--r-pill);
+  font-size: 13.5px; font-weight: 600; color: var(--ink-2); white-space: nowrap;
+  transition: var(--t); font-family: var(--font-d); font-stretch: 75%; letter-spacing: .01em;
+}
+.ptab:hover { color: var(--ink); background: var(--surface-2); }
+.ptab.is-active { background: var(--flame-dim); color: var(--flame); }
+.ptab__dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--flame); margin-left: 6px; vertical-align: middle; }
+
+/* ---------- Check-in-Regler ---------- */
+input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 6px;
+  border-radius: 99px; background: var(--surface-3); outline: none; padding: 0;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--flame-fill); border: 2px solid var(--brand-mint); cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--flame-fill); border: 2px solid var(--brand-mint); cursor: pointer;
+}
+@media (max-width: 760px) { .ptab { padding: 8px 12px; font-size: 12.5px; } }

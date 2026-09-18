@@ -71,10 +71,21 @@ magic link, todos os valores, histórico, agenda, videomensagens.
 | **Kommunikation** | Rascunhos prontos na voz FITARY, copiar / abrir WhatsApp / e-mail, marcar como enviado |
 | **Automationen** | 8 regras que vigiam a jornada e propõem a mensagem certa. Nada sai sem você liberar |
 
-### 2. Acesso individual do cliente (magic link 1:1 FITARY ↔ cliente)
+### 2. Área do cliente — 6 seções (magic link 1:1 FITARY ↔ cliente)
 
 Cada cliente tem um **magic link** com token próprio e validade de 30 dias
-(`index.html?zugang=fit-xxxxx`). Abre **apenas os dados daquela pessoa**:
+(`index.html?zugang=fit-xxxxx`). Abre **apenas os dados daquela pessoa**, em 6 abas:
+
+| Aba | Conteúdo |
+|---|---|
+| **Start** | próxima sessão, objetivo atual + próximo marco com barra, último treino, streak, adherence, progresso desde o início, mensagem do trainer, aviso de check-in pendente |
+| **Training** | cada treino documentado: exercícios, peso × repetições × séries, duração, intensidade, PRs e a nota do trainer |
+| **Fortschritt** | **Start vs. Heute** (força, peso, gordura, medidas, resistência, mobilidade), curvas de força por exercício, valores corporais, mobilidade item a item, trilha da jornada |
+| **Erfolge** | maior progresso em destaque (ex.: Kniebeuge 50 → 70 kg **+40 %**), recordes por exercício, nº de treinos, marcos automáticos |
+| **Check-in** | formulário semanal: energia, sono, estresse, motivação, bem-estar (1–5) + peso e nota opcionais, com histórico e score 0–100 |
+| **Betreuung** | tarefas da semana (com check), thread de mensagens 1:1 nos dois sentidos, videomensagens, contingente, contato direto |
+
+Além disso:
 
 - próxima sessão + botão de **absagen** (cancelar) e pedir sessão extra
 - **Beweglichkeitstest**: baseline → valor atual, item por item, com marcador do ponto de partida
@@ -175,6 +186,21 @@ qualquer fundo escuro):
 
 Para trocar por uma versão vetorial: substitua por `logo.svg` e ajuste o `src` em
 `index.html`. Se o arquivo faltar, o app cai no monograma "F" automaticamente.
+
+## Betreuungsakte (visão do trainer)
+
+Cada cliente tem uma ficha em 5 abas — o mesmo dado, do outro lado:
+
+- **Übersicht** — objetivo + próximo marco, treinos, streak, adherence, **último check-in com os 5 valores**, sinais de risco, próxima sessão, último treino, top 3 recordes
+- **Training** — histórico + botão **"Training dokumentieren"**: data, duração, intensidade, peso/reps/séries por exercício do programa e nota para o cliente. **PR é detectado automaticamente** e aparece no app dele
+- **Fortschritt** — curvas de força, medidas corporais (registro novo em 1 clique), Beweglichkeitstest e Leistungstest
+- **Check-ins** — histórico semanal com score e destaque nos valores críticos
+- **Betreuung** — notas privadas do trainer, tarefas da semana, thread de mensagens, videomensagens e os modelos de mensagem
+
+Duas regras novas no cockpit fecham o ciclo:
+**Check-in fehlt** (sem auto-relato há 9+ dias) e **schwacher Check-in** (score < 55 → ajustar o treino antes que a pessoa saia sozinha).
+
+O ciclo completo: **documentar treino → tornar progresso visível → dar feedback → ajustar o acompanhamento.**
 
 ## Disponibilidade e auto-agendamento
 

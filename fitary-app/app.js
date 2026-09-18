@@ -4,7 +4,7 @@
    Vanilla JS, localStorage. Kein Build, kein Backend.
    ========================================================= */
 
-const KEY = 'fitary.journey.v3';
+const KEY = 'fitary.journey.v4';
 
 /* ---------------- Helpers ---------------- */
 const $  = (s, r = document) => r.querySelector(s);
@@ -59,6 +59,49 @@ const stageOf = c => {
   const w = daysBetween(c.start, iso(today())) / 7;
   return STAGES.slice(1).find(s => w >= s.from && w < s.to) || STAGES[STAGES.length - 1];
 };
+
+/* Übungskatalog für die Trainingsdokumentation */
+const EXERCISES = {
+  squat: { label: 'Kniebeuge',       unit: 'kg' },
+  bench: { label: 'Bankdrücken',     unit: 'kg' },
+  row:   { label: 'Rudern',          unit: 'kg' },
+  dead:  { label: 'Kreuzheben',      unit: 'kg' },
+  ohp:   { label: 'Schulterdrücken', unit: 'kg' },
+  lunge: { label: 'Ausfallschritt',  unit: 'kg' },
+  pull:  { label: 'Klimmzüge',       unit: 'Wdh' },
+  plank: { label: 'Plank',           unit: 'sek' }
+};
+
+/* Wöchentlicher Check-in — Skala 1–5 */
+const CHECKIN = [
+  { id: 'energie',      label: 'Energie',      good: 5 },
+  { id: 'schlaf',       label: 'Schlaf',       good: 5 },
+  { id: 'stress',       label: 'Stress',       good: 1 },
+  { id: 'motivation',   label: 'Motivation',   good: 5 },
+  { id: 'wohlbefinden', label: 'Wohlbefinden', good: 5 }
+];
+
+/* Körpermaße in cm, Gewicht in kg, Körperfett in % */
+const BODY = [
+  { id: 'kg',    label: 'Gewicht',     unit: 'kg', dir: -1 },
+  { id: 'bf',    label: 'Körperfett',  unit: '%',  dir: -1 },
+  { id: 'taille',label: 'Taille',      unit: 'cm', dir: -1 },
+  { id: 'brust', label: 'Brust',       unit: 'cm', dir:  1 },
+  { id: 'huefte',label: 'Hüfte',       unit: 'cm', dir: -1 },
+  { id: 'arm',   label: 'Oberarm',     unit: 'cm', dir:  1 },
+  { id: 'bein',  label: 'Oberschenkel',unit: 'cm', dir:  1 }
+];
+
+const TRAINER_NOTES = [
+  'Saubere Technik heute — nächstes Mal steigern wir.',
+  'Tiefe passt jetzt. Ab nächster Woche mehr Gewicht.',
+  'Rumpf war stabil, die Atmung noch unruhig.',
+  'Letzter Satz war zu leicht — beim nächsten Mal 2,5 kg drauf.',
+  'Gute Einheit nach der Pause. Wir ziehen es nicht über.',
+  'Knie wandert unter Last leicht nach innen — daran arbeiten wir gezielt.',
+  'Griffkraft war heute der Begrenzer, nicht der Rücken.',
+  'Tempo kontrolliert gehalten. Genau so wollen wir es.'
+];
 
 /* Öffnungszeiten je Wochentag (0 = Sonntag). Hier anpassen, wenn sich die Zeiten ändern. */
 const OPENING = {
@@ -176,9 +219,16 @@ const SEED_LEADS = [
     source:'Empfehlung',     phone:'4367612345614', email:'c.brunner@example.at' }
 ];
 
+const PROGRAMS = {
+  pt1: ['squat', 'bench', 'row'], pt2: ['squat', 'bench', 'row'], mob: ['squat', 'ohp', 'row'],
+  reha: ['plank', 'lunge', 'row'], pad: ['bench', 'row', 'plank'],
+  grp: ['squat', 'ohp', 'row'], athl: ['squat', 'pull', 'plank'], bwg: []
+};
+const r25 = v => Math.round(v / 2.5) * 2.5;
+
 function buildSeed() {
   const t = today();
-  const clients = [], bookings = [];
+  const clients = [], bookings = [], workouts = [];
 
   SEED_CLIENTS.forEach((s, i) => {
     const rand = mulberry32(1337 + i * 97);
@@ -297,6 +347,78 @@ function buildSeed() {
       s.recent.forEach(o => { const b = mine[o.i - 1]; if (b) { b.status = o.status; b.reason = o.reason || null; } });
     }
 
+    /* Trainingsdokumentation: jede absolvierte Einheit bekommt Übungen, Sätze und Notiz */
+    c.program = PROGRAMS[s.type] || PROGRAMS.pt1;
+    const startW = {
+      squat: r25(s.kg[0] * .5 + s.kraft[0] * .3), bench: r25(s.kg[0] * .34 + s.kraft[0] * .2),
+      row:   r25(s.kg[0] * .38 + s.kraft[0] * .2), dead: r25(s.kg[0] * .62 + s.kraft[0] * .3),
+      ohp:   r25(s.kg[0] * .24 + s.kraft[0] * .12), lunge: r25(s.kg[0] * .2 + s.kraft[0] * .1),
+      pull:  Math.max(2, Math.round(s.kraft[0] * .12)), plank: Math.round(28 + s.kraft[0] * .7)
+    };
+    const prog = (s.kraft[1] - s.kraft[0]) / Math.max(s.kraft[0], 1);
+    const mine = bookings.filter(b => b.clientId === c.id && b.status === 'completed')
+      .sort((a, b) => a.date.localeCompare(b.date));
+    const peak = {};
+    mine.forEach((b, k) => {
+      const p = mine.length > 1 ? k / (mine.length - 1) : 1;
+      const ex = c.program.map(id => {
+        const unit = EXERCISES[id].unit;
+        const raw = startW[id] * (1 + prog * p * .85) * (1 + (rand() - .5) * .04);
+        const weight = unit === 'kg' ? r25(raw) : Math.round(raw);
+        const isPr = weight > (peak[id] || 0);
+        if (isPr) peak[id] = weight;
+        return { ex: id, weight, reps: unit === 'sek' ? 1 : (rand() < .3 ? 10 : 8),
+                 sets: unit === 'sek' ? 3 : (rand() < .35 ? 4 : 3), pr: isPr && k > 0 };
+      });
+      workouts.push({
+        id: uid('w'), clientId: c.id, date: b.date, bookingId: b.id,
+        duration: 45 + Math.round(rand() * 15), intensity: 6 + Math.round(rand() * 3),
+        exercises: ex, note: rand() < .45 ? TRAINER_NOTES[Math.floor(rand() * TRAINER_NOTES.length)] : ''
+      });
+    });
+    /* Messbares Ziel: nächster runder Schritt auf der Hauptübung */
+    const mainEx = c.program[0];
+    if (mainEx) c.goalTarget = { ex: mainEx, value: EXERCISES[mainEx].unit === 'kg'
+      ? r25((peak[mainEx] || startW[mainEx]) * 1.15) : Math.round((peak[mainEx] || startW[mainEx]) * 1.2) };
+
+    /* Wöchentlicher Check-in der letzten 8 Wochen */
+    c.weekly = [];
+    const base = { energie: 2.6, schlaf: 2.8, stress: 3.6, motivation: 3, wohlbefinden: 2.8 };
+    for (let w = 7; w >= 0; w--) {
+      const p = (7 - w) / 7, e = { date: iso(addDays(startOfWeek(t), -w * 7)) };
+      CHECKIN.forEach(f => {
+        const dir = f.good === 5 ? 1 : -1;
+        e[f.id] = +clamp(base[f.id] + dir * p * 1.5 + (rand() - .5) * .8, 1, 5).toFixed(1);
+      });
+      e.kg = +(s.kg[0] + (s.kg[1] - s.kg[0]) * p).toFixed(1);
+      e.note = '';
+      c.weekly.push(e);
+    }
+    if (i % 2 === 0) c.weekly.pop();   /* offener Check-in bei jeder zweiten Kund:in */
+
+    /* Körpermaße alle 4 Wochen */
+    c.body = [];
+    const bodyN = Math.min(6, Math.max(2, Math.floor(s.weeks / 4)));
+    for (let k = 0; k <= bodyN; k++) {
+      const p = k / bodyN;
+      c.body.push({
+        date: iso(addDays(t, -(bodyN - k) * 28)),
+        kg:     +(s.kg[0] + (s.kg[1] - s.kg[0]) * p).toFixed(1),
+        bf:     +clamp(28 - s.kraft[0] * .1 - p * 4.5 + (rand() - .5) * .6, 8, 40).toFixed(1),
+        taille: Math.round(s.kg[0] * 1.05 - p * 6 + (rand() - .5) * 1.5),
+        brust:  Math.round(s.kg[0] * 1.15 + p * 2.5),
+        huefte: Math.round(s.kg[0] * 1.12 - p * 3),
+        arm:    +(28 + s.kraft[0] * .07 + p * 1.8).toFixed(1),
+        bein:   +(52 + s.kraft[0] * .08 + p * 2.2).toFixed(1)
+      });
+    }
+
+    /* Aufgaben für die laufende Woche */
+    c.tasks = [
+      { id: uid('t'), text: '2× 10 Minuten Mobility für Hüfte und Brustwirbelsäule', done: rand() < .5, week: iso(startOfWeek(t)) },
+      { id: uid('t'), text: 'Protein: 3 Portionen pro Tag, keine Rechenübung — nur Häkchen', done: rand() < .35, week: iso(startOfWeek(t)) }
+    ];
+
     /* Check-ins alle 14 Tage: Schmerz ↓, Kraftindex ↑, Gewicht → Ziel */
     const n = Math.max(2, Math.floor(s.weeks / 2));
     for (let k = 0; k <= n; k++) {
@@ -322,7 +444,8 @@ function buildSeed() {
       phone: s.phone, email: s.email, dow: (d.getDay() + 6) % 7 + 1, time: s.time,
       code: 'FIT-L' + (10 + i),
       access: null,   /* App-Zugang ist Teil des Programms, nicht des Gratis-Termins */
-      note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: null
+      note: '', checkins: [], mobility: [], performance: [], videos: [],
+      program: [], weekly: [], body: [], tasks: [], stoppedDaysAgo: null
     };
     bookings.push({ id: uid('b'), clientId: c.id, date: iso(d), time: s.time, type: 'bwg',
       coach: 'Yalcin', status: s.inDays < 0 ? 'completed' : 'confirmed', reason: null, reminded: false });
@@ -338,8 +461,23 @@ function buildSeed() {
     clients.push(c);
   });
 
+  /* Startbestand an Trainer-Nachrichten, damit der Betreuungsbereich Inhalt hat */
+  const messages = [];
+  clients.filter(c => !c.lead).forEach((c, i) => {
+    const first = c.name.split(' ')[0];
+    const pool = [
+      `${first}, deine Werte aus dem letzten Test sind eingetragen. Wir bleiben beim Plan, ziehen aber bei der Hauptübung das Gewicht an.`,
+      `Kurzes Feedback zur Woche: Technik war stabil, Tempo kontrolliert. Wenn der Schlaf schlechter wird, sag es mir vor der Einheit, nicht danach.`,
+      `${first}, für die kommende Woche zwei Dinge: Mobility an trainingsfreien Tagen und Protein nicht vergessen. Den Rest mache ich.`
+    ];
+    messages.push({ id: uid('m'), clientId: c.id, type: 'trainer', channel: 'App', from: 'trainer',
+      text: pool[i % pool.length], status: 'gesendet', date: iso(addDays(t, -9)) });
+    messages.push({ id: uid('m'), clientId: c.id, type: 'trainer', channel: 'App', from: 'trainer',
+      text: pool[(i + 1) % pool.length], status: 'gesendet', date: iso(addDays(t, -2)) });
+  });
+
   return {
-    clients, bookings, messages: [], events: [],
+    clients, bookings, workouts, messages, events: [],
     settings: { autos: { reminder: true, cancel: true, winback: true, credits: true, milestone: true, onboarding: true, noshow: true } }
   };
 }
@@ -564,6 +702,24 @@ TPL.leadNoshow = {
 Wenn du willst, gebe ich dir einen zweiten Termin. Dann aber einen, den du wirklich schaffst.
 Wenn gerade nicht die richtige Zeit ist: sag einfach kurz Bescheid, dann melde ich mich nicht weiter.`
 };
+TPL.checkinRemind = {
+  label: 'Check-in erinnern', channel: 'WhatsApp',
+  build: (c, m) => `${c.name.split(' ')[0]}, dein Wochen-Check-in fehlt noch.
+Fünf Fragen, zwei Minuten: Energie, Schlaf, Stress, Motivation, Wohlbefinden.
+Ich steuere dein Training danach — ohne die Werte rate ich, und raten ist nicht das, wofür du zahlst.`
+};
+TPL.checkinLow = {
+  label: 'Reaktion auf schwachen Check-in', channel: 'WhatsApp',
+  build: (c, m) => {
+    const e = lastCheckin(c);
+    const worst = e ? CHECKIN.map(f => ({ f, v: f.good === 5 ? e[f.id] : 6 - e[f.id] })).sort((a, b) => a.v - b.v)[0] : null;
+    return `${c.name.split(' ')[0]}, dein Check-in sieht nach einer harten Woche aus${worst ? ` — vor allem ${worst.f.label.toLowerCase()}` : ''}.
+Wir ziehen die nächste Einheit nicht durch wie geplant: weniger Volumen, mehr Technik und Mobility. Das ist kein Rückschritt, das ist Steuerung.
+Wenn es privat gerade eng ist, sag es mir — dann passen wir den Rhythmus an, statt dass du ganz aussteigst.`;
+  }
+};
+TPL.trainer = { label: 'Trainer-Feedback', channel: 'App', build: (c, m) => '' };
+TPL.kunde   = { label: 'Nachricht von Kund:in', channel: 'App', build: (c, m) => '' };
 TPL.access = {
   label: 'Persönlichen Zugang senden', channel: 'WhatsApp',
   build: (c, m) => `${c.name.split(' ')[0]}, dein Training startet — und damit ist dein persönlicher FITARY-Zugang freigeschaltet (${c.code}):
@@ -643,6 +799,18 @@ const RULES = [
     match:(c,m)=> (c.videos || []).some(v => v.kind === 'welcome' && !v.watched) && daysBetween(c.start, iso(today())) >= 2,
     why:c=>`Seit ${daysBetween(c.start, iso(today()))} Tagen Kund:in · Video noch ungesehen` },
 
+  { id:'checkinlow', level:'crit', tpl:'checkinLow', title:c=>`${c.name}: schwacher Check-in`,
+    desc:'Selbstauskunft unter 55 von 100 — Training anpassen, bevor die Person von selbst aussteigt.',
+    match:(c,m)=> !c.lead && lastCheckin(c) && checkinScore(lastCheckin(c)) < 55 &&
+                  daysBetween(lastCheckin(c).date, iso(today())) <= 9,
+    why:c=>{ const e = lastCheckin(c); return `Score ${checkinScore(e)}/100 · ${fmtDate(e.date)}${e.note ? ' · „' + e.note.slice(0, 40) + '"' : ''}`; } },
+
+  { id:'checkin', level:'warn', tpl:'checkinRemind', title:c=>`${c.name}: Check-in fehlt`,
+    desc:'Ohne wöchentliche Selbstauskunft steuerst du nach Gefühl statt nach Daten.',
+    match:(c,m)=> !c.lead && m.inactive < 21 && checkinDue(c) &&
+                  (!lastCheckin(c) || daysBetween(lastCheckin(c).date, iso(today())) >= 9),
+    why:c=>{ const l = lastCheckin(c); return l ? `Letzter Check-in vor ${daysBetween(l.date, iso(today()))} Tagen` : 'Noch nie ausgefüllt'; } },
+
   { id:'rebook', level:'warn', tpl:'rebook', title:c=>`${c.name}: Folgetermin fehlt`,
     desc:'Aktiver Kunde ohne nächste Buchung — Lücke schließen, bevor sie Routine wird.',
     match:(c,m)=> !c.lead && !m.next && m.inactive < 12, why:(c,m)=>`Letzte Einheit ${relDay(m.lastDone ? m.lastDone.date : c.start)}` }
@@ -688,6 +856,53 @@ function draft(clientId, tplId, booking) {
     text, status: 'entwurf', date: iso(today()) });
   save();
   return text;
+}
+
+/* ---------------- Training, Bestleistungen, Streak ---------------- */
+const workoutsOf = id => db.workouts.filter(w => w.clientId === id).sort((a, b) => b.date.localeCompare(a.date));
+
+/* Bestleistung je Übung: höchstes Gewicht bzw. höchster Wert, plus Startwert für den Vergleich */
+function personalBests(c) {
+  const ws = workoutsOf(c.id).slice().reverse();
+  const best = {};
+  ws.forEach(w => w.exercises.forEach(e => {
+    const b = best[e.ex] || (best[e.ex] = { ex: e.ex, start: e.weight, value: e.weight, reps: e.reps, date: w.date });
+    if (e.weight > b.value) { b.value = e.weight; b.reps = e.reps; b.date = w.date; }
+  }));
+  return Object.values(best).map(b => ({ ...b,
+    gain: b.start ? Math.round((b.value - b.start) / b.start * 100) : 0 }));
+}
+
+/* Streak: Wochen in Folge mit mindestens einer absolvierten Einheit */
+function streak(c) {
+  const done = new Set(bookingsOf(c.id).filter(b => b.status === 'completed')
+    .map(b => iso(startOfWeek(parse(b.date)))));
+  let n = 0;
+  for (let w = 0; w < 60; w++) {
+    const key = iso(addDays(startOfWeek(today()), -w * 7));
+    if (done.has(key)) n++;
+    else if (w > 0) break;           /* die laufende Woche darf noch leer sein */
+  }
+  return n;
+}
+
+const lastCheckin = c => (c.weekly && c.weekly.length) ? c.weekly[c.weekly.length - 1] : null;
+const checkinDue  = c => { const l = lastCheckin(c); return !l || daysBetween(l.date, iso(today())) >= 7; };
+const checkinScore = e => Math.round(CHECKIN.reduce((a, f) =>
+  a + (f.good === 5 ? e[f.id] : 6 - e[f.id]), 0) / CHECKIN.length * 20);
+
+/* Nächster Meilenstein: das nächste runde Ziel, das noch nicht erreicht ist */
+function nextMilestone(c) {
+  const m = metrics(c), done = m.totalDone;
+  const sessions = Math.ceil((done + 1) / 10) * 10;
+  const pb = personalBests(c).sort((a, b) => b.gain - a.gain)[0];
+  const target = c.goalTarget;
+  if (target && pb && pb.ex === target.ex && pb.value < target.value)
+    return { label: `${EXERCISES[target.ex].label} ${target.value} ${EXERCISES[target.ex].unit}`,
+             now: pb.value, goal: target.value, unit: EXERCISES[target.ex].unit,
+             pct: Math.round(pb.value / target.value * 100) };
+  return { label: `${sessions} Einheiten`, now: done, goal: sessions, unit: 'Einheiten',
+           pct: Math.round(done / sessions * 100) };
 }
 
 /* ---------------- Erstkontakt-Funnel ----------------
@@ -1020,105 +1235,256 @@ function viewClients() {
 }
 
 /* ---------------- Kundenakte (Drawer) ---------------- */
-function openClient(id) {
+let DTAB = 'overview';
+const DTABS = [
+  { id: 'overview', label: 'Übersicht' },
+  { id: 'training', label: 'Training' },
+  { id: 'progress', label: 'Fortschritt' },
+  { id: 'checkins', label: 'Check-ins' },
+  { id: 'care',     label: 'Betreuung' }
+];
+
+/* Betreuungsakte: alles zu einer Kund:in an einem Ort —
+   Ziel, Check-in, Trainingshistorie, Fortschritt, Notizen, Nachrichten. */
+function openClient(id, tab) {
+  if (tab) DTAB = tab;
   const c = client(id), m = metrics(c), st = stageOf(c);
-  const ci = c.checkins;
-  const dPain = (m.now.pain - m.first.pain).toFixed(1);
-  const dKraft = m.now.kraft - m.first.kraft;
-  const dKg = (m.now.kg - m.first.kg).toFixed(1);
-  const hist = m.bs.filter(b => b.date < iso(today())).slice(-8).reverse();
-  const stageIdx = STAGES.findIndex(s => s.id === st.id);
+
+  const body = c.lead ? leadSheet(c, m)
+    : ({ overview: sheetOverview, training: sheetTraining, progress: sheetProgress,
+         checkins: sheetCheckins, care: sheetCare })[DTAB](c, m);
 
   $('#drawerPanel').innerHTML = `
     <div class="panel__head">
       <div>
         <p class="panel__name">${c.name}</p>
         <p class="panel__meta">${c.segment} · seit ${fmtDate(c.start)} · ${daysBetween(c.start, iso(today()))} Tage</p>
-        <p class="panel__meta" style="color:var(--ink-2);margin-top:6px">Ziel: ${c.goal}</p>
       </div>
       <button class="closebtn" data-close>✕</button>
     </div>
 
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
       <span class="pill pill--flame stage-pill">${st.label}</span>
       <span class="pill">${TYPES[c.type].short}</span>
       <span class="pill">${c.plan} · ${c.credits} offen</span>
       <span class="pill ${m.level === 'crit' ? 'pill--crit' : m.level === 'warn' ? 'pill--warn' : 'pill--good'}">Risiko ${m.score}</span>
     </div>
 
-    ${c.lead ? `<div class="action action--crit" style="margin-bottom:18px"><div class="action__body">
-      <p class="action__title">Erstkontakt — Beweglichkeitstest</p>
-      <p class="action__why">${m.bs.some(b => b.status === 'completed')
-        ? 'Test absolviert. Befund liegt vor, Programm noch offen — jetzt entscheidet sich, ob daraus ein:e Kund:in wird.'
-        : `Test gebucht für ${m.next ? fmtDate(m.next.date) + ' · ' + m.next.time : '—'}. Vorbereitung senken No-Shows beim wichtigsten Termin.`}</p>
+    ${c.lead ? '' : `<nav class="ptabs">${DTABS.map(t =>
+      `<button class="ptab ${DTAB === t.id ? 'is-active' : ''}" data-act="dtab" data-id="${c.id}" data-t="${t.id}">
+        ${t.label}${t.id === 'checkins' && checkinDue(c) ? '<span class="ptab__dot"></span>' : ''}
+      </button>`).join('')}</nav>`}
+
+    ${body}
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:22px">
+      <button class="btn btn--primary" data-act="bookfor" data-id="${c.id}">+ Einheit buchen</button>
+      ${c.access ? `<button class="btn btn--ghost" data-act="openportal" data-id="${c.id}">Kundenansicht</button>` : ''}
+      <button class="btn btn--ghost" data-act="access" data-id="${c.id}">${c.access ? 'Zugang teilen' : 'Zugang (ab Start)'}</button>
+    </div>
+    <p class="card__sub" style="margin-top:12px">${c.phone ? `WhatsApp: +${c.phone} · ` : ''}${c.email}</p>`;
+  $('#drawer').setAttribute('aria-hidden', 'false');
+}
+
+/* ---------- Erstkontakt ---------- */
+function leadSheet(c, m) {
+  const done = m.bs.some(b => b.status === 'completed');
+  return `
+    <div class="action action--crit" style="margin-bottom:18px"><div class="action__body">
+      <p class="action__title">Erstkontakt — Kennenlernen mit Beweglichkeitstest</p>
+      <p class="action__why">${done
+        ? 'Termin absolviert. Befund liegt vor, Programm noch offen — hier entscheidet sich, ob daraus ein:e Kund:in wird.'
+        : `Termin am ${m.next ? fmtDate(m.next.date) + ' · ' + m.next.time : '—'}. Vorbereitung senkt No-Shows beim wichtigsten Termin.`}</p>
       <p class="action__why" style="color:var(--ink-3)">Quelle: ${c.source || 'unbekannt'} · 30 Min gratis · App-Zugang erst mit Trainingsstart</p>
       <div class="action__acts">
         <button class="btn btn--sm btn--primary" data-act="convert" data-id="${c.id}">In Kund:in umwandeln</button>
-        <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="${m.bs.some(b => b.status === 'completed') ? 'leadFollow' : 'leadPrep'}">Nachricht erstellen</button>
-      </div></div></div>` : ''}
+        <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="${done ? 'leadFollow' : 'leadPrep'}">Nachricht erstellen</button>
+      </div></div></div>
+    <p class="section-title">Ziel</p>
+    <p class="card__sub" style="color:var(--ink-2);margin-bottom:16px">${c.goal}</p>
+    ${mobilitySection(c)}`;
+}
 
-    <p class="section-title">Journey</p>
-    <div class="rail">
-      ${STAGES.map((s, i) => `
-        <div class="rail__step ${i < stageIdx ? 'done' : i === stageIdx ? 'now' : ''}">
-          <span class="rail__dot"></span>
-          <p class="rail__label">${s.label}</p>
-        </div>`).join('')}
+/* ---------- Übersicht ---------- */
+function sheetOverview(c, m) {
+  const ci = lastCheckin(c), ms = nextMilestone(c);
+  const pbs = personalBests(c).sort((a, b) => b.gain - a.gain).slice(0, 3);
+  const w = workoutsOf(c.id)[0];
+
+  return `
+    <p class="section-title">Aktuelles Ziel</p>
+    <div class="metricbox" style="margin-bottom:14px">
+      <p class="metricbox__val" style="font-size:16px">${c.goal}</p>
+      <p class="card__sub" style="margin:6px 0 8px">Nächster Meilenstein: ${ms.label} · Stand ${ms.now}/${ms.goal} ${ms.unit}</p>
+      <span style="display:block;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden">
+        <span style="display:block;height:100%;width:${clamp(ms.pct, 4, 100)}%;background:var(--flame-fill)"></span></span>
     </div>
-    <p class="card__sub" style="margin-bottom:18px">${st.desc}</p>
 
-    ${ci.length > 1 ? `<p class="section-title">Fortschritt seit Start</p>
+    <div class="grid grid--3">
+      <div class="metricbox"><p class="metricbox__label">Einheiten</p><p class="metricbox__val">${m.totalDone}</p>
+        <p class="card__sub">${m.adherence} % Adherence</p></div>
+      <div class="metricbox"><p class="metricbox__label">Streak</p><p class="metricbox__val">${streak(c)} Wo.</p>
+        <p class="card__sub">${m.cancels30} Storni / 30 T.</p></div>
+      <div class="metricbox"><p class="metricbox__label">Letzter Check-in</p>
+        <p class="metricbox__val">${ci ? checkinScore(ci) : '—'}</p>
+        <p class="card__sub">${ci ? relDay(ci.date) : 'offen'}${checkinDue(c) ? ' · fällig' : ''}</p></div>
+    </div>
+
+    ${ci ? `<div class="metricbox" style="margin-top:12px">
+      <p class="metricbox__label">Check-in vom ${fmtDate(ci.date)}</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+        ${CHECKIN.map(f => `<span class="pill ${(f.good === 5 ? ci[f.id] <= 2 : ci[f.id] >= 4) ? 'pill--crit' : ''}">${f.label} ${ci[f.id]}</span>`).join('')}
+      </div>
+      ${ci.note ? `<p class="card__sub" style="margin-top:8px">„${ci.note}"</p>` : ''}
+    </div>` : ''}
+
+    ${m.why.length ? `<div class="action action--${m.level}" style="margin-top:14px"><div class="action__body">
+      <p class="action__title">Risiko-Signale</p><p class="action__why">${m.why.join(' · ')}</p></div></div>` : ''}
+
+    <p class="section-title">Nächste Einheit</p>
+    ${m.next ? `<div class="row">
+        <span class="avatar">${m.next.time.slice(0,5)}</span>
+        <div class="row__main"><p class="row__name">${fmtDate(m.next.date)} · ${relDay(m.next.date)}</p>
+          <p class="row__meta">${TYPES[m.next.type].label}</p></div>
+        <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="cancelask" data-id="${m.next.id}">Stornieren</button></div>
+      </div>` : `<div class="row"><div class="row__main"><p class="row__name" style="color:var(--warn)">Kein Folgetermin</p>
+        <p class="row__meta">Lücke schließen, bevor sie zur Gewohnheit wird.</p></div>
+        <div class="row__side"><button class="btn btn--sm btn--primary" data-act="bookfor" data-id="${c.id}">Buchen</button></div></div>`}
+
+    ${w ? `<p class="section-title">Letztes Training · ${fmtDate(w.date)}</p>
+      <div class="metricbox">${workoutLines(w)}
+        ${w.note ? `<p class="card__sub" style="margin-top:10px">„${w.note}"</p>` : ''}</div>` : ''}
+
+    ${pbs.length ? `<p class="section-title">Bestleistungen</p>
+      ${pbs.map(p => `<div class="row"><span class="avatar avatar--good">↑</span>
+        <div class="row__main"><p class="row__name">${EXERCISES[p.ex].label} ${p.value} ${EXERCISES[p.ex].unit}</p>
+          <p class="row__meta">Start ${p.start} · ${fmtDate(p.date)}</p></div>
+        <div class="row__side"><span class="pill pill--good">+${p.gain} %</span></div></div>`).join('')}` : ''}`;
+}
+
+/* ---------- Training dokumentieren ---------- */
+function sheetTraining(c, m) {
+  const ws = workoutsOf(c.id);
+  return `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="btn btn--sm btn--primary" data-act="wonew" data-id="${c.id}">+ Training dokumentieren</button>
+      <span class="pill">${ws.length} dokumentiert</span>
+      <span class="pill">Programm: ${(c.program || []).map(x => EXERCISES[x].label).join(', ') || '—'}</span>
+    </div>
+    ${ws.length ? ws.slice(0, 12).map(w => `
+      <div class="metricbox" style="margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
+          <p style="font-size:13.5px;font-weight:700">${fmtDate(w.date)}</p>
+          <span class="card__sub">${w.duration} Min · Intensität ${w.intensity}/10</span>
+        </div>
+        ${workoutLines(w)}
+        ${w.note ? `<p class="card__sub" style="margin-top:9px">„${w.note}"</p>` : ''}
+      </div>`).join('') : '<p class="empty">Noch kein Training dokumentiert.</p>'}`;
+}
+
+/* ---------- Fortschritt ---------- */
+function sheetProgress(c, m) {
+  const ci = c.checkins || [], b = c.body || [];
+  const dPain = (m.now.pain - m.first.pain).toFixed(1), dKraft = m.now.kraft - m.first.kraft, dKg = (m.now.kg - m.first.kg).toFixed(1);
+  const pbs = personalBests(c);
+  const ws = workoutsOf(c.id).slice().reverse();
+
+  return `
+    ${ci.length > 1 ? `<p class="section-title">Verlauf</p>
     <div class="grid grid--3">
       ${metricBox('Schmerz (0–10)', m.now.pain, dPain, dPain <= 0, ci.map(x => x.pain), 'var(--good)')}
       ${metricBox('Kraftindex', m.now.kraft, (dKraft > 0 ? '+' : '') + dKraft, dKraft >= 0, ci.map(x => x.kraft), 'var(--flame)')}
       ${metricBox('Gewicht (kg)', m.now.kg, (dKg > 0 ? '+' : '') + dKg, true, ci.map(x => x.kg), 'var(--ink-2)')}
     </div>` : ''}
 
-    ${mobilitySection(c)}
-
-    ${performanceSection(c)}
-
-    ${videoSection(c)}
-
-    <p class="section-title">Verlässlichkeit</p>
+    ${pbs.length ? `<p class="section-title">Kraftentwicklung</p>
     <div class="grid grid--3">
-      <div class="metricbox"><p class="metricbox__label">Adherence</p><p class="metricbox__val">${m.adherence} %</p><p class="card__sub">letzte 8 Wochen</p></div>
-      <div class="metricbox"><p class="metricbox__label">Storni 30 T.</p><p class="metricbox__val">${m.cancels30}</p><p class="card__sub">${m.noshows30} No-Shows</p></div>
-      <div class="metricbox"><p class="metricbox__label">Letztes Training</p><p class="metricbox__val" style="font-size:16px">${m.lastDone ? relDay(m.lastDone.date) : '—'}</p><p class="card__sub">${m.totalDone} Einheiten gesamt</p></div>
+      ${pbs.map(p => { const sr = ws.filter(w => w.exercises.some(e => e.ex === p.ex))
+          .map(w => w.exercises.find(e => e.ex === p.ex).weight);
+        return `<div class="metricbox"><p class="metricbox__label">${EXERCISES[p.ex].label}</p>
+          <p class="metricbox__val">${p.value}<span style="font-size:11px;color:var(--ink-3)"> ${EXERCISES[p.ex].unit}</span>
+            <span class="${p.gain >= 0 ? 'delta-good' : 'delta-crit'}">${p.gain >= 0 ? '+' : ''}${p.gain} %</span></p>
+          ${sparkline(sr.length > 1 ? sr : [p.start, p.value], { color: 'var(--flame)', w: 126, h: 36 })}</div>`; }).join('')}
+    </div>` : ''}
+
+    ${b.length > 1 ? `<p class="section-title">Körpermessungen · ${b.length}</p>
+    <div class="metricbox" style="margin-bottom:12px">
+      ${BODY.map(f => { const v0 = b[0][f.id], v1 = b[b.length - 1][f.id], d = +(v1 - v0).toFixed(1);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)">
+          <span style="flex:1;font-size:13px;font-weight:600">${f.label}</span>
+          <span style="font-size:12.5px;color:var(--ink-2)">${v0} → <strong>${v1}</strong> ${f.unit}</span>
+          <span style="width:52px;text-align:right;font-size:12px" class="${d * f.dir >= 0 ? 'delta-good' : 'delta-crit'}">${d > 0 ? '+' : ''}${d}</span>
+        </div>`; }).join('')}
+      <button class="btn btn--sm btn--ghost" data-act="bodynew" data-id="${c.id}" style="margin-top:12px">Messung erfassen</button>
+    </div>` : `<p class="section-title">Körpermessungen</p>
+      <button class="btn btn--sm btn--ghost" data-act="bodynew" data-id="${c.id}">Erste Messung erfassen</button>`}
+
+    ${mobilitySection(c)}
+    ${performanceSection(c)}`;
+}
+
+/* ---------- Check-ins ---------- */
+function sheetCheckins(c, m) {
+  const hist = (c.weekly || []).slice().reverse();
+  return `
+    ${checkinDue(c) ? `<div class="action action--warn" style="margin-bottom:14px"><div class="action__body">
+      <p class="action__title">Check-in offen</p>
+      <p class="action__why">Letzter Check-in ${hist[0] ? relDay(hist[0].date) : 'nie'} — ohne Selbstauskunft steuerst du blind.</p>
+      <div class="action__acts"><button class="btn btn--sm btn--primary" data-act="draft" data-id="${c.id}" data-tpl="checkinRemind">Erinnerung senden</button></div>
+    </div>` : ''}
+    ${hist.length ? hist.slice(0, 10).map(e => `
+      <div class="metricbox" style="margin-bottom:9px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span style="font-size:13px;font-weight:700">${fmtDate(e.date)}</span>
+          <span class="pill ${checkinScore(e) >= 70 ? 'pill--good' : checkinScore(e) >= 50 ? 'pill--warn' : 'pill--crit'}">${checkinScore(e)} / 100</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+          ${CHECKIN.map(f => `<span class="pill ${(f.good === 5 ? e[f.id] <= 2 : e[f.id] >= 4) ? 'pill--crit' : ''}" style="font-weight:500">${f.label} ${e[f.id]}</span>`).join('')}
+          ${e.kg ? `<span class="pill" style="font-weight:500">${e.kg} kg</span>` : ''}
+        </div>
+        ${e.note ? `<p class="card__sub" style="margin-top:7px">„${e.note}"</p>` : ''}
+      </div>`).join('') : '<p class="empty">Noch keine Check-ins.</p>'}`;
+}
+
+/* ---------- Betreuung: Notizen, Aufgaben, Nachrichten, Videos ---------- */
+function sheetCare(c, m) {
+  const thread = db.messages.filter(x => x.clientId === c.id && x.status === 'gesendet')
+    .slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-6);
+  const tasks = c.tasks || [];
+
+  return `
+    <p class="section-title">Eigene Notizen</p>
+    <div class="field">
+      <textarea id="cnote" rows="3" placeholder="Beobachtungen, Absprachen, Verletzungen, Vorlieben …">${c.note || ''}</textarea>
     </div>
+    <button class="btn btn--sm btn--ghost" data-act="noteSave" data-id="${c.id}">Notiz speichern</button>
 
-    ${m.why.length ? `<div class="action action--${m.level}" style="margin-top:16px">
-      <div class="action__body"><p class="action__title">Risiko-Signale</p>
-      <p class="action__why">${m.why.join(' · ')}</p></div></div>` : ''}
+    <p class="section-title">Aufgaben für die Woche</p>
+    ${tasks.length ? tasks.map(t => `<div class="row row--click" data-act="task" data-id="${c.id}" data-tid="${t.id}">
+      <span class="avatar ${t.done ? 'avatar--good' : ''}">${t.done ? '✓' : '○'}</span>
+      <div class="row__main"><p class="row__name" style="${t.done ? 'opacity:.6;text-decoration:line-through' : ''}">${t.text}</p></div>
+    </div>`).join('') : '<p class="empty">Keine Aufgaben vergeben.</p>'}
+    <div class="field" style="margin-top:10px"><input id="taskText" placeholder="Neue Aufgabe für die Woche …" /></div>
+    <button class="btn btn--sm btn--ghost" data-act="taskadd" data-id="${c.id}">Aufgabe hinzufügen</button>
 
-    <p class="section-title">Nächste Einheit</p>
-    ${m.next ? `<div class="row">
-        <span class="avatar">${m.next.time.slice(0,5)}</span>
-        <div class="row__main"><p class="row__name">${fmtDate(m.next.date)} · ${relDay(m.next.date)}</p>
-        <p class="row__meta">${TYPES[m.next.type].label}</p></div>
-        <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="cancelask" data-id="${m.next.id}">Stornieren</button></div>
-      </div>` : `<div class="row"><div class="row__main"><p class="row__name" style="color:var(--warn)">Kein Folgetermin gebucht</p>
-        <p class="row__meta">Lücke schließen, bevor sie zur Gewohnheit wird.</p></div>
-        <div class="row__side"><button class="btn btn--sm btn--primary" data-act="bookfor" data-id="${c.id}">Buchen</button></div></div>`}
+    <p class="section-title">Nachrichten</p>
+    ${thread.length ? thread.map(x => `
+      <div style="margin-bottom:9px;display:flex;justify-content:${x.from === 'kunde' ? 'flex-start' : 'flex-end'}">
+        <div style="max-width:86%;background:${x.from === 'kunde' ? 'var(--surface-3)' : 'var(--flame-dim)'};
+          border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px">
+          <p style="font-size:11px;color:var(--ink-3);margin-bottom:3px">${x.from === 'kunde' ? c.name.split(' ')[0] : 'Yalcin'} · ${fmtDate(x.date)}</p>
+          <p style="font-size:13px;white-space:pre-wrap;line-height:1.5">${x.text}</p>
+        </div>
+      </div>`).join('') : '<p class="empty">Noch keine Nachrichten.</p>'}
+    <div class="field" style="margin-top:10px"><textarea id="trainerText" rows="2" placeholder="Feedback an ${c.name.split(' ')[0]} …"></textarea></div>
+    <button class="btn btn--sm btn--primary" data-act="trainerMsg" data-id="${c.id}">Senden</button>
 
-    <p class="section-title">Letzte Einheiten</p>
-    ${hist.length ? hist.map(b => bookingRow(b)).join('') : '<p class="empty">Noch keine Historie.</p>'}
-
-    <p class="section-title">Kommunikation</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
       ${['winback','credits','milestone','onboarding','rebook','welcomeVideo','perfResult'].map(t =>
         `<button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="${t}">${TPL[t].label}</button>`).join('')}
     </div>
 
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:22px">
-      <button class="btn btn--primary" data-act="bookfor" data-id="${c.id}">+ Einheit buchen</button>
-      ${c.access ? `<button class="btn btn--ghost" data-act="openportal" data-id="${c.id}">Kundenansicht öffnen</button>` : ''}
-      <button class="btn btn--ghost" data-act="portal" data-id="${c.id}">Handy-Vorschau</button>
-      <button class="btn btn--ghost" data-act="access" data-id="${c.id}">${c.access ? 'Zugang teilen' : 'Zugang (ab Start)'}</button>
-    </div>
-    <p class="card__sub" style="margin-top:12px">${c.phone ? `WhatsApp: +${c.phone} · ` : ''}${c.email}</p>
-  `;
-  $('#drawer').setAttribute('aria-hidden', 'false');
+    ${videoSection(c)}`;
 }
 
 function mobilitySection(c) {
@@ -1396,6 +1762,48 @@ function testModal(id) {
     </div>`).join('')}
     <div class="field"><label>Notiz</label><textarea id="mbNote" rows="2" placeholder="Auffälligkeiten, Schmerzangaben, Trainingskonsequenz…"></textarea></div>
     <button class="btn btn--primary" data-act="testSave" data-id="${c.id}" style="width:100%;justify-content:center">Test speichern & Ergebnis-Nachricht erstellen</button>`);
+}
+
+function workoutModal(id) {
+  const c = client(id), prog = (c.program || []).length ? c.program : ['squat', 'bench', 'row'];
+  const last = workoutsOf(c.id)[0];
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">Training dokumentieren</p>
+      <p class="panel__meta">${c.name}${last ? ' · zuletzt ' + fmtDate(last.date) : ''}</p></div>
+      <button class="closebtn" data-close>✕</button></div>
+    <div class="field-row">
+      <div class="field"><label>Datum</label><input type="date" id="woDate" value="${iso(today())}" /></div>
+      <div class="field"><label>Dauer (Min)</label><input type="number" id="woDur" value="${last ? last.duration : 60}" /></div>
+    </div>
+    <div class="field"><label>Intensität (1–10)</label><input type="number" min="1" max="10" id="woInt" value="${last ? last.intensity : 7}" /></div>
+    ${prog.map(ex => {
+      const prev = last ? last.exercises.find(e => e.ex === ex) : null;
+      const u = EXERCISES[ex].unit;
+      return `<div class="field">
+        <label>${EXERCISES[ex].label} ${prev ? `<span style="color:var(--ink-3);text-transform:none;letter-spacing:0">(zuletzt ${prev.weight} ${u} × ${prev.reps} × ${prev.sets})</span>` : ''}</label>
+        <div class="field-row" style="grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <input type="number" step="0.5" id="wo_${ex}_w" placeholder="${u}" value="${prev ? prev.weight : ''}" />
+          <input type="number" id="wo_${ex}_r" placeholder="Wdh" value="${prev ? prev.reps : 8}" />
+          <input type="number" id="wo_${ex}_s" placeholder="Sätze" value="${prev ? prev.sets : 3}" />
+        </div>
+      </div>`; }).join('')}
+    <div class="field"><label>Notiz an ${c.name.split(' ')[0]}</label>
+      <textarea id="woNote" rows="2" placeholder="Saubere Technik heute — nächstes Mal steigern wir."></textarea></div>
+    <button class="btn btn--primary" data-act="woSave" data-id="${c.id}" style="width:100%;justify-content:center">Training speichern</button>
+    <p class="card__sub" style="margin-top:10px">Bestleistungen werden automatisch erkannt und im Kundenzugang als PR ausgewiesen.</p>`);
+}
+
+function bodyModal(id) {
+  const c = client(id), last = (c.body || [])[(c.body || []).length - 1];
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">Körpermessung</p>
+      <p class="panel__meta">${c.name}${last ? ' · zuletzt ' + fmtDate(last.date) : ''}</p></div>
+      <button class="closebtn" data-close>✕</button></div>
+    ${BODY.map(f => `<div class="field">
+      <label>${f.label} (${f.unit}) ${last ? `<span style="color:var(--ink-3);text-transform:none;letter-spacing:0">(zuletzt ${last[f.id]})</span>` : ''}</label>
+      <input type="number" step="0.1" id="bd_${f.id}" value="${last ? last[f.id] : ''}" />
+    </div>`).join('')}
+    <button class="btn btn--primary" data-act="bodySave" data-id="${c.id}" style="width:100%;justify-content:center">Messung speichern</button>`);
 }
 
 function convertModal(id) {
@@ -1704,142 +2112,414 @@ function feedModal() {
       : '<p class="empty">Noch keine Ereignisse.</p>'}`);
 }
 
-/* ---------------- Kundenportal (individueller Zugang) ---------------- */
-function renderPortal(id) {
-  const c = client(id), m = metrics(c), st = stageOf(c);
-  const b = baseTest(c), l = lastTest(c);
-  const stageIdx = STAGES.findIndex(x => x.id === st.id);
-  const feed = db.events.filter(e => e.clientId === id).slice(0, 6);
-  const ci = c.checkins;
+/* ---------------- Kundenportal (individueller Zugang) ----------------
+   Sechs Bereiche: Start, Training, Fortschritt, Erfolge, Check-in, Betreuung.
+   Der Kunde sieht ausschließlich eigene Daten plus die freie Verfügbarkeit. */
+let PVIEW = 'home';
+const PTABS = [
+  { id: 'home',     label: 'Start' },
+  { id: 'training', label: 'Training' },
+  { id: 'progress', label: 'Fortschritt' },
+  { id: 'wins',     label: 'Erfolge' },
+  { id: 'checkin',  label: 'Check-in' },
+  { id: 'care',     label: 'Betreuung' }
+];
 
+function renderPortal(id) {
+  const c = client(id), m = metrics(c);
   document.body.classList.add('is-portal');
   $('#topEyebrow').textContent = 'Dein FITARY-Zugang';
   $('#topTitle').textContent = 'Servus, ' + c.name.split(' ')[0];
   $('#quickBook').textContent = window.innerWidth < 520 ? '+ Termin' : '+ Termin anfragen';
+
+  const body = ({ home: portalHome, training: portalTraining, progress: portalProgress,
+                  wins: portalWins, checkin: portalCheckin, care: portalCare })[PVIEW](c, m);
+
   $('#view').innerHTML = `
-    ${PORTAL_DEMO ? `<div class="row demo-bar" style="margin-bottom:16px;border-color:rgba(255,138,80,.38)">
+    ${PORTAL_DEMO ? `<div class="row demo-bar" style="margin-bottom:14px;border-color:rgba(255,138,80,.38)">
       <span class="avatar">👁</span>
       <div class="row__main"><p class="row__name">Kundenansicht von ${c.name}</p>
         <p class="row__meta">So sieht ${c.name.split(' ')[0]} den eigenen Zugang — nur eigene Daten, nichts vom Studio.</p></div>
       <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="leaveportal">Zurück ins Cockpit</button></div>
     </div>` : ''}
-    <div class="grid grid--2">
-      <div>
-        ${(c.videos || []).length ? `<div class="card" style="margin-bottom:16px;border-color:${unwatched(c).length ? 'rgba(255,138,80,.42)' : 'var(--line)'}">
-          <div class="card__head"><div><p class="card__title">Videobotschaft von Yalcin</p>
-            <p class="card__sub">${unwatched(c).length ? 'Neu für dich — 60 Sekunden' : 'Alle Videos gesehen'}</p></div>
-            ${unwatched(c).length ? '<span class="pill pill--flame">neu</span>' : '<span class="pill pill--good">✓</span>'}</div>
-          ${c.videos.map(v => `<div class="row">
-            <span class="avatar ${v.watched ? 'avatar--good' : 'avatar--risk'}">▶</span>
-            <div class="row__main"><p class="row__name">${v.title}</p>
-              <p class="row__meta">${VIDEO_KINDS[v.kind]} · ${fmtDate(v.date)}</p></div>
-            <div class="row__side"><button class="btn btn--sm ${v.watched ? 'btn--ghost' : 'btn--primary'}" data-act="play" data-id="${c.id}" data-vid="${v.id}">${v.watched ? 'Nochmal' : 'Ansehen'}</button></div>
-          </div>`).join('')}
-        </div>` : ''}
 
-        <div class="card">
-          <div class="card__head"><div><p class="card__title">Deine nächste Einheit</p>
-            <p class="card__sub">Plobergerstraße 7, 4600 Wels</p></div></div>
-          ${m.next ? `<div class="row">
-              <span class="avatar">${m.next.time.slice(0,5)}</span>
-              <div class="row__main"><p class="row__name">${fmtDate(m.next.date)} · ${relDay(m.next.date)}</p>
-                <p class="row__meta">${TYPES[m.next.type].label} · ${m.next.coach}</p></div>
-              <div class="row__side">
-                <button class="btn btn--sm btn--ghost" data-act="cancelask" data-id="${m.next.id}">Absagen</button>
-              </div></div>
-            <p class="card__sub" style="margin-top:10px">Absage bis 24 h vorher: deine Einheit bleibt erhalten.</p>`
-            : '<p class="empty">Aktuell kein Termin gebucht — such dir unten einen freien Platz aus.</p>'}
-        </div>
+    <nav class="ptabs">
+      ${PTABS.map(t => `<button class="ptab ${PVIEW === t.id ? 'is-active' : ''}" data-act="ptab" data-t="${t.id}">
+        ${t.label}${t.id === 'checkin' && checkinDue(c) ? '<span class="ptab__dot"></span>' : ''}
+        ${t.id === 'care' && (c.tasks || []).some(x => !x.done) ? '<span class="ptab__dot"></span>' : ''}
+      </button>`).join('')}
+    </nav>
 
-        <div class="card" style="margin-top:16px">
-          <div class="card__head"><div><p class="card__title">Freie Termine</p>
-            <p class="card__sub">Verfügbarkeit im Studio — wähl, was in deine Woche passt</p></div></div>
-          ${availabilityHTML(c)}
-        </div>
-
-        <div class="card" style="margin-top:16px">
-          <div class="card__head"><div><p class="card__title">Dein Beweglichkeitstest</p>
-            <p class="card__sub">${b ? `${b.phase} ${fmtDate(b.date)} → ${l.phase} ${fmtDate(l.date)}` : 'Eingangsbefund steht noch aus'}</p></div>
-            ${b ? `<span class="pill pill--good">Score ${mobiScore(b)} → ${mobiScore(l)}</span>` : '<span class="pill pill--warn">offen</span>'}
-          </div>
-          ${b ? MOBI.map(i => {
-            const v0 = b.items[i.id], v1 = l.items[i.id], d = +(v1 - v0).toFixed(1);
-            const tone = v1 >= 4 ? 'var(--good)' : v1 >= 2.8 ? 'var(--warn)' : 'var(--crit)';
-            return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)">
-              <span style="width:140px;font-size:13px;font-weight:600">${i.label}</span>
-              <span class="tbar" style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden" title="Start ${v0} · heute ${v1}">
-                <span style="position:absolute;inset:0 auto 0 0;width:${v1 / 5 * 100}%;background:${tone};border-radius:99px"></span>
-                <span style="position:absolute;top:-2px;bottom:-2px;left:${v0 / 5 * 100}%;width:2px;background:var(--ink)"></span></span>
-              <span style="width:80px;text-align:right;font-size:12.5px;color:var(--ink-2)">${v0} → <strong style="color:${tone}">${v1}</strong></span>
-              <span style="width:36px;text-align:right;font-size:12px" class="${d >= 0 ? 'delta-good' : 'delta-crit'}">${d >= 0 ? '+' : ''}${d}</span>
-            </div>`; }).join('')
-          : '<p class="empty">Dein Test wird beim ersten Termin gemacht — 20 Minuten, 7 Messpunkte. Danach steht dein Plan.</p>'}
-        </div>
-      </div>
-
-      <div>
-        ${basePerf(c) ? (() => {
-          const first = c.performance.length < 2;   /* erst Baseline, noch kein Vergleich */
-          const due = iso(addDays(parse(lastPerf(c).date), PERF_RETEST));
-          return `<div class="card" style="margin-bottom:16px">
-          <div class="card__head"><div><p class="card__title">Deine Leistungswerte</p>
-            <p class="card__sub">${lastPerf(c).phase} · ${fmtDate(lastPerf(c).date)}</p></div>
-            ${first ? '<span class="pill">Ausgangswerte</span>'
-              : `<span class="pill ${perfIndex(c, lastPerf(c)) >= 100 ? 'pill--good' : 'pill--warn'}">Index ${perfIndex(c, lastPerf(c))}</span>`}</div>
-          ${PERF.map(i => {
-            const v0 = basePerf(c).items[i.id], v1 = lastPerf(c).items[i.id];
-            const rel = ((v1 - v0) / v0) * 100 * i.dir;
-            return `<div class="row row--click" data-act="perfinfo" data-i="${i.id}" style="padding:10px 12px">
-              <div class="row__main"><p class="row__name" style="font-size:13.5px">${i.label}</p>
-                <p class="row__meta">${first ? v1 + ' ' + i.unit : v0 + ' → ' + v1 + ' ' + i.unit}</p></div>
-              <div class="row__side">${first ? ''
-                : `<span class="pill ${rel >= 0 ? 'pill--good' : 'pill--crit'}">${Math.abs(rel).toFixed(0)} % ${rel >= 0 ? 'besser' : 'schwächer'}</span>`}</div>
-            </div>`; }).join('')}
-          <p class="card__sub" style="margin-top:10px">${first
-            ? `Das ist dein Startpunkt. Beim Re-Test am ${fmtDate(due)} siehst du schwarz auf weiß, was sich verändert hat.`
-            : 'Tippe einen Wert an, um zu sehen, was er bedeutet.'}</p>
-        </div>`; })() : ''}
-
-        <div class="card">
-          <div class="card__head"><div><p class="card__title">Deine Journey</p>
-            <p class="card__sub">${st.desc}</p></div><span class="pill pill--flame stage-pill">${st.label}</span></div>
-          <div class="rail">
-            ${STAGES.map((x, i) => `<div class="rail__step ${i < stageIdx ? 'done' : i === stageIdx ? 'now' : ''}">
-              <span class="rail__dot"></span><p class="rail__label">${x.label}</p></div>`).join('')}
-          </div>
-          ${ci.length > 1 ? `<div class="grid grid--3" style="margin-top:18px">
-            ${metricBox('Schmerz', m.now.pain, (m.now.pain - m.first.pain).toFixed(1), m.now.pain <= m.first.pain, ci.map(x => x.pain), 'var(--good)')}
-            ${metricBox('Kraftindex', m.now.kraft, '+' + (m.now.kraft - m.first.kraft), true, ci.map(x => x.kraft), 'var(--flame)')}
-            ${metricBox('Einheiten', m.totalDone, '', true, [0, m.totalDone], 'var(--ink-2)')}
-          </div>` : ''}
-        </div>
-
-        <div class="card" style="margin-top:16px">
-          <div class="card__head"><div><p class="card__title">Dein Kontingent</p>
-            <p class="card__sub">${c.plan}</p></div>
-            <span class="pill ${c.credits <= 2 ? 'pill--warn' : 'pill--good'}">${c.credits} Einheiten offen</span></div>
-          ${c.credits <= 2 ? '<p class="card__sub">Fast aufgebraucht — melde dich, damit dein fixer Termin erhalten bleibt.</p>' : ''}
-        </div>
-
-        <div class="card" style="margin-top:16px">
-          <div class="card__head"><div><p class="card__title">Updates</p>
-            <p class="card__sub">Buchungen, Storni, Testergebnisse</p></div></div>
-          ${feed.length ? feed.map(e => `<div class="feeditem">
-              <span class="feeditem__time">${new Date(e.at).toLocaleDateString('de-AT')}</span><span>${e.text}</span></div>`).join('')
-            : '<p class="empty">Noch keine Updates.</p>'}
-        </div>
-
-        <div class="card" style="margin-top:16px">
-          <div class="card__head"><div><p class="card__title">Direkter Draht</p>
-            <p class="card__sub">1:1 mit deinem Trainer — kein Sammel-Chat</p></div></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <a class="btn btn--sm btn--primary" href="https://wa.me/436703565006" target="_blank" rel="noopener">WhatsApp an FITARY</a>
-            <a class="btn btn--sm btn--ghost" href="mailto:office@fitary.at">office@fitary.at</a>
-          </div>
-        </div>
-      </div>
-    </div>`;
+    ${body}`;
   observeReveal();
+}
+
+/* ---------- Start: Ziel, Fortschritt, letztes Training, Streak ---------- */
+function portalHome(c, m) {
+  const w = workoutsOf(c.id)[0];
+  const ms = nextMilestone(c), st = streak(c);
+  const msg = db.messages.filter(x => x.clientId === c.id && x.status === 'gesendet' && x.from !== 'kunde')[0];
+  const ci = c.checkins || [];
+
+  return `
+  <div class="grid grid--2">
+    <div>
+      <div class="card">
+        <div class="card__head"><div><p class="card__title">Deine nächste Einheit</p>
+          <p class="card__sub">Plobergerstraße 7, 4600 Wels</p></div></div>
+        ${m.next ? `<div class="row">
+            <span class="avatar">${m.next.time.slice(0,5)}</span>
+            <div class="row__main"><p class="row__name">${fmtDate(m.next.date)} · ${relDay(m.next.date)}</p>
+              <p class="row__meta">${TYPES[m.next.type].label} · ${m.next.coach}</p></div>
+            <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="cancelask" data-id="${m.next.id}">Absagen</button></div>
+          </div>` : `<p class="empty">Kein Termin gebucht.</p>
+            <button class="btn btn--primary" data-act="availability" data-id="${c.id}" style="width:100%;justify-content:center">Freien Termin wählen</button>`}
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Dein aktuelles Ziel</p>
+          <p class="card__sub">${c.goal}</p></div></div>
+        <p class="metricbox__label">Nächster Meilenstein</p>
+        <p class="metricbox__val" style="margin-bottom:8px">${ms.label}</p>
+        <span style="display:block;height:10px;border-radius:99px;background:var(--surface-3);overflow:hidden">
+          <span style="display:block;height:100%;width:${clamp(ms.pct, 4, 100)}%;background:var(--flame-fill);border-radius:99px"></span></span>
+        <p class="card__sub" style="margin-top:8px">Stand: ${ms.now} von ${ms.goal} ${ms.unit} · ${clamp(ms.pct,0,100)} %</p>
+      </div>
+
+      ${w ? `<div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Letztes Training</p>
+          <p class="card__sub">${fmtDate(w.date)} · ${w.duration} Min · Intensität ${w.intensity}/10</p></div>
+          ${w.exercises.some(e => e.pr) ? '<span class="pill pill--flame">Bestleistung</span>' : ''}</div>
+        ${workoutLines(w)}
+        ${w.note ? `<p class="msg__text" style="margin-top:12px">💬 „${w.note}"</p>` : ''}
+        <button class="btn btn--sm btn--ghost" data-act="ptab" data-t="training" style="margin-top:12px">Alle Trainings ansehen</button>
+      </div>` : ''}
+    </div>
+
+    <div>
+      <div class="grid grid--3">
+        <div class="metricbox"><p class="metricbox__label">Einheiten</p>
+          <p class="metricbox__val">${m.totalDone}</p><p class="card__sub">seit ${fmtShort(c.start)}</p></div>
+        <div class="metricbox"><p class="metricbox__label">Streak</p>
+          <p class="metricbox__val">${st}<span style="font-size:12px;color:var(--ink-3)"> Wo.</span></p>
+          <p class="card__sub">${st >= 4 ? 'Das hält' : 'dranbleiben'}</p></div>
+        <div class="metricbox"><p class="metricbox__label">Adherence</p>
+          <p class="metricbox__val">${m.adherence} %</p><p class="card__sub">letzte 8 Wochen</p></div>
+      </div>
+
+      ${ci.length > 1 ? `<div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Fortschritt seit Start</p>
+          <p class="card__sub">${daysBetween(c.start, iso(today()))} Tage dabei</p></div></div>
+        <div class="grid grid--3">
+          ${metricBox('Schmerz', m.now.pain, (m.now.pain - m.first.pain).toFixed(1), m.now.pain <= m.first.pain, ci.map(x => x.pain), 'var(--good)')}
+          ${metricBox('Kraftindex', m.now.kraft, '+' + (m.now.kraft - m.first.kraft), true, ci.map(x => x.kraft), 'var(--flame)')}
+          ${metricBox('Gewicht', m.now.kg, (m.now.kg - m.first.kg).toFixed(1), true, ci.map(x => x.kg), 'var(--ink-2)')}
+        </div>
+        <button class="btn btn--sm btn--ghost" data-act="ptab" data-t="progress" style="margin-top:12px">Alle Werte ansehen</button>
+      </div>` : ''}
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Nachricht von Yalcin</p>
+          <p class="card__sub">${msg ? fmtDate(msg.date) : 'noch keine Nachricht'}</p></div></div>
+        ${msg ? `<div class="msg__text">${msg.text.split('\n').slice(0, 3).join('\n')}</div>
+          <button class="btn btn--sm btn--ghost" data-act="ptab" data-t="care" style="margin-top:11px">Zur Betreuung</button>`
+          : '<p class="empty">Sobald Yalcin dir schreibt, steht es hier.</p>'}
+      </div>
+
+      ${checkinDue(c) ? `<div class="action action--flame" style="margin-top:16px"><div class="action__body">
+        <p class="action__title">Dein Wochen-Check-in ist offen</p>
+        <p class="action__why">Zwei Minuten: Energie, Schlaf, Stress, Motivation, Wohlbefinden. Danach passt Yalcin dein Training an.</p>
+        <div class="action__acts"><button class="btn btn--sm btn--primary" data-act="ptab" data-t="checkin">Jetzt ausfüllen</button></div>
+      </div></div>` : ''}
+    </div>
+  </div>`;
+}
+
+const workoutLines = w => w.exercises.map(e => {
+  const u = EXERCISES[e.ex].unit;
+  const val = u === 'sek' ? `${e.weight} sek × ${e.sets}` : `${e.weight} ${u} × ${e.reps} × ${e.sets}`;
+  return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)">
+    <span style="flex:1;font-size:13.5px;font-weight:600">${EXERCISES[e.ex].label}</span>
+    <span style="font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums">${val}</span>
+    ${e.pr ? '<span class="pill pill--flame">PR</span>' : ''}
+  </div>`;
+}).join('');
+
+/* ---------- Mein Training ---------- */
+function portalTraining(c) {
+  const ws = workoutsOf(c.id);
+  if (!ws.length) return '<p class="empty">Sobald dein erstes Training dokumentiert ist, steht es hier.</p>';
+  const last30 = ws.filter(w => daysBetween(w.date, iso(today())) <= 30);
+  const avgDur = Math.round(ws.slice(0, 10).reduce((a, w) => a + w.duration, 0) / Math.min(ws.length, 10));
+  const avgInt = (ws.slice(0, 10).reduce((a, w) => a + w.intensity, 0) / Math.min(ws.length, 10)).toFixed(1);
+
+  return `
+  <div class="grid grid--3" style="margin-bottom:16px">
+    <div class="metricbox"><p class="metricbox__label">Trainings gesamt</p><p class="metricbox__val">${ws.length}</p></div>
+    <div class="metricbox"><p class="metricbox__label">Letzte 30 Tage</p><p class="metricbox__val">${last30.length}</p></div>
+    <div class="metricbox"><p class="metricbox__label">Ø Dauer / Intensität</p><p class="metricbox__val" style="font-size:17px">${avgDur} Min · ${avgInt}/10</p></div>
+  </div>
+
+  ${ws.slice(0, 14).map(w => `
+    <div class="card" style="margin-bottom:10px">
+      <div class="card__head" style="margin-bottom:10px">
+        <div><p class="card__title">Training — ${fmtDate(w.date)}</p>
+          <p class="card__sub">${w.duration} Minuten · Intensität ${w.intensity}/10${w.coach ? ' · ' + w.coach : ''}</p></div>
+        ${w.exercises.some(e => e.pr) ? '<span class="pill pill--flame">Bestleistung</span>' : ''}
+      </div>
+      ${workoutLines(w)}
+      ${w.note ? `<p class="msg__text" style="margin-top:12px">💬 „${w.note}"</p>` : ''}
+    </div>`).join('')}
+  ${ws.length > 14 ? `<p class="card__sub">${ws.length - 14} weitere Trainings im Archiv.</p>` : ''}`;
+}
+
+/* ---------- Fortschritt ---------- */
+function portalProgress(c, m) {
+  const ws = workoutsOf(c.id).slice().reverse();
+  const pbs = personalBests(c);
+  const b = c.body || [];
+  const first = b[0], now = b[b.length - 1];
+  const mob = baseTest(c) ? { von: mobiScore(baseTest(c)), bis: mobiScore(lastTest(c)) } : null;
+
+  const series = ex => ws.filter(w => w.exercises.some(e => e.ex === ex))
+    .map(w => w.exercises.find(e => e.ex === ex).weight);
+
+  const row = (label, von, bis, unit, better) => `
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)">
+      <span style="flex:1;font-size:13.5px;font-weight:600">${label}</span>
+      <span style="font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums">${von} → <strong style="color:${better ? 'var(--good)' : 'var(--ink)'}">${bis}</strong> ${unit}</span>
+    </div>`;
+
+  return `
+  <div class="card" style="margin-bottom:16px">
+    <div class="card__head"><div><p class="card__title">Start vs. Heute</p>
+      <p class="card__sub">Alles, was gemessen wurde — ohne Schönrechnen</p></div></div>
+    ${pbs.map(p => row(EXERCISES[p.ex].label, p.start, p.value, EXERCISES[p.ex].unit, p.value > p.start)).join('')}
+    ${first ? BODY.map(f => row(f.label, first[f.id], now[f.id], f.unit,
+        f.dir === 1 ? now[f.id] >= first[f.id] : now[f.id] <= first[f.id])).join('') : ''}
+    ${basePerf(c) ? PERF.filter(i => ['row500','hr'].includes(i.id)).map(i =>
+        row(i.label, basePerf(c).items[i.id], lastPerf(c).items[i.id], i.unit,
+            (lastPerf(c).items[i.id] - basePerf(c).items[i.id]) * i.dir >= 0)).join('') : ''}
+    ${mob ? row('Beweglichkeits-Score', mob.von, mob.bis, '/100', mob.bis >= mob.von) : ''}
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card__head"><div><p class="card__title">Kraftentwicklung</p>
+      <p class="card__sub">Arbeitsgewicht je Übung über alle dokumentierten Trainings</p></div></div>
+    <div class="grid grid--3">
+      ${pbs.map(p => {
+        const sr = series(p.ex);
+        return `<div class="metricbox">
+          <p class="metricbox__label">${EXERCISES[p.ex].label}</p>
+          <p class="metricbox__val">${p.value}<span style="font-size:12px;color:var(--ink-3)"> ${EXERCISES[p.ex].unit}</span>
+            <span class="${p.gain >= 0 ? 'delta-good' : 'delta-crit'}">${p.gain >= 0 ? '+' : ''}${p.gain} %</span></p>
+          ${sparkline(sr.length > 1 ? sr : [p.start, p.value], { color: 'var(--flame)', w: 130, h: 38 })}
+        </div>`; }).join('')}
+    </div>
+  </div>
+
+  ${b.length > 1 ? `<div class="card" style="margin-bottom:16px">
+    <div class="card__head"><div><p class="card__title">Körperwerte</p>
+      <p class="card__sub">${b.length} Messungen · zuletzt ${fmtDate(now.date)}</p></div></div>
+    <div class="grid grid--3">
+      ${['kg','bf','taille'].map(f => {
+        const def = BODY.find(x => x.id === f), sr = b.map(x => x[f]);
+        const d = +(now[f] - first[f]).toFixed(1);
+        return `<div class="metricbox">
+          <p class="metricbox__label">${def.label}</p>
+          <p class="metricbox__val">${now[f]}<span style="font-size:12px;color:var(--ink-3)"> ${def.unit}</span>
+            <span class="${d * def.dir <= 0 ? 'delta-good' : 'delta-crit'}">${d > 0 ? '+' : ''}${d}</span></p>
+          ${sparkline(sr, { color: 'var(--good)', w: 130, h: 38 })}
+        </div>`; }).join('')}
+    </div>
+  </div>` : ''}
+
+  ${baseTest(c) ? `<div class="card" style="margin-bottom:16px">
+    <div class="card__head"><div><p class="card__title">Beweglichkeit</p>
+      <p class="card__sub">${lastTest(c).phase} · ${fmtDate(lastTest(c).date)}</p></div>
+      <span class="pill pill--good">Score ${mobiScore(baseTest(c))} → ${mobiScore(lastTest(c))}</span></div>
+    ${MOBI.map(i => {
+      const v0 = baseTest(c).items[i.id], v1 = lastTest(c).items[i.id], d = +(v1 - v0).toFixed(1);
+      const tone = v1 >= 4 ? 'var(--good)' : v1 >= 2.8 ? 'var(--warn)' : 'var(--crit)';
+      return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)">
+        <span style="flex:1;font-size:13px;font-weight:600">${i.label}</span>
+        <span class="tbar" style="flex:1;height:8px;border-radius:99px;background:var(--surface-3);position:relative;overflow:hidden">
+          <span style="position:absolute;inset:0 auto 0 0;width:${v1 / 5 * 100}%;background:${tone};border-radius:99px"></span>
+          <span style="position:absolute;top:-2px;bottom:-2px;left:${v0 / 5 * 100}%;width:2px;background:var(--ink)"></span></span>
+        <span style="width:78px;text-align:right;font-size:12.5px;color:var(--ink-2)">${v0} → <strong style="color:${tone}">${v1}</strong></span>
+        <span style="width:36px;text-align:right;font-size:12px" class="${d >= 0 ? 'delta-good' : 'delta-crit'}">${d >= 0 ? '+' : ''}${d}</span>
+      </div>`; }).join('')}
+  </div>` : ''}
+
+  <div class="card">
+    <div class="card__head"><div><p class="card__title">Deine Journey</p>
+      <p class="card__sub">${stageOf(c).desc}</p></div>
+      <span class="pill pill--flame stage-pill">${stageOf(c).label}</span></div>
+    <div class="rail">
+      ${STAGES.map((x, i) => { const idx = STAGES.findIndex(y => y.id === stageOf(c).id);
+        return `<div class="rail__step ${i < idx ? 'done' : i === idx ? 'now' : ''}">
+          <span class="rail__dot"></span><p class="rail__label">${x.label}</p></div>`; }).join('')}
+    </div>
+  </div>`;
+}
+
+/* ---------- Erfolge ---------- */
+function portalWins(c, m) {
+  const pbs = personalBests(c).sort((a, b) => b.gain - a.gain);
+  const top = pbs[0];
+  const st = streak(c);
+  const mob = baseTest(c) ? mobiScore(lastTest(c)) - mobiScore(baseTest(c)) : 0;
+  const prCount = workoutsOf(c.id).reduce((a, w) => a + w.exercises.filter(e => e.pr).length, 0);
+  const marks = [10, 20, 30, 50, 75, 100].filter(x => m.totalDone >= x);
+
+  return `
+  ${top ? `<div class="card" style="margin-bottom:16px;border-color:rgba(255,138,80,.45)">
+    <p class="metricbox__label">🏆 Dein bisher größter Fortschritt</p>
+    <p style="font-family:var(--font-d);font-stretch:75%;font-size:30px;font-weight:700;letter-spacing:-.02em;margin:6px 0">
+      ${EXERCISES[top.ex].label}: ${top.start} → ${top.value} ${EXERCISES[top.ex].unit}
+      <span class="delta-good" style="font-size:20px">+${top.gain} %</span></p>
+    <p class="card__sub">Erreicht am ${fmtDate(top.date)} — erarbeitet in ${m.totalDone} Einheiten.</p>
+  </div>` : ''}
+
+  <div class="grid grid--3" style="margin-bottom:16px">
+    <div class="metricbox"><p class="metricbox__label">Trainings</p><p class="metricbox__val">${m.totalDone}</p></div>
+    <div class="metricbox"><p class="metricbox__label">Bestleistungen</p><p class="metricbox__val">${prCount}</p></div>
+    <div class="metricbox"><p class="metricbox__label">Streak</p><p class="metricbox__val">${st} Wo.</p></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card__head"><div><p class="card__title">Persönliche Rekorde</p>
+      <p class="card__sub">Höchstwert je Übung, verglichen mit dem Start</p></div></div>
+    ${pbs.map(p => `<div class="row">
+      <span class="avatar avatar--good">${p.gain >= 0 ? '↑' : '↓'}</span>
+      <div class="row__main"><p class="row__name">${EXERCISES[p.ex].label}</p>
+        <p class="row__meta">${p.start} → ${p.value} ${EXERCISES[p.ex].unit} · zuletzt ${fmtDate(p.date)}</p></div>
+      <div class="row__side"><span class="pill ${p.gain >= 0 ? 'pill--good' : 'pill--crit'}">${p.gain >= 0 ? '+' : ''}${p.gain} %</span></div>
+    </div>`).join('')}
+  </div>
+
+  <div class="card">
+    <div class="card__head"><div><p class="card__title">Meilensteine</p>
+      <p class="card__sub">Automatisch dokumentiert</p></div></div>
+    ${marks.map(x => `<div class="row"><span class="avatar avatar--good">✓</span>
+      <div class="row__main"><p class="row__name">${x} Trainings absolviert</p>
+        <p class="row__meta">Teil deiner ${daysBetween(c.start, iso(today()))} Tage bei FITARY</p></div></div>`).join('')}
+    ${mob > 0 ? `<div class="row"><span class="avatar avatar--good">✓</span>
+      <div class="row__main"><p class="row__name">Beweglichkeit um ${mob} Punkte verbessert</p>
+        <p class="row__meta">Gemessen an denselben 7 Messpunkten wie beim Erstkontakt</p></div></div>` : ''}
+    ${st >= 4 ? `<div class="row"><span class="avatar avatar--good">✓</span>
+      <div class="row__main"><p class="row__name">${st} Wochen ohne Trainingslücke</p>
+        <p class="row__meta">Regelmäßigkeit schlägt Intensität</p></div></div>` : ''}
+    ${!marks.length && mob <= 0 && st < 4 ? '<p class="empty">Deine ersten Meilensteine kommen — sie werden hier automatisch eingetragen.</p>' : ''}
+  </div>`;
+}
+
+/* ---------- Check-in ---------- */
+function portalCheckin(c) {
+  const hist = (c.weekly || []).slice().reverse();
+  const due = checkinDue(c);
+
+  return `
+  ${due ? `<div class="card" style="margin-bottom:16px">
+    <div class="card__head"><div><p class="card__title">Wochen-Check-in</p>
+      <p class="card__sub">Fünf Fragen, zwei Minuten. Yalcin passt dein Training danach an.</p></div></div>
+    ${CHECKIN.map(f => `<div class="field">
+      <label>${f.label} <span id="lab_${f.id}" style="color:var(--flame);text-transform:none;letter-spacing:0">3</span> / 5
+        <span style="color:var(--ink-3);text-transform:none;letter-spacing:0">${f.good === 1 ? '(1 = wenig Stress)' : '(5 = sehr gut)'}</span></label>
+      <input type="range" min="1" max="5" step="1" value="3" id="ci_${f.id}" data-lab="lab_${f.id}" />
+    </div>`).join('')}
+    <div class="field"><label>Gewicht (optional)</label><input type="number" step="0.1" id="ci_kg" placeholder="kg" /></div>
+    <div class="field"><label>Was war diese Woche los?</label><textarea id="ci_note" rows="2" placeholder="Schlafmangel, Stress, Urlaub, Verletzung …"></textarea></div>
+    <button class="btn btn--primary" data-act="checkinSave" data-id="${c.id}" style="width:100%;justify-content:center">Check-in absenden</button>
+  </div>`
+  : `<div class="action action--good" style="margin-bottom:16px"><div class="action__body">
+      <p class="action__title">Check-in für diese Woche erledigt</p>
+      <p class="action__why">Danke — Yalcin sieht deine Werte. Der nächste ist in ${7 - daysBetween(lastCheckin(c).date, iso(today()))} Tagen dran.</p>
+    </div></div>`}
+
+  <div class="card">
+    <div class="card__head"><div><p class="card__title">Verlauf</p>
+      <p class="card__sub">Deine letzten Check-ins</p></div></div>
+    ${hist.length ? hist.slice(0, 8).map(e => `
+      <div style="padding:11px 0;border-bottom:1px solid var(--line)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px">
+          <span style="font-size:13px;font-weight:600">${fmtDate(e.date)}</span>
+          <span class="pill ${checkinScore(e) >= 70 ? 'pill--good' : checkinScore(e) >= 50 ? 'pill--warn' : 'pill--crit'}">${checkinScore(e)} / 100</span>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${CHECKIN.map(f => `<span class="pill" style="font-weight:500">${f.label} ${e[f.id]}</span>`).join('')}
+          ${e.kg ? `<span class="pill" style="font-weight:500">${e.kg} kg</span>` : ''}
+        </div>
+        ${e.note ? `<p class="card__sub" style="margin-top:6px">„${e.note}"</p>` : ''}
+      </div>`).join('') : '<p class="empty">Noch keine Check-ins.</p>'}
+  </div>`;
+}
+
+/* ---------- Betreuung ---------- */
+function portalCare(c, m) {
+  const thread = db.messages.filter(x => x.clientId === c.id && x.status === 'gesendet')
+    .slice().sort((a, b) => a.date.localeCompare(b.date));
+  const tasks = c.tasks || [];
+
+  return `
+  <div class="grid grid--2">
+    <div>
+      <div class="card">
+        <div class="card__head"><div><p class="card__title">Deine Aufgaben diese Woche</p>
+          <p class="card__sub">Kurz, machbar, zwischen den Einheiten</p></div>
+          <span class="pill ${tasks.every(t => t.done) ? 'pill--good' : 'pill--warn'}">${tasks.filter(t => t.done).length}/${tasks.length}</span></div>
+        ${tasks.length ? tasks.map(t => `<div class="row row--click" data-act="task" data-id="${c.id}" data-tid="${t.id}">
+          <span class="avatar ${t.done ? 'avatar--good' : ''}">${t.done ? '✓' : '○'}</span>
+          <div class="row__main"><p class="row__name" style="${t.done ? 'opacity:.6;text-decoration:line-through' : ''}">${t.text}</p></div>
+        </div>`).join('') : '<p class="empty">Aktuell keine Aufgaben.</p>'}
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Nachrichten</p>
+          <p class="card__sub">1:1 mit deinem Trainer — kein Sammel-Chat</p></div></div>
+        ${thread.length ? thread.slice(-8).map(x => `
+          <div style="margin-bottom:10px;display:flex;justify-content:${x.from === 'kunde' ? 'flex-end' : 'flex-start'}">
+            <div style="max-width:86%;background:${x.from === 'kunde' ? 'var(--flame-dim)' : 'var(--surface-2)'};
+              border:1px solid var(--line);border-radius:var(--r-md);padding:11px 13px">
+              <p style="font-size:11px;color:var(--ink-3);margin-bottom:4px">${x.from === 'kunde' ? 'Du' : 'Yalcin'} · ${fmtDate(x.date)}</p>
+              <p style="font-size:13.5px;white-space:pre-wrap;line-height:1.55">${x.text}</p>
+            </div>
+          </div>`).join('') : '<p class="empty">Noch keine Nachrichten.</p>'}
+        <div class="field" style="margin-top:12px"><textarea id="careText" rows="2" placeholder="Frage an Yalcin …"></textarea></div>
+        <button class="btn btn--sm btn--primary" data-act="clientMsg" data-id="${c.id}">Senden</button>
+      </div>
+    </div>
+
+    <div>
+      ${(c.videos || []).length ? `<div class="card">
+        <div class="card__head"><div><p class="card__title">Videobotschaften</p>
+          <p class="card__sub">${unwatched(c).length ? 'Neu für dich' : 'alle gesehen'}</p></div>
+          ${unwatched(c).length ? '<span class="pill pill--flame">neu</span>' : '<span class="pill pill--good">✓</span>'}</div>
+        ${c.videos.map(v => `<div class="row">
+          <span class="avatar ${v.watched ? 'avatar--good' : 'avatar--risk'}">▶</span>
+          <div class="row__main"><p class="row__name">${v.title}</p>
+            <p class="row__meta">${VIDEO_KINDS[v.kind]} · ${fmtDate(v.date)}</p></div>
+          <div class="row__side"><button class="btn btn--sm ${v.watched ? 'btn--ghost' : 'btn--primary'}" data-act="play" data-id="${c.id}" data-vid="${v.id}">${v.watched ? 'Nochmal' : 'Ansehen'}</button></div>
+        </div>`).join('')}
+      </div>` : ''}
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Dein Kontingent</p>
+          <p class="card__sub">${c.plan}</p></div>
+          <span class="pill ${c.credits <= 2 ? 'pill--warn' : 'pill--good'}">${c.credits} offen</span></div>
+        ${c.credits <= 2 ? '<p class="card__sub">Fast aufgebraucht — sag Bescheid, damit dein fixer Termin erhalten bleibt.</p>' : ''}
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Direkter Draht</p>
+          <p class="card__sub">Plobergerstraße 7, 4600 Wels</p></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn btn--sm btn--primary" href="https://wa.me/436703565006" target="_blank" rel="noopener">WhatsApp an FITARY</a>
+          <a class="btn btn--sm btn--ghost" href="mailto:office@fitary.at">office@fitary.at</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 /* ---------------- Event-Delegation ---------------- */
@@ -1875,6 +2555,98 @@ document.addEventListener('click', e => {
 
     case 'access':     closeAll(); accessModal(id); break;
     case 'openportal': openPortal(id); break;
+    case 'dtab':      DTAB = el.dataset.t; openClient(id); break;
+    case 'wonew':     closeAll(); workoutModal(id); break;
+    case 'bodynew':   closeAll(); bodyModal(id); break;
+
+    case 'woSave': {
+      const c = client(id), prog = (c.program || []).length ? c.program : ['squat', 'bench', 'row'];
+      const peak = {};
+      workoutsOf(c.id).forEach(w => w.exercises.forEach(e => { peak[e.ex] = Math.max(peak[e.ex] || 0, e.weight); }));
+      const exercises = prog.map(ex => {
+        const weight = parseFloat($('#wo_' + ex + '_w').value) || 0;
+        return { ex, weight, reps: parseInt($('#wo_' + ex + '_r').value, 10) || 8,
+                 sets: parseInt($('#wo_' + ex + '_s').value, 10) || 3, pr: weight > (peak[ex] || 0) };
+      }).filter(e => e.weight > 0);
+      if (!exercises.length) { toast('Mindestens eine Übung eintragen'); break; }
+      const w = { id: uid('w'), clientId: c.id, date: $('#woDate').value, bookingId: null,
+        duration: parseInt($('#woDur').value, 10) || 60, intensity: parseInt($('#woInt').value, 10) || 7,
+        exercises, note: $('#woNote').value.trim() };
+      db.workouts.push(w);
+      const prs = exercises.filter(e => e.pr);
+      logEvent('workout', `${c.name}: Training ${fmtDate(w.date)} dokumentiert${prs.length ? ' — ' + prs.length + '× Bestleistung' : ''}`, c.id);
+      save(); toast(prs.length ? `Gespeichert · ${prs.length}× Bestleistung` : 'Training gespeichert');
+      closeAll(); DTAB = 'training'; openClient(c.id);
+      break;
+    }
+
+    case 'bodySave': {
+      const c = client(id), e = { date: iso(today()) };
+      BODY.forEach(f => { const v = parseFloat($('#bd_' + f.id).value); if (!isNaN(v)) e[f.id] = v; });
+      c.body = c.body || []; c.body.push(e);
+      logEvent('body', `${c.name}: Körpermessung erfasst`, c.id);
+      save(); toast('Messung gespeichert'); closeAll(); DTAB = 'progress'; openClient(c.id);
+      break;
+    }
+
+    case 'noteSave': {
+      const c = client(id); c.note = $('#cnote').value;
+      save(); toast('Notiz gespeichert');
+      break;
+    }
+
+    case 'taskadd': {
+      const c = client(id), box = $('#taskText'), text = (box ? box.value : '').trim();
+      if (!text) { toast('Aufgabe eintragen'); break; }
+      c.tasks = c.tasks || [];
+      c.tasks.push({ id: uid('t'), text, done: false, week: iso(startOfWeek(today())) });
+      logEvent('task', `${c.name}: neue Aufgabe — ${text}`, c.id);
+      save(); toast('Aufgabe vergeben'); openClient(c.id);
+      break;
+    }
+
+    case 'trainerMsg': {
+      const c = client(id), box = $('#trainerText'), text = (box ? box.value : '').trim();
+      if (!text) { toast('Text eingeben'); break; }
+      db.messages.push({ id: uid('m'), clientId: c.id, type: 'trainer', channel: 'App', from: 'trainer',
+        text, status: 'gesendet', date: iso(today()) });
+      logEvent('message', `Feedback an ${c.name} gesendet`, c.id);
+      save(); toast('Gesendet · sichtbar im Kundenzugang'); openClient(c.id);
+      break;
+    }
+    case 'ptab':      PVIEW = el.dataset.t; render(); break;
+
+    case 'task': {
+      const c = client(id), t = c.tasks.find(x => x.id === el.dataset.tid);
+      t.done = !t.done;
+      if (t.done) logEvent('task', `${c.name} hat erledigt: ${t.text}`, c.id);
+      save();
+      if (PORTAL) render(); else openClient(c.id);
+      break;
+    }
+
+    case 'clientMsg': {
+      const c = client(id), box = $('#careText'), text = (box ? box.value : '').trim();
+      if (!text) { toast('Schreib kurz, worum es geht'); break; }
+      db.messages.push({ id: uid('m'), clientId: c.id, type: 'kunde', channel: 'App', from: 'kunde',
+        text, status: 'gesendet', date: iso(today()) });
+      logEvent('message', `Nachricht von ${c.name}: „${text.slice(0, 60)}"`, c.id);
+      save(); toast('Gesendet — Yalcin sieht es im Cockpit'); render();
+      break;
+    }
+
+    case 'checkinSave': {
+      const c = client(id), e = { date: iso(today()) };
+      CHECKIN.forEach(f => { e[f.id] = parseInt($('#ci_' + f.id).value, 10); });
+      const kg = parseFloat($('#ci_kg').value);
+      if (!isNaN(kg)) e.kg = kg;
+      e.note = $('#ci_note').value.trim();
+      c.weekly.push(e);
+      const sc = checkinScore(e);
+      logEvent('checkin', `${c.name}: Check-in ${sc}/100${e.note ? ' — „' + e.note.slice(0, 50) + '"' : ''}`, c.id);
+      save(); toast(`Check-in gespeichert · ${sc}/100`); render();
+      break;
+    }
     case 'availability': availabilityModal(id); break;
 
     case 'reqslot': {
@@ -2077,6 +2849,10 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('input', e => {
+  if (e.target.dataset && e.target.dataset.lab) {
+    const lab = $('#' + e.target.dataset.lab);
+    if (lab) lab.textContent = e.target.value;
+  }
   if (e.target.id === 'fq')     { filter.q = e.target.value; const v = e.target.value; render();
                                   const f = $('#fq'); if (f) { f.focus(); f.value = v; f.setSelectionRange(v.length, v.length); } }
 });
