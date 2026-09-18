@@ -25,10 +25,11 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Voz sintética por idioma (velocidade normal + modo lento 🐢 + repetição por toque).
 - Gravação da voz da família (local, com prioridade sobre TTS).
 - Reconhecimento de fala com avaliação tolerante (3 tentativas, replay lento, "Quase!", marcação silenciosa) **onde o navegador suporta**; fallback honesto "repita junto".
+- Recuperação de PIN pelo desafio de adulto, sem perder nenhum dado.
 - Painel dos responsáveis: progresso por idioma, estados, retenção 1/3/7/14/30d, dificuldades, histórico, tempo de uso, dicas, configurações, troca de PIN, multi-perfil, exportação JSON e exclusão total.
 - Painel administrativo (`admin.html`): revisão de todos os campos e variações, teste de áudio, validador, importação JSON/CSV sem rebuild, exportação de packs.
 - Offline após a primeira visita (Service Worker) + instalação PWA (iOS/Android).
-- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (59 testes).
+- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência, recuperação de PIN e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (61 testes).
 
 ## ⚠️ Funcional com limitação conhecida
 

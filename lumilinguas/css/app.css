@@ -1119,3 +1119,11 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
 .journey-card .jc-phase i {
   font-size: 12px; font-style: normal; color: var(--ink-soft); font-weight: 600;
 }
+
+/* "Esqueci o PIN": discreto, mas sempre disponível — ninguém pode ficar
+   trancado fora do progresso da própria criança. */
+.gate-forgot {
+  display: block; margin: 14px auto 0; background: none;
+  color: var(--ink-soft); font-size: 13px; font-weight: 700;
+  text-decoration: underline; padding: 6px;
+}

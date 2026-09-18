@@ -56,6 +56,19 @@
         else { msg.textContent = 'PIN incorreto.'; input.value = ''; }
       };
       body.appendChild(ok);
+
+      /* Esqueceu o PIN?
+       *
+       * Sem isto, um responsável que esquece o número fica trancado fora do
+       * progresso da própria criança — e a única saída seria apagar os dados.
+       * A recuperação cai no mesmo desafio de adulto que protege o app antes
+       * de existir PIN: o objetivo aqui nunca foi resistir a um adulto, e sim
+       * impedir que a criança entre sozinha. Uma conta de multiplicação dá
+       * conta disso; os dados seguem apenas neste aparelho. */
+      var esqueci = el('button', 'gate-forgot', 'Esqueci o PIN');
+      esqueci.onclick = function () { pinRecovery(body, data, done); };
+      body.appendChild(esqueci);
+
       input.focus();
     } else {
       var ch = GATE.mathChallenge();
@@ -75,6 +88,41 @@
       inp2.focus();
     }
     $('gate-close').onclick = function () { modal.classList.remove('open'); };
+  }
+
+  /* Recuperação do PIN: desafio de adulto e, ao passar, o PIN sai de cena
+   * para que um novo seja definido nas Configurações (ou fique sem PIN). */
+  function pinRecovery(body, data, done) {
+    body.innerHTML = '';
+    var ch = GATE.mathChallenge();
+    body.appendChild(el('p', 'gate-title', 'Confirmação de adulto'));
+    body.appendChild(el('p', '', ch.question));
+    var inp = el('input', 'gate-input');
+    inp.type = 'number'; inp.inputMode = 'numeric';
+    body.appendChild(inp);
+    var msg = el('p', 'gate-msg', '');
+    body.appendChild(msg);
+
+    var ok = el('button', 'btn-primary', 'Entrar e apagar o PIN');
+    ok.onclick = function () {
+      if (Number(inp.value) !== ch.answer) {
+        msg.textContent = 'Tente novamente.';
+        inp.value = '';
+        ch = GATE.mathChallenge();
+        body.children[1].textContent = ch.question;
+        return;
+      }
+      // O PIN sai; o progresso e os perfis ficam intactos.
+      data.parent.pin = null;
+      APP().save();
+      done();
+    };
+    body.appendChild(ok);
+    body.appendChild(el('p', 'ob-note',
+      'O PIN será apagado e a área volta a abrir com uma conta de multiplicação. ' +
+      'Nenhum dado da criança é perdido — você pode definir um novo PIN em ' +
+      'Configurações.'));
+    inp.focus();
   }
 
   /* ---------- Onboarding ---------- */

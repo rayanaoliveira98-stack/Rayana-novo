@@ -18,8 +18,13 @@ por cima. Três regras sustentam tudo:
 
 **Baloo 2** (SIL Open Font License), servida pelo próprio app em `fonts/` —
 não do Google Fonts, porque o app precisa funcionar offline. Arredondada,
-encorpada e desenhada para telas pequenas. Só latim e latim estendido (68 KB
-por peso); mandarim e japonês usam a fonte do sistema, que os desenha melhor.
+encorpada e desenhada para telas pequenas.
+
+É uma fonte **variável**: um único arquivo por subconjunto cobre os pesos de
+400 a 800, interpolados pelo navegador. Declarar pesos fixos faria baixar o
+mesmo arquivo três vezes (eram 196 KB; são 60 KB) e travaria a interpolação.
+Só latim e latim estendido; mandarim e japonês usam a fonte do sistema, que os
+desenha melhor.
 
 O corpo de texto do **painel dos responsáveis** fica na fonte do sistema: lê
 melhor em blocos longos, é o que o adulto já está acostumado a ler no
