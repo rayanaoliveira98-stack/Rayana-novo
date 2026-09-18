@@ -167,9 +167,14 @@ Status: `#5BE6B4` bom, `#F5B23B` atenção, `#FF5A5F` crítico — sempre com r�
 
 ### Logo
 
-Coloque o arquivo real em **`fitary-app/assets/logo.svg`** (ou `.png`, ajustando o `src`
-em `index.html`). Ele substitui o monograma automaticamente — sem mexer em mais nada.
-Enquanto não existir, o app mostra o monograma "F" em terracota.
+Logo oficial em `assets/`, recortado e com fundo transparente (branco, funciona sobre
+qualquer fundo escuro):
+
+- `assets/logo.png` — marca + wordmark, na sidebar (78 px de altura)
+- `assets/logo-mark.png` — só a marca, no topo do acesso do cliente (onde não há sidebar)
+
+Para trocar por uma versão vetorial: substitua por `logo.svg` e ajuste o `src` em
+`index.html`. Se o arquivo faltar, o app cai no monograma "F" automaticamente.
 
 ## Disponibilidade e auto-agendamento
 
@@ -190,9 +195,10 @@ num estúdio boutique. Quem quiser tudo, clica em "Alle freien Zeiten ansehen".
 
 ### Fontes
 
-Hoje: Archivo (títulos) + Inter (texto). As fontes oficiais do Canva aparecem só como IDs
-internos nas peças, sem nome legível — assim que você passar os nomes, a troca é uma linha
-em `--font-d` / `--font-b`.
+**Open Sans Condensed Bold** nos títulos e **Open Sans** normal no texto — uma família,
+duas larguras. Carregada do Google Fonts pelo eixo variável de largura
+(`family=Open+Sans:wdth,wght@75..100,400..800`); os elementos de display usam
+`font-stretch: 75%`, que é o condensed.
 
 ## Estrutura
 
