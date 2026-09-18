@@ -282,7 +282,7 @@ a { color: inherit; }
 .chart text { font-family: var(--font-b); font-size: 10px; fill: var(--ink-3); }
 .metricbox { border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: var(--surface-2); min-width: 0; overflow: hidden; }
 .metricbox__label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
-.metricbox__val { font-family: var(--font-d); font-stretch: 75%; font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin: 3px 0 6px; }
+.metricbox__val { font-family: var(--font-d); font-stretch: 75%; font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin: 3px 0 6px; white-space: nowrap; }
 .metricbox__val span { font-size: 12px; font-weight: 600; margin-left: 6px; }
 .delta-good { color: var(--good); }
 .delta-crit { color: var(--crit); }
@@ -484,3 +484,15 @@ input[type="range"]::-moz-range-thumb {
   background: var(--flame-fill); border: 2px solid var(--brand-mint); cursor: pointer;
 }
 @media (max-width: 760px) { .ptab { padding: 8px 12px; font-size: 12.5px; } }
+
+
+/* ---------- Fortschrittsfotos ---------- */
+.photo {
+  width: 100%; aspect-ratio: 3 / 4; object-fit: cover;
+  border-radius: var(--r-md); border: 1px solid var(--line-2); background: var(--surface-2);
+}
+.photo--thumb { aspect-ratio: 3 / 4; border-radius: var(--r-sm); }
+figure { margin: 0; }
+
+/* In der Kundenakte müssen fünf Reiter nebeneinander passen */
+.drawer__panel .ptab { padding: 8px 11px; font-size: 12.5px; }

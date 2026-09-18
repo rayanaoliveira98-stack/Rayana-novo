@@ -4,7 +4,7 @@
    Vanilla JS, localStorage. Kein Build, kein Backend.
    ========================================================= */
 
-const KEY = 'fitary.journey.v4';
+const KEY = 'fitary.journey.v5';
 
 /* ---------------- Helpers ---------------- */
 const $  = (s, r = document) => r.querySelector(s);
@@ -91,6 +91,35 @@ const BODY = [
   { id: 'arm',   label: 'Oberarm',     unit: 'cm', dir:  1 },
   { id: 'bein',  label: 'Oberschenkel',unit: 'cm', dir:  1 }
 ];
+
+/* Fortschrittsfotos werden verkleinert im Browser gespeichert (Demo).
+   In Produktion gehören sie verschlüsselt auf den Server — Gesundheitsdaten. */
+const PHOTO_MAX = 720;
+const demoPhoto = label => 'data:image/svg+xml;utf8,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="360" height="480">
+     <rect width="100%" height="100%" fill="#0E4739"/>
+     <g fill="#145A4A"><circle cx="180" cy="132" r="50"/>
+     <path d="M180 196c-58 0-93 38-101 97l-8 170h218l-8-170c-8-59-43-97-101-97z"/></g>
+     <text x="180" y="452" fill="#7FA79E" font-family="sans-serif" font-size="17" text-anchor="middle">${label}</text>
+   </svg>`);
+
+function readPhoto(file, cb) {
+  const r = new FileReader();
+  r.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const sc = Math.min(1, PHOTO_MAX / Math.max(img.width, img.height));
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * sc); cv.height = Math.round(img.height * sc);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      cb(cv.toDataURL('image/jpeg', .72));
+    };
+    img.onerror = () => cb(null);
+    img.src = r.result;
+  };
+  r.onerror = () => cb(null);
+  r.readAsDataURL(file);
+}
 
 const TRAINER_NOTES = [
   'Saubere Technik heute — nächstes Mal steigern wir.',
@@ -413,6 +442,12 @@ function buildSeed() {
       });
     }
 
+    /* Fortschrittsfotos — in der Demo zwei Platzhalter, damit der Vergleich sichtbar ist */
+    c.photos = (i % 3 === 0) ? [
+      { id: uid('ph'), date: iso(addDays(t, -s.weeks * 7 + 2)), url: demoPhoto('Beispielbild Start'), note: 'Start' },
+      { id: uid('ph'), date: iso(addDays(t, -7)), url: demoPhoto('Beispielbild aktuell'), note: '' }
+    ] : [];
+
     /* Aufgaben für die laufende Woche */
     c.tasks = [
       { id: uid('t'), text: '2× 10 Minuten Mobility für Hüfte und Brustwirbelsäule', done: rand() < .5, week: iso(startOfWeek(t)) },
@@ -445,7 +480,7 @@ function buildSeed() {
       code: 'FIT-L' + (10 + i),
       access: null,   /* App-Zugang ist Teil des Programms, nicht des Gratis-Termins */
       note: '', checkins: [], mobility: [], performance: [], videos: [],
-      program: [], weekly: [], body: [], tasks: [], stoppedDaysAgo: null
+      program: [], weekly: [], body: [], tasks: [], photos: [], stoppedDaysAgo: null
     };
     bookings.push({ id: uid('b'), clientId: c.id, date: iso(d), time: s.time, type: 'bwg',
       coach: 'Yalcin', status: s.inDays < 0 ? 'completed' : 'confirmed', reason: null, reminded: false });
@@ -490,7 +525,13 @@ function load() {
   try { localStorage.setItem(KEY, JSON.stringify(fresh)); } catch (e) {}
   return fresh;
 }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {} }
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
+  catch (e) {
+    toast('Speicher voll — ältere Fotos löschen');
+    return false;
+  }
+}
 const client = id => db.clients.find(c => c.id === id);
 const bookingsOf = id => db.bookings.filter(b => b.clientId === id).sort((a, b) => a.date.localeCompare(b.date));
 
@@ -1419,6 +1460,12 @@ function sheetProgress(c, m) {
     </div>` : `<p class="section-title">Körpermessungen</p>
       <button class="btn btn--sm btn--ghost" data-act="bodynew" data-id="${c.id}">Erste Messung erfassen</button>`}
 
+    <p class="section-title">Fotos</p>
+    <div class="metricbox" style="margin-bottom:12px">
+      ${photoSection(c, { title: 'Fortschrittsfotos', ctx: 'studio',
+        hint: 'Gesundheitsdaten: nur mit ausdrücklicher Zustimmung erfassen und niemals ohne Freigabe verwenden.' })}
+    </div>
+
     ${mobilitySection(c)}
     ${performanceSection(c)}`;
 }
@@ -1764,7 +1811,35 @@ function testModal(id) {
     <button class="btn btn--primary" data-act="testSave" data-id="${c.id}" style="width:100%;justify-content:center">Test speichern & Ergebnis-Nachricht erstellen</button>`);
 }
 
-function workoutModal(id) {
+function photoSection(c, opts = {}) {
+  const ph = (c.photos || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+  const first = ph[0], last = ph[ph.length - 1];
+  return `
+    <div class="card__head" style="margin-bottom:12px">
+      <div><p class="card__title">${opts.title || 'Fortschrittsfotos'}</p>
+        <p class="card__sub">${ph.length ? `${ph.length} Aufnahmen · gleiche Haltung, gleiches Licht` : 'Noch keine Fotos'}</p></div>
+      ${ph.length > 1 ? '<span class="pill pill--good">Start vs. Heute</span>' : ''}
+    </div>
+    ${ph.length > 1 ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <figure><img src="${first.url}" alt="Foto vom ${fmtDate(first.date)}" class="photo" />
+        <figcaption class="card__sub" style="margin-top:6px">Start · ${fmtDate(first.date)}</figcaption></figure>
+      <figure><img src="${last.url}" alt="Foto vom ${fmtDate(last.date)}" class="photo" />
+        <figcaption class="card__sub" style="margin-top:6px">Heute · ${fmtDate(last.date)}</figcaption></figure>
+    </div>` : ph.length === 1 ? `<figure style="max-width:200px"><img src="${first.url}" alt="Foto" class="photo" />
+      <figcaption class="card__sub" style="margin-top:6px">${fmtDate(first.date)}</figcaption></figure>` : ''}
+    ${ph.length > 2 ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      ${ph.slice(0, -1).map(x => `<figure style="width:78px"><img src="${x.url}" alt="Foto vom ${fmtDate(x.date)}" class="photo photo--thumb" />
+        <figcaption class="card__sub" style="font-size:10px;margin-top:4px">${fmtShort(x.date)}</figcaption></figure>`).join('')}
+    </div>` : ''}
+    <label class="btn btn--sm btn--ghost" style="cursor:pointer">
+      Foto hinzufügen
+      <input type="file" accept="image/*" data-photo="${c.id}" data-ctx="${opts.ctx || 'studio'}" style="display:none" />
+    </label>
+    <p class="card__sub" style="margin-top:8px">${opts.hint ||
+      'Freiwillig. Fotos bleiben zwischen dir und Yalcin — sie werden nirgendwo veröffentlicht.'}</p>`;
+}
+
+function workoutModal(id, date) {
   const c = client(id), prog = (c.program || []).length ? c.program : ['squat', 'bench', 'row'];
   const last = workoutsOf(c.id)[0];
   modal(`
@@ -1772,7 +1847,7 @@ function workoutModal(id) {
       <p class="panel__meta">${c.name}${last ? ' · zuletzt ' + fmtDate(last.date) : ''}</p></div>
       <button class="closebtn" data-close>✕</button></div>
     <div class="field-row">
-      <div class="field"><label>Datum</label><input type="date" id="woDate" value="${iso(today())}" /></div>
+      <div class="field"><label>Datum</label><input type="date" id="woDate" value="${date || iso(today())}" /></div>
       <div class="field"><label>Dauer (Min)</label><input type="number" id="woDur" value="${last ? last.duration : 60}" /></div>
     </div>
     <div class="field"><label>Intensität (1–10)</label><input type="number" min="1" max="10" id="woInt" value="${last ? last.intensity : 7}" /></div>
@@ -2351,6 +2426,10 @@ function portalProgress(c, m) {
       </div>`; }).join('')}
   </div>` : ''}
 
+  <div class="card" style="margin-bottom:16px">
+    ${photoSection(c, { ctx: 'portal' })}
+  </div>
+
   <div class="card">
     <div class="card__head"><div><p class="card__title">Deine Journey</p>
       <p class="card__sub">${stageOf(c).desc}</p></div>
@@ -2429,6 +2508,9 @@ function portalCheckin(c) {
       <input type="range" min="1" max="5" step="1" value="3" id="ci_${f.id}" data-lab="lab_${f.id}" />
     </div>`).join('')}
     <div class="field"><label>Gewicht (optional)</label><input type="number" step="0.1" id="ci_kg" placeholder="kg" /></div>
+    <div class="field"><label>Foto (optional)</label>
+      <input type="file" accept="image/*" id="ci_photo" />
+      <p class="card__sub" style="font-size:11px;margin-top:4px">Gleiche Haltung, gleiches Licht — nur so ist der Vergleich ehrlich.</p></div>
     <div class="field"><label>Was war diese Woche los?</label><textarea id="ci_note" rows="2" placeholder="Schlafmangel, Stress, Urlaub, Verletzung …"></textarea></div>
     <button class="btn btn--primary" data-act="checkinSave" data-id="${c.id}" style="width:100%;justify-content:center">Check-in absenden</button>
   </div>`
@@ -2643,8 +2725,18 @@ document.addEventListener('click', e => {
       e.note = $('#ci_note').value.trim();
       c.weekly.push(e);
       const sc = checkinScore(e);
-      logEvent('checkin', `${c.name}: Check-in ${sc}/100${e.note ? ' — „' + e.note.slice(0, 50) + '"' : ''}`, c.id);
-      save(); toast(`Check-in gespeichert · ${sc}/100`); render();
+      const file = ($('#ci_photo') || {}).files && $('#ci_photo').files[0];
+      const finish = () => {
+        logEvent('checkin', `${c.name}: Check-in ${sc}/100${e.note ? ' — „' + e.note.slice(0, 50) + '"' : ''}`, c.id);
+        save(); toast(`Check-in gespeichert · ${sc}/100`); render();
+      };
+      if (file) readPhoto(file, url => {
+        if (url) { c.photos = c.photos || [];
+          c.photos.push({ id: uid('ph'), date: iso(today()), url, note: 'Check-in' });
+          logEvent('photo', `${c.name}: neues Fortschrittsfoto`, c.id); }
+        finish();
+      });
+      else finish();
       break;
     }
     case 'availability': availabilityModal(id); break;
@@ -2801,7 +2893,10 @@ document.addEventListener('click', e => {
       const b = db.bookings.find(x => x.id === id), c = client(b.clientId);
       b.status = s;
       if (s === 'completed') { c.credits = Math.max(0, c.credits - 1);
-        logEvent('session', `${c.name}: Einheit am ${fmtDate(b.date)} absolviert (${c.credits} offen)`, c.id); }
+        logEvent('session', `${c.name}: Einheit am ${fmtDate(b.date)} absolviert (${c.credits} offen)`, c.id);
+        save(); toast('Einheit absolviert · jetzt dokumentieren');
+        closeAll(); render(); workoutModal(c.id, b.date);   /* direkt weiter zur Dokumentation */
+        break; }
       if (s === 'noshow') { draft(c.id, 'noshow', b);
         logEvent('noshow', `${c.name}: No-Show am ${fmtDate(b.date)} — Follow-up erstellt`, c.id); }
       save(); toast(s === 'completed' ? 'Einheit absolviert' : 'No-Show erfasst · Follow-up erstellt');
@@ -2857,6 +2952,19 @@ document.addEventListener('input', e => {
                                   const f = $('#fq'); if (f) { f.focus(); f.value = v; f.setSelectionRange(v.length, v.length); } }
 });
 document.addEventListener('change', e => {
+  if (e.target.dataset && e.target.dataset.photo) {
+    const c = client(e.target.dataset.photo), file = e.target.files[0], ctx = e.target.dataset.ctx;
+    if (!c || !file) return;
+    readPhoto(file, url => {
+      if (!url) { toast('Bild konnte nicht gelesen werden'); return; }
+      c.photos = c.photos || [];
+      c.photos.push({ id: uid('ph'), date: iso(today()), url, note: '' });
+      logEvent('photo', `${c.name}: neues Fortschrittsfoto`, c.id);
+      if (save()) toast('Foto gespeichert');
+      if (ctx === 'portal') render(); else openClient(c.id);
+    });
+    return;
+  }
   if (e.target.id === 'fstage') { filter.stage = e.target.value; render(); }
   if (e.target.id === 'frisk')  { filter.risk  = e.target.value; render(); }
 });
