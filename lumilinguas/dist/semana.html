@@ -1,0 +1,265 @@
+<title>Sete Dias com a Sofia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ink:#2E2A45; --ink-2:#6B6484; --ink-3:#9A93B0;
+  --paper:#FFFDF9; --card:#FFFFFF; --rail:#EFEBFA;
+  --accent:#7C5CF0; --accent-deep:#5B3FC4; --accent-soft:#F1ECFE;
+  --en:#4A6CF7; --en-soft:#E8EDFE;
+  --de:#C98A00; --de-soft:#FBF0D8;
+  --good:#23A96B; --warn:#D98324; --line:#E7E2F2;
+  --shadow:0 2px 0 rgba(46,42,69,.07), 0 10px 26px rgba(46,42,69,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#EFEBFA; --ink-2:#B9B2CE; --ink-3:#8B84A3;
+    --paper:#191428; --card:#221B38; --rail:#2C2447;
+    --accent:#A98CFF; --accent-deep:#C4B0FF; --accent-soft:#2E2551;
+    --en:#8AA2FF; --en-soft:#232C50;
+    --de:#E8B54A; --de-soft:#3A2F16;
+    --good:#4FD094; --warn:#F0A75B; --line:#332A52;
+    --shadow:0 2px 0 rgba(0,0,0,.28), 0 12px 30px rgba(0,0,0,.34);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#EFEBFA; --ink-2:#B9B2CE; --ink-3:#8B84A3;
+  --paper:#191428; --card:#221B38; --rail:#2C2447;
+  --accent:#A98CFF; --accent-deep:#C4B0FF; --accent-soft:#2E2551;
+  --en:#8AA2FF; --en-soft:#232C50;
+  --de:#E8B54A; --de-soft:#3A2F16;
+  --good:#4FD094; --warn:#F0A75B; --line:#332A52;
+  --shadow:0 2px 0 rgba(0,0,0,.28), 0 12px 30px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif; font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px; margin:0 auto; padding:16px; padding-block:36px 64px}
+h1,h2,h3,.num{font-family:'Baloo 2','IBM Plex Sans',system-ui,sans-serif; font-weight:800; letter-spacing:-.01em}
+h1{font-size:clamp(30px,6.2vw,44px); line-height:1.08; margin:0 0 10px; text-wrap:balance}
+h2{font-size:clamp(20px,3.6vw,25px); margin:0}
+h3{font-size:16px; margin:0}
+p{margin:0 0 14px; max-width:66ch}
+.lede{font-size:clamp(16px,2.4vw,18px); color:var(--ink-2); max-width:62ch; margin-bottom:22px}
+
+.setup{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:34px}
+.tag{
+  display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600;
+  background:var(--card); border:1px solid var(--line); border-radius:999px;
+  padding:6px 13px; color:var(--ink-2);
+}
+.tag b{color:var(--ink); font-weight:700}
+
+/* ---- resumo ---- */
+.totais{display:grid; grid-template-columns:repeat(auto-fit,minmax(138px,1fr)); gap:12px; margin-bottom:14px}
+.tot{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; box-shadow:var(--shadow)}
+.tot .num{font-size:30px; line-height:1; display:block; font-variant-numeric:tabular-nums}
+.tot .lbl{font-size:12px; color:var(--ink-2); font-weight:600; display:block; margin-top:5px}
+.tot.en .num{color:var(--en)} .tot.de .num{color:var(--de)}
+.tot.ac .num{color:var(--accent)} .tot.gd .num{color:var(--good)}
+
+.adesivos{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background:var(--accent-soft); border-radius:14px; padding:12px 16px; margin-bottom:40px;
+}
+.adesivos .cap{font-size:12px; font-weight:700; color:var(--accent-deep); text-transform:uppercase; letter-spacing:.06em}
+.adesivos .s{font-size:24px}
+
+/* ---- dia ---- */
+.dia{margin-bottom:34px; border-top:2px solid var(--line); padding-top:20px}
+.dia-top{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:4px}
+.dia-n{
+  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:13px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--accent); background:var(--accent-soft);
+  border-radius:999px; padding:3px 11px;
+}
+.dia-meta{font-size:13px; color:var(--ink-3); margin-left:auto; font-variant-numeric:tabular-nums}
+.dia-tema{font-size:13px; color:var(--ink-2); margin-bottom:14px}
+
+/* ---- fita da sessão ---- */
+.fita{
+  display:flex; gap:7px; overflow-x:auto; padding:4px 2px 12px;
+  scrollbar-width:thin;
+}
+.passo{
+  flex:0 0 auto; width:78px; background:var(--card); border:1px solid var(--line);
+  border-radius:12px; padding:8px 6px 7px; text-align:center; position:relative;
+}
+.passo.en{border-color:var(--en); background:var(--en-soft)}
+.passo.de{border-color:var(--de); background:var(--de-soft)}
+.passo.marco{border-style:dashed; background:transparent}
+.passo .em{font-size:23px; line-height:1.25; display:block}
+.passo .wd{font-size:11px; font-weight:700; display:block; margin-top:1px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.passo .at{font-size:9.5px; color:var(--ink-2); display:block; line-height:1.3; margin-top:2px;
+  min-height:25px}
+.passo .res{
+  position:absolute; top:-6px; right:-5px; width:17px; height:17px; border-radius:50%;
+  font-size:10px; line-height:17px; font-weight:700; color:#fff;
+}
+.res.ok{background:var(--good)} .res.helped{background:var(--warn)}
+.res.hard{background:var(--ink-3)} .res.silent{background:var(--accent)}
+.passo .sobe{
+  display:block; font-size:9px; font-weight:700; color:var(--good);
+  margin-top:3px; letter-spacing:.02em;
+}
+
+/* ---- dicas ---- */
+.dicas{background:var(--rail); border-radius:14px; padding:14px 16px; margin-top:6px}
+.dicas h3{font-size:12px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-2); margin-bottom:8px}
+.dicas ol{margin:0; padding-left:19px; font-size:14px}
+.dicas li{margin-bottom:5px; color:var(--ink)}
+.dicas li::marker{color:var(--accent); font-weight:700}
+
+/* ---- legenda ---- */
+.legenda{display:flex; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--ink-2); margin:6px 0 30px}
+.legenda span{display:inline-flex; align-items:center; gap:6px}
+.dot{width:11px; height:11px; border-radius:50%; display:inline-block}
+
+/* ---- vocabulário final ---- */
+.vocab{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:8px}
+@media(max-width:560px){.vocab{grid-template-columns:1fr}}
+.vocab h3{margin-bottom:10px; font-size:15px}
+.vocab h3 .fl{font-weight:600; color:var(--ink-2); font-size:13px}
+.palavra{
+  display:flex; align-items:center; gap:9px; padding:7px 0;
+  border-bottom:1px dotted var(--line); font-size:14px;
+}
+.palavra .em{font-size:20px}
+.palavra .w{font-weight:700; flex:1}
+.palavra .dg{font-size:11.5px; color:var(--ink-2); text-align:right}
+.barra{display:flex; gap:3px; margin-top:3px; justify-content:flex-end}
+.barra i{width:9px; height:5px; border-radius:2px; background:var(--line); display:block}
+.barra i.on{background:var(--good)}
+
+.nota{
+  border-left:3px solid var(--accent); background:var(--accent-soft);
+  padding:14px 16px; border-radius:0 12px 12px 0; margin-top:34px; font-size:14px;
+}
+.nota strong{color:var(--accent-deep)}
+</style>
+
+<div class="wrap">
+  <h1>Sete dias com a Sofia</h1>
+  <p class="lede">Uma semana inteira de uso do LumiLínguas, atividade por atividade — gerada pelo motor real do aplicativo, não escrita à mão. Cada passo abaixo é o que a criança veria na tela, na ordem em que veria.</p>
+
+  <div class="setup">
+    <span class="tag">👧 <span><b>Sofia</b>, 5 anos</span></span>
+    <span class="tag">Aprende <b>inglês</b> e <b>alemão</b></span>
+    <span class="tag">Sessão de <b>11 min</b></span>
+    <span class="tag">Gosta de <b>animais</b></span>
+    <span class="tag"><span>Fase <b>1</b>: casa e rotina</span></span>
+  </div>
+
+  <div class="totais" id="totais"></div>
+  <div class="adesivos">
+    <span class="cap">Adesivos da semana</span>
+    <span id="adesivos"></span>
+  </div>
+
+  <div class="legenda">
+    <span><i class="dot" style="background:var(--good)"></i> acertou sozinha</span>
+    <span><i class="dot" style="background:var(--warn)"></i> conseguiu com ajuda</span>
+    <span><i class="dot" style="background:var(--ink-3)"></i> achou difícil</span>
+    <span><i class="dot" style="background:var(--accent)"></i> preferiu não falar</span>
+    <span><i class="dot" style="background:var(--en)"></i> inglês</span>
+    <span><i class="dot" style="background:var(--de)"></i> alemão</span>
+  </div>
+
+  <div id="dias"></div>
+
+  <h2 style="margin-top:44px">O que ficou, ao fim dos sete dias</h2>
+  <p style="color:var(--ink-2); font-size:14px; margin-top:8px">
+    Cada palavra sobe sete degraus: <b>ouvir → reconhecer → responder com o corpo → repetir com modelo → completar a frase → falar sozinha → conversar</b>. Em uma semana, nenhuma criança chega ao topo — e o app não a empurra para lá.
+  </p>
+  <div class="vocab" id="vocab"></div>
+
+  <div class="nota">
+    <strong>Como esta página foi feita.</strong> Rodei os sete dias dentro do aplicativo de verdade: o mesmo montador de sessão, o mesmo motor de repetição espaçada e a mesma escada de produção que rodam no celular. O que variei foi só o desempenho da Sofia — ela acerta a maioria, precisa de ajuda em cerca de um quinto das vezes, tropeça de vez em quando e, às vezes, prefere não falar. Os quatro conselhos ao fim de cada dia são exatamente os que apareceriam no painel dos responsáveis. Repare nos minutos de cada dia: nenhum passa dos <strong>11 minutos</strong> que o responsável escolheu — a duração é um teto real, e o app corta jogos e conceitos novos antes de estourar o tempo da criança.
+  </div>
+</div>
+
+<script>
+const D = {"dias":[{"n":1,"tema":"Objetos da casa e rotina","min":5.9,"estrelas":5,"adesivo":"🛏️","dicas":["No café da manhã, pergunte onde está “bed” em inglês.","Ao sair de casa, diga “Bett” em alemão apontando para o objeto.","No carro ou no caminho, repitam juntos “bed” em inglês.","Antes de dormir, peça que a criança mostre ou fale “Bett” em alemão."],"foto":{"en":{"total":1,"falando":0,"dist":{"exposure":0,"recognize":1,"act":0,"echo":0,"cloze":0,"name":0,"use":0}},"de":{"total":1,"falando":0,"dist":{"exposure":0,"recognize":1,"act":0,"echo":0,"cloze":0,"name":0,"use":0}}},"passos":[{"r":"Boas-vindas","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Entrada do idioma","l":"de","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Apresentação","l":"de","e":"🛏️","w":"Bett","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🛏️","w":"Bett","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"de","e":"🛏️","w":"Bett","res":"ok","sobe":null,"por":null},{"r":"Entrada do idioma","l":"en","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Apresentação","l":"en","e":"🛏️","w":"bed","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"helped","sobe":null,"por":null},{"r":"Ouça e repita","l":"en","e":"🛏️","w":"bed","res":"hard","sobe":"recognize","por":null},{"r":"Quem falou?","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Celebração","l":null,"e":"","w":"","res":null,"sobe":null,"por":null}]},{"n":2,"tema":"Objetos da casa e rotina","min":9.1,"estrelas":9,"adesivo":"🪑","dicas":["No café da manhã, pergunte onde está “chair” em inglês.","Ao sair de casa, diga “Stuhl” em alemão apontando para o objeto.","No carro ou no caminho, repitam juntos “chair” em inglês.","Antes de dormir, peça que a criança mostre ou fale “Stuhl” em alemão."],"foto":{"en":{"total":2,"falando":0,"dist":{"exposure":0,"recognize":1,"act":1,"echo":0,"cloze":0,"name":0,"use":0}},"de":{"total":2,"falando":0,"dist":{"exposure":0,"recognize":1,"act":1,"echo":0,"cloze":0,"name":0,"use":0}}},"passos":[{"r":"Boas-vindas","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Entrada do idioma","l":"en","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"ok","sobe":null,"por":"struggle"},{"r":"Apresentação","l":"en","e":"🪑","w":"chair","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🪑","w":"chair","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"en","e":"🪑","w":"chair","res":"hard","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"ok","sobe":"act","por":"gentle_recheck"},{"r":"Entrada do idioma","l":"de","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🛏️","w":"Bett","res":"ok","sobe":"act","por":"due"},{"r":"Apresentação","l":"de","e":"🪑","w":"Stuhl","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🪑","w":"Stuhl","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"de","e":"🪑","w":"Stuhl","res":"ok","sobe":null,"por":null},{"r":"Caça em casa","l":"en","e":"🪑","w":"chair","res":"ok","sobe":null,"por":null},{"r":"Quem falou?","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Celebração","l":null,"e":"","w":"","res":null,"sobe":null,"por":null}]},{"n":3,"tema":"Objetos da casa e rotina","min":9.4,"estrelas":9,"adesivo":"🚪","dicas":["No café da manhã, pergunte onde está “door” em inglês.","Ao sair de casa, diga “Tür” em alemão apontando para o objeto.","No carro ou no caminho, repitam juntos “door” em inglês.","Antes de dormir, peça que a criança mostre ou fale “Tür” em alemão."],"foto":{"en":{"total":3,"falando":0,"dist":{"exposure":0,"recognize":2,"act":1,"echo":0,"cloze":0,"name":0,"use":0}},"de":{"total":3,"falando":0,"dist":{"exposure":0,"recognize":0,"act":3,"echo":0,"cloze":0,"name":0,"use":0}}},"passos":[{"r":"Boas-vindas","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Entrada do idioma","l":"de","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🪑","w":"Stuhl","res":"ok","sobe":"act","por":"due"},{"r":"Apresentação","l":"de","e":"🚪","w":"Tür","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🚪","w":"Tür","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"de","e":"🚪","w":"Tür","res":"ok","sobe":null,"por":null},{"r":"Entrada do idioma","l":"en","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Siga a instrução","l":"en","e":"🛏️","w":"bed","res":"hard","sobe":"recognize","por":"due"},{"r":"Ouça e toque","l":"en","e":"🪑","w":"chair","res":"ok","sobe":"act","por":"due"},{"r":"Apresentação","l":"en","e":"🚪","w":"door","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🚪","w":"door","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"en","e":"🚪","w":"door","res":"ok","sobe":null,"por":null},{"r":"História","l":"de","e":"🚪","w":"Tür","res":"ok","sobe":"act","por":null},{"r":"Quem falou?","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Celebração","l":null,"e":"","w":"","res":null,"sobe":null,"por":null}]},{"n":4,"tema":"Objetos da casa e rotina","min":9.8,"estrelas":10,"adesivo":"🔑","dicas":["No café da manhã, pergunte onde está “key” em inglês.","Ao sair de casa, diga “Schlüssel” em alemão apontando para o objeto.","No carro ou no caminho, repitam juntos “key” em inglês.","Antes de dormir, peça que a criança mostre ou fale “Schlüssel” em alemão."],"foto":{"en":{"total":4,"falando":0,"dist":{"exposure":0,"recognize":3,"act":1,"echo":0,"cloze":0,"name":0,"use":0}},"de":{"total":4,"falando":0,"dist":{"exposure":1,"recognize":0,"act":3,"echo":0,"cloze":0,"name":0,"use":0}}},"passos":[{"r":"Boas-vindas","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Entrada do idioma","l":"en","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"ok","sobe":null,"por":"struggle"},{"r":"Ouça e toque","l":"en","e":"🚪","w":"door","res":"helped","sobe":null,"por":"due"},{"r":"Apresentação","l":"en","e":"🔑","w":"key","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🔑","w":"key","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"en","e":"🔑","w":"key","res":"silent","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"hard","sobe":null,"por":"gentle_recheck"},{"r":"Entrada do idioma","l":"de","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Siga a instrução","l":"de","e":"🚪","w":"Tür","res":"ok","sobe":null,"por":"due"},{"r":"Apresentação","l":"de","e":"🔑","w":"Schlüssel","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🔑","w":"Schlüssel","res":"helped","sobe":null,"por":null},{"r":"Ouça e repita","l":"de","e":"🔑","w":"Schlüssel","res":"ok","sobe":null,"por":null},{"r":"Música","l":"en","e":"🔑","w":"key","res":"ok","sobe":null,"por":null},{"r":"Quem falou?","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Celebração","l":null,"e":"","w":"","res":null,"sobe":null,"por":null}]},{"n":5,"tema":"Objetos da casa e rotina","min":10.5,"estrelas":12,"adesivo":"🥄","dicas":["No café da manhã, pergunte onde está “spoon” em inglês.","Ao sair de casa, diga “Löffel” em alemão apontando para o objeto.","No carro ou no caminho, repitam juntos “spoon” em inglês.","Antes de dormir, peça que a criança mostre ou fale “Löffel” em alemão."],"foto":{"en":{"total":5,"falando":0,"dist":{"exposure":0,"recognize":4,"act":1,"echo":0,"cloze":0,"name":0,"use":0}},"de":{"total":5,"falando":0,"dist":{"exposure":0,"recognize":2,"act":3,"echo":0,"cloze":0,"name":0,"use":0}}},"passos":[{"r":"Boas-vindas","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Entrada do idioma","l":"de","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Siga a instrução","l":"de","e":"🛏️","w":"Bett","res":"ok","sobe":null,"por":"due"},{"r":"Apresentação","l":"de","e":"🔑","w":"Schlüssel","res":"ok","sobe":"recognize","por":"due"},{"r":"Apresentação","l":"de","e":"🥄","w":"Löffel","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🥄","w":"Löffel","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"de","e":"🥄","w":"Löffel","res":"helped","sobe":null,"por":null},{"r":"Entrada do idioma","l":"en","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"helped","sobe":null,"por":"struggle"},{"r":"Ouça e toque","l":"en","e":"🚪","w":"door","res":"ok","sobe":null,"por":"due"},{"r":"Apresentação","l":"en","e":"🥄","w":"spoon","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🥄","w":"spoon","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"en","e":"🥄","w":"spoon","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"ok","sobe":null,"por":"gentle_recheck"},{"r":"Caça em casa","l":"de","e":"🥄","w":"Löffel","res":"helped","sobe":null,"por":null},{"r":"Quem falou?","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Celebração","l":null,"e":"","w":"","res":null,"sobe":null,"por":null}]},{"n":6,"tema":"Objetos da casa e rotina","min":10.1,"estrelas":10,"adesivo":"⚽","dicas":["No café da manhã, pergunte onde está “ball” em inglês.","Ao sair de casa, diga “Ball” em alemão apontando para o objeto.","No carro ou no caminho, repitam juntos “ball” em inglês.","Antes de dormir, peça que a criança mostre ou fale “Ball” em alemão."],"foto":{"en":{"total":6,"falando":0,"dist":{"exposure":0,"recognize":4,"act":2,"echo":0,"cloze":0,"name":0,"use":0}},"de":{"total":6,"falando":0,"dist":{"exposure":0,"recognize":3,"act":3,"echo":0,"cloze":0,"name":0,"use":0}}},"passos":[{"r":"Boas-vindas","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Entrada do idioma","l":"en","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🔑","w":"key","res":"hard","sobe":null,"por":"due"},{"r":"Ouça e toque","l":"en","e":"🛏️","w":"bed","res":"ok","sobe":"act","por":"due"},{"r":"Apresentação","l":"en","e":"⚽","w":"ball","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"⚽","w":"ball","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"en","e":"⚽","w":"ball","res":"helped","sobe":null,"por":null},{"r":"Entrada do idioma","l":"de","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Siga a instrução","l":"de","e":"🪑","w":"Stuhl","res":"helped","sobe":null,"por":"due"},{"r":"Ouça e toque","l":"de","e":"🔑","w":"Schlüssel","res":"ok","sobe":null,"por":"due"},{"r":"Apresentação","l":"de","e":"⚽","w":"Ball","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"⚽","w":"Ball","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"de","e":"⚽","w":"Ball","res":"ok","sobe":null,"por":null},{"r":"História","l":"en","e":"⚽","w":"ball","res":"ok","sobe":null,"por":null},{"r":"Quem falou?","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Celebração","l":null,"e":"","w":"","res":null,"sobe":null,"por":null}]},{"n":7,"tema":"Objetos da casa e rotina","min":10.5,"estrelas":12,"adesivo":"📖","dicas":["No café da manhã, pergunte onde está “book” em inglês.","Ao sair de casa, diga “Buch” em alemão apontando para o objeto.","No carro ou no caminho, repitam juntos “book” em inglês.","Antes de dormir, peça que a criança mostre ou fale “Buch” em alemão."],"foto":{"en":{"total":7,"falando":0,"dist":{"exposure":0,"recognize":4,"act":3,"echo":0,"cloze":0,"name":0,"use":0}},"de":{"total":7,"falando":1,"dist":{"exposure":0,"recognize":3,"act":3,"echo":1,"cloze":0,"name":0,"use":0}}},"passos":[{"r":"Boas-vindas","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Entrada do idioma","l":"de","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"🥄","w":"Löffel","res":"helped","sobe":null,"por":"due"},{"r":"Siga a instrução","l":"de","e":"🚪","w":"Tür","res":"ok","sobe":"echo","por":"due"},{"r":"Apresentação","l":"de","e":"📖","w":"Buch","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"de","e":"📖","w":"Buch","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"de","e":"📖","w":"Buch","res":"ok","sobe":null,"por":null},{"r":"Entrada do idioma","l":"en","e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🔑","w":"key","res":"ok","sobe":null,"por":"struggle"},{"r":"Siga a instrução","l":"en","e":"🪑","w":"chair","res":"ok","sobe":null,"por":"due"},{"r":"Apresentação","l":"en","e":"📖","w":"book","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"📖","w":"book","res":"ok","sobe":"recognize","por":null},{"r":"Ouça e repita","l":"en","e":"📖","w":"book","res":"ok","sobe":null,"por":null},{"r":"Ouça e toque","l":"en","e":"🔑","w":"key","res":"ok","sobe":"act","por":"gentle_recheck"},{"r":"Música","l":"de","e":"📖","w":"Buch","res":"ok","sobe":"act","por":null},{"r":"Quem falou?","l":null,"e":"","w":"","res":null,"sobe":null,"por":null},{"r":"Celebração","l":null,"e":"","w":"","res":null,"sobe":null,"por":null}]}],"vocab":{"en":[{"id":"bed","emoji":"🛏️","palavra":"bed","degrau":"act","proxima":2},{"id":"chair","emoji":"🪑","palavra":"chair","degrau":"act","proxima":3},{"id":"door","emoji":"🚪","palavra":"door","degrau":"recognize","proxima":-1},{"id":"key","emoji":"🔑","palavra":"key","degrau":"act","proxima":1},{"id":"spoon","emoji":"🥄","palavra":"spoon","degrau":"recognize","proxima":-1},{"id":"ball","emoji":"⚽","palavra":"ball","degrau":"recognize","proxima":0},{"id":"book","emoji":"📖","palavra":"book","degrau":"recognize","proxima":1}],"de":[{"id":"bed","emoji":"🛏️","palavra":"Bett","degrau":"act","proxima":1},{"id":"chair","emoji":"🪑","palavra":"Stuhl","degrau":"act","proxima":2},{"id":"door","emoji":"🚪","palavra":"Tür","degrau":"echo","proxima":3},{"id":"key","emoji":"🔑","palavra":"Schlüssel","degrau":"recognize","proxima":0},{"id":"spoon","emoji":"🥄","palavra":"Löffel","degrau":"recognize","proxima":1},{"id":"ball","emoji":"⚽","palavra":"Ball","degrau":"recognize","proxima":0},{"id":"book","emoji":"📖","palavra":"Buch","degrau":"act","proxima":1}]}};
+
+const NOME = {exposure:'ouvindo', recognize:'reconhece', act:'com o corpo',
+  echo:'repete', cloze:'completa a frase', name:'fala sozinha', use:'conversa'};
+const ORDEM = ['exposure','recognize','act','echo','cloze','name','use'];
+
+/* ---- totais da semana ---- */
+const totMin = D.dias.reduce((a,d)=>a+d.min,0);
+const totEstrelas = D.dias.reduce((a,d)=>a+d.estrelas,0);
+const voc = [...D.vocab.en, ...D.vocab.de];
+const falam = voc.filter(v=>ORDEM.indexOf(v.degrau)>=3).length;
+const atividades = D.dias.reduce((a,d)=>a+d.passos.length,0);
+
+document.getElementById('totais').innerHTML = [
+  ['ac', Math.round(totMin), 'minutos no total', ''],
+  ['ac', atividades, 'atividades', 'ao longo da semana'],
+  ['en', D.vocab.en.length, 'palavras em inglês', ''],
+  ['de', D.vocab.de.length, 'palavras em alemão', ''],
+  ['gd', totEstrelas, 'estrelas ganhas', '']
+].map(([c,n,l]) => `<div class="tot ${c}"><span class="num">${n}</span><span class="lbl">${l}</span></div>`).join('');
+
+document.getElementById('adesivos').innerHTML =
+  D.dias.map(d=>`<span class="s" title="dia ${d.n}">${d.adesivo}</span>`).join(' ');
+
+/* ---- os sete dias ---- */
+document.getElementById('dias').innerHTML = D.dias.map(d => {
+  const fita = d.passos.map(p => {
+    if (!p.w) {
+      return `<div class="passo marco"><span class="em">${
+        p.r==='Boas-vindas'?'👋' : p.r==='Celebração'?'🎉' :
+        p.r==='Entrada do idioma'?'🎵' : '🗣️'
+      }</span><span class="at">${p.r}</span></div>`;
+    }
+    const sobe = p.sobe ? `<span class="sobe">↑ ${NOME[p.sobe]}</span>` : '';
+    const marca = {ok:'✓', helped:'+', hard:'~', silent:'·'}[p.res] || '';
+    return `<div class="passo ${p.l}">
+      <span class="res ${p.res}">${marca}</span>
+      <span class="em">${p.e}</span>
+      <span class="wd">${p.w}</span>
+      <span class="at">${p.r}</span>${sobe}
+    </div>`;
+  }).join('');
+
+  return `<section class="dia">
+    <div class="dia-top">
+      <span class="dia-n">Dia ${d.n}</span>
+      <h2>${d.n===1?'A primeira sessão':
+            d.n===2?'As primeiras revisões':
+            d.n===3?'Uma palavra fica difícil':
+            d.n===4?'A escada começa a subir':
+            d.n===5?'Jogo e caça pela casa':
+            d.n===6?'Seis palavras em circulação':
+            'A semana fecha'}</h2>
+      <span class="dia-meta">${String(d.min).replace('.', ',')} min · ${d.passos.length} atividades · ⭐ ${d.estrelas}</span>
+    </div>
+    <p class="dia-tema">${d.tema} · adesivo do dia: ${d.adesivo}</p>
+    <div class="fita">${fita}</div>
+    <div class="dicas">
+      <h3>O que os pais recebem ao fim do dia</h3>
+      <ol>${d.dicas.map(t=>`<li>${t}</li>`).join('')}</ol>
+    </div>
+  </section>`;
+}).join('');
+
+/* ---- vocabulário final ---- */
+document.getElementById('vocab').innerHTML = [
+  ['en','Inglês','🦊 Finn'], ['de','Alemão','🐻 Bruno']
+].map(([code,nome,guia]) => `
+  <div>
+    <h3 style="color:var(--${code})">${nome} <span class="fl">${guia}</span></h3>
+    ${D.vocab[code].map(v => {
+      const nivel = ORDEM.indexOf(v.degrau);
+      const barra = ORDEM.map((_,i)=>`<i class="${i<=nivel?'on':''}"></i>`).join('');
+      return `<div class="palavra">
+        <span class="em">${v.emoji}</span>
+        <span class="w">${v.palavra}</span>
+        <span class="dg">${NOME[v.degrau]}<span class="barra">${barra}</span></span>
+      </div>`;
+    }).join('')}
+  </div>`).join('');
+</script>
