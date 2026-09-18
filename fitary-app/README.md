@@ -202,6 +202,12 @@ Duas regras novas no cockpit fecham o ciclo:
 
 O ciclo completo: **documentar treino → tornar progresso visível → dar feedback → ajustar o acompanhamento.**
 
+### Fluxo real do trainer
+
+Marcar a sessão como **absolvida** abre imediatamente a documentação do treino, com a data já
+preenchida e os pesos da última sessão como ponto de partida. Documentar deixa de ser tarefa
+administrativa para depois — vira o gesto seguinte ao treino.
+
 ## Disponibilidade e auto-agendamento
 
 O cliente vê apenas: **o próprio perfil + os horários livres**. Nada de outros clientes.
@@ -259,4 +265,6 @@ Pontos de ajuste rápido no `app.js`:
 4. **Magic link em produção** — hoje o token é gerado no cliente; em produção ele deve ser
    assinado no servidor, com expiração e revogação persistidas
 5. **Push/Reminder automático** — cron para 24h-Erinnerung e Re-Test
-6. **GDPR** — dados de saúde exigem consentimento explícito, base legal e política de retenção
+6. **GDPR** — dados de saúde (testes, dor, medidas e sobretudo **fotos**) exigem consentimento
+   explícito, base legal e política de retenção. Na demo as fotos são redimensionadas para 720 px
+   e guardadas só no navegador; em produção vão cifradas para o servidor, com direito a apagar
