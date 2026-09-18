@@ -825,6 +825,16 @@ function renderExpired() {
   </div>`;
 }
 
+/* Kästen beim Scrollen hervorheben: einmaliges Auffahren plus heller Markenrand. */
+let revealIO = null;
+function observeReveal() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!revealIO) revealIO = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); }
+  }), { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+  $$('#view .kpi, #view .card, #view .action').forEach(el => { el.classList.add('reveal'); revealIO.observe(el); });
+}
+
 function render() {
   if (PORTAL_EXPIRED) return renderExpired();
   if (PORTAL) return renderPortal(PORTAL.id);
@@ -840,6 +850,7 @@ function render() {
     cockpit: viewCockpit, clients: viewClients, calendar: viewCalendar,
     messages: viewMessages, automations: viewAutomations
   })[VIEW]();
+  observeReveal();
   window.scrollTo({ top: 0 });
 }
 
@@ -1828,6 +1839,7 @@ function renderPortal(id) {
         </div>
       </div>
     </div>`;
+  observeReveal();
 }
 
 /* ---------------- Event-Delegation ---------------- */

@@ -9,6 +9,7 @@
   --brand-green-2:   #0E4739;  /* Sekundärgrün: Flächen, Icons */
   --brand-terracotta:#B3360C;  /* Akzent: Headlines, Buttons (Weiß darauf = 6,1:1) */
   --brand-white:     #F9FFFF;  /* Markenweiß, leicht kühl */
+  --brand-mint:      #E7F3E9;  /* helles Markengrün für Kanten, Labels und Hervorhebungen */
 
   /* Flächen — vom Markengrün abgeleitet */
   --bg:        #06302B;
@@ -166,15 +167,23 @@ a { color: inherit; }
 .grid--2 { grid-template-columns: 1.35fr 1fr; align-items: start; }
 
 .card {
-  background: var(--surface); border: 1px solid var(--line);
+  background: var(--surface); border: 1px solid rgba(231,243,233,.11);
   border-radius: var(--r-md); padding: 20px;
+  transition: border-color var(--t), box-shadow var(--t);
 }
+.card:hover { border-color: rgba(231,243,233,.2); }
 .card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 .card__title { font-family: var(--font-d); font-stretch: 75%; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
 .card__sub { font-size: 12.5px; color: var(--ink-3); }
 
-.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px; }
-.kpi__label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.kpi {
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
+  border: 1px solid rgba(231,243,233,.14);
+  border-radius: var(--r-md); padding: 18px;
+  transition: border-color var(--t), transform var(--t), box-shadow var(--t);
+}
+.kpi:hover { border-color: rgba(231,243,233,.3); transform: translateY(-2px); }
+.kpi__label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(231,243,233,.66); font-weight: 600; }
 .kpi__value { font-family: var(--font-d); font-stretch: 75%; font-size: 32px; font-weight: 700; letter-spacing: -.03em; margin: 6px 0 2px; }
 .kpi__value small { font-size: 15px; font-weight: 500; color: var(--ink-3); letter-spacing: 0; }
 .kpi__meta { font-size: 12.5px; color: var(--ink-2); }
@@ -425,3 +434,20 @@ a { color: inherit; }
 .is-portal .shell { grid-template-columns: 1fr; }
 .is-portal .view { max-width: 1120px; margin: 0 auto; width: 100%; }
 @media (max-width: 760px) { .is-portal .view { padding-bottom: 40px; } }
+
+
+/* ---------- Hervorhebung beim Scrollen ----------
+   Kästen fahren beim Eintreten in den Viewport auf und bekommen einmalig
+   einen hellen Markenrand (--brand-mint), damit das Auge dem Inhalt folgt. */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity .38s ease, transform .38s cubic-bezier(.4,0,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+.kpi.in, .card.in, .action.in { animation: mintPulse .9s ease-out; }
+@keyframes mintPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(231,243,233,0); }
+  30%  { box-shadow: 0 0 0 2px rgba(231,243,233,.24); }
+  100% { box-shadow: 0 0 0 0 rgba(231,243,233,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
+  .kpi.in, .card.in, .action.in { animation: none; }
+}
