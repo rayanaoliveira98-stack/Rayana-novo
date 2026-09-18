@@ -87,6 +87,7 @@ Gravações: chave `perfil:idioma:conceito` → Blob de áudio. Excluir o perfil
 1. Abrir com até 2 dificuldades de ontem (as com mais `struggles` primeiro);
 2. Até 4 revisões vencidas por idioma (mais atrasadas primeiro);
 3. Conceitos novos: orçamento = f(idade, nº idiomas, dificuldade recente) ∈ [2, 6], dividido pelos idiomas;
+3b. **Orçamento de tempo**: o total de passos por idioma sai da duração escolhida (8/11/15 min) menos abertura, vinhetas, celebração e momento especial. Há reserva para 1 conceito novo (3 passos) e para o jogo em contexto (2), e o que sobra vai para revisões. Se ainda estourar, a poda segue a ordem jogo → desafio → momento especial → conceitos novos; dificuldades e revisões nunca são cortadas;
 4. Reapresentação discreta de 1 erro depois de 3-5 atividades;
 5. Jogo em contexto com conteúdo já visto; desafio misto no fim;
 6. `struggleDays >= 3` → a revisão daquele conceito volta para reconhecimento visual (`mode: 'listen'`).

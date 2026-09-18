@@ -110,3 +110,71 @@ test('o módulo de efeitos expõe a API usada pelas atividades', () => {
    'starFly', 'buzz', 'nudge', 'highlight', 'confetti', 'reduced'
   ].forEach(fn => assert.equal(typeof FX[fn], 'function', `FX.${fn} ausente`));
 });
+
+/* ---- a duração escolhida pelo responsável precisa valer ---- */
+
+function comHistorico(ids, now) {
+  const SRS = require('../js/srs.js');
+  const r = {};
+  ids.forEach(id => {
+    const x = SRS.introduce(SRS.freshRecord(0), now - 8 * SRS.DAY);
+    x.state = 'recognized';
+    x.dueAt = now - SRS.DAY;
+    r[id] = x;
+  });
+  return r;
+}
+
+test('a sessão cabe na duração que o responsável escolheu', () => {
+  const SRS = require('../js/srs.js');
+  const now = 20 * SRS.DAY;
+  [[8, 1], [11, 1], [15, 1], [8, 2], [11, 2], [15, 2], [11, 4]].forEach(([min, nl]) => {
+    const langs = ['en', 'de', 'es', 'tr'].slice(0, nl);
+    const rb = {};
+    langs.forEach(l => { rb[l] = comHistorico(SEEN, now); });
+    const s = SESSION.buildSession(
+      { age: 6, langs, journeyDay: 20, interests: [], sessionMinutes: min }, rb, now);
+    assert.ok(s.estimatedMinutes <= min,
+      `${min} min com ${nl} idioma(s) estourou: ${s.estimatedMinutes.toFixed(1)} min`);
+    // e não pode encolher a ponto de virar uma sessão vazia
+    assert.ok(s.estimatedMinutes >= min * 0.6,
+      `${min} min com ${nl} idioma(s) ficou curta demais: ${s.estimatedMinutes.toFixed(1)} min`);
+  });
+});
+
+test('mesmo na sessão mais curta a criança vê algo novo', () => {
+  const SRS = require('../js/srs.js');
+  const now = 20 * SRS.DAY;
+  [1, 2, 4].forEach(nl => {
+    const langs = ['en', 'de', 'es', 'tr'].slice(0, nl);
+    const rb = {};
+    langs.forEach(l => { rb[l] = comHistorico(SEEN, now); });
+    const s = SESSION.buildSession(
+      { age: 6, langs, journeyDay: 20, interests: [], sessionMinutes: 8 }, rb, now);
+    const novos = s.steps.filter(x => x.type === 'present').length;
+    assert.ok(novos >= 1, `8 min com ${nl} idioma(s) não apresentou nada novo`);
+  });
+});
+
+test('as dicas do dia só citam o que a criança realmente viu', () => {
+  const SRS = require('../js/srs.js');
+  const now = 20 * SRS.DAY;
+  const rb = { en: comHistorico(SEEN, now) };
+  const s = SESSION.buildSession(
+    { age: 6, langs: ['en'], journeyDay: 20, interests: [], sessionMinutes: 8 }, rb, now);
+  const apresentados = s.steps.filter(x => x.type === 'present').map(x => x.concept);
+  (s.newConcepts.en || []).forEach(id => {
+    assert.ok(apresentados.includes(id),
+      `"${id}" viraria dica sem ter sido apresentado (a sessão foi aparada)`);
+  });
+});
+
+test('a estimativa de tempo cobre todos os tipos de passo', () => {
+  const tipos = ['welcome', 'lang_intro', 'celebrate', 'present', 'listen_tap',
+    'tpr', 'repeat', 'cloze', 'name_it', 'use_it', 'review', 'game', 'compare',
+    ...SESSION.SPECIAL_POOL];
+  tipos.forEach(t => {
+    assert.ok(typeof SESSION.STEP_SECONDS[t] === 'number',
+      `"${t}" não tem duração estimada — a sessão não saberia se cabe`);
+  });
+});

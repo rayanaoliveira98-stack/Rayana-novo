@@ -31,6 +31,85 @@
    * anterior: história, música/rima e caça ao objeto em casa. */
   var SPECIAL_POOL = ['story', 'song', 'home_hunt'];
 
+  /* Quanto tempo cada tipo de passo costuma levar, em segundos, com a fala
+   * do personagem incluída. Serve para a sessão caber na duração que o
+   * responsável escolheu — antes esse ajuste era um botão sem efeito. */
+  var STEP_SECONDS = {
+    welcome: 14, lang_intro: 10, celebrate: 18,
+    present: 45, listen_tap: 38, tpr: 40, repeat: 46,
+    cloze: 55, name_it: 52, use_it: 58,
+    review: 42, game: 70, compare: 45,
+    story: 95, song: 80, home_hunt: 75
+  };
+
+  function stepSeconds(st) {
+    if (st.type === 'review') return STEP_SECONDS[st.activity] || STEP_SECONDS.review;
+    return STEP_SECONDS[st.type] || 40;
+  }
+
+  function estimateMinutes(steps) {
+    var total = 0;
+    steps.forEach(function (st) { total += stepSeconds(st); });
+    return total / 60;
+  }
+
+  /* Encaixa a sessão na duração pedida, cortando pela ordem inversa da
+   * importância pedagógica: primeiro o momento especial, depois os jogos,
+   * depois o desafio final e, só então, conceitos novos (o trio
+   * apresentar/ouvir/repetir sai junto — meia apresentação não ensina).
+   * Revisões e dificuldades de ontem nunca são cortadas: são elas que
+   * sustentam a retenção. A celebração também fica sempre. */
+  function fitToMinutes(steps, minutos) {
+    if (!minutos || estimateMinutes(steps) <= minutos) return steps;
+
+    var out = steps.slice();
+    /* O jogo sai antes do momento especial: história, música e caça são o
+     * que torna um dia diferente do outro, e a variedade é parte do método. */
+    var ordemDeCorte = ['game', 'compare', 'story', 'song', 'home_hunt'];
+
+    ordemDeCorte.forEach(function (tipo) {
+      while (estimateMinutes(out) > minutos) {
+        var i = -1;
+        for (var k = out.length - 1; k >= 0; k--) {
+          if (out[k].type === tipo) { i = k; break; }
+        }
+        if (i < 0) break;
+        out.splice(i, 1);
+      }
+    });
+
+    // Ainda longa: remove conceitos novos, do último para o primeiro.
+    while (estimateMinutes(out) > minutos) {
+      var ultimo = -1;
+      for (var j = out.length - 1; j >= 0; j--) {
+        if (out[j].type === 'present') { ultimo = j; break; }
+      }
+      if (ultimo < 0) break;   // só sobrou o essencial: não corta mais
+      var conceito = out[ultimo].concept, lang = out[ultimo].lang;
+      out = out.filter(function (st, idx) {
+        if (idx < ultimo) return true;
+        var mesmo = st.concept === conceito && st.lang === lang;
+        return !(mesmo && ['present', 'listen_tap', 'repeat'].indexOf(st.type) >= 0);
+      });
+    }
+    return out;
+  }
+
+  /* Quantos passos de conteúdo cabem em cada idioma.
+   *
+   * Sem esta conta, a sessão era montada sempre do mesmo tamanho e só depois
+   * aparava — o que fazia o momento especial e os jogos sumirem toda vez. O
+   * certo é planejar já sabendo quanto tempo existe: o tempo é dividido entre
+   * os idiomas do dia, descontando abertura, vinhetas e celebração. */
+  function stepBudgetPerLang(minutos, nLangs) {
+    var seg = (minutos || 11) * 60
+      - STEP_SECONDS.welcome - STEP_SECONDS.celebrate
+      - (nLangs > 1 ? nLangs * STEP_SECONDS.lang_intro : 0)
+      - 85;                                  // momento especial do dia
+    var MEDIA = 44;                          // segundos por passo de conteúdo
+    return Math.max(3, Math.floor(seg / MEDIA / nLangs));
+  }
+
   function rotate(arr, n) {
     var a = arr.slice();
     for (var i = 0; i < (n % a.length + a.length) % a.length; i++) a.push(a.shift());
@@ -110,7 +189,23 @@
 
     // 3. Revisão programada (SRS). Sem conceitos novos, sobra tempo de sessão
     // e mais palavras antigas voltam — é assim que a escada anda.
-    var maxRevisoes = opts.shortened ? 2 : (espacoParaNovos ? 4 : 8);
+    /* Reparte o orçamento de passos do idioma.
+     *
+     * A ordem importa: as dificuldades de ontem já entraram; então reserva-se
+     * espaço para UM conceito novo (senão, em sessões curtas com vários
+     * idiomas, a jornada parava de andar e a criança nunca via novidade);
+     * o que sobra vai para revisões, que sustentam a retenção; e o jogo só
+     * entra se ainda couber, porque ele custa tempo de um conceito inteiro. */
+    var orcamento = Math.max(3, (opts.stepBudget || 12) - struggles.length);
+    var querNovidade = espacoParaNovos > 0;
+    var reservaNovo = querNovidade ? 3 : 0;      // apresentar + ouvir + repetir
+    // O jogo em contexto é item do ciclo diário, não sobra: ganha reserva
+    // sempre que a sessão tem tamanho para ele.
+    var reservaJogo = (!opts.shortened && orcamento >= 8) ? 2 : 0;
+
+    var tetoRevisoes = opts.shortened ? 2 : (querNovidade ? 4 : 8);
+    var maxRevisoes = Math.max(1,
+      Math.min(tetoRevisoes, orcamento - reservaNovo - reservaJogo));
     var due = SRS.dueList(records, now)
       .filter(function (id) { return struggles.indexOf(id) < 0; })
       .slice(0, maxRevisoes);
@@ -122,7 +217,14 @@
     });
 
     // 4-6. Conceitos novos: apresentar → compreender → repetir em voz alta
-    var news = pickNewConcepts(records, opts.journeyDay, espacoParaNovos, opts.interests);
+    /* Cada conceito novo custa três passos (apresentar, ouvir, repetir):
+     * meia apresentação não ensina, então ou cabe inteiro ou não entra.
+     * Com a reserva acima, sempre cabe ao menos um quando há novidade a dar. */
+    var gastos = Math.min(maxRevisoes, due.length);
+    var cabemNovos = Math.max(querNovidade ? 1 : 0,
+      Math.floor((orcamento - gastos - reservaJogo) / 3));
+    var news = pickNewConcepts(records, opts.journeyDay,
+      Math.min(espacoParaNovos, cabemNovos), opts.interests);
     news.forEach(function (id, i) {
       steps.push({ type: 'present', lang: lang, concept: id });
       steps.push({ type: 'listen_tap', lang: lang, concept: id });
@@ -168,7 +270,7 @@
     // 7. Jogo rápido em contexto (com conteúdo já visto)
     var seen = Object.keys(records).filter(function (k) { return records[k].state !== 'new'; });
     var playable = seen.concat(news);
-    if (playable.length >= 3 && !opts.shortened) {
+    if (playable.length >= 3 && !opts.shortened && reservaJogo > 0) {
       var game = rotate(GAME_POOL, opts.journeyDay + opts.langIndex)[0];
       steps.push({
         type: 'game', lang: lang, game: game,
@@ -201,6 +303,7 @@
         newBudget: perLang,
         interests: profile.interests,
         shortened: !!opts.shortened,
+        stepBudget: stepBudgetPerLang(opts.shortened ? 6 : profile.sessionMinutes, langs.length),
         langIndex: idx
       });
       if (langs.length > 1) steps.push({ type: 'lang_intro', lang: l });
@@ -238,7 +341,23 @@
     // 9. Celebração
     steps.push({ type: 'celebrate' });
 
-    return { steps: steps, newConcepts: allNew, langOrder: langs, budgetTotal: budgetTotal };
+    /* 10. Caber no tempo que o responsável escolheu. */
+    steps = fitToMinutes(steps, opts.shortened ? 6 : profile.sessionMinutes);
+
+    // os conceitos novos que sobreviveram ao corte são os que valem as dicas
+    var sobreviventes = {};
+    Object.keys(allNew).forEach(function (l) {
+      sobreviventes[l] = allNew[l].filter(function (id) {
+        return steps.some(function (st) {
+          return st.type === 'present' && st.lang === l && st.concept === id;
+        });
+      });
+    });
+
+    return {
+      steps: steps, newConcepts: sobreviventes, langOrder: langs,
+      budgetTotal: budgetTotal, estimatedMinutes: estimateMinutes(steps)
+    };
   }
 
   /* 10. Dicas práticas do dia para os responsáveis (4, em português). */
@@ -277,6 +396,9 @@
     shouldShorten: shouldShorten,
     GAME_POOL: GAME_POOL,
     SPECIAL_POOL: SPECIAL_POOL,
+    STEP_SECONDS: STEP_SECONDS,
+    estimateMinutes: estimateMinutes,
+    fitToMinutes: fitToMinutes,
     _rotate: rotate
   };
 

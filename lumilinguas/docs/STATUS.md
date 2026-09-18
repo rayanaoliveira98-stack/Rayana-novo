@@ -11,7 +11,7 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - **Instalável no iOS e no Android** como PWA: ícones PNG (192/512/maskable e apple-touch 180), meta tags do iOS para abrir em tela cheia, e todo o conteúdo em cache offline.
 - Onboarding completo dos responsáveis (13 passos, incl. consentimento, PIN e teste inicial).
 - Escolha de 1-4 idiomas, alterável depois nas configurações.
-- Sessão diária adaptativa (~11 min) com o ciclo completo: boas-vindas → dificuldades de ontem → revisões SRS → 2-6 conceitos novos → compreensão → repetição oral → jogo → desafio misto → celebração → 4 dicas práticas do dia.
+- Sessão diária adaptativa que **respeita a duração escolhida** (8, 11 ou 15 min): o tempo é repartido entre os idiomas do dia, com reserva para um conceito novo e para o jogo em contexto. Ciclo completo: boas-vindas → dificuldades de ontem → revisões SRS → 2-6 conceitos novos → compreensão → repetição oral → jogo → desafio misto → celebração → 4 dicas práticas do dia.
 - Motor SRS com os 7 estados e intervalos 1-3-7-14-30 dias; simplificação após 3 dias de dificuldade; sem punição.
 - **Escada de produção** (`js/ladder.js`): cada palavra sobe sete degraus por criança e idioma — ouvir → reconhecer → responder com o corpo → repetir com modelo → completar a frase → falar sozinha → usar em conversa. A atividade do dia sai do degrau, nunca de sorteio.
 - **A criança fala**: três atividades produtivas novas (completar a frase, nomear sem modelo, responder em conversa), com apoio entregue só depois da tentativa.
@@ -31,7 +31,7 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Painel dos responsáveis: progresso por idioma, estados, retenção 1/3/7/14/30d, dificuldades, histórico, tempo de uso, dicas, configurações, troca de PIN, multi-perfil, exportação JSON e exclusão total.
 - Painel administrativo (`admin.html`): revisão de todos os campos e variações, teste de áudio, validador, importação JSON/CSV sem rebuild, exportação de packs.
 - Offline após a primeira visita (Service Worker) + instalação PWA (iOS/Android).
-- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência, recuperação de PIN, cobertura dos 6 idiomas da interface e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (70 testes).
+- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência, recuperação de PIN, cobertura dos 6 idiomas da interface, duração da sessão e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (74 testes).
 
 ## ⚠️ Funcional com limitação conhecida
 
