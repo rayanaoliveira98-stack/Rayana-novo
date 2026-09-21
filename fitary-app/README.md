@@ -208,6 +208,37 @@ Marcar a sessão como **absolvida** abre imediatamente a documentação do trein
 preenchida e os pesos da última sessão como ponto de partida. Documentar deixa de ser tarefa
 administrativa para depois — vira o gesto seguinte ao treino.
 
+## Datenschutz: consentimento antes do primeiro uso
+
+Ao abrir o acesso pela primeira vez, o cliente **não vê dado nenhum** até decidir. A tela de
+consentimento cumpre a informação obrigatória (Art 13 DSGVO) e recolhe consentimento **granular**:
+
+| Caixa | Estado | Base legal |
+|---|---|---|
+| Betreuung com dados de treino e saúde | obrigatória | Art 9 Abs 2 lit a DSGVO (consentimento explícito) |
+| Fortschrittsfotos | opcional | Art 9 Abs 2 lit a — separado, porque foto é dado de saúde |
+| Exemplos anonimizados (marketing) | opcional | consentimento livre; nome/foto só com liberação escrita extra |
+| Menor de 14 anos | campo do responsável legal | § 4 Abs 4 DSG (Áustria fixou 14, não 16) |
+
+Armazenar dados no aparelho é coberto por **§ 165 Abs 3 TKG 2021** — aqui é indispensável para o
+serviço pedido, e isso está declarado na tela.
+
+**O consentimento muda o comportamento do app, não é enfeite:**
+- sem consentimento de foto, o upload fica **bloqueado** nos dois lados (cliente e trainer)
+- revogar a foto **apaga as fotos na hora**
+- a mensagem de Meilenstein muda o texto conforme exista ou não consentimento de marketing
+- o trainer vê o estado do consentimento na Betreuungsakte, com data e versão
+
+**Bereich Datenschutz** no acesso do cliente: estado atual, revogar cada consentimento,
+**baixar todos os dados em JSON** (Art 15/20), **apagar tudo** (Art 17), ler a Datenschutzerklärung
+completa e o endereço da Datenschutzbehörde para reclamação.
+
+Cada consentimento é gravado com **carimbo de data/hora e versão do texto** (Art 7 — dever de prova).
+
+> **Antes de usar com clientes reais:** o texto é uma base sólida, não um parecer. Precisa de revisão
+> por advogado/a de proteção de dados, além de Impressum (§ 5 ECG), contrato de processamento com o
+> host (Art 28), registro das atividades de tratamento (Art 30) e medidas técnicas (Art 32).
+
 ## Disponibilidade e auto-agendamento
 
 O cliente vê apenas: **o próprio perfil + os horários livres**. Nada de outros clientes.
