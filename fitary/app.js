@@ -4,7 +4,7 @@
    Vanilla JS, localStorage. Kein Build, kein Backend.
    ========================================================= */
 
-const KEY = 'fitary.journey.v5';
+const KEY = 'fitary.journey.v6';
 
 /* ---------------- Helpers ---------------- */
 const $  = (s, r = document) => r.querySelector(s);
@@ -91,6 +91,27 @@ const BODY = [
   { id: 'arm',   label: 'Oberarm',     unit: 'cm', dir:  1 },
   { id: 'bein',  label: 'Oberschenkel',unit: 'cm', dir:  1 }
 ];
+
+/* ---------------- Einwilligung (DSGVO / DSG / TKG) ----------------
+   Rechtlicher Rahmen, der hier abgebildet wird:
+   - Art 9 Abs 2 lit a DSGVO: Gesundheitsdaten (Schmerz, Beweglichkeit,
+     Körpermaße, Fotos) brauchen eine ausdrückliche, gesonderte Einwilligung.
+   - Art 7 DSGVO: freiwillig, granular, jederzeit widerrufbar, nachweisbar.
+   - § 4 Abs 4 DSG: unter 14 Jahren willigt die erziehungsberechtigte Person ein.
+   - § 165 Abs 3 TKG 2021: Speicherung am Endgerät nur mit Einwilligung, außer
+     sie ist für den ausdrücklich gewünschten Dienst unbedingt erforderlich.
+   Die Zustimmung wird mit Zeitstempel und Textversion protokolliert. */
+const CONSENT_VERSION = '1.0 · 09/2026';
+const CONSENT_AGE = 14;          /* § 4 Abs 4 DSG */
+
+const blankConsent = () => ({
+  version: null, givenAt: null, core: false, photos: false, marketing: false,
+  guardian: null, withdrawnAt: null
+});
+const consentOk = c => !!(c.consent && c.consent.core && c.consent.givenAt && !c.consent.withdrawnAt);
+const consentStale = c => !!(c.consent && c.consent.givenAt && c.consent.version !== CONSENT_VERSION);
+const mayPhotos = c => consentOk(c) && c.consent.photos;
+const mayMarketing = c => consentOk(c) && c.consent.marketing;
 
 /* Fortschrittsfotos werden verkleinert im Browser gespeichert (Demo).
    In Produktion gehören sie verschlüsselt auf den Server — Gesundheitsdaten. */
@@ -228,7 +249,7 @@ const SEED_CLIENTS = [
   { name:'Daniel Baumgartner',   segment:'Corporate (Firma)',goal:'Firmenprogramm — Rücken & Stress',      type:'grp',  dow:3, time:'16:00', weeks:8,  credits:12, plan:'Corporate Jahresprogramm', rel:.83, pain:[5,3], kraft:[44,58], kg:[89,86.5], phone:'4367612345605', email:'d.baumgartner@example.at',
     recent:[{i:2,status:'cancelled',reason:'krank'}] },
   { name:'Lisa Mayr',            segment:'Eltern, wenig Zeit',goal:'Wiedereinstieg nach Karenz',           type:'pt1',  dow:5, time:'08:00', weeks:1,  credits:9,  plan:'10er-Block', rel:1,   pain:[3,3], kraft:[30,33], kg:[74,73.6], phone:'4367612345606', email:'l.mayr@example.at' },
-  { freq:2, name:'Kevin Sturm (15)',     segment:'Jugend-Athletik',  goal:'Schnelligkeit für Fußball-Akademie',    type:'athl', dow:2, time:'17:00', weeks:13, credits:5,  plan:'Athletik-Block', rel:.9,  pain:[1,0], kraft:[35,62], kg:[61,64], phone:'4367612345607', email:'eltern.sturm@example.at',
+  { freq:2, age:15, name:'Kevin Sturm (15)',     segment:'Jugend-Athletik',  goal:'Schnelligkeit für Fußball-Akademie',    type:'athl', dow:2, time:'17:00', weeks:13, credits:5,  plan:'Athletik-Block', rel:.9,  pain:[1,0], kraft:[35,62], kg:[61,64], phone:'4367612345607', email:'eltern.sturm@example.at',
     recent:[{i:1,status:'noshow'}] },
   { name:'Petra Winkler',        segment:'40+ Longevity',    goal:'Knie stabil, Kraft halten',             type:'pt1',  dow:4, time:'11:00', weeks:31, credits:3,  plan:'Abo 1x/Woche', rel:.62, pain:[5,4], kraft:[38,51], kg:[77,75.2], phone:'4367612345608', email:'p.winkler@example.at',
     recent:[{i:1,status:'cancelled',reason:'kurzfristig'},{i:2,status:'cancelled',reason:'krank'}] },
@@ -269,6 +290,14 @@ function buildSeed() {
       code: 'FIT-' + (s.name.replace(/[^A-Za-zÄÖÜäöü]/g, '').slice(0, 2) + (100 + i)).toUpperCase(),
       access: { token: 'fit-' + s.name.split(' ')[0].toLowerCase().replace(/[^a-zäöüß]/g, ''), issued: iso(t), days: 30 },
       fromLead: true, firstContact: start,
+      age: s.age || null,
+      /* Demodaten: Bestand hat zugestimmt, Lisa Mayr (Onboarding) noch nicht —
+         damit der Einwilligungs-Dialog im Prototyp sichtbar bleibt. */
+      consent: s.weeks <= 2 ? blankConsent() : {
+        version: CONSENT_VERSION, givenAt: iso(addDays(t, -s.weeks * 7 + 1)) + 'T09:00',
+        core: true, photos: i % 3 === 0, marketing: i % 4 === 0,
+        guardian: null, withdrawnAt: null
+      },
       note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: s.stoppedDaysAgo || null
     };
 
@@ -443,7 +472,7 @@ function buildSeed() {
     }
 
     /* Fortschrittsfotos — in der Demo zwei Platzhalter, damit der Vergleich sichtbar ist */
-    c.photos = (i % 3 === 0) ? [
+    c.photos = (i % 3 === 0 && s.weeks > 2) ? [
       { id: uid('ph'), date: iso(addDays(t, -s.weeks * 7 + 2)), url: demoPhoto('Beispielbild Start'), note: 'Start' },
       { id: uid('ph'), date: iso(addDays(t, -7)), url: demoPhoto('Beispielbild aktuell'), note: '' }
     ] : [];
@@ -480,7 +509,8 @@ function buildSeed() {
       code: 'FIT-L' + (10 + i),
       access: null,   /* App-Zugang ist Teil des Programms, nicht des Gratis-Termins */
       note: '', checkins: [], mobility: [], performance: [], videos: [],
-      program: [], weekly: [], body: [], tasks: [], photos: [], stoppedDaysAgo: null
+      program: [], weekly: [], body: [], tasks: [], photos: [],
+      consent: blankConsent(), age: null, stoppedDaysAgo: null
     };
     bookings.push({ id: uid('b'), clientId: c.id, date: iso(d), time: s.time, type: 'bwg',
       coach: 'Yalcin', status: s.inDays < 0 ? 'completed' : 'confirmed', reason: null, reminded: false });
@@ -625,7 +655,10 @@ Damit dein Rhythmus nicht reißt, verlängern wir vor der letzten Einheit — ni
     label: 'Meilenstein + Testimonial-Ask', channel: 'WhatsApp',
     build: (c, m) => `${m.totalDone} Einheiten. ${daysBetween(c.start, iso(today()))} Tage dabei.
 Deine Zahlen: Kraftindex ${m.first.kraft} → ${m.now.kraft}${m.first.pain > m.now.pain ? `, Schmerz ${m.first.pain} → ${m.now.pain}` : ''}. Das hast du dir erarbeitet.
-Eine Bitte: 30 Sekunden Handyvideo, wie es dir vor FITARY ging und wie es jetzt ist. Kein Skript, keine Kamera-Show — genau das überzeugt die Leute in Wels, die noch zögern.`
+Eine Bitte: 30 Sekunden Handyvideo, wie es dir vor FITARY ging und wie es jetzt ist. Kein Skript, keine Kamera-Show — genau das überzeugt die Leute in Wels, die noch zögern.
+${mayMarketing(c)
+  ? 'Anonymisierte Zahlen darf ich laut deiner Einwilligung als Beispiel verwenden — für Name, Foto oder Video hole ich mir trotzdem jedes Mal extra dein Okay.'
+  : 'Veröffentlicht wird nichts ohne deine ausdrückliche Zustimmung. Sagst du Nein, ändert das überhaupt nichts an deiner Betreuung.'}`
   },
   onboarding: {
     label: 'Onboarding Check-in (Tag 14)', channel: 'WhatsApp',
@@ -758,6 +791,13 @@ TPL.checkinLow = {
 Wir ziehen die nächste Einheit nicht durch wie geplant: weniger Volumen, mehr Technik und Mobility. Das ist kein Rückschritt, das ist Steuerung.
 Wenn es privat gerade eng ist, sag es mir — dann passen wir den Rhythmus an, statt dass du ganz aussteigst.`;
   }
+};
+TPL.consentAsk = {
+  label: 'Einwilligung anfragen', channel: 'WhatsApp',
+  build: (c, m) => `${c.name.split(' ')[0]}, für Fortschrittsfotos brauche ich deine ausdrückliche Zustimmung —
+Fotos zählen rechtlich zu den Gesundheitsdaten, da entscheidest du und niemand sonst.
+In deinem FITARY-Zugang unter „Datenschutz" kannst du sie mit einem Klick erteilen und genauso wieder widerrufen.
+Wenn du keine Fotos willst: völlig in Ordnung, alles andere funktioniert genauso.`
 };
 TPL.trainer = { label: 'Trainer-Feedback', channel: 'App', build: (c, m) => '' };
 TPL.kunde   = { label: 'Nachricht von Kund:in', channel: 'App', build: (c, m) => '' };
@@ -1085,10 +1125,15 @@ function renderExpired() {
 let revealIO = null;
 function observeReveal() {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;   /* ohne Beobachter bleibt alles sichtbar */
   if (!revealIO) revealIO = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); }
   }), { threshold: .12, rootMargin: '0px 0px -40px 0px' });
-  $$('#view .kpi, #view .card, #view .action').forEach(el => { el.classList.add('reveal'); revealIO.observe(el); });
+  const els = $$('#view .kpi, #view .card, #view .action');
+  els.forEach(el => { el.classList.add('reveal'); revealIO.observe(el); });
+  /* Sicherheitsnetz: feuert der Beobachter nicht, wird der Inhalt trotzdem sichtbar —
+     ein unsichtbarer Kasten ist schlimmer als eine fehlende Animation. */
+  setTimeout(() => els.forEach(el => el.classList.add('in')), 1500);
 }
 
 function render() {
@@ -1267,6 +1312,7 @@ function viewClients() {
           ${m.next ? ` · nächste ${relDay(m.next.date)}` : ' · <span style="color:var(--warn)">kein Folgetermin</span>'}</p>
       </div>
       <div class="row__side">
+        ${!c.lead && !consentOk(c) ? '<span class="pill pill--warn">Einwilligung offen</span>' : ''}
         ${m.level === 'crit' ? `<span class="pill pill--crit">Risiko ${m.score}</span>`
           : m.level === 'warn' ? `<span class="pill pill--warn">beobachten</span>`
           : `<span class="pill pill--good">stabil</span>`}
@@ -1499,7 +1545,21 @@ function sheetCare(c, m) {
     .slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-6);
   const tasks = c.tasks || [];
 
+  const k = c.consent || blankConsent();
+  const chip = (on, label) => `<span class="pill ${on ? 'pill--good' : 'pill--warn'}">${on ? '✓' : '✕'} ${label}</span>`;
+
   return `
+    <p class="section-title">Einwilligung</p>
+    <div class="metricbox" style="margin-bottom:14px">
+      <p class="metricbox__label">${consentOk(c) ? 'Erteilt am ' + (k.givenAt ? fmtDate(k.givenAt.slice(0, 10)) : '—') + ' · Fassung ' + (k.version || '—') : 'Keine gültige Einwilligung'}</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+        ${chip(k.core, 'Betreuung')} ${chip(k.photos, 'Fotos')} ${chip(k.marketing, 'Anonyme Beispiele')}
+      </div>
+      ${k.guardian ? `<p class="card__sub" style="margin-top:8px">Erziehungsberechtigte Person: ${k.guardian.name} (§ 4 Abs 4 DSG)</p>` : ''}
+      ${k.withdrawnAt ? `<p class="card__sub" style="margin-top:8px;color:var(--crit)">Widerrufen am ${fmtDate(k.withdrawnAt.slice(0, 10))} — Zugang gesperrt</p>` : ''}
+      ${!consentOk(c) ? `<button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="consentAsk" style="margin-top:10px">Einwilligung anfragen</button>` : ''}
+    </div>
+
     <p class="section-title">Eigene Notizen</p>
     <div class="field">
       <textarea id="cnote" rows="3" placeholder="Beobachtungen, Absprachen, Verletzungen, Vorlieben …">${c.note || ''}</textarea>
@@ -1812,6 +1872,20 @@ function testModal(id) {
 }
 
 function photoSection(c, opts = {}) {
+  if (!mayPhotos(c)) return `
+    <div class="card__head" style="margin-bottom:10px">
+      <div><p class="card__title">${opts.title || 'Fortschrittsfotos'}</p>
+        <p class="card__sub">Keine Einwilligung für Fotos</p></div>
+      <span class="pill pill--warn">gesperrt</span>
+    </div>
+    <p class="card__sub" style="color:var(--ink-2)">Fotos sind Gesundheitsdaten und brauchen eine eigene,
+      ausdrückliche Zustimmung (Art 9 Abs 2 lit a DSGVO). ${opts.ctx === 'portal'
+        ? 'Du kannst sie im Bereich <strong>Datenschutz</strong> jederzeit erteilen — und genauso wieder widerrufen.'
+        : 'Solange sie fehlt, ist der Upload gesperrt.'}</p>
+    ${opts.ctx === 'portal'
+      ? `<button class="btn btn--sm btn--ghost" data-act="ptab" data-t="privacy" style="margin-top:10px">Zum Datenschutz</button>`
+      : `<button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="consentAsk" style="margin-top:10px">Einwilligung anfragen</button>`}`;
+
   const ph = (c.photos || []).slice().sort((a, b) => a.date.localeCompare(b.date));
   const first = ph[0], last = ph[ph.length - 1];
   return `
@@ -2197,18 +2271,22 @@ const PTABS = [
   { id: 'progress', label: 'Fortschritt' },
   { id: 'wins',     label: 'Erfolge' },
   { id: 'checkin',  label: 'Check-in' },
-  { id: 'care',     label: 'Betreuung' }
+  { id: 'care',     label: 'Betreuung' },
+  { id: 'privacy',  label: 'Datenschutz' }
 ];
 
 function renderPortal(id) {
   const c = client(id), m = metrics(c);
   document.body.classList.add('is-portal');
+  /* Ohne Einwilligung werden keine Daten angezeigt — nicht nur nicht gespeichert. */
+  if (!consentOk(c)) return renderConsent(c);
   $('#topEyebrow').textContent = 'Dein FITARY-Zugang';
   $('#topTitle').textContent = 'Servus, ' + c.name.split(' ')[0];
   $('#quickBook').textContent = window.innerWidth < 520 ? '+ Termin' : '+ Termin anfragen';
 
   const body = ({ home: portalHome, training: portalTraining, progress: portalProgress,
-                  wins: portalWins, checkin: portalCheckin, care: portalCare })[PVIEW](c, m);
+                  wins: portalWins, checkin: portalCheckin, care: portalCare,
+                  privacy: portalPrivacy })[PVIEW](c, m);
 
   $('#view').innerHTML = `
     ${PORTAL_DEMO ? `<div class="row demo-bar" style="margin-bottom:14px;border-color:rgba(255,138,80,.38)">
@@ -2227,6 +2305,169 @@ function renderPortal(id) {
 
     ${body}`;
   observeReveal();
+}
+
+/* ---------- Einwilligung: Informationspflicht nach Art 13 DSGVO plus
+     gesonderte Einwilligung für Gesundheitsdaten nach Art 9 Abs 2 lit a ---------- */
+function renderConsent(c) {
+  $('#topEyebrow').textContent = 'FITARY-Zugang';
+  $('#topTitle').textContent = 'Bevor es losgeht';
+  $('#quickBook').style.display = 'none';
+  const first = c.name.split(' ')[0];
+
+  $('#view').innerHTML = `
+    <div style="max-width:720px;margin:0 auto">
+      <div class="card" style="margin-bottom:16px">
+        <p class="card__title" style="font-size:19px">Servus ${first} — kurz etwas Wichtiges</p>
+        <p class="card__sub" style="margin-top:8px">In diesem Zugang stehen auch Gesundheitsdaten: Schmerzangaben,
+        Beweglichkeit, Leistungswerte, Körpermaße und auf Wunsch Fotos. Dafür brauchen wir deine ausdrückliche
+        Zustimmung — und zwar vorher, nicht irgendwann später im Kleingedruckten.</p>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card__head"><div><p class="card__title">Wer verantwortlich ist</p></div></div>
+        <p class="card__sub" style="color:var(--ink-2);line-height:1.7">
+          FITARY — Yalcin Arslan<br />Plobergerstraße 7, 4600 Wels, Österreich<br />
+          office@fitary.at · +43 670 3565006</p>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card__head"><div><p class="card__title">Welche Daten, wofür, auf welcher Grundlage</p></div></div>
+        ${[
+          ['Kontakt und Termine', 'Terminverwaltung, Erinnerungen, Absagen', 'Vertrag · Art 6 Abs 1 lit b DSGVO'],
+          ['Trainingsdaten', 'Übungen, Gewichte, Sätze, Dauer — für die Trainingssteuerung', 'Vertrag · Art 6 Abs 1 lit b DSGVO'],
+          ['Gesundheitsdaten', 'Schmerz, Beweglichkeit, Leistungswerte, Körpermaße, Check-in', 'Ausdrückliche Einwilligung · Art 9 Abs 2 lit a DSGVO'],
+          ['Fortschrittsfotos', 'Freiwilliger Vorher-Nachher-Vergleich', 'Ausdrückliche Einwilligung · freiwillig'],
+          ['Speicherung auf deinem Gerät', 'Damit dein Zugang überhaupt funktioniert', '§ 165 Abs 3 TKG 2021 · für den Dienst erforderlich']
+        ].map(([a, b, law]) => `
+          <div style="padding:10px 0;border-bottom:1px solid var(--line)">
+            <p style="font-size:13.5px;font-weight:700">${a}</p>
+            <p class="card__sub">${b}</p>
+            <p class="card__sub" style="color:var(--ink-3);font-size:11px;margin-top:2px">${law}</p>
+          </div>`).join('')}
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card__head"><div><p class="card__title">Was nicht passiert</p></div></div>
+        <p class="card__sub" style="color:var(--ink-2);line-height:1.7">
+          Keine Weitergabe an Dritte zu Werbezwecken. Kein Verkauf deiner Daten. Kein Tracking, keine Werbe-Cookies,
+          keine Auswertung durch fremde Anbieter. Deine Werte sehen du und dein Trainer — sonst niemand.</p>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card__head"><div><p class="card__title">Deine Entscheidung</p>
+          <p class="card__sub">Jede Zustimmung ist einzeln und jederzeit widerrufbar</p></div></div>
+
+        <label class="consent">
+          <input type="checkbox" id="cs_core" />
+          <span><strong>Betreuung (erforderlich).</strong> Ich willige ein, dass FITARY meine Trainings- und
+          Gesundheitsdaten verarbeitet, um mich persönlich zu betreuen und meinen Fortschritt zu dokumentieren.</span>
+        </label>
+
+        <label class="consent">
+          <input type="checkbox" id="cs_photos" />
+          <span><strong>Fortschrittsfotos (freiwillig).</strong> Ich willige ein, dass Fotos in meinem Zugang
+          gespeichert und mit meinem Trainer besprochen werden. Ohne diese Zustimmung funktioniert alles andere genauso.</span>
+        </label>
+
+        <label class="consent">
+          <input type="checkbox" id="cs_marketing" />
+          <span><strong>Anonyme Beispiele (freiwillig).</strong> Ich willige ein, dass anonymisierte Ergebnisse
+          — etwa „Kniebeuge +40 %" ohne Namen und ohne Foto — als Beispiel verwendet werden dürfen.
+          Name, Foto oder Video nur nach gesonderter, schriftlicher Freigabe.</span>
+        </label>
+
+        <label class="consent">
+          <input type="checkbox" id="cs_minor" data-minor="1" />
+          <span>Ich bin <strong>unter 14 Jahre</strong> alt.</span>
+        </label>
+        <div id="guardianBox" style="display:none;padding-left:30px">
+          <p class="card__sub" style="margin-bottom:8px">Unter 14 Jahren entscheidet die erziehungsberechtigte Person
+            (§ 4 Abs 4 DSG). Bitte gemeinsam ausfüllen.</p>
+          <div class="field"><label>Name der erziehungsberechtigten Person</label><input id="cs_guardian" /></div>
+        </div>
+
+        <p class="card__sub" style="margin:14px 0">
+          Der Widerruf ist jederzeit im Bereich <strong>Datenschutz</strong> möglich und wirkt für die Zukunft;
+          die Rechtmäßigkeit der bis dahin erfolgten Verarbeitung bleibt unberührt. Du hast Recht auf Auskunft,
+          Berichtigung, Löschung, Einschränkung und Datenübertragbarkeit sowie das Recht auf Beschwerde bei der
+          Österreichischen Datenschutzbehörde, Barichgasse 40–42, 1030 Wien, dsb@dsb.gv.at.</p>
+
+        <div style="display:grid;gap:9px">
+          <button class="btn btn--primary" data-act="consentSave" data-id="${c.id}" style="justify-content:center">Zustimmen und starten</button>
+          <button class="btn btn--ghost" data-act="consentDecline" data-id="${c.id}" style="justify-content:center">Nicht zustimmen</button>
+          <button class="btn btn--ghost btn--sm" data-act="dsgvo" style="justify-content:center">Vollständige Datenschutzerklärung lesen</button>
+        </div>
+      </div>
+    </div>`;
+  observeReveal();
+}
+
+function renderDeclined(c) {
+  $('#view').innerHTML = `
+    <div class="card" style="max-width:560px;margin:40px auto;text-align:center">
+      <p class="card__title" style="font-size:19px">Alles gut — ohne Zustimmung kein App-Zugang</p>
+      <p class="card__sub" style="margin:10px 0 18px">Deine Betreuung im Studio läuft genauso weiter. Deine Werte und
+        deinen Fortschritt bekommst du dann persönlich von Yalcin, so wie vorher auch.
+        Wenn du es dir anders überlegst: einfach kurz Bescheid geben, dann schalten wir den Zugang frei.</p>
+      <a class="btn btn--primary" href="https://wa.me/436703565006" target="_blank" rel="noopener">Yalcin schreiben</a>
+    </div>`;
+}
+
+/* Vollständige Datenschutzerklärung — Vorlage, vor dem Livegang anwaltlich prüfen lassen. */
+function dsgvoModal() {
+  modal(`
+    <div class="panel__head"><div><p class="panel__name">Datenschutzerklärung</p>
+      <p class="panel__meta">Stand ${CONSENT_VERSION} · FITARY, Wels</p></div>
+      <button class="closebtn" data-close>✕</button></div>
+    <div class="msg__text" style="max-height:none">
+<strong>1. Verantwortlicher</strong>
+FITARY — Yalcin Arslan, Plobergerstraße 7, 4600 Wels, Österreich
+office@fitary.at, +43 670 3565006
+
+<strong>2. Welche Daten wir verarbeiten</strong>
+Stammdaten (Name, Kontakt), Termin- und Buchungsdaten, Trainingsdokumentation (Übungen, Gewichte,
+Wiederholungen, Sätze, Dauer, Intensität), Gesundheitsdaten (Beweglichkeitstest, Leistungstest,
+Schmerzangaben, Körpermaße, Körperfett, wöchentlicher Check-in), auf ausdrücklichen Wunsch
+Fortschrittsfotos sowie Nachrichten zwischen dir und deinem Trainer.
+
+<strong>3. Zwecke und Rechtsgrundlagen</strong>
+Terminverwaltung und Durchführung des Trainings: Vertragserfüllung (Art 6 Abs 1 lit b DSGVO).
+Gesundheitsdaten und Fotos: ausdrückliche Einwilligung (Art 9 Abs 2 lit a DSGVO), jederzeit widerrufbar.
+Speicherung von Daten auf deinem Endgerät: § 165 Abs 3 TKG 2021; sie ist für den von dir angeforderten
+Dienst erforderlich.
+
+<strong>4. Empfänger</strong>
+Deine Daten werden nicht verkauft und nicht zu Werbezwecken an Dritte weitergegeben. Zugriff haben
+ausschließlich dein Trainer und, soweit erforderlich, technische Dienstleister als Auftragsverarbeiter
+nach Art 28 DSGVO (Hosting). Eine Übermittlung in Drittländer findet nicht statt.
+
+<strong>5. Speicherdauer</strong>
+Trainings- und Gesundheitsdaten werden für die Dauer der Betreuung und danach so lange gespeichert,
+wie es für Nachweiszwecke erforderlich ist; Buchhaltungsunterlagen sieben Jahre nach § 132 BAO.
+Fotos werden auf Wunsch sofort gelöscht. Nach Widerruf werden die betroffenen Daten gelöscht,
+sofern keine gesetzliche Aufbewahrungspflicht besteht.
+
+<strong>6. Deine Rechte</strong>
+Auskunft (Art 15), Berichtigung (Art 16), Löschung (Art 17), Einschränkung (Art 18),
+Datenübertragbarkeit (Art 20) und Widerspruch (Art 21). Erteilte Einwilligungen kannst du jederzeit
+widerrufen; die bis dahin erfolgte Verarbeitung bleibt rechtmäßig.
+
+<strong>7. Beschwerderecht</strong>
+Österreichische Datenschutzbehörde, Barichgasse 40–42, 1030 Wien, dsb@dsb.gv.at, www.dsb.gv.at
+
+<strong>8. Minderjährige</strong>
+Für Personen unter 14 Jahren ist die Einwilligung der erziehungsberechtigten Person erforderlich
+(§ 4 Abs 4 DSG). FITARY prüft dies im Rahmen des Zumutbaren bei der Anmeldung im Studio.
+
+<strong>9. Sicherheit</strong>
+Der Zugang erfolgt über einen persönlichen, zeitlich begrenzten Link. Er ist nicht öffentlich
+auffindbar und kann jederzeit widerrufen werden.
+    </div>
+    <p class="card__sub" style="margin-top:12px">Hinweis: Diese Fassung ist eine sorgfältig erstellte Vorlage
+      für den Prototyp. Vor dem Einsatz mit echten Kundendaten von einer Rechtsanwältin oder einem
+      Rechtsanwalt für Datenschutzrecht prüfen lassen — insbesondere Speicherdauern, Auftragsverarbeiter
+      und die konkrete Hosting-Situation.</p>`);
 }
 
 /* ---------- Start: Ziel, Fortschritt, letztes Training, Streak ---------- */
@@ -2537,6 +2778,73 @@ function portalCheckin(c) {
   </div>`;
 }
 
+/* ---------- Datenschutz: Status, Widerruf, Auskunft, Löschung ---------- */
+function portalPrivacy(c, m) {
+  const k = c.consent || blankConsent();
+  const row = (on, title, text, scope) => `
+    <div class="row">
+      <span class="avatar ${on ? 'avatar--good' : ''}">${on ? '✓' : '○'}</span>
+      <div class="row__main"><p class="row__name">${title}</p><p class="row__meta">${text}</p></div>
+      <div class="row__side">${scope
+        ? `<button class="btn btn--sm ${on ? 'btn--ghost' : 'btn--primary'}" data-act="consentToggle" data-id="${c.id}" data-scope="${scope}">${on ? 'Widerrufen' : 'Erteilen'}</button>`
+        : '<span class="pill pill--good">aktiv</span>'}</div>
+    </div>`;
+
+  return `
+  <div class="grid grid--2">
+    <div>
+      <div class="card">
+        <div class="card__head"><div><p class="card__title">Deine Einwilligungen</p>
+          <p class="card__sub">Erteilt am ${k.givenAt ? fmtDate(k.givenAt.slice(0, 10)) : '—'} · Fassung ${k.version || '—'}</p></div>
+          ${consentStale(c) ? '<span class="pill pill--warn">Neue Fassung</span>' : '<span class="pill pill--good">aktuell</span>'}</div>
+        ${row(k.core, 'Betreuung mit Trainings- und Gesundheitsdaten', 'Grundlage deiner Betreuung · Art 9 Abs 2 lit a DSGVO')}
+        ${row(k.photos, 'Fortschrittsfotos', 'Speicherung und Besprechung deiner Fotos', 'photos')}
+        ${row(k.marketing, 'Anonyme Beispiele', 'Ergebnisse ohne Namen und ohne Foto als Beispiel', 'marketing')}
+        ${k.guardian ? `<p class="card__sub" style="margin-top:10px">Einwilligung erteilt durch erziehungsberechtigte Person: ${k.guardian.name}</p>` : ''}
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Deine Daten</p>
+          <p class="card__sub">Auskunft, Mitnahme, Löschung — ohne Umweg über jemanden</p></div></div>
+        <div style="display:grid;gap:9px">
+          <button class="btn btn--ghost" data-act="dataExport" data-id="${c.id}" style="justify-content:center">Meine Daten herunterladen (Art 20)</button>
+          <button class="btn btn--ghost" data-act="dsgvo" style="justify-content:center">Datenschutzerklärung lesen</button>
+          <button class="btn btn--danger" data-act="consentWithdraw" data-id="${c.id}" style="justify-content:center">Alle Einwilligungen widerrufen</button>
+          <button class="btn btn--danger" data-act="dataDelete" data-id="${c.id}" style="justify-content:center">Alle meine Daten löschen (Art 17)</button>
+        </div>
+        <p class="card__sub" style="margin-top:12px">Ein Widerruf wirkt für die Zukunft. Die bis dahin erfolgte
+          Verarbeitung bleibt rechtmäßig. Nach dem Widerruf ist der App-Zugang gesperrt — deine Betreuung im
+          Studio läuft normal weiter.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card__head"><div><p class="card__title">Wer deine Daten sieht</p></div></div>
+        <div class="row"><span class="avatar avatar--good">✓</span>
+          <div class="row__main"><p class="row__name">Du</p><p class="row__meta">Über deinen persönlichen Link</p></div></div>
+        <div class="row"><span class="avatar avatar--good">✓</span>
+          <div class="row__main"><p class="row__name">Yalcin Arslan</p><p class="row__meta">Dein Trainer — für deine Betreuung</p></div></div>
+        <div class="row"><span class="avatar avatar--risk">✕</span>
+          <div class="row__main"><p class="row__name">Sonst niemand</p><p class="row__meta">Keine Weitergabe, kein Verkauf, kein Tracking</p></div></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Beschwerderecht</p></div></div>
+        <p class="card__sub" style="color:var(--ink-2);line-height:1.7">
+          Österreichische Datenschutzbehörde<br />Barichgasse 40–42, 1030 Wien<br />
+          dsb@dsb.gv.at · www.dsb.gv.at</p>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card__head"><div><p class="card__title">Dein Zugang</p></div></div>
+        <p class="card__sub" style="color:var(--ink-2)">Persönlicher Link, ${c.access ? c.access.days : 30} Tage gültig,
+          nicht öffentlich auffindbar und jederzeit widerrufbar.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
 /* ---------- Betreuung ---------- */
 function portalCare(c, m) {
   const thread = db.messages.filter(x => x.clientId === c.id && x.status === 'gesendet')
@@ -2697,6 +3005,87 @@ document.addEventListener('click', e => {
       break;
     }
     case 'ptab':      PVIEW = el.dataset.t; render(); break;
+    case 'dsgvo':     dsgvoModal(); break;
+    case 'consentDecline': { const c = client(id); renderDeclined(c); break; }
+
+    case 'consentSave': {
+      const c = client(id);
+      if (!$('#cs_core').checked) { toast('Ohne die erste Zustimmung geht es leider nicht'); break; }
+      const minor = $('#cs_minor').checked;
+      const guardian = ($('#cs_guardian') || {}).value ? $('#cs_guardian').value.trim() : '';
+      if (minor && !guardian) { toast('Bitte Namen der erziehungsberechtigten Person eintragen'); break; }
+      c.consent = {
+        version: CONSENT_VERSION, givenAt: new Date().toISOString().slice(0, 16),
+        core: true, photos: $('#cs_photos').checked, marketing: $('#cs_marketing').checked,
+        guardian: minor ? { name: guardian, at: new Date().toISOString().slice(0, 16) } : null,
+        withdrawnAt: null
+      };
+      logEvent('consent', `${c.name}: Einwilligung erteilt (Fotos ${c.consent.photos ? 'ja' : 'nein'}, Beispiele ${c.consent.marketing ? 'ja' : 'nein'})`, c.id);
+      save(); toast('Danke — dein Zugang ist offen');
+      $('#quickBook').style.display = '';
+      PVIEW = 'home'; render();
+      break;
+    }
+
+    case 'consentToggle': {
+      const c = client(id), sc = el.dataset.scope;
+      c.consent[sc] = !c.consent[sc];
+      if (sc === 'photos' && !c.consent.photos) {
+        /* Widerruf der Fotoeinwilligung löscht die Fotos sofort mit. */
+        const n = (c.photos || []).length; c.photos = [];
+        logEvent('consent', `${c.name}: Fotoeinwilligung widerrufen — ${n} Fotos gelöscht`, c.id);
+      } else {
+        logEvent('consent', `${c.name}: Einwilligung „${sc}" ${c.consent[sc] ? 'erteilt' : 'widerrufen'}`, c.id);
+      }
+      save(); toast(c.consent[sc] ? 'Einwilligung erteilt' : 'Widerrufen');
+      if (PORTAL) render(); else openClient(c.id);
+      break;
+    }
+
+    case 'consentWithdraw': {
+      const c = client(id);
+      if (!confirm('Alle Einwilligungen widerrufen? Der App-Zugang wird gesperrt. Deine Betreuung im Studio läuft weiter.')) break;
+      c.consent.withdrawnAt = new Date().toISOString().slice(0, 16);
+      c.consent.core = c.consent.photos = c.consent.marketing = false;
+      c.photos = [];
+      logEvent('consent', `${c.name}: alle Einwilligungen widerrufen — Zugang gesperrt`, c.id);
+      save(); toast('Widerrufen'); render();
+      break;
+    }
+
+    case 'dataExport': {
+      const c = client(id);
+      const data = { exportiert: new Date().toISOString(), hinweis: 'Datenauskunft nach Art 15 und 20 DSGVO',
+        person: { ...c }, trainings: workoutsOf(c.id), termine: bookingsOf(c.id),
+        nachrichten: db.messages.filter(x => x.clientId === c.id) };
+      const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+      const a = document.createElement('a');
+      a.href = url; a.download = `fitary-daten-${c.name.split(' ')[0].toLowerCase()}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      logEvent('export', `${c.name}: Datenauskunft heruntergeladen`, c.id);
+      save(); toast('Datei wird heruntergeladen');
+      break;
+    }
+
+    case 'dataDelete': {
+      const c = client(id);
+      if (!confirm('Wirklich alle Daten löschen? Trainings, Tests, Fotos und Nachrichten werden entfernt. Das lässt sich nicht rückgängig machen.')) break;
+      db.workouts = db.workouts.filter(w => w.clientId !== c.id);
+      db.bookings = db.bookings.filter(b => b.clientId !== c.id);
+      db.messages = db.messages.filter(x => x.clientId !== c.id);
+      db.events = db.events.filter(e => e.clientId !== c.id);
+      db.clients = db.clients.filter(x => x.id !== c.id);
+      save();
+      try { sessionStorage.removeItem('fitary.portal'); } catch (e) {}
+      $('#view').innerHTML = `<div class="card" style="max-width:520px;margin:40px auto;text-align:center">
+        <p class="card__title" style="font-size:19px">Deine Daten wurden gelöscht</p>
+        <p class="card__sub" style="margin:10px 0 18px">Trainings, Tests, Fotos und Nachrichten sind entfernt.
+          Was aus gesetzlichen Gründen aufbewahrt werden muss (z. B. Rechnungen nach § 132 BAO), bleibt beim Studio
+          gespeichert und wird nicht weiterverwendet.</p>
+        <a class="btn btn--ghost" href="https://wa.me/436703565006" target="_blank" rel="noopener">Rückfrage an FITARY</a></div>`;
+      break;
+    }
 
     case 'task': {
       const c = client(id), t = c.tasks.find(x => x.id === el.dataset.tid);
@@ -2952,6 +3341,10 @@ document.addEventListener('input', e => {
                                   const f = $('#fq'); if (f) { f.focus(); f.value = v; f.setSelectionRange(v.length, v.length); } }
 });
 document.addEventListener('change', e => {
+  if (e.target.dataset && e.target.dataset.minor) {
+    const box = $('#guardianBox'); if (box) box.style.display = e.target.checked ? 'block' : 'none';
+    return;
+  }
   if (e.target.dataset && e.target.dataset.photo) {
     const c = client(e.target.dataset.photo), file = e.target.files[0], ctx = e.target.dataset.ctx;
     if (!c || !file) return;
