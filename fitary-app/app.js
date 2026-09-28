@@ -4,7 +4,7 @@
    Vanilla JS, localStorage. Kein Build, kein Backend.
    ========================================================= */
 
-const KEY = 'fitary.journey.v6';
+const KEY = 'fitary.journey.v7';
 
 /* ---------------- Helpers ---------------- */
 const $  = (s, r = document) => r.querySelector(s);
@@ -116,6 +116,14 @@ const mayMarketing = c => consentOk(c) && c.consent.marketing;
 /* Fortschrittsfotos werden verkleinert im Browser gespeichert (Demo).
    In Produktion gehören sie verschlüsselt auf den Server — Gesundheitsdaten. */
 const PHOTO_MAX = 720;
+/* Drei feste Positionen — ein Blickwinkel zeigt nur die Hälfte der Veränderung. */
+const POSES = [
+  { id: 'front', label: 'Vorne',  hint: 'Arme locker neben dem Körper, Füße hüftbreit' },
+  { id: 'side',  label: 'Seite',  hint: 'Seitlich zur Kamera, Blick geradeaus' },
+  { id: 'back',  label: 'Hinten', hint: 'Rücken zur Kamera, Schultern locker' }
+];
+const photosOfPose = (c, pose) => (c.photos || []).filter(x => (x.pose || 'front') === pose)
+  .slice().sort((a, b) => a.date.localeCompare(b.date));
 const demoPhoto = label => 'data:image/svg+xml;utf8,' + encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="360" height="480">
      <rect width="100%" height="100%" fill="#0E4739"/>
@@ -472,10 +480,14 @@ function buildSeed() {
     }
 
     /* Fortschrittsfotos — in der Demo zwei Platzhalter, damit der Vergleich sichtbar ist */
-    c.photos = (i % 3 === 0 && s.weeks > 2) ? [
-      { id: uid('ph'), date: iso(addDays(t, -s.weeks * 7 + 2)), url: demoPhoto('Beispielbild Start'), note: 'Start' },
-      { id: uid('ph'), date: iso(addDays(t, -7)), url: demoPhoto('Beispielbild aktuell'), note: '' }
-    ] : [];
+    c.photos = (i % 3 === 0 && s.weeks > 2)
+      ? POSES.flatMap(po => [
+          { id: uid('ph'), pose: po.id, date: iso(addDays(t, -s.weeks * 7 + 2)),
+            url: demoPhoto('Beispiel ' + po.label + ' · Start'), note: 'Start' },
+          { id: uid('ph'), pose: po.id, date: iso(addDays(t, -7)),
+            url: demoPhoto('Beispiel ' + po.label + ' · aktuell'), note: '' }
+        ])
+      : [];
 
     /* Aufgaben für die laufende Woche */
     c.tasks = [
@@ -1886,31 +1898,48 @@ function photoSection(c, opts = {}) {
       ? `<button class="btn btn--sm btn--ghost" data-act="ptab" data-t="privacy" style="margin-top:10px">Zum Datenschutz</button>`
       : `<button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="consentAsk" style="margin-top:10px">Einwilligung anfragen</button>`}`;
 
-  const ph = (c.photos || []).slice().sort((a, b) => a.date.localeCompare(b.date));
-  const first = ph[0], last = ph[ph.length - 1];
+  const total = (c.photos || []).length;
+  const ctx = opts.ctx || 'studio';
+
   return `
     <div class="card__head" style="margin-bottom:12px">
       <div><p class="card__title">${opts.title || 'Fortschrittsfotos'}</p>
-        <p class="card__sub">${ph.length ? `${ph.length} Aufnahmen · gleiche Haltung, gleiches Licht` : 'Noch keine Fotos'}</p></div>
-      ${ph.length > 1 ? '<span class="pill pill--good">Start vs. Heute</span>' : ''}
+        <p class="card__sub">${total ? `${total} Aufnahmen in drei Positionen` : 'Noch keine Fotos'}</p></div>
+      ${total ? '<span class="pill pill--good">Start vs. Heute</span>' : ''}
     </div>
-    ${ph.length > 1 ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-      <figure><img src="${first.url}" alt="Foto vom ${fmtDate(first.date)}" class="photo" />
-        <figcaption class="card__sub" style="margin-top:6px">Start · ${fmtDate(first.date)}</figcaption></figure>
-      <figure><img src="${last.url}" alt="Foto vom ${fmtDate(last.date)}" class="photo" />
-        <figcaption class="card__sub" style="margin-top:6px">Heute · ${fmtDate(last.date)}</figcaption></figure>
-    </div>` : ph.length === 1 ? `<figure style="max-width:200px"><img src="${first.url}" alt="Foto" class="photo" />
-      <figcaption class="card__sub" style="margin-top:6px">${fmtDate(first.date)}</figcaption></figure>` : ''}
-    ${ph.length > 2 ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-      ${ph.slice(0, -1).map(x => `<figure style="width:78px"><img src="${x.url}" alt="Foto vom ${fmtDate(x.date)}" class="photo photo--thumb" />
-        <figcaption class="card__sub" style="font-size:10px;margin-top:4px">${fmtShort(x.date)}</figcaption></figure>`).join('')}
-    </div>` : ''}
-    <label class="btn btn--sm btn--ghost" style="cursor:pointer">
-      Foto hinzufügen
-      <input type="file" accept="image/*" data-photo="${c.id}" data-ctx="${opts.ctx || 'studio'}" style="display:none" />
-    </label>
-    <p class="card__sub" style="margin-top:8px">${opts.hint ||
-      'Freiwillig. Fotos bleiben zwischen dir und Yalcin — sie werden nirgendwo veröffentlicht.'}</p>`;
+
+    ${POSES.map(po => {
+      const ph = photosOfPose(c, po.id);
+      const first = ph[0], last = ph[ph.length - 1];
+      const same = ph.length === 1;
+      return `
+      <div class="pose">
+        <div class="pose__head">
+          <div><p class="pose__label">${po.label}</p><p class="card__sub">${po.hint}</p></div>
+          <label class="btn btn--sm ${ph.length ? 'btn--ghost' : 'btn--primary'}" style="cursor:pointer">
+            ${ph.length ? 'Neues Foto' : 'Foto hinzufügen'}
+            <input type="file" accept="image/*" capture="environment"
+                   data-photo="${c.id}" data-pose="${po.id}" data-ctx="${ctx}" style="display:none" />
+          </label>
+        </div>
+        ${ph.length ? `<div class="pose__pair">
+            <figure><img src="${first.url}" alt="${po.label}, Start ${fmtDate(first.date)}" class="photo" />
+              <figcaption class="card__sub">Start · ${fmtShort(first.date)}</figcaption></figure>
+            ${same ? `<figure class="pose__empty"><div class="photo photo--ghost">Nächstes Foto<br />für den Vergleich</div>
+              <figcaption class="card__sub">offen</figcaption></figure>`
+              : `<figure><img src="${last.url}" alt="${po.label}, aktuell ${fmtDate(last.date)}" class="photo" />
+              <figcaption class="card__sub">Heute · ${fmtShort(last.date)}</figcaption></figure>`}
+          </div>
+          ${ph.length > 2 ? `<div class="pose__strip">
+            ${ph.slice(1, -1).map(x => `<figure><img src="${x.url}" alt="${po.label} ${fmtDate(x.date)}" class="photo photo--thumb" />
+              <figcaption class="card__sub" style="font-size:10px">${fmtShort(x.date)}</figcaption></figure>`).join('')}
+          </div>` : ''}`
+        : `<p class="card__sub" style="padding:6px 0">Noch kein Bild aus dieser Position.</p>`}
+      </div>`;
+    }).join('')}
+
+    <p class="card__sub" style="margin-top:12px">${opts.hint ||
+      'Freiwillig. Gleiche Position, gleicher Abstand, gleiches Licht — sonst vergleichst du Beleuchtung statt Fortschritt. Die Bilder bleiben zwischen dir und Yalcin.'}</p>`;
 }
 
 function workoutModal(id, date) {
@@ -2750,8 +2779,11 @@ function portalCheckin(c) {
     </div>`).join('')}
     <div class="field"><label>Gewicht (optional)</label><input type="number" step="0.1" id="ci_kg" placeholder="kg" /></div>
     <div class="field"><label>Foto (optional)</label>
-      <input type="file" accept="image/*" id="ci_photo" />
-      <p class="card__sub" style="font-size:11px;margin-top:4px">Gleiche Haltung, gleiches Licht — nur so ist der Vergleich ehrlich.</p></div>
+      <select id="ci_pose" style="margin-bottom:8px">
+        ${POSES.map(po => `<option value="${po.id}">${po.label} — ${po.hint}</option>`).join('')}
+      </select>
+      <input type="file" accept="image/*" capture="environment" id="ci_photo" />
+      <p class="card__sub" style="font-size:11px;margin-top:4px">Gleiche Position, gleicher Abstand, gleiches Licht — nur so ist der Vergleich ehrlich.</p></div>
     <div class="field"><label>Was war diese Woche los?</label><textarea id="ci_note" rows="2" placeholder="Schlafmangel, Stress, Urlaub, Verletzung …"></textarea></div>
     <button class="btn btn--primary" data-act="checkinSave" data-id="${c.id}" style="width:100%;justify-content:center">Check-in absenden</button>
   </div>`
@@ -3121,7 +3153,8 @@ document.addEventListener('click', e => {
       };
       if (file) readPhoto(file, url => {
         if (url) { c.photos = c.photos || [];
-          c.photos.push({ id: uid('ph'), date: iso(today()), url, note: 'Check-in' });
+          c.photos.push({ id: uid('ph'), pose: ($('#ci_pose') || {}).value || 'front',
+            date: iso(today()), url, note: 'Check-in' });
           logEvent('photo', `${c.name}: neues Fortschrittsfoto`, c.id); }
         finish();
       });
@@ -3347,13 +3380,15 @@ document.addEventListener('change', e => {
   }
   if (e.target.dataset && e.target.dataset.photo) {
     const c = client(e.target.dataset.photo), file = e.target.files[0], ctx = e.target.dataset.ctx;
+    const pose = e.target.dataset.pose || 'front';
     if (!c || !file) return;
     readPhoto(file, url => {
       if (!url) { toast('Bild konnte nicht gelesen werden'); return; }
       c.photos = c.photos || [];
-      c.photos.push({ id: uid('ph'), date: iso(today()), url, note: '' });
-      logEvent('photo', `${c.name}: neues Fortschrittsfoto`, c.id);
-      if (save()) toast('Foto gespeichert');
+      c.photos.push({ id: uid('ph'), pose, date: iso(today()), url, note: '' });
+      const po = POSES.find(x => x.id === pose);
+      logEvent('photo', `${c.name}: neues Foto (${po ? po.label : pose})`, c.id);
+      if (save()) toast(`Foto gespeichert · ${POSES.find(x => x.id === pose).label}`);
       if (ctx === 'portal') render(); else openClient(c.id);
     });
     return;

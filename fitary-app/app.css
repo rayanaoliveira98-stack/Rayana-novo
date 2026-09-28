@@ -512,3 +512,19 @@ figure { margin: 0; }
 }
 .consent span { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
 .consent strong { color: var(--ink); }
+
+
+/* ---------- Fortschrittsfotos in drei Positionen ---------- */
+.pose { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.pose:last-of-type { border-bottom: none; }
+.pose__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.pose__label { font-family: var(--font-d); font-stretch: 75%; font-size: 14px; font-weight: 700; }
+.pose__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pose__pair figcaption { margin-top: 5px; font-size: 11px; }
+.pose__strip { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 9px; }
+.pose__strip figure { width: 64px; }
+.photo--ghost {
+  display: grid; place-items: center; text-align: center;
+  color: var(--ink-3); font-size: 11.5px; line-height: 1.4;
+  border-style: dashed; background: transparent;
+}
