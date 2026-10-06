@@ -29,9 +29,15 @@
   <!-- Seleção de perfil / primeira visita -->
   <section id="screen-splash" class="screen active">
     <div class="splash-inner">
+      <!-- A turma: os guias dos idiomas cujo pack está instalado. Montada em
+           js/app.js a partir de LANGS.availableCodes() — nunca um guia de
+           idioma que o app não sabe ensinar. -->
+      <div id="guide-ring" class="guide-ring" aria-hidden="true"></div>
       <div class="logo">
-        <span class="logo-star">✨</span>
-        <h1>LumiLínguas</h1>
+        <div class="logo-mark">
+          <h1>LumiLínguas</h1>
+          <i class="logo-star" aria-hidden="true">✨</i>
+        </div>
         <p class="tagline">Uma base real em até 4 idiomas — jornada de 60 dias</p>
       </div>
       <div id="profile-list" class="profile-list"></div>
@@ -39,6 +45,7 @@
         <p>Antes da primeira aventura, um adulto configura tudo em 2 minutos.</p>
       </div>
       <button id="btn-splash-setup" class="btn-parent-link">👨‍👩‍👧 Área dos responsáveis</button>
+      <p id="splash-langs" class="splash-langs"></p>
     </div>
   </section>
 

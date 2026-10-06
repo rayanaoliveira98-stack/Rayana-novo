@@ -106,3 +106,23 @@ test('nenhuma frase fica presa em português no código da interface', () => {
   assert.deepEqual(achadas, [],
     'strings fora do i18n: ' + achadas.slice(0, 5).join(' | '));
 });
+
+/* Nenhum escopo pode declarar uma variável chamada `t`.
+ *
+ * `var` sobe para o topo da função: um `var t = ...` no meio de stepReading
+ * apagava a t() de tradução no passo INTEIRO, e a tela "A criança já lê?"
+ * saía em branco — sem opções e sem botão de continuar. O onboarding parava
+ * ali, em todos os seis idiomas. Erro silencioso: nenhum teste de unidade
+ * pega, porque só aparece quando a tela é montada. */
+test('nada sombreia a função t() de tradução', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  ['parent.js', 'app.js'].forEach(arquivo => {
+    let src = fs.readFileSync(path.join(__dirname, '..', 'js', arquivo), 'utf8');
+    src = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    const sombras = src.match(/\b(?:var|let|const)\s+t\s*=|function\s*\(\s*t\s*[,)]/g) || [];
+    assert.deepEqual(sombras, [],
+      `${arquivo} declara uma variável "t" que apaga a função de tradução: ` +
+      sombras.join(' | '));
+  });
+});

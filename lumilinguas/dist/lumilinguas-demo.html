@@ -190,43 +190,119 @@ button { font-family: inherit; border: 0; cursor: pointer; color: var(--ink); fo
    SPLASH
    ========================================================================== */
 
-.splash-inner { margin: auto; text-align: center; padding: 24px; max-width: 480px; width: 100%; }
+.splash-inner { margin: auto; text-align: center; padding: 24px 20px; max-width: 480px; width: 100%; }
 
+/* A TURMA ------------------------------------------------------------------
+   Nove guias em arco, cada um no disco da cor do seu idioma. É o primeiro
+   que a criança vê e o único lugar do app onde os nove aparecem juntos: diz
+   a largura do produto sem uma linha de texto. O arco (--arc) vem do JS. */
+.guide-ring {
+  display: flex; justify-content: center; align-items: flex-end;
+  gap: 3px; margin: 0 0 22px; min-height: 60px;
+}
+.guide-ring .g {
+  width: clamp(30px, 8.6vw, 38px); aspect-ratio: 1; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(17px, 4.8vw, 21px); line-height: 1; flex: none;
+  box-shadow: 0 3px 0 rgba(58, 51, 81, .10);
+  transform: translateY(var(--arc, 0px));
+  animation: guide-breathe 5.6s ease-in-out infinite;
+  animation-delay: var(--wait, 0s);
+}
+@keyframes guide-breathe {
+  0%, 100% { transform: translateY(var(--arc, 0px)) scale(1); }
+  50%      { transform: translateY(calc(var(--arc, 0px) - 5px)) scale(1.07); }
+}
+
+/* MARCA --------------------------------------------------------------------
+   O brilho fica fora do <h1>: o título pinta o texto com background-clip e
+   um emoji dentro dele sairia recortado junto. */
 .logo { position: relative; }
+.logo-mark { position: relative; display: inline-block; }
 .logo h1 {
   font-size: var(--t-hero); font-weight: 800; line-height: 1.05;
   background: linear-gradient(100deg, #7C5CF0 0%, #E2574C 48%, #F5A623 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.logo-star { font-size: 44px; display: block; animation: twinkle 3.4s ease-in-out infinite; }
+.logo-star {
+  position: absolute; top: -12px; right: -28px;
+  font-size: 20px; font-style: normal; line-height: 1;
+  animation: twinkle 3.4s ease-in-out infinite;
+}
 @keyframes twinkle {
-  0%, 100% { transform: scale(1) rotate(-6deg); opacity: .9; }
+  0%, 100% { transform: scale(1) rotate(-6deg); opacity: .85; }
   50% { transform: scale(1.14) rotate(6deg); opacity: 1; }
 }
-.tagline { color: var(--ink-soft); margin-top: 10px; font-size: var(--t-body); font-weight: 600; }
+.tagline {
+  color: var(--ink); margin-top: 12px; font-size: 16px; font-weight: 700;
+  max-width: 21em; margin-left: auto; margin-right: auto; opacity: .82;
+}
 
-.profile-list { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin: 38px 0; }
+/* QUEM JÁ USA --------------------------------------------------------------- */
+.profile-list { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 30px 0 4px; }
 .profile-bubble {
   background: var(--card); border-radius: var(--r-xl);
   box-shadow: var(--lift-2);
-  padding: 20px 24px;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 18px 20px 16px;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
   transition: transform .12s ease, box-shadow .12s ease;
 }
 .profile-bubble:active { transform: translateY(5px); box-shadow: var(--lift-1); }
 .pb-emoji {
-  font-size: 58px;
+  font-size: 54px;
   width: 92px; height: 92px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(circle at 50% 38%, #fff 0%, var(--accent-soft) 100%);
+  background: radial-gradient(circle at 50% 38%, #fff 0%, var(--pb-soft, var(--accent-soft)) 100%);
+  box-shadow: inset 0 0 0 3px var(--pb-color, var(--accent));
 }
 .pb-name { font-size: 19px; font-weight: 800; }
-.splash-empty { margin: 28px 0; color: var(--ink-soft); font-size: var(--t-body); font-weight: 600; }
+/* Os guias dos idiomas daquela criança: imagem, não texto — funciona aos 3 anos. */
+.pb-guides { display: flex; gap: 3px; font-size: 15px; line-height: 1; }
+
+/* PRIMEIRA ABERTURA --------------------------------------------------------
+   Sem perfil nenhum, a área dos responsáveis é a única coisa a fazer na tela.
+   Então ela vira o botão principal, com espessura, e a frase de apoio desce
+   para baixo dele em vez de disputar atenção. */
+.splash-empty { margin: 26px 0 0; color: var(--ink-soft); font-size: var(--t-small); font-weight: 600; }
 .btn-parent-link {
   background: rgba(255, 255, 255, .7); color: var(--ink-soft);
   font-size: var(--t-small); font-weight: 700;
-  padding: 10px 18px; border-radius: 999px; margin-top: 14px;
+  padding: 10px 18px; border-radius: 999px; margin-top: 16px;
   box-shadow: var(--lift-1);
+}
+#screen-splash.first-run .splash-empty { order: 2; margin: 14px auto 0; max-width: 26em; }
+#screen-splash.first-run .btn-parent-link {
+  order: 1;
+  background: var(--accent); color: #fff;
+  font-size: 17px; font-weight: 800;
+  padding: 15px 28px; border-radius: var(--r-md);
+  margin-top: 30px;
+  box-shadow: 0 5px 0 var(--accent-deep);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+#screen-splash.first-run .btn-parent-link:active {
+  transform: translateY(4px); box-shadow: 0 1px 0 var(--accent-deep);
+}
+#screen-splash.first-run .splash-inner { display: flex; flex-direction: column; align-items: center; }
+#screen-splash.first-run .guide-ring { order: -3; }
+#screen-splash.first-run .logo { order: -2; }
+#screen-splash.first-run .profile-list { order: -1; }
+#screen-splash.first-run .splash-langs { order: 3; }
+
+/* OS IDIOMAS, NO PRÓPRIO ALFABETO -----------------------------------------
+   Cada nome como ele se escreve na sua língua. Para um pai turco ou chinês,
+   ver 中文 e Türkçe na primeira tela diz mais do que qualquer promessa. */
+.splash-langs {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  margin: 26px auto 0; max-width: 100%;
+  font-size: var(--t-small); font-weight: 700; line-height: 1.9;
+  color: var(--ink-soft);
+}
+/* Cada nome é indivisível; a quebra acontece entre eles. O ponto fica no fim
+   da palavra anterior (::after), para nenhuma linha começar com separador. */
+.splash-langs span { white-space: nowrap; }
+.splash-langs span:not(:last-child)::after {
+  content: '\00B7'; padding: 0 8px; opacity: .4; font-weight: 800;
 }
 
 /* ==========================================================================
@@ -1139,9 +1215,15 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
   <!-- Seleção de perfil / primeira visita -->
   <section id="screen-splash" class="screen active">
     <div class="splash-inner">
+      <!-- A turma: os guias dos idiomas cujo pack está instalado. Montada em
+           js/app.js a partir de LANGS.availableCodes() — nunca um guia de
+           idioma que o app não sabe ensinar. -->
+      <div id="guide-ring" class="guide-ring" aria-hidden="true"></div>
       <div class="logo">
-        <span class="logo-star">✨</span>
-        <h1>LumiLínguas</h1>
+        <div class="logo-mark">
+          <h1>LumiLínguas</h1>
+          <i class="logo-star" aria-hidden="true">✨</i>
+        </div>
         <p class="tagline">Uma base real em até 4 idiomas — jornada de 60 dias</p>
       </div>
       <div id="profile-list" class="profile-list"></div>
@@ -1149,6 +1231,7 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
         <p>Antes da primeira aventura, um adulto configura tudo em 2 minutos.</p>
       </div>
       <button id="btn-splash-setup" class="btn-parent-link">👨‍👩‍👧 Área dos responsáveis</button>
+      <p id="splash-langs" class="splash-langs"></p>
     </div>
   </section>
 
@@ -5794,9 +5877,12 @@ t('gate.forgotNote')));
     });
     wrap.appendChild(row);
     if (draft.age >= 5 && draft.reading !== 'no') {
-      var t = el('button', 'chip toggle' + (draft.textSupport ? ' sel' : ''), (draft.textSupport ? '✓ ' : '') + t('ob.reading.textToggle'));
-      t.onclick = function () { draft.textSupport = !draft.textSupport; renderObStep(); };
-      wrap.appendChild(t);
+      /* Nunca chamar a variável de `t`: `var` sobe para o topo da função e
+         apagaria a t() de tradução no passo inteiro. */
+      var alternador = el('button', 'chip toggle' + (draft.textSupport ? ' sel' : ''),
+        (draft.textSupport ? '✓ ' : '') + t('ob.reading.textToggle'));
+      alternador.onclick = function () { draft.textSupport = !draft.textSupport; renderObStep(); };
+      wrap.appendChild(alternador);
       wrap.appendChild(el('p', 'ob-note', t('ob.reading.textNote')));
     }
     navRow(wrap, true);
@@ -5807,11 +5893,11 @@ t('gate.forgotNote')));
     var THEMES = ['animals', 'places', 'home', 'food', 'family', 'clothes', 'actions', 'dialogs']
       .map(function (id) { return [id, t('theme.' + id)]; });
     var row = el('div', 'chip-row wrap');
-    THEMES.forEach(function (t) {
-      var idx = draft.interests.indexOf(t[0]);
-      var c = el('button', 'chip' + (idx >= 0 ? ' sel' : ''), t[1]);
+    THEMES.forEach(function (tema) {
+      var idx = draft.interests.indexOf(tema[0]);
+      var c = el('button', 'chip' + (idx >= 0 ? ' sel' : ''), tema[1]);
       c.onclick = function () {
-        if (idx >= 0) draft.interests.splice(idx, 1); else draft.interests.push(t[0]);
+        if (idx >= 0) draft.interests.splice(idx, 1); else draft.interests.push(tema[0]);
         renderObStep();
       };
       row.appendChild(c);
@@ -5956,12 +6042,12 @@ t('gate.forgotNote')));
       ['tips', t('tab.tips')], ['voice', t('tab.voice')],
       ['settings', t('tab.settings')], ['dataTab', t('tab.data')]
     ];
-    TABS.forEach(function (t, i) {
-      var b = el('button', 'ptab' + (i === 0 ? ' sel' : ''), t[1]);
+    TABS.forEach(function (aba, i) {
+      var b = el('button', 'ptab' + (i === 0 ? ' sel' : ''), aba[1]);
       b.onclick = function () {
         tabs.querySelectorAll('.ptab').forEach(function (x) { x.classList.remove('sel'); });
         b.classList.add('sel');
-        renderTab(t[0]);
+        renderTab(aba[0]);
       };
       tabs.appendChild(b);
     });
@@ -6000,12 +6086,12 @@ t('gate.forgotNote')));
         [[vistos, t('common.of') + ' ' + CUR.concepts.length, t('panel.wordsSeen'), L.color],
          [reconhece, '', t('panel.recognises'), '#3550C4'],
          [falados, '', t('panel.speaks'), '#23A96B']
-        ].forEach(function (t) {
+        ].forEach(function (dado) {
           var tile = el('div', 'stat');
           tile.innerHTML =
-            '<span class="stat-num" style="color:' + t[3] + '">' + t[0] +
-            (t[1] ? '<span class="stat-of"> ' + t[1] + '</span>' : '') + '</span>' +
-            '<span class="stat-label">' + t[2] + '</span>';
+            '<span class="stat-num" style="color:' + dado[3] + '">' + dado[0] +
+            (dado[1] ? '<span class="stat-of"> ' + dado[1] + '</span>' : '') + '</span>' +
+            '<span class="stat-label">' + dado[2] + '</span>';
           tiles.appendChild(tile);
         });
         card.appendChild(tiles);
@@ -6130,7 +6216,7 @@ t('ladder.silence')));
         body.appendChild(el('p', '', t('tips.empty')));
       } else {
         body.appendChild(el('p', 'ob-note', t('tips.intro')));
-        last.tips.forEach(function (t) { body.appendChild(el('div', 'pcard tip', '💡 ' + t)); });
+        last.tips.forEach(function (dica) { body.appendChild(el('div', 'pcard tip', '💡 ' + dica)); });
       }
     }
 
@@ -6268,9 +6354,9 @@ t('ladder.silence')));
     [['allowSpeech', t('set.speech')],
      ['allowFamilyVoice', t('set.familyVoice')],
      ['textSupport', t('set.textSupport')]].forEach(function (opt) {
-      var t = el('button', 'chip toggle' + (p[opt[0]] ? ' sel' : ''), (p[opt[0]] ? '✓ ' : '') + opt[1]);
-      t.onclick = function () { p[opt[0]] = !p[opt[0]]; APP().save(); renderTab('settings'); };
-      card2.appendChild(t);
+      var alternador = el('button', 'chip toggle' + (p[opt[0]] ? ' sel' : ''), (p[opt[0]] ? '✓ ' : '') + opt[1]);
+      alternador.onclick = function () { p[opt[0]] = !p[opt[0]]; APP().save(); renderTab('settings'); };
+      card2.appendChild(alternador);
     });
     card2.appendChild(el('label', '', t('ob.routine.duration')));
     var dr = el('div', 'chip-row');
@@ -6361,10 +6447,46 @@ t('ladder.silence')));
 
   /* ---------- Splash / seleção de perfil ---------- */
 
+  /* A turma e a lista de idiomas saem de availableCodes(): se um pack não
+   * estiver carregado, aquele guia simplesmente não aparece. Nada de prometer
+   * na primeira tela um idioma que o app não sabe ensinar. */
+  function renderSplashWorld() {
+    var codes = LANGS.availableCodes();
+    var ring = $('guide-ring');
+    var strip = $('splash-langs');
+    if (!ring || !strip || !codes.length) return;
+
+    ring.innerHTML = '';
+    strip.innerHTML = '';
+    var n = codes.length;
+    codes.forEach(function (code, i) {
+      var L = LANGS.get(code);
+      /* Arco: os do meio sobem, os das pontas descem. Um seno, não uma escada. */
+      var alto = n > 1 ? Math.sin(Math.PI * (i / (n - 1))) : 1;
+      var d = document.createElement('span');
+      d.className = 'g';
+      d.textContent = L.character.emoji;
+      d.title = L.character.name;
+      d.style.setProperty('--arc', (-alto * 15).toFixed(1) + 'px');
+      d.style.setProperty('--wait', (i * 0.42).toFixed(2) + 's');
+      d.style.background =
+        'radial-gradient(circle at 50% 34%, #fff 0%, ' + L.colorSoft + ' 100%)';
+      ring.appendChild(d);
+
+      var s = document.createElement('span');
+      s.textContent = L.childName;
+      strip.appendChild(s);
+    });
+  }
+
   function renderSplash() {
     var wrap = $('profile-list');
     wrap.innerHTML = '';
+    renderSplashWorld();
     var ids = Object.keys(data.profiles);
+    /* Sem perfil, a área dos responsáveis é a única ação possível: o CSS a
+     * promove a botão principal em vez de deixá-la como link apagado. */
+    $('screen-splash').classList.toggle('first-run', !ids.length);
     if (!ids.length) {
       $('splash-empty').style.display = 'block';
       wrap.style.display = 'none';
@@ -6375,7 +6497,21 @@ t('ladder.silence')));
         var p = data.profiles[id];
         var b = document.createElement('button');
         b.className = 'profile-bubble';
-        b.innerHTML = '<span class="pb-emoji">' + (p.avatar || '🧒') + '</span><span class="pb-name">' + p.name + '</span>';
+        /* O disco usa a cor do primeiro idioma da criança e os guias dela
+         * aparecem embaixo do nome: imagem, para quem ainda não lê. */
+        var guias = (p.langs || []).map(function (c) {
+          var L = LANGS.get(c);
+          return L ? L.character.emoji : '';
+        }).join('');
+        var L0 = LANGS.get((p.langs || [])[0]);
+        b.innerHTML =
+          '<span class="pb-emoji">' + (p.avatar || '🧒') + '</span>' +
+          '<span class="pb-name">' + p.name + '</span>' +
+          (guias ? '<span class="pb-guides" aria-hidden="true">' + guias + '</span>' : '');
+        if (L0) {
+          b.style.setProperty('--pb-color', L0.color);
+          b.style.setProperty('--pb-soft', L0.colorSoft);
+        }
         b.onclick = function () {
           data.activeProfile = id; save();
           goHome();

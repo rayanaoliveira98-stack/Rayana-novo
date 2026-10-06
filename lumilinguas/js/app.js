@@ -59,10 +59,46 @@
 
   /* ---------- Splash / seleção de perfil ---------- */
 
+  /* A turma e a lista de idiomas saem de availableCodes(): se um pack não
+   * estiver carregado, aquele guia simplesmente não aparece. Nada de prometer
+   * na primeira tela um idioma que o app não sabe ensinar. */
+  function renderSplashWorld() {
+    var codes = LANGS.availableCodes();
+    var ring = $('guide-ring');
+    var strip = $('splash-langs');
+    if (!ring || !strip || !codes.length) return;
+
+    ring.innerHTML = '';
+    strip.innerHTML = '';
+    var n = codes.length;
+    codes.forEach(function (code, i) {
+      var L = LANGS.get(code);
+      /* Arco: os do meio sobem, os das pontas descem. Um seno, não uma escada. */
+      var alto = n > 1 ? Math.sin(Math.PI * (i / (n - 1))) : 1;
+      var d = document.createElement('span');
+      d.className = 'g';
+      d.textContent = L.character.emoji;
+      d.title = L.character.name;
+      d.style.setProperty('--arc', (-alto * 15).toFixed(1) + 'px');
+      d.style.setProperty('--wait', (i * 0.42).toFixed(2) + 's');
+      d.style.background =
+        'radial-gradient(circle at 50% 34%, #fff 0%, ' + L.colorSoft + ' 100%)';
+      ring.appendChild(d);
+
+      var s = document.createElement('span');
+      s.textContent = L.childName;
+      strip.appendChild(s);
+    });
+  }
+
   function renderSplash() {
     var wrap = $('profile-list');
     wrap.innerHTML = '';
+    renderSplashWorld();
     var ids = Object.keys(data.profiles);
+    /* Sem perfil, a área dos responsáveis é a única ação possível: o CSS a
+     * promove a botão principal em vez de deixá-la como link apagado. */
+    $('screen-splash').classList.toggle('first-run', !ids.length);
     if (!ids.length) {
       $('splash-empty').style.display = 'block';
       wrap.style.display = 'none';
@@ -73,7 +109,21 @@
         var p = data.profiles[id];
         var b = document.createElement('button');
         b.className = 'profile-bubble';
-        b.innerHTML = '<span class="pb-emoji">' + (p.avatar || '🧒') + '</span><span class="pb-name">' + p.name + '</span>';
+        /* O disco usa a cor do primeiro idioma da criança e os guias dela
+         * aparecem embaixo do nome: imagem, para quem ainda não lê. */
+        var guias = (p.langs || []).map(function (c) {
+          var L = LANGS.get(c);
+          return L ? L.character.emoji : '';
+        }).join('');
+        var L0 = LANGS.get((p.langs || [])[0]);
+        b.innerHTML =
+          '<span class="pb-emoji">' + (p.avatar || '🧒') + '</span>' +
+          '<span class="pb-name">' + p.name + '</span>' +
+          (guias ? '<span class="pb-guides" aria-hidden="true">' + guias + '</span>' : '');
+        if (L0) {
+          b.style.setProperty('--pb-color', L0.color);
+          b.style.setProperty('--pb-soft', L0.colorSoft);
+        }
         b.onclick = function () {
           data.activeProfile = id; save();
           goHome();

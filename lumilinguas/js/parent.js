@@ -322,9 +322,12 @@ t('gate.forgotNote')));
     });
     wrap.appendChild(row);
     if (draft.age >= 5 && draft.reading !== 'no') {
-      var t = el('button', 'chip toggle' + (draft.textSupport ? ' sel' : ''), (draft.textSupport ? '✓ ' : '') + t('ob.reading.textToggle'));
-      t.onclick = function () { draft.textSupport = !draft.textSupport; renderObStep(); };
-      wrap.appendChild(t);
+      /* Nunca chamar a variável de `t`: `var` sobe para o topo da função e
+         apagaria a t() de tradução no passo inteiro. */
+      var alternador = el('button', 'chip toggle' + (draft.textSupport ? ' sel' : ''),
+        (draft.textSupport ? '✓ ' : '') + t('ob.reading.textToggle'));
+      alternador.onclick = function () { draft.textSupport = !draft.textSupport; renderObStep(); };
+      wrap.appendChild(alternador);
       wrap.appendChild(el('p', 'ob-note', t('ob.reading.textNote')));
     }
     navRow(wrap, true);
@@ -335,11 +338,11 @@ t('gate.forgotNote')));
     var THEMES = ['animals', 'places', 'home', 'food', 'family', 'clothes', 'actions', 'dialogs']
       .map(function (id) { return [id, t('theme.' + id)]; });
     var row = el('div', 'chip-row wrap');
-    THEMES.forEach(function (t) {
-      var idx = draft.interests.indexOf(t[0]);
-      var c = el('button', 'chip' + (idx >= 0 ? ' sel' : ''), t[1]);
+    THEMES.forEach(function (tema) {
+      var idx = draft.interests.indexOf(tema[0]);
+      var c = el('button', 'chip' + (idx >= 0 ? ' sel' : ''), tema[1]);
       c.onclick = function () {
-        if (idx >= 0) draft.interests.splice(idx, 1); else draft.interests.push(t[0]);
+        if (idx >= 0) draft.interests.splice(idx, 1); else draft.interests.push(tema[0]);
         renderObStep();
       };
       row.appendChild(c);
@@ -484,12 +487,12 @@ t('gate.forgotNote')));
       ['tips', t('tab.tips')], ['voice', t('tab.voice')],
       ['settings', t('tab.settings')], ['dataTab', t('tab.data')]
     ];
-    TABS.forEach(function (t, i) {
-      var b = el('button', 'ptab' + (i === 0 ? ' sel' : ''), t[1]);
+    TABS.forEach(function (aba, i) {
+      var b = el('button', 'ptab' + (i === 0 ? ' sel' : ''), aba[1]);
       b.onclick = function () {
         tabs.querySelectorAll('.ptab').forEach(function (x) { x.classList.remove('sel'); });
         b.classList.add('sel');
-        renderTab(t[0]);
+        renderTab(aba[0]);
       };
       tabs.appendChild(b);
     });
@@ -528,12 +531,12 @@ t('gate.forgotNote')));
         [[vistos, t('common.of') + ' ' + CUR.concepts.length, t('panel.wordsSeen'), L.color],
          [reconhece, '', t('panel.recognises'), '#3550C4'],
          [falados, '', t('panel.speaks'), '#23A96B']
-        ].forEach(function (t) {
+        ].forEach(function (dado) {
           var tile = el('div', 'stat');
           tile.innerHTML =
-            '<span class="stat-num" style="color:' + t[3] + '">' + t[0] +
-            (t[1] ? '<span class="stat-of"> ' + t[1] + '</span>' : '') + '</span>' +
-            '<span class="stat-label">' + t[2] + '</span>';
+            '<span class="stat-num" style="color:' + dado[3] + '">' + dado[0] +
+            (dado[1] ? '<span class="stat-of"> ' + dado[1] + '</span>' : '') + '</span>' +
+            '<span class="stat-label">' + dado[2] + '</span>';
           tiles.appendChild(tile);
         });
         card.appendChild(tiles);
@@ -658,7 +661,7 @@ t('ladder.silence')));
         body.appendChild(el('p', '', t('tips.empty')));
       } else {
         body.appendChild(el('p', 'ob-note', t('tips.intro')));
-        last.tips.forEach(function (t) { body.appendChild(el('div', 'pcard tip', '💡 ' + t)); });
+        last.tips.forEach(function (dica) { body.appendChild(el('div', 'pcard tip', '💡 ' + dica)); });
       }
     }
 
@@ -796,9 +799,9 @@ t('ladder.silence')));
     [['allowSpeech', t('set.speech')],
      ['allowFamilyVoice', t('set.familyVoice')],
      ['textSupport', t('set.textSupport')]].forEach(function (opt) {
-      var t = el('button', 'chip toggle' + (p[opt[0]] ? ' sel' : ''), (p[opt[0]] ? '✓ ' : '') + opt[1]);
-      t.onclick = function () { p[opt[0]] = !p[opt[0]]; APP().save(); renderTab('settings'); };
-      card2.appendChild(t);
+      var alternador = el('button', 'chip toggle' + (p[opt[0]] ? ' sel' : ''), (p[opt[0]] ? '✓ ' : '') + opt[1]);
+      alternador.onclick = function () { p[opt[0]] = !p[opt[0]]; APP().save(); renderTab('settings'); };
+      card2.appendChild(alternador);
     });
     card2.appendChild(el('label', '', t('ob.routine.duration')));
     var dr = el('div', 'chip-row');
