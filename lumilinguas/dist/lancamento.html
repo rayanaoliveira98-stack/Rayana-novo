@@ -1,0 +1,380 @@
+<title>Lançar o LumiLínguas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+:root{
+  --ink:#16141F; --ink-2:#4A4559; --ink-3:#7D7790;
+  --paper:#FBFAF7; --card:#FFFFFF; --rule:#E4E0DA; --well:#F3F1EC;
+  --accent:#7C5CF0; --accent-deep:#5B3FC4; --accent-soft:#EFEAFE;
+  --good:#1E8F5E; --warn:#B3651A; --stop:#C0392B;
+  /* as nove cores vêm do próprio produto: cada idioma tem a sua */
+  --l-pt:#2BB673; --l-de:#F4B400; --l-en:#4A6CF7; --l-es:#E2574C; --l-tr:#00A3A3;
+  --l-fr:#8E6CF0; --l-it:#3AAE5C; --l-zh:#E58B2F; --l-ja:#E2648F;
+  --shadow:0 1px 2px rgba(22,20,31,.05), 0 8px 24px rgba(22,20,31,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#F2EFEA; --ink-2:#B5AFC2; --ink-3:#857F96;
+    --paper:#121019; --card:#1B1825; --rule:#2E2A3C; --well:#201C2C;
+    --accent:#A98CFF; --accent-deep:#C9B6FF; --accent-soft:#2A2340;
+    --good:#4CCB92; --warn:#E2A05C; --stop:#F0786A;
+    --l-de:#E8B54A; --l-zh:#EDA050;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.34);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#F2EFEA; --ink-2:#B5AFC2; --ink-3:#857F96;
+  --paper:#121019; --card:#1B1825; --rule:#2E2A3C; --well:#201C2C;
+  --accent:#A98CFF; --accent-deep:#C9B6FF; --accent-soft:#2A2340;
+  --good:#4CCB92; --warn:#E2A05C; --stop:#F0786A;
+  --l-de:#E8B54A; --l-zh:#EDA050;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Source Serif 4',Georgia,serif; font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:780px; margin:0 auto; padding-inline:20px; padding-block:40px 80px}
+h1,h2,h3,h4,.ui{font-family:'Bricolage Grotesque','Helvetica Neue',sans-serif; letter-spacing:-.02em}
+h1{font-size:clamp(34px,7vw,56px); line-height:1.02; font-weight:800; margin:0 0 16px; text-wrap:balance}
+h2{font-size:clamp(23px,4vw,31px); font-weight:700; line-height:1.14; margin:0 0 14px; text-wrap:balance}
+h3{font-size:19px; font-weight:700; margin:0 0 7px}
+p{margin:0 0 17px; max-width:64ch}
+a{color:var(--accent-deep)}
+strong{font-weight:700}
+em{font-style:italic; color:var(--ink-2)}
+
+/* A régua de nove faixas: uma por idioma. Reaparece ao longo da página
+   porque "nove idiomas" é a estrutura do produto, não um enfeite. */
+.spectrum{display:flex; height:5px; border-radius:99px; overflow:hidden; margin:0 0 30px}
+.spectrum i{flex:1}
+.spectrum i:nth-child(1){background:var(--l-pt)} .spectrum i:nth-child(2){background:var(--l-de)}
+.spectrum i:nth-child(3){background:var(--l-en)} .spectrum i:nth-child(4){background:var(--l-es)}
+.spectrum i:nth-child(5){background:var(--l-tr)} .spectrum i:nth-child(6){background:var(--l-fr)}
+.spectrum i:nth-child(7){background:var(--l-it)} .spectrum i:nth-child(8){background:var(--l-zh)}
+.spectrum i:nth-child(9){background:var(--l-ja)}
+
+.eyebrow{
+  font-family:'Bricolage Grotesque',sans-serif; font-size:12px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:0 0 10px;
+}
+.lede{font-size:clamp(18px,2.4vw,21px); line-height:1.5; color:var(--ink-2); max-width:56ch}
+
+section{margin-top:54px; scroll-margin-top:20px}
+.sec-head{border-top:2px solid var(--ink); padding-top:14px; margin-bottom:22px}
+
+/* ---- a promessa honesta, em destaque ---- */
+.promise{
+  background:var(--card); border:1px solid var(--rule); border-left:5px solid var(--accent);
+  border-radius:4px 14px 14px 4px; padding:22px 24px; box-shadow:var(--shadow);
+  margin:0 0 20px;
+}
+.promise p{margin:0; font-size:19px; line-height:1.5}
+.promise .src{display:block; margin-top:10px; font-size:13px; color:var(--ink-3); font-family:'Bricolage Grotesque',sans-serif}
+
+/* ---- números reais ---- */
+.figs{display:grid; grid-template-columns:repeat(auto-fit,minmax(142px,1fr)); gap:1px; background:var(--rule);
+  border:1px solid var(--rule); border-radius:12px; overflow:hidden; margin:0 0 18px}
+.fig{background:var(--card); padding:16px 17px}
+.fig b{display:block; font-family:'Bricolage Grotesque',sans-serif; font-size:30px; font-weight:800;
+  line-height:1; font-variant-numeric:tabular-nums; letter-spacing:-.03em}
+.fig span{display:block; margin-top:6px; font-size:13px; color:var(--ink-2); line-height:1.35}
+
+/* ---- diferenciais ---- */
+.diffs{display:flex; flex-direction:column; gap:2px; margin:0 0 8px}
+.diff{background:var(--card); border:1px solid var(--rule); border-radius:12px; padding:18px 20px}
+.diff h3{display:flex; align-items:baseline; gap:10px}
+.diff h3 .n{font-size:12px; font-weight:700; color:var(--ink-3); font-variant-numeric:tabular-nums;
+  letter-spacing:.08em; flex:none}
+.diff p{margin:0; font-size:16px; color:var(--ink-2)}
+.diff p + p{margin-top:9px}
+.proof{font-family:'Bricolage Grotesque',sans-serif; font-size:13px; color:var(--ink-3)}
+.proof b{color:var(--good); font-weight:700}
+
+/* ---- o balanço honesto ---- */
+.ledger{border:1px solid var(--rule); border-radius:12px; overflow:hidden; margin:0 0 18px}
+.ledger-row{display:grid; grid-template-columns:28px 1fr auto; gap:12px; align-items:start;
+  padding:13px 16px; background:var(--card); border-bottom:1px solid var(--rule); font-size:15.5px}
+.ledger-row:last-child{border-bottom:0}
+.ledger-row .mk{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:15px; line-height:1.5}
+.ledger-row.ok .mk{color:var(--good)} .ledger-row.part .mk{color:var(--warn)} .ledger-row.no .mk{color:var(--stop)}
+.ledger-row .tag{font-family:'Bricolage Grotesque',sans-serif; font-size:11px; font-weight:700;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap; padding-top:3px}
+.ledger-row small{display:block; color:var(--ink-3); font-size:13.5px; margin-top:2px}
+
+/* ---- fases do lançamento ---- */
+.phase{display:grid; grid-template-columns:auto 1fr; gap:0 18px; margin:0 0 4px}
+.phase .rail{display:flex; flex-direction:column; align-items:center; gap:4px}
+.phase .dot{width:34px; height:34px; border-radius:50%; flex:none; display:flex; align-items:center;
+  justify-content:center; font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:14px;
+  color:#fff; background:var(--accent)}
+.phase .line{flex:1; width:2px; background:var(--rule); min-height:14px}
+.phase:last-child .line{display:none}
+.phase .body{padding-bottom:26px; min-width:0}
+.phase h3{margin-bottom:3px}
+.phase .when{font-family:'Bricolage Grotesque',sans-serif; font-size:12.5px; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:9px}
+.phase p{font-size:16px; color:var(--ink-2); margin-bottom:10px}
+.phase .gate{background:var(--well); border-radius:9px; padding:11px 14px; font-size:14.5px;
+  font-family:'Bricolage Grotesque',sans-serif; color:var(--ink-2)}
+.phase .gate b{color:var(--ink)}
+.p0 .dot{background:var(--l-tr)} .p1 .dot{background:var(--l-de)}
+.p2 .dot{background:var(--l-en)} .p3 .dot{background:var(--l-ja)}
+
+/* ---- tabelas ---- */
+.tw{overflow-x:auto; margin:0 0 18px; border:1px solid var(--rule); border-radius:12px}
+table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+th,td{text-align:left; padding:11px 15px; border-bottom:1px solid var(--rule); vertical-align:top}
+th{font-family:'Bricolage Grotesque',sans-serif; font-size:12px; font-weight:700; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-3); white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td b{font-weight:700}
+.num{font-variant-numeric:tabular-nums; white-space:nowrap}
+
+/* ---- nota / alerta ---- */
+.note{background:var(--well); border-radius:12px; padding:17px 20px; font-size:15.5px; color:var(--ink-2); margin:0 0 18px}
+.note b{color:var(--ink)}
+.note.warn{background:transparent; border:1px dashed var(--warn)}
+
+ul{margin:0 0 17px; padding-left:22px; max-width:64ch}
+li{margin-bottom:8px}
+li::marker{color:var(--ink-3)}
+
+.footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--rule); font-size:14px; color:var(--ink-3)}
+.footer a{color:var(--ink-2)}
+
+@media (max-width:460px){
+  .phase{grid-template-columns:1fr; gap:0}
+  .phase .rail{flex-direction:row; width:100%; margin-bottom:8px}
+  .phase .line{width:100%; height:2px; min-height:0; flex:1}
+  .ledger-row{grid-template-columns:24px 1fr; }
+  .ledger-row .tag{grid-column:2; padding-top:0}
+}
+</style>
+
+<div class="wrap">
+
+  <div class="spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <p class="eyebrow">LumiLínguas · pitch e plano de lançamento</p>
+  <h1>Nenhum app ensina seu filho a falar quatro idiomas em dois meses.</h1>
+  <p class="lede">Este diz isso na primeira tela — e é exatamente por isso que ele vende. Abaixo: o produto como um comprador o vê, o que está pronto e o que não está, e por onde começar a vender.</p>
+
+  <!-- ================= PARTE 1: A APRESENTAÇÃO ================= -->
+  <section>
+    <div class="sec-head"><p class="eyebrow" style="margin:0">Parte 1 — O produto</p></div>
+    <h2>A promessa, inteira</h2>
+
+    <div class="promise">
+      <p>“Construa uma base de compreensão, vocabulário e pronúncia em até quatro idiomas durante uma jornada de 60 dias.”</p>
+      <span class="src">A frase aparece no primeiro passo do cadastro, antes de qualquer cobrança. Seguida de: <em>este aplicativo não promete fluência em dois meses.</em></span>
+    </div>
+
+    <p>Um mercado inteiro vende fluência infantil em pacotes de dois meses. Os pais compram, a criança abandona na terceira semana, e a culpa fica com a criança. <strong>A honestidade aqui não é escrúpulo — é o posicionamento.</strong> É o único eixo em que um produto novo pode bater os grandes sem gastar mais que eles em mídia.</p>
+
+    <h3 style="margin-top:26px">O que a criança faz, concretamente</h3>
+    <p>Abre o app sozinha — sem ler nada, sem digitar nada, sem menu. Toca no botão verde. De 8 a 15 minutos depois (a duração que o responsável escolheu, e que o app <em>respeita</em>), ela ganhou uma estrela, um adesivo, e trabalhou de 10 a 17 atividades em até quatro idiomas. Os pais recebem quatro frases práticas para usar no café da manhã, no carro e antes de dormir.</p>
+  </section>
+
+  <section>
+    <h2>Os cinco motivos para comprar</h2>
+    <p>Cada um verificado no código, não no material de marketing.</p>
+
+    <div class="diffs">
+      <div class="diff">
+        <h3><span class="n">01</span> A criança precisa falar — e o app prova que ela falou</h3>
+        <p>Cada palavra sobe sete degraus por criança e por idioma: ouvir → reconhecer → responder com o corpo → repetir com modelo → completar a frase → falar sozinha → usar em conversa. A atividade do dia sai do degrau em que aquela criança está com aquela palavra. Nunca de sorteio.</p>
+        <p>Nenhuma palavra conta como dominada sem ter saído da boca dela sem modelo. Em aparelho sem reconhecimento de fala, o app mede o <em>volume</em> do microfone para confirmar que houve voz — sem gravar nem enviar nada.</p>
+        <p class="proof">Verificação: <b>uma simulação dos 60 dias completos roda a cada build</b> e falha se a criança não chegar a produzir.</p>
+      </div>
+
+      <div class="diff">
+        <h3><span class="n">02</span> Duas camadas de idioma que ninguém mais separa</h3>
+        <p>O que o adulto lê e o que a criança aprende são independentes. A interface dos responsáveis fala <strong>seis idiomas</strong> (português, inglês, alemão, espanhol, italiano, turco). A criança aprende em <strong>nove</strong> (os seis mais francês, mandarim e japonês), com variantes regionais reais: alemão da Alemanha <em>e</em> da Áustria, inglês britânico <em>e</em> americano, espanhol europeu <em>e</em> latino.</p>
+        <p>Um pai turco configura o app em turco para a filha aprender alemão austríaco. Guarde essa frase: é o plano de lançamento inteiro.</p>
+      </div>
+
+      <div class="diff">
+        <h3><span class="n">03</span> Privacidade que é argumento de venda, não letra miúda</h3>
+        <p>Tudo fica no aparelho: perfis, progresso, gravações da família. Sem publicidade. Sem chat. Sem comunicação entre crianças. Sem localização. Sem perfil público. Sem compra dentro da área infantil. Exportação e exclusão total pelo responsável, a qualquer momento.</p>
+        <p>Consequência comercial que quase ninguém nota: <strong>não há servidor, então não há custo por usuário.</strong> A margem não depende de escala — o que abre modelos de preço que um concorrente com infraestrutura não consegue oferecer.</p>
+      </div>
+
+      <div class="diff">
+        <h3><span class="n">04</span> Nunca a palavra “errado”</h3>
+        <p>Sem sons negativos, sem perda de pontos, sem ranking, sem contagem regressiva. Dificuldade gera reapresentação discreta e revisão antecipada; depois de três dias, a atividade simplifica sozinha. Silêncio numa tarefa de fala não é erro — é sinal de que o período silencioso daquela criança ainda não acabou, e o app recua sozinho para uma atividade de corpo.</p>
+        <p>Há teto de exigência por idade: aos 3 anos o app para em “repete com modelo” e não insiste.</p>
+      </div>
+
+      <div class="diff">
+        <h3><span class="n">05</span> Funciona no celular que a família já tem</h3>
+        <p>Instala em iOS e Android pela tela inicial, sem loja. Depois da primeira visita, roda inteiro sem internet — inclusive os áudios. Carrega em aparelho antigo porque não há framework nem build. Para as lojas, empacota com Capacitor sem reescrever nada.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Uma semana de uso, medida</h2>
+    <p>Números de uma simulação de sete dias rodada <em>dentro do aplicativo de verdade</em> — mesmo montador de sessão, mesmo motor de repetição espaçada, mesma escada de produção. Perfil: 5 anos, inglês e alemão, sessões de 11 minutos.</p>
+
+    <div class="figs">
+      <div class="fig"><b>65</b><span>minutos na semana inteira</span></div>
+      <div class="fig"><b>107</b><span>atividades</span></div>
+      <div class="fig"><b>14</b><span>palavras (7 + 7)</span></div>
+      <div class="fig"><b>67</b><span>estrelas</span></div>
+    </div>
+
+    <p>Nenhum dia passou dos 11 minutos escolhidos. Ao fim dos sete dias: 7 palavras em “reconhece ao ouvir”, 6 em “responde com o corpo”, 1 em “repete com modelo”. <strong>Nenhuma chegou a “fala sozinha” — e isso está certo.</strong> Uma semana não constrói produção, e o app não empurra a criança para lá. Um concorrente mostraria um gráfico subindo; este mostra o degrau real.</p>
+  </section>
+
+  <!-- ================= PARTE 2: O BALANÇO HONESTO ================= -->
+  <section>
+    <div class="sec-head"><p class="eyebrow" style="margin:0">Parte 2 — O que você está comprando de verdade</p></div>
+    <h2>O balanço, sem maquiagem</h2>
+    <p>Um plano de lançamento construído sobre o que o produto <em>vai ter</em> não é um plano. Este é o estado real hoje.</p>
+
+    <div class="ledger">
+      <div class="ledger-row ok"><span class="mk">✓</span><span><b>O motor pedagógico, completo e testado</b><small>Escada de produção, repetição espaçada 1-3-7-14-30, 14 modos de atividade, sessão adaptativa que respeita a duração escolhida, painel dos responsáveis. 75 testes automatizados.</small></span><span class="tag">Pronto</span></div>
+      <div class="ledger-row ok"><span class="mk">✓</span><span><b>Nove idiomas de aprendizagem, seis de interface</b><small>Com variantes regionais, personagem-guia, cor e identidade sonora por idioma.</small></span><span class="tag">Pronto</span></div>
+      <div class="ledger-row ok"><span class="mk">✓</span><span><b>Instalação em iOS e Android, offline</b><small>PWA com ícones, tela cheia e cache completo. Empacotamento para lojas configurado.</small></span><span class="tag">Pronto</span></div>
+      <div class="ledger-row part"><span class="mk">◐</span><span><b>Conteúdo: 36 conceitos dos 250-350 previstos</b><small>324 entradas lexicais (36 conceitos × 9 idiomas, 10 campos cada). Cobre os dias 1 a 44 do currículo; as duas últimas fases — diálogos e revisão final — estão vazias. O pipeline de importação está pronto; faltam os dados.</small></span><span class="tag">~12%</span></div>
+      <div class="ledger-row part"><span class="mk">◐</span><span><b>Vozes e ilustrações</b><small>Hoje: voz sintética do sistema (qualidade varia por aparelho) e emoji como imagem. Funciona, mas não é o acabamento de um produto pago.</small></span><span class="tag">Provisório</span></div>
+      <div class="ledger-row no"><span class="mk">✕</span><span><b>Consentimento parental verificável forte</b><small>Exigido em alguns mercados sob COPPA/GDPR-K. Hoje: confirmação de adulto. Requer provedor externo.</small></span><span class="tag">Falta</span></div>
+      <div class="ledger-row no"><span class="mk">✕</span><span><b>Publicação nas lojas e cobrança</b><small>Dependem das suas contas de desenvolvedor Apple e Google e de um provedor de pagamento.</small></span><span class="tag">Falta</span></div>
+    </div>
+
+    <div class="note"><b>A leitura em uma frase:</b> a máquina está construída e provada; o conteúdo é uma semente. Isso define o lançamento inteiro — não dá para abrir em nove idiomas, mas dá para abrir fundo em <em>um par</em>.</div>
+  </section>
+
+  <!-- ================= PARTE 3: O LANÇAMENTO ================= -->
+  <section>
+    <div class="sec-head"><p class="eyebrow" style="margin:0">Parte 3 — Estratégia de lançamento</p></div>
+    <h2>A cunha: famílias que já vivem entre duas línguas</h2>
+
+    <p>Lançar “um app de idiomas para crianças” é entrar de frente contra empresas com orçamento de mídia. Lançar <em>para a mãe turca em Wels cujo filho entra no Kindergarten em setembro</em> é outra conversa — e é a única em que o LumiLínguas já tem vantagem real hoje.</p>
+
+    <p>Em 2023/24, <strong>30% das crianças nos jardins de infância austríacos não tinham o alemão como língua do dia a dia</strong> (Statistik Austria, via factsheet do Fundo de Integração — sem a Estíria). Essa família não precisa de “quatro idiomas”. Precisa de uma coisa só: a criança chegar ao Kindergarten entendendo o que a educadora diz.</p>
+
+    <p>O LumiLínguas é, por acidente de projeto, o produto certo para ela:</p>
+    <ul>
+      <li>O alemão <strong>austríaco</strong> é uma variante de primeira classe, não um “alemão genérico”.</li>
+      <li>Os pais configuram tudo <strong>em turco</strong> — e a criança aprende alemão. As duas camadas são independentes.</li>
+      <li>A área infantil <strong>não exige leitura nenhuma</strong>, o que importa quando ninguém em casa lê alemão.</li>
+      <li>Tudo fica no aparelho. Para uma família imigrante, “nenhum dado sai daqui” não é detalhe técnico.</li>
+    </ul>
+
+    <div class="note warn"><b>Por que não abrir global:</b> encher nove idiomas até 300 conceitos é um projeto de linguística de muitos meses. Encher <em>um par</em> até 150 conceitos é um projeto de algumas semanas. A cunha não é modéstia — é o que o estado do conteúdo permite fazer bem.</div>
+
+    <h2 style="margin-top:40px">As quatro fases</h2>
+
+    <div class="phase p0">
+      <div class="rail"><span class="dot">0</span><span class="line"></span></div>
+      <div class="body">
+        <h3>Piloto com famílias reais</h3>
+        <p class="when">Agora · custo ≈ 0 · 4 a 6 semanas</p>
+        <p>20 a 30 famílias em Wels/Linz, recrutadas por jardins de infância, associações de pais e associações da comunidade turca. Nada de loja: manda-se um link, instala na tela inicial. O conteúdo atual já cobre seis semanas de uso.</p>
+        <div class="gate"><b>Porta de saída:</b> a criança volta sozinha no dia 7? Essa é a única pergunta. Download não é métrica; retorno no sétimo dia é.</div>
+      </div>
+    </div>
+
+    <div class="phase p1">
+      <div class="rail"><span class="dot">1</span><span class="line"></span></div>
+      <div class="body">
+        <h3>Encher um par de idiomas</h3>
+        <p class="when">Depois do piloto · aqui está o custo real</p>
+        <p>Levar <strong>alemão (de-AT) com interface em turco</strong> de 36 para 150 conceitos: um linguista de educação infantil, gravações com falantes nativos (adultos e crianças) e ilustrações originais no lugar dos emoji. É o maior item do orçamento e o que separa demonstração de produto pago.</p>
+        <div class="gate"><b>Porta de saída:</b> 150 conceitos revisados, áudio nativo gravado, e as duas fases finais do currículo deixaram de estar vazias.</div>
+      </div>
+    </div>
+
+    <div class="phase p2">
+      <div class="rail"><span class="dot">2</span><span class="line"></span></div>
+      <div class="body">
+        <h3>Virar produto comprável</h3>
+        <p class="when">Requer suas credenciais</p>
+        <p>Empacotar com Capacitor e publicar na App Store e no Google Play, resolver o consentimento parental verificável com um provedor, ligar o pagamento e escrever a política de privacidade hospedada. Nenhuma dessas etapas depende de código novo — dependem de contas, contratos e revisão das lojas.</p>
+        <div class="gate"><b>Porta de saída:</b> aprovado na categoria infantil das duas lojas, com cobrança funcionando.</div>
+      </div>
+    </div>
+
+    <div class="phase p3">
+      <div class="rail"><span class="dot">3</span><span class="line"></span></div>
+      <div class="body">
+        <h3>Repetir a cunha, não alargá-la</h3>
+        <p class="when">Só depois de o par 1 vender</p>
+        <p>O segundo par não é “mais seis idiomas”: é o mesmo movimento para outra comunidade — bósnio/croata/sérvio como interface, alemão como alvo. A máquina não muda; só entra um pack de conteúdo e uma coluna de tradução. É aí que os nove idiomas deixam de ser promessa e viram catálogo.</p>
+        <div class="gate"><b>Porta de saída:</b> o custo de encher o par 2 cai em relação ao par 1. Se não cair, o processo de conteúdo é que precisa de conserto.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Preço</h2>
+    <p>Como não há servidor, não há custo por usuário — o que torna a assinatura mensal um modelo <em>desnecessariamente</em> hostil aqui. Três hipóteses para testar no piloto, não três certezas:</p>
+
+    <div class="tw"><table>
+      <thead><tr><th>Modelo</th><th>Faixa</th><th>A favor</th><th>Contra</th></tr></thead>
+      <tbody>
+        <tr><td><b>Compra única,<br>família</b></td><td class="num">€39-59</td><td>Casa com a ética do produto (sem assinatura, sem compra na área infantil). Diferencia de todo o mercado.</td><td>Receita não recorrente; exige volume.</td></tr>
+        <tr><td><b>Anual,<br>família</b></td><td class="num">€25-35/ano</td><td>Recorrência sem o atrito do mensal. Barato o bastante para não doer.</td><td>Precisa justificar a renovação com conteúdo novo.</td></tr>
+        <tr><td><b>Licença para<br>jardim de infância</b></td><td class="num">a definir</td><td>Um contrato alcança 20 famílias. É o canal, não só o preço.</td><td>Ciclo de venda longo; exige material para educadores.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="note warn"><b>Nota sobre os números acima:</b> as faixas partem de uma consulta rápida a apps infantis de referência (algo como €5 a €15 por mês), mas as fontes públicas se contradizem entre si e variam por região. Trate como ponto de partida para a conversa com as 30 famílias do piloto — não como pesquisa de mercado.</div>
+  </section>
+
+  <section>
+    <h2>Canais, na ordem</h2>
+    <p>Mídia paga é o último passo, não o primeiro. Com 30 famílias ainda não se sabe o que anunciar.</p>
+    <ul>
+      <li><strong>Jardins de infância e associações de pais</strong> em Wels/Linz. Uma educadora que recomenda vale mais que qualquer anúncio — e ela recomenda o que resolve o problema dela em sala.</li>
+      <li><strong>Associações da comunidade turca</strong> e redes locais de integração. A mensagem chega em turco, na interface que o pai vai realmente usar.</li>
+      <li><strong>Pediatras e centros de saúde infantil</strong>, onde a conversa sobre desenvolvimento da linguagem já acontece.</li>
+      <li><strong>Canal próprio, se fizer sentido:</strong> uma empresa com filiais e milhares de colaboradores tem, entre eles, centenas de pais de crianças de 3 a 7 anos. É distribuição que não se compra — vale testar antes de gastar o primeiro euro em mídia.</li>
+      <li><strong>Só então mídia paga</strong>, com o criativo escrito a partir das frases que as famílias do piloto usaram para descrever o app.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>O que medir</h2>
+    <p>O app já instrumenta tudo isto no painel dos responsáveis. Nenhuma métrica nova precisa ser construída.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Métrica</th><th>Por que ela, e não outra</th></tr></thead>
+      <tbody>
+        <tr><td><b>Retorno no dia 7</b><br><span class="proof">a criança, não o pai</span></td><td>Mede se a sessão é boa. Todo o resto é consequência disso.</td></tr>
+        <tr><td><b>Palavras que chegam a “fala sozinha”</b></td><td>É a promessa do produto virando número. Um app que só mostra “palavras vistas” está escondendo o que importa.</td></tr>
+        <tr><td><b>Retenção medida em 7 e 30 dias</b></td><td>O motor já calcula. É a prova de que o método funciona, e vira material de venda.</td></tr>
+        <tr><td><b>Sessões que terminam vs. abandonadas</b></td><td>Se a criança sai no meio, a duração escolhida está errada — e isso se conserta.</td></tr>
+        <tr><td><b>Aberturas do painel dos pais</b></td><td>Pai que acompanha é pai que renova. E são as quatro dicas diárias que o trazem de volta.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Os riscos, nomeados</h2>
+    <div class="tw"><table>
+      <thead><tr><th>Risco</th><th>Gravidade</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><b>Custo do conteúdo</b> — linguista, áudio nativo e ilustração para cada par de idiomas</td><td><b style="color:var(--stop)">Alto</b></td><td>É o risco principal. Fazer um par inteiro antes de prometer o segundo, e medir quanto custou de verdade.</td></tr>
+        <tr><td><b>Qualidade da voz sintética</b> varia por aparelho e pode soar mal justamente no alemão</td><td><b style="color:var(--warn)">Médio</b></td><td>Gravação nativa já está na fase 1. Testar nos aparelhos reais das 30 famílias do piloto.</td></tr>
+        <tr><td><b>Revisão das lojas</b> na categoria infantil é rigorosa</td><td><b style="color:var(--warn)">Médio</b></td><td>A favor: sem anúncios, sem chat, sem dados saindo do aparelho. O produto já está do lado certo da regra.</td></tr>
+        <tr><td><b>Consentimento verificável</b> exigido em alguns mercados</td><td><b style="color:var(--warn)">Médio</b></td><td>Contratar provedor na fase 2. Não bloqueia o piloto.</td></tr>
+        <tr><td><b>Cunha estreita demais</b> para sustentar um negócio</td><td><b style="color:var(--ink-3)">Baixo</b></td><td>A cunha é a porta de entrada, não o mercado. A fase 3 existe para isso — e a máquina já suporta nove idiomas.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Se for para fazer uma coisa esta semana</h2>
+    <p>Falar com dois jardins de infância em Wels e perguntar uma única coisa: <em>quantas crianças chegam aqui sem entender alemão, e o que vocês fazem hoje a respeito?</em></p>
+    <p>A resposta decide se a fase 0 começa com 30 famílias ou com 300 — e não custa nada descobrir.</p>
+  </section>
+
+  <div class="footer">
+    <div class="spectrum" style="margin-bottom:16px" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <p style="margin:0">Os números do produto vêm do código e dos testes do próprio aplicativo. O dado dos jardins de infância austríacos é do factsheet <em>Schule und Integration</em> do Österreichischer Integrationsfonds, com base na Kindertagesheimstatistik da Statistik Austria (2023/24, sem a Estíria) — <a href="https://www.integrationsfonds.at/fileadmin/content/AT/monitor/Factsheet_Schule_und_Integration_2025-08-29.pdf">fonte</a>. As faixas de preço são hipóteses a testar, não pesquisa de mercado.</p>
+  </div>
+
+</div>
