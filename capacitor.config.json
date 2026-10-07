@@ -1,0 +1,21 @@
+{
+  "appId": "app.lumilinguas",
+  "appName": "LumiLínguas",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "backgroundColor": "#FFFDF9",
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "always",
+    "limitsNavigationsToAppBoundDomains": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#FFFDF9",
+      "showSpinner": false
+    }
+  }
+}

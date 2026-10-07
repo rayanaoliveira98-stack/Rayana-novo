@@ -1,0 +1,10 @@
+{
+  "name": "lumilinguas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LumiLínguas — base em até 4 idiomas para crianças de 3 a 7 anos em uma jornada de 60 dias",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "npx --yes http-server -p 8080 -c-1 ."
+  }
+}
