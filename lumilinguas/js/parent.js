@@ -651,7 +651,8 @@ t('ladder.silence')));
           Math.round((s.durationMs || 0) / 60000) + ' min · ' +
           s.answered + ' ' + t('sessions.activities') +
           (s.hard ? ' · ' + s.hard + ' ' + t('sessions.extraHelp') : '') +
-          (s.shortened ? ' · ' + t('sessions.shortened') : '')));
+          (s.shortened ? ' · ' + t('sessions.shortened') : '') +
+          (s.interrupted ? ' · ' + t('session.interrupted') : '')));
       });
     }
 

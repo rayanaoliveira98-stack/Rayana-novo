@@ -65,6 +65,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+/* O `display` das nossas classes vence o [hidden] da folha do navegador, e um
+   botão escondido continuava na tela. Esta regra devolve o sentido do atributo. */
+[hidden] { display: none !important; }
+
 html, body { height: 100%; }
 
 body {
@@ -481,6 +485,22 @@ button { font-family: inherit; border: 0; cursor: pointer; color: var(--ink); fo
   background: linear-gradient(90deg, var(--lang-color), color-mix(in srgb, var(--lang-color) 60%, #fff));
   transition: width .5s cubic-bezier(.3, .9, .3, 1);
 }
+
+/* Segurar para sair: o anel se enche enquanto a criança mantém o dedo.
+   O preenchimento vem de --hold (0→1), escrito pelo JS a cada quadro — não
+   é animação nem transição, então continua funcionando com movimento
+   reduzido, que é justamente quando o aviso visual mais importa. */
+#btn-session-exit { position: relative; --hold: 0; touch-action: none; }
+#btn-session-exit::after {
+  content: ''; position: absolute; inset: -5px; border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(var(--danger) calc(var(--hold) * 360deg), transparent 0);
+  -webkit-mask: radial-gradient(circle, transparent 0 59%, #000 60%);
+          mask: radial-gradient(circle, transparent 0 59%, #000 60%);
+  opacity: 0;
+}
+#btn-session-exit.holding::after { opacity: 1; }
+#btn-session-exit.holding { transform: scale(.94); }
 
 .session-stars {
   display: flex; align-items: center; gap: 5px;

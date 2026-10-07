@@ -26,8 +26,9 @@
     set('#splash-empty p', T.t('splash.setupFirst'));
     set('#btn-splash-setup', T.t('splash.parents'));
     set('.parent-title', T.t('panel.title'));
-    [['btn-home-profiles', 'data.profiles'], ['btn-home-parent', 'gate.title'],
-     ['btn-map', 'common.day'], ['btn-session-exit', 'common.back']
+    [['btn-home-profiles', 'nav.switchChild'], ['btn-home-parent', 'gate.title'],
+     ['btn-map', 'nav.map'], ['btn-stickers', 'nav.stickers'],
+     ['btn-session-exit', 'session.exit']
     ].forEach(function (pair) {
       var b = document.getElementById(pair[0]);
       if (b) b.setAttribute('aria-label', T.t(pair[1]));
@@ -139,6 +140,9 @@
   function goHome() {
     var p = profile();
     if (!p) return renderSplash();
+    /* Botão de trocar de criança: só existe se houver outra criança. Senão
+     * leva a uma tela com um único botão — e some do caminho da pequena. */
+    $('btn-home-profiles').hidden = Object.keys(data.profiles).length < 2;
     var L = LANGS.get(p.langs[0]);
     $('home-char').textContent = L.character.emoji;
     $('home-char-wrap').style.background =
@@ -415,6 +419,77 @@
     save();
   }
 
+  /* Sair da sessão exige SEGURAR o botão.
+   *
+   * Um ✕ de um toque no canto da tela é um botão de autodestruição nas mãos
+   * de quem tem 3 anos: medindo, um toque sem querer apagava uma sessão 58%
+   * completa — sem adesivo, sem celebração e sem registro para os pais.
+   * Segurar é um gesto deliberado que uma mão de passagem não produz, e não
+   * exige ler nada (um aviso "tem certeza?" seria inútil para ela).
+   * O anel se enche enquanto a criança segura; soltar antes cancela. */
+  var SEGURAR_MS = 1100;
+
+  function armarSaidaPorPressao(btn) {
+    var t0 = 0, raf = null;
+
+    function pintar() {
+      var f = Math.min(1, (Date.now() - t0) / SEGURAR_MS);
+      btn.style.setProperty('--hold', f.toFixed(3));
+      if (f >= 1) return concluir();
+      raf = requestAnimationFrame(pintar);
+    }
+    function parar() {
+      if (raf) cancelAnimationFrame(raf);
+      raf = null;
+      btn.classList.remove('holding');
+      btn.style.setProperty('--hold', '0');
+    }
+    function concluir() { parar(); sairDaSessao(); }
+
+    btn.addEventListener('pointerdown', function (e) {
+      if (!running) return;
+      e.preventDefault();
+      t0 = Date.now();
+      btn.classList.add('holding');
+      FX.buzz(10);
+      raf = requestAnimationFrame(pintar);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+      btn.addEventListener(ev, parar);
+    });
+    /* Teclado (adulto): não há risco de toque acidental, então sai direto. */
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sairDaSessao(); }
+    });
+  }
+
+  /* Saída no meio: o que a criança fez até aqui não é jogado fora.
+   * O progresso de cada palavra já foi gravado a cada passo; falta registrar a
+   * sessão em si, para o responsável ver que houve uso hoje. Não ganha o
+   * adesivo do dia nem avança a jornada — isso continua sendo de quem termina. */
+  function sairDaSessao() {
+    var r = running;
+    AUDIO.stop();
+    FX.mascotHide();
+    running = null;
+    if (r && r.stats.answered > 0) {
+      var p = profile();
+      store.logSession(data, p.id, {
+        date: new Date().toISOString(),
+        day: p.journeyDay,
+        durationMs: Date.now() - r.startedAt,
+        answered: r.stats.answered,
+        hard: r.stats.hard,
+        shortened: r.shortened,
+        interrupted: true,
+        newConcepts: {},
+        tips: []
+      });
+      save();
+    }
+    goHome();
+  }
+
   function finishSession() {
     var r = running; running = null;
     var p = profile();
@@ -490,18 +565,17 @@
     $('btn-map-back').onclick = goHome;
     $('btn-stickers-back').onclick = goHome;
     $('btn-home-profiles').onclick = renderSplash;
-    $('btn-session-exit').onclick = function () {
-      AUDIO.stop();
-      FX.mascotHide();
-      // exigir gesto de adulto evitaria saídas acidentais; aqui: toque duplo
-      running = null;
-      goHome();
-    };
+    armarSaidaPorPressao($('btn-session-exit'));
     $('btn-splash-setup').onclick = function () { g.LUMI_PARENT.openGate('onboarding'); };
     $('btn-home-parent').onclick = function () { g.LUMI_PARENT.openGate('dashboard'); };
 
     applyUILang();
-    renderSplash();
+
+    /* Com uma criança só, o seletor de perfil é uma tela a mais entre ela e o
+     * botão de brincar — e uma tela que ela não entende. Vai direto para casa.
+     * Com duas ou mais, o seletor volta a fazer sentido e reaparece. */
+    if (Object.keys(data.profiles).length === 1 && profile()) goHome();
+    else renderSplash();
   }
 
   g.LUMI_APP = {

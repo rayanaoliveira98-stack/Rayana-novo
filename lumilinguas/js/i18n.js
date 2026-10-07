@@ -617,6 +617,27 @@
       es: 'Antes de la primera aventura, un adulto lo configura todo en 2 minutos.',
       it: 'Prima della prima avventura, un adulto configura tutto in 2 minuti.',
       tr: 'İlk maceradan önce bir yetişkin her şeyi 2 dakikada ayarlar.' },
+    /* ---------- rótulos dos botões da área infantil ----------
+       A criança não lê; estes textos existem para leitores de tela e para o
+       adulto que ajuda. Antes o mapa se anunciava como "Dia" e o botão de
+       sair como "← Voltar" — rótulos herdados de outras chaves. */
+    'nav.map': {
+      pt: 'Mapa da jornada', en: 'Journey map', de: 'Reisekarte',
+      es: 'Mapa del viaje', it: 'Mappa del percorso', tr: 'Yolculuk haritası' },
+    'nav.stickers': {
+      pt: 'Meus adesivos', en: 'My stickers', de: 'Meine Sticker',
+      es: 'Mis pegatinas', it: 'I miei adesivi', tr: 'Çıkartmalarım' },
+    'nav.switchChild': {
+      pt: 'Trocar de criança', en: 'Switch child', de: 'Kind wechseln',
+      es: 'Cambiar de niño', it: 'Cambia bambino', tr: 'Çocuk değiştir' },
+    'session.exit': {
+      pt: 'Segure para sair', en: 'Hold to leave', de: 'Zum Beenden halten',
+      es: 'Mantén pulsado para salir', it: 'Tieni premuto per uscire',
+      tr: 'Çıkmak için basılı tutun' },
+    'session.interrupted': {
+      pt: 'sessão interrompida', en: 'session interrupted', de: 'Einheit abgebrochen',
+      es: 'sesión interrumpida', it: 'sessione interrotta', tr: 'oturum yarıda kaldı' },
+
     'splash.parents': {
       pt: '👨‍👩‍👧 Área dos responsáveis', en: '👨‍👩‍👧 Parents’ area',
       de: '👨‍👩‍👧 Elternbereich', es: '👨‍👩‍👧 Área de los padres',

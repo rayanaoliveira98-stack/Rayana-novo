@@ -126,3 +126,40 @@ test('nada sombreia a função t() de tradução', () => {
       sombras.join(' | '));
   });
 });
+
+/* Os botões da área infantil precisam dizer o que fazem.
+ *
+ * Eles já nasceram apontando para chaves de outra coisa: o mapa se anunciava
+ * como "Dia" e o botão de sair da sessão como "← Voltar" — com a seta e tudo,
+ * num botão que mostra ✕. Para quem navega por leitor de tela (ou para o
+ * adulto que ajuda a criança), isso é um rótulo errado, não um rótulo feio. */
+test('cada botão da área infantil usa o próprio rótulo', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const src = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+  const T = require('../js/i18n.js');
+
+  [['btn-map', 'nav.map'],
+   ['btn-stickers', 'nav.stickers'],
+   ['btn-home-profiles', 'nav.switchChild'],
+   ['btn-session-exit', 'session.exit']
+  ].forEach(([id, chave]) => {
+    assert.ok(T.STRINGS[chave], `chave "${chave}" não existe no i18n`);
+    assert.ok(src.includes(`['${id}', '${chave}']`),
+      `"${id}" não está ligado a "${chave}" em app.js`);
+  });
+});
+
+/* Sair da sessão tem de exigir um gesto deliberado.
+ * Um ✕ de um toque apagava uma sessão mais da metade feita. */
+test('a saída da sessão exige segurar, não um toque', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const src = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+  assert.ok(/SEGURAR_MS\s*=\s*\d{3,}/.test(src),
+    'não há tempo mínimo de pressão para sair da sessão');
+  assert.ok(!/\$\('btn-session-exit'\)\.onclick/.test(src),
+    'o botão de sair voltou a ser um onclick de um toque só');
+  assert.ok(/interrupted:\s*true/.test(src),
+    'a sessão abandonada não é registrada para os responsáveis');
+});
