@@ -22,6 +22,7 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Blocos separados por idioma (3-4 anos) e comparação entre idiomas (5-7 anos).
 - 14 modos de atividade: apresentar, ouvir-e-tocar, repetir, som→imagem, encontrar no cenário, qual desapareceu, arrastar, seguir instrução, "quem falou?", **jogo da memória auditiva**, **imite o personagem**, **história interativa**, **música e rima**, **caça ao objeto em casa**.
 - Momento especial do dia em rodízio (história → música → caça em casa), para nenhum dia repetir o anterior.
+- **Melodias conhecidas como ponte** (`content/songs.js`): a música do dia usa uma melodia que a criança provavelmente já canta na língua de casa — e que existe com letra tradicional própria nos nove idiomas. Quem canta "Brilha, brilha, estrelinha" reconhece a mesma melodia em alemão no primeiro compasso. Só entram melodias de domínio público, sintetizadas em notas pelo próprio app; título sem conferência de nativo não é dito em voz alta (hoje: 7 dos 9 idiomas conferidos; faltam chinês e japonês).
 - Camada de dinâmica: transição entre atividades, mascote-guia que pensa/escuta/comemora, partículas no toque, estrela que voa para o contador, vibração suave, cenários que respiram, casa com o colecionado flutuando, mapa em trilha serpenteante, adesivos que falam ao toque.
 - Ajuda sem pressão: se a criança fica parada ~9 s, o áudio volta sozinho e a resposta certa pulsa de leve.
 - Voz sintética por idioma (velocidade normal + modo lento 🐢 + repetição por toque).
@@ -31,7 +32,7 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 - Painel dos responsáveis: progresso por idioma, estados, retenção 1/3/7/14/30d, dificuldades, histórico, tempo de uso, dicas, configurações, troca de PIN, multi-perfil, exportação JSON e exclusão total.
 - Painel administrativo (`admin.html`): revisão de todos os campos e variações, teste de áudio, validador, importação JSON/CSV sem rebuild, exportação de packs.
 - Offline após a primeira visita (Service Worker) + instalação PWA (iOS/Android).
-- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência, recuperação de PIN, cobertura dos 6 idiomas da interface, duração da sessão e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (74 testes).
+- Testes automatizados: SRS, escada de produção, montagem/alternância de sessão, portão parental, integridade dos packs, persistência, recuperação de PIN, cobertura dos 6 idiomas da interface, duração da sessão, domínio público das melodias e uma **simulação dos 60 dias completos** que exige que a criança chegue a falar (83 testes).
 
 ## ⚠️ Funcional com limitação conhecida
 
@@ -40,7 +41,7 @@ concluído nesta versão está listado abaixo com a evolução necessária.
 | Reconhecimento de fala | Web Speech API quando existe; onde não existe, o app usa detecção de voz por volume (sabe que a criança falou, não o que falou) e, sem microfone, ela fala em voz alta e confirma no botão | Produção: motor infantil dedicado on-device (ex.: Vosk/whisper.cpp compilado p/ mobile) com modelos acústicos de voz infantil, para avaliar a pronúncia e não só a presença da fala |
 | Vozes | TTS do sistema — qualidade varia por aparelho; "vozes diferentes" = voz do sistema + gravações da família | Produção: pacotes de áudio gravados por falantes nativos (adultos e crianças), baixáveis por idioma |
 | Ilustrações | Emoji do sistema (originais, sem copyright de terceiros) | Produção: ilustrações originais encomendadas; basta trocar `emoji` por caminho de imagem no currículo |
-| Músicas e rimas | Atividade pronta: melodia por idioma + palavra cantada em compasso de três repetições, montada a partir do vocabulário do dia | Produção musical original gravada (canções completas com refrão) no lugar da melodia sintetizada |
+| Músicas e rimas | Atividade pronta sobre **duas melodias conhecidas de domínio público** (*Ah! vous dirai-je, maman*, 1761, e *Frère Jacques*, séc. XVIII), as mesmas nos nove idiomas e com título tradicional próprio em cada um. O app **toca** a melodia (notas sintetizadas, nunca gravação de terceiros) e **fala** as palavras por cima | O app ainda não CANTA a palavra na nota — isso exige voz gravada. Produção: canções completas gravadas por nativos, e mais melodias tradicionais por região |
 | Histórias interativas | Atividade pronta: 3 cenas narradas com escolha da criança a cada cena, montadas a partir do vocabulário já trabalhado | Roteiros autorais ilustrados por tema, escritos por especialistas, e minibiografias de personagens |
 | Notificação do horário habitual | Horário é salvo, mas não notifica | `@capacitor/local-notifications` no empacotamento nativo — PWA no iOS não permite notificação local |
 | Publicação nas lojas | `capacitor.config.json` pronto e o app empacota sem build; o passo a passo está em [LOJAS.md](LOJAS.md) | Contas de desenvolvedor (Apple e Google), assinatura dos pacotes e submissão dependem das suas credenciais |

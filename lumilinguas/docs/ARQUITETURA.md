@@ -55,6 +55,7 @@ lumilinguas/
 │   └── parent.js         # onboarding, painel dos responsáveis, gravação de voz
 ├── content/
 │   ├── curriculum.js     # 36 conceitos + jornada de 60 dias em 9 fases
+│   ├── songs.js          # ★ melodias conhecidas de domínio público (puro, testado)
 │   └── pack-{pt,en,de,es,fr,it,tr,zh,ja}.js   # 9 packs completos
 └── tests/                # node --test (59 testes, incl. jornada de 60 dias)
 ```

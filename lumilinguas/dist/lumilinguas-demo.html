@@ -2252,6 +2252,140 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
 
 </script>
   <script>
+/* LumiLínguas — Melodias conhecidas, para ancorar vocabulário.
+ * ============================================================================
+ * POR QUE ISTO EXISTE
+ *
+ * A criança já sabe uma melodia. Quando as palavras novas chegam montadas
+ * nela, ela não precisa segurar duas coisas ao mesmo tempo: a melodia já está
+ * na cabeça e sobra atenção para a língua. É a ponte mais barata que existe
+ * entre o que ela conhece e o que ela está aprendendo.
+ *
+ * O truque está na escolha: as duas melodias abaixo são as MESMAS nos nove
+ * idiomas, com letras próprias e antigas em cada um. Uma criança brasileira
+ * que canta "Brilha, brilha, estrelinha" reconhece a melodia no alemão
+ * "Morgen kommt der Weihnachtsmann" no primeiro compasso — e é aí que a
+ * associação acontece.
+ *
+ * DIREITOS — a regra que define o que entra aqui
+ *
+ * Só entram melodias velhas o bastante para serem de domínio público, e o app
+ * SINTETIZA as notas (Web Audio) em vez de tocar gravação. Isso importa: a
+ * melodia e a letra tradicional são livres, mas ARRANJOS e GRAVAÇÕES modernas
+ * continuam protegidos. Por isso aqui não há áudio de terceiros — há uma
+ * sequência de notas escrita neste arquivo.
+ *
+ * Nada de "Baby Shark" e afins: a melodia pode ser tradicional, mas a versão
+ * que a criança conhece é um arranjo protegido. Fora.
+ *
+ * `verificado: false` marca o título que ainda não foi conferido por um
+ * falante nativo. O app não mostra o que não está verificado — ver
+ * `tituloPara()` abaixo. É a mesma regra dos packs: nada de conteúdo
+ * inventado passando por conteúdo revisado.
+ * ========================================================================== */
+(function (g) {
+  'use strict';
+
+  /* Dó maior, uma oitava e meia. Hz. */
+  var N = {
+    C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23,
+    G4: 392.00, A4: 440.00, B4: 493.88, C5: 523.25, D5: 587.33
+  };
+
+  /* Cada nota é [frequência, tempos]. 1 tempo ≈ uma semínima. */
+  var MELODIAS = {
+    /* "Ah! vous dirai-je, maman" — impressa em Paris em 1761, origem anônima.
+     * É a melodia de Twinkle Twinkle, do ABC e de Baa Baa Black Sheep, e a
+     * mesma que Mozart usou nas variações K. 265. Domínio público. */
+    estrela: {
+      id: 'estrela',
+      origem: 'Ah! vous dirai-je, maman (França, impressa em 1761)',
+      dominioPublico: true,
+      andamento: 0.46,                 // segundos por tempo
+      frase: [
+        [N.C4, 1], [N.C4, 1], [N.G4, 1], [N.G4, 1],
+        [N.A4, 1], [N.A4, 1], [N.G4, 2],
+        [N.F4, 1], [N.F4, 1], [N.E4, 1], [N.E4, 1],
+        [N.D4, 1], [N.D4, 1], [N.C4, 2]
+      ],
+      /* Os títulos tradicionais em cada idioma. Mesma melodia, letra própria. */
+      titulos: {
+        pt: { titulo: 'Brilha, brilha, estrelinha', verificado: true },
+        en: { titulo: 'Twinkle, Twinkle, Little Star', verificado: true },
+        de: { titulo: 'Morgen kommt der Weihnachtsmann', verificado: true },
+        es: { titulo: 'Brilla, brilla, estrellita', verificado: true },
+        fr: { titulo: 'Ah ! vous dirai-je, maman', verificado: true },
+        it: { titulo: 'Brilla, brilla, piccola stella', verificado: true },
+        tr: { titulo: 'Daha Dün Annemizin', verificado: true },
+        /* Títulos consagrados, mas ainda sem conferência de falante nativo. */
+        zh: { titulo: '小星星', verificado: false },
+        ja: { titulo: 'きらきら星', verificado: false }
+      }
+    },
+
+    /* "Frère Jacques" — cânone francês do século XVIII, de autoria desconhecida
+     * (manuscrito por volta de 1780, publicado em 1811). Domínio público. */
+    irmao: {
+      id: 'irmao',
+      origem: 'Frère Jacques (França, séc. XVIII)',
+      dominioPublico: true,
+      andamento: 0.42,
+      frase: [
+        [N.C4, 1], [N.D4, 1], [N.E4, 1], [N.C4, 1],
+        [N.C4, 1], [N.D4, 1], [N.E4, 1], [N.C4, 1],
+        [N.E4, 1], [N.F4, 1], [N.G4, 2],
+        [N.E4, 1], [N.F4, 1], [N.G4, 2]
+      ],
+      titulos: {
+        pt: { titulo: 'Frei João', verificado: true },
+        en: { titulo: 'Are You Sleeping (Brother John)', verificado: true },
+        de: { titulo: 'Bruder Jakob', verificado: true },
+        es: { titulo: 'Martinillo', verificado: true },
+        fr: { titulo: 'Frère Jacques', verificado: true },
+        it: { titulo: 'Fra Martino', verificado: true },
+        tr: { titulo: 'Tembel Çocuk', verificado: false },
+        zh: { titulo: '两只老虎', verificado: false },
+        ja: { titulo: 'グーチョキパーでなにつくろう', verificado: false }
+      }
+    }
+  };
+
+  var ORDEM = ['estrela', 'irmao'];
+
+  var api = {
+    MELODIAS: MELODIAS,
+    ids: ORDEM,
+
+    get: function (id) { return MELODIAS[id] || null; },
+
+    /* A melodia do dia, em rodízio — nunca dois dias seguidos com a mesma. */
+    forDay: function (day) {
+      return MELODIAS[ORDEM[((day || 1) - 1) % ORDEM.length]];
+    },
+
+    /* O título tradicional naquele idioma, SE estiver verificado.
+     * Sem verificação devolve null, e a atividade toca só a melodia: melhor
+     * uma melodia sem nome do que um nome possivelmente errado dito em voz
+     * alta para uma criança que está aprendendo aquela língua. */
+    tituloPara: function (melodia, lang) {
+      var t = melodia && melodia.titulos && melodia.titulos[lang];
+      return t && t.verificado ? t.titulo : null;
+    },
+
+    /* Em quantos idiomas esta melodia já pode ser anunciada pelo nome. */
+    idiomasVerificados: function (id) {
+      var m = MELODIAS[id];
+      if (!m) return [];
+      return Object.keys(m.titulos).filter(function (l) { return m.titulos[l].verificado; });
+    }
+  };
+
+  g.LUMI_SONGS = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
 /* LumiLínguas — Pack de conteúdo: Português (Brasil).
  * Chaves: word=palavra, art=com artigo, pl=plural, adj=frase adjetiva,
  * act=ação/verbo, sen=frase simples, q=pergunta, a=resposta,
@@ -3988,6 +4122,30 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
     (freqs || [523, 659, 784]).forEach(function (f, i) { tone(f, i * 0.14, 0.22, 'sine', 0.1); });
   }
 
+  /* Toca uma melodia: lista de [frequência, tempos].
+   * Devolve uma Promise que resolve quando a última nota termina, para a
+   * atividade conseguir sincronizar a palavra com a frase musical.
+   * As notas são sintetizadas aqui — nunca há gravação de terceiros. */
+  function melody(notas, opts) {
+    opts = opts || {};
+    var porTempo = opts.beat || 0.45;
+    var ganho = opts.gain || 0.085;
+    var t = opts.delay || 0;
+    (notas || []).forEach(function (n) {
+      var dur = n[1] * porTempo;
+      // 0.85 do valor: deixa um respiro entre as notas, senão vira zumbido
+      tone(n[0], t, dur * 0.85, 'triangle', ganho);
+      t += dur;
+    });
+    return new Promise(function (r) { setTimeout(r, (t + 0.1) * 1000); });
+  }
+
+  /* Duração total de uma melodia, em ms. */
+  function melodyMs(notas, beat) {
+    var tempos = (notas || []).reduce(function (a, n) { return a + n[1]; }, 0);
+    return tempos * (beat || 0.45) * 1000;
+  }
+
   /* Feedback positivo tranquilo (nunca sons negativos). */
   function chimeGood() { tone(660, 0, 0.15, 'sine', 0.1); tone(880, 0.12, 0.25, 'sine', 0.1); }
   function chimeSoft() { tone(440, 0, 0.2, 'sine', 0.07); } // "vamos ouvir de novo" — neutro e calmo
@@ -4107,7 +4265,8 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
 
   g.LUMI_AUDIO = {
     supportsTTS: supportsTTS, speak: speak, speakConcept: speakConcept, stop: stop,
-    jingle: jingle, chimeGood: chimeGood, chimeSoft: chimeSoft, setMuted: setMuted,
+    jingle: jingle, melody: melody, melodyMs: melodyMs,
+    chimeGood: chimeGood, chimeSoft: chimeSoft, setMuted: setMuted,
     saveRecording: saveRecording, getRecording: getRecording,
     deleteRecordings: deleteRecordings, playBlob: playBlob, createRecorder: createRecorder
   };
@@ -5180,35 +5339,68 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
 
   /* ---------- 4. Música e rima ---------- */
 
-  /* Rima original montada com o vocabulário do dia: uma melodia simples
-   * toca enquanto as palavras aparecem no ritmo. Cantar fixa prosódia —
-   * por isso a palavra é repetida três vezes em compasso. */
+  /* Monta a atividade sobre uma melodia que a criança JÁ CONHECE.
+   *
+   * As melodias vivem em content/songs.js — são de domínio público e as mesmas
+   * nos nove idiomas, com letra tradicional própria em cada um. A criança que
+   * canta "Brilha, brilha, estrelinha" reconhece a melodia no alemão logo no
+   * primeiro compasso, e é nesse reconhecimento que a palavra nova se apoia.
+   *
+   * A ordem importa:
+   *   1. a melodia sozinha  — "eu conheço isso!"
+   *   2. o nome dela naquele idioma — a ponte entre o que ela sabe e a língua
+   *   3. as palavras do dia em cima da melodia — a carona
+   *
+   * Honestidade: o app TOCA a melodia (notas sintetizadas) e FALA as palavras.
+   * Ele não canta a palavra na nota — isso exige voz gravada, que está no
+   * STATUS como pendência de produção. */
   function song(env, step, container) {
     return new Promise(function (resolve) {
       var L = LANGS.get(step.lang);
+      var SONGS = g.LUMI_SONGS;
       var words = playable(step, 3);
+      var melodia = SONGS ? SONGS.forDay(step.journeyDay || 1) : null;
+      var titulo = melodia ? SONGS.tituloPara(melodia, step.lang) : null;
+
       var card = el('div', 'stage-card song-card');
-      card.appendChild(el('div', 'task-hint', '🎵'));
+      card.appendChild(el('div', 'task-hint', '\uD83C\uDFB5'));
       var stage = el('div', 'song-stage');
       card.appendChild(stage);
       container.appendChild(card);
 
       var notes = el('div', 'song-notes');
-      ['🎵', '🎶', '🎵', '🎶', '🎵'].forEach(function (n, i) {
+      ['\uD83C\uDFB5', '\uD83C\uDFB6', '\uD83C\uDFB5', '\uD83C\uDFB6', '\uD83C\uDFB5'].forEach(function (n, i) {
         var s = el('span', 'song-note', n);
         s.style.animationDelay = (i * 0.32) + 's';
         notes.appendChild(s);
       });
       card.appendChild(notes);
 
-      var chain = Promise.resolve();
-      words.forEach(function (id, wi) {
+      /* Sem o módulo de melodias, cai no jingle do idioma: a atividade
+       * continua funcionando, só perde a ponte. */
+      function tocarFrase() {
+        if (!melodia) { AUDIO.jingle(L.jingle); return new Promise(function (r) { setTimeout(r, 700); }); }
+        return AUDIO.melody(melodia.frase, { beat: melodia.andamento });
+      }
+
+      var nota = el('div', 'song-word', '\uD83C\uDFB5');
+      stage.appendChild(nota);
+
+      /* 1 + 2: a melodia conhecida e, se o título estiver verificado naquele
+       * idioma, o nome dela — dito pela voz do idioma que ela está aprendendo. */
+      var abertura = tocarFrase().then(function () {
+        if (!titulo) return null;
+        return AUDIO.speak(titulo, env.ttsTag(step.lang));
+      });
+
+      // 3: cada palavra do dia ganha a melodia por baixo
+      var chain = abertura;
+      words.forEach(function (id) {
         chain = chain.then(function () {
           stage.innerHTML = '';
           var e = el('div', 'song-word', CUR.get(id).emoji);
           stage.appendChild(e);
-          AUDIO.jingle(L.jingle);
-          // três repetições em compasso: a rima nasce da repetição
+          tocarFrase();                     // toca junto, não antes
           return speakField(env, step.lang, id, 'word')
             .then(function () { return speakField(env, step.lang, id, 'word'); })
             .then(function () { return speakField(env, step.lang, id, 'adj'); })
@@ -5220,7 +5412,8 @@ body.reduce-motion .flip-card.done .flip-inner { transform: rotateY(180deg); }
       });
 
       chain.then(function () {
-        AUDIO.jingle(L.jingle);
+        return tocarFrase();
+      }).then(function () {
         praise(env, step.lang, stage).then(function () {
           resolve({ kind: 'listen', result: 'ok' });
         });

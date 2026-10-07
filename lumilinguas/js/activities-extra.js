@@ -198,35 +198,68 @@
 
   /* ---------- 4. Música e rima ---------- */
 
-  /* Rima original montada com o vocabulário do dia: uma melodia simples
-   * toca enquanto as palavras aparecem no ritmo. Cantar fixa prosódia —
-   * por isso a palavra é repetida três vezes em compasso. */
+  /* Monta a atividade sobre uma melodia que a criança JÁ CONHECE.
+   *
+   * As melodias vivem em content/songs.js — são de domínio público e as mesmas
+   * nos nove idiomas, com letra tradicional própria em cada um. A criança que
+   * canta "Brilha, brilha, estrelinha" reconhece a melodia no alemão logo no
+   * primeiro compasso, e é nesse reconhecimento que a palavra nova se apoia.
+   *
+   * A ordem importa:
+   *   1. a melodia sozinha  — "eu conheço isso!"
+   *   2. o nome dela naquele idioma — a ponte entre o que ela sabe e a língua
+   *   3. as palavras do dia em cima da melodia — a carona
+   *
+   * Honestidade: o app TOCA a melodia (notas sintetizadas) e FALA as palavras.
+   * Ele não canta a palavra na nota — isso exige voz gravada, que está no
+   * STATUS como pendência de produção. */
   function song(env, step, container) {
     return new Promise(function (resolve) {
       var L = LANGS.get(step.lang);
+      var SONGS = g.LUMI_SONGS;
       var words = playable(step, 3);
+      var melodia = SONGS ? SONGS.forDay(step.journeyDay || 1) : null;
+      var titulo = melodia ? SONGS.tituloPara(melodia, step.lang) : null;
+
       var card = el('div', 'stage-card song-card');
-      card.appendChild(el('div', 'task-hint', '🎵'));
+      card.appendChild(el('div', 'task-hint', '\uD83C\uDFB5'));
       var stage = el('div', 'song-stage');
       card.appendChild(stage);
       container.appendChild(card);
 
       var notes = el('div', 'song-notes');
-      ['🎵', '🎶', '🎵', '🎶', '🎵'].forEach(function (n, i) {
+      ['\uD83C\uDFB5', '\uD83C\uDFB6', '\uD83C\uDFB5', '\uD83C\uDFB6', '\uD83C\uDFB5'].forEach(function (n, i) {
         var s = el('span', 'song-note', n);
         s.style.animationDelay = (i * 0.32) + 's';
         notes.appendChild(s);
       });
       card.appendChild(notes);
 
-      var chain = Promise.resolve();
-      words.forEach(function (id, wi) {
+      /* Sem o módulo de melodias, cai no jingle do idioma: a atividade
+       * continua funcionando, só perde a ponte. */
+      function tocarFrase() {
+        if (!melodia) { AUDIO.jingle(L.jingle); return new Promise(function (r) { setTimeout(r, 700); }); }
+        return AUDIO.melody(melodia.frase, { beat: melodia.andamento });
+      }
+
+      var nota = el('div', 'song-word', '\uD83C\uDFB5');
+      stage.appendChild(nota);
+
+      /* 1 + 2: a melodia conhecida e, se o título estiver verificado naquele
+       * idioma, o nome dela — dito pela voz do idioma que ela está aprendendo. */
+      var abertura = tocarFrase().then(function () {
+        if (!titulo) return null;
+        return AUDIO.speak(titulo, env.ttsTag(step.lang));
+      });
+
+      // 3: cada palavra do dia ganha a melodia por baixo
+      var chain = abertura;
+      words.forEach(function (id) {
         chain = chain.then(function () {
           stage.innerHTML = '';
           var e = el('div', 'song-word', CUR.get(id).emoji);
           stage.appendChild(e);
-          AUDIO.jingle(L.jingle);
-          // três repetições em compasso: a rima nasce da repetição
+          tocarFrase();                     // toca junto, não antes
           return speakField(env, step.lang, id, 'word')
             .then(function () { return speakField(env, step.lang, id, 'word'); })
             .then(function () { return speakField(env, step.lang, id, 'adj'); })
@@ -238,7 +271,8 @@
       });
 
       chain.then(function () {
-        AUDIO.jingle(L.jingle);
+        return tocarFrase();
+      }).then(function () {
         praise(env, step.lang, stage).then(function () {
           resolve({ kind: 'listen', result: 'ok' });
         });

@@ -34,6 +34,7 @@ var ASSETS = [
   'js/parent.js',
   'js/app.js',
   'content/curriculum.js',
+  'content/songs.js',
   'content/pack-pt.js',
   'content/pack-en.js',
   'content/pack-de.js',

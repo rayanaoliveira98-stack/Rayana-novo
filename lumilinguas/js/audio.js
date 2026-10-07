@@ -87,6 +87,30 @@
     (freqs || [523, 659, 784]).forEach(function (f, i) { tone(f, i * 0.14, 0.22, 'sine', 0.1); });
   }
 
+  /* Toca uma melodia: lista de [frequência, tempos].
+   * Devolve uma Promise que resolve quando a última nota termina, para a
+   * atividade conseguir sincronizar a palavra com a frase musical.
+   * As notas são sintetizadas aqui — nunca há gravação de terceiros. */
+  function melody(notas, opts) {
+    opts = opts || {};
+    var porTempo = opts.beat || 0.45;
+    var ganho = opts.gain || 0.085;
+    var t = opts.delay || 0;
+    (notas || []).forEach(function (n) {
+      var dur = n[1] * porTempo;
+      // 0.85 do valor: deixa um respiro entre as notas, senão vira zumbido
+      tone(n[0], t, dur * 0.85, 'triangle', ganho);
+      t += dur;
+    });
+    return new Promise(function (r) { setTimeout(r, (t + 0.1) * 1000); });
+  }
+
+  /* Duração total de uma melodia, em ms. */
+  function melodyMs(notas, beat) {
+    var tempos = (notas || []).reduce(function (a, n) { return a + n[1]; }, 0);
+    return tempos * (beat || 0.45) * 1000;
+  }
+
   /* Feedback positivo tranquilo (nunca sons negativos). */
   function chimeGood() { tone(660, 0, 0.15, 'sine', 0.1); tone(880, 0.12, 0.25, 'sine', 0.1); }
   function chimeSoft() { tone(440, 0, 0.2, 'sine', 0.07); } // "vamos ouvir de novo" — neutro e calmo
@@ -206,7 +230,8 @@
 
   g.LUMI_AUDIO = {
     supportsTTS: supportsTTS, speak: speak, speakConcept: speakConcept, stop: stop,
-    jingle: jingle, chimeGood: chimeGood, chimeSoft: chimeSoft, setMuted: setMuted,
+    jingle: jingle, melody: melody, melodyMs: melodyMs,
+    chimeGood: chimeGood, chimeSoft: chimeSoft, setMuted: setMuted,
     saveRecording: saveRecording, getRecording: getRecording,
     deleteRecordings: deleteRecordings, playBlob: playBlob, createRecorder: createRecorder
   };
