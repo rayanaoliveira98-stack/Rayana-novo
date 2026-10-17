@@ -18,7 +18,7 @@ E a insegurança? Ela só some com **repetições de fala com baixo risco** (IA,
 - **Tutor 1:1** (Preply / italki) 1×/semana. Peça explicitamente: *"I don't want grammar lessons. I want to talk 45 minutes about marketing and family, and you write down every phrase I said unnaturally."*
 
 ### Fase 3 — Semanas 9–12: exposição real
-- **Toastmasters em Linz:** [Blue Danube Speakers](https://www.toastmasters.org/Find-a-Club/02869957) — Tabakfabrik (Grand Garage), toda 2ª segunda-feira do mês, 19h, visitantes bem-vindos. Confirme se a sessão é em inglês antes de ir.
+- **Toastmasters em Linz:** [Blue Danube Speakers](https://www.toastmasters.org/Find-a-Club/02869957) — Tabakfabrik (Grand Garage), segundas-feiras quinzenais, ~18h45–19h, sessões em inglês, visitantes bem-vindos. Confirme a próxima data pelo Meetup (*Toastmasters Linz – Blue Danube Speakers*).
 - **Tandem em Linz:** [MyLanguageExchange – Linz](https://www.mylanguageexchange.com/city/Linz__Austria.asp) + eventos de estudantes internacionais da JKU. Mais opções em [06-austria-linz.md](06-austria-linz.md).
 - **FM4** (rádio do ORF em inglês) no carro, todo dia.
 - **Meetups / expat communities** em inglês (Internations, Meetup, eventos na Tabakfabrik e Ars Electronica).

@@ -79,7 +79,7 @@ Você mora em Linz. Isso muda duas coisas no plano:
 ### Inglês: falar de verdade
 | Onde | O quê | Observação |
 |---|---|---|
-| **[Blue Danube Speakers (Toastmasters)](https://www.toastmasters.org/Find-a-Club/02869957)** | Falar em público com feedback estruturado | Tabakfabrik (Grand Garage), toda 2ª segunda-feira do mês, 19h, aberto a visitantes. **Confirme se a sessão é em inglês** antes de ir |
+| **[Blue Danube Speakers (Toastmasters)](https://www.toastmasters.org/Find-a-Club/02869957)** | Falar em público com feedback estruturado | Tabakfabrik (Grand Garage), segundas-feiras quinzenais, por volta das 18h45–19h (as fontes divergem), aberto a visitantes. As sessões são em inglês — o clube já deu um [workshop de oratória em inglês na FH OÖ](https://fh-ooe.at/karriere/alumni-club/news/redekunst-auf-englisch-rueckblick-auf-den-toastmasters-workshop). Confirme a data da próxima sessão pelo Meetup (*Toastmasters Linz – Blue Danube Speakers*) |
 | **[MyLanguageExchange – Linz](https://www.mylanguageexchange.com/city/Linz__Austria.asp)** | Parceiro de tandem 1:1 (você ensina português/alemão, recebe inglês) | Há pessoas em Linz procurando prática de inglês |
 | **Estudantes internacionais da JKU** (eventos para Erasmus / internacionais) | Ambiente onde o inglês é a língua comum | Ótimo para conversa informal |
 | **Tabakfabrik Linz / Ars Electronica** | Eventos de tecnologia, startups e criatividade — muitos em inglês | Treina inglês **e** faz networking na sua área |
