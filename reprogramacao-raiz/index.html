@@ -1,0 +1,606 @@
+<title>Reprogramação Raiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one calm reading column (~70ch); pillars as tabs; the guided session opens as a full-screen night room */
+:root{
+  --bg:#ECEFF1; --surface:#F7F8F9; --ink:#1A2330; --muted:#596473; --line:#D2D8DE;
+  --accent:#94571F; --accent-soft:#F0E2D2; --calm:#3C6863; --calm-soft:#DCE8E5;
+  --night:#0D131A; --night-2:#161F29; --night-ink:#E9E3D8; --night-muted:#9AA5B0; --night-accent:#D9A066;
+  --ok:#2F6B45; --warn:#8A6410; --weak:#8A3B2E;
+  --f-display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-body:"Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10161D; --surface:#17202A; --ink:#E0E5EA; --muted:#98A4B0; --line:#2A3541;
+    --accent:#D9A066; --accent-soft:#2C231A; --calm:#80B2AA; --calm-soft:#1B2B2A;
+    --ok:#7CC496; --warn:#E0B65A; --weak:#E58C7C; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10161D; --surface:#17202A; --ink:#E0E5EA; --muted:#98A4B0; --line:#2A3541;
+  --accent:#D9A066; --accent-soft:#2C231A; --calm:#80B2AA; --calm-soft:#1B2B2A;
+  --ok:#7CC496; --warn:#E0B65A; --weak:#E58C7C; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.65;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px}
+.wrap{max-width:860px;margin:0 auto}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.6rem, 7vw, 4.2rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.8rem, 4.5vw, 2.4rem)}
+h3{font-size:1.6rem}
+h4{font-family:var(--f-body);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 .6rem;font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:1.15rem;color:var(--muted)}
+em.q{font-family:var(--f-display);font-style:italic;font-size:1.15em;color:var(--ink)}
+
+header.top{padding-block:56px 32px;display:grid;gap:18px;border-bottom:1px solid var(--line)}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.92rem}
+nav.toc a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent)}
+
+section{padding-block:48px 8px;display:grid;gap:20px}
+section + section{border-top:1px solid var(--line);margin-top:40px}
+
+/* method sequence */
+ol.phases{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:ph}
+ol.phases li{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:baseline;padding:12px 0;border-bottom:1px dashed var(--line);counter-increment:ph}
+ol.phases li::before{content:counter(ph, decimal-leading-zero);font-family:var(--f-mono);color:var(--accent);font-size:.9rem}
+ol.phases b{font-weight:700}
+ol.phases .min{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+ol.phases span.d{display:block;color:var(--muted);font-size:.95rem}
+
+.callout{background:var(--calm-soft);border-left:3px solid var(--calm);padding:16px 18px;border-radius:2px}
+.callout.warm{background:var(--accent-soft);border-color:var(--accent)}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line)}
+.tab{font:inherit;background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px 9px;color:var(--muted);cursor:pointer;display:grid;text-align:left;line-height:1.25}
+.tab small{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase}
+.tab strong{font-family:var(--f-display);font-size:1.35rem;font-weight:600}
+.tab[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{display:grid;gap:26px;padding-top:22px}
+.pillar-head{display:grid;gap:8px}
+.pillar-head .sub{font-family:var(--f-display);font-style:italic;font-size:1.3rem;color:var(--accent)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:22px 32px}
+.grid2 > *{min-width:0}
+ul.beliefs,ul.plain{margin:0;padding-left:1.1em;display:grid;gap:6px}
+ul.beliefs li::marker{content:"✕  ";color:var(--weak)}
+ul.plain li::marker{color:var(--accent)}
+
+.session-card{background:var(--surface);border:1px solid var(--line);padding:22px;display:grid;gap:14px;border-radius:4px}
+.session-card label{font-size:.85rem;font-weight:700;display:grid;gap:6px}
+.session-card input{font:inherit;font-size:1rem;padding:10px 12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:3px;width:100%}
+.session-card input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{font:inherit;font-weight:700;cursor:pointer;border-radius:999px;padding:11px 20px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);justify-self:start}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.ritual{border-top:1px solid var(--line);padding-top:18px;display:grid;gap:10px}
+.ritual h5{font-family:var(--f-display);font-size:1.3rem;margin:0;font-weight:600}
+.science{font-size:.9rem;color:var(--muted)}
+
+/* tracker */
+.tracker{display:grid;gap:10px}
+.days{display:grid;grid-template-columns:repeat(7, minmax(0, 1fr));gap:6px;max-width:420px}
+.day{font:inherit;font-family:var(--f-mono);font-size:.8rem;aspect-ratio:1;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:3px;cursor:pointer;font-variant-numeric:tabular-nums}
+.day[aria-pressed="true"]{background:var(--calm);border-color:var(--calm);color:var(--surface)}
+.day:focus-visible{outline:2px solid var(--accent)}
+.score{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:.92rem}
+.score input[type=range]{width:200px;accent-color:var(--accent)}
+.score output{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:620px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:2px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.chip.forte{color:var(--ok)} .chip.mod{color:var(--warn)} .chip.fraca{color:var(--weak)} .chip.simb{color:var(--accent)}
+
+/* reader overlay — single night world in both themes */
+.reader{position:fixed;inset:0;z-index:50;background:var(--night);color:var(--night-ink);display:grid;grid-template-rows:auto 1fr auto;
+  padding-top:env(safe-area-inset-top, 0px);padding-bottom:env(safe-area-inset-bottom, 0px)}
+.reader .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px max(18px, env(safe-area-inset-right, 0px)) 14px max(18px, env(safe-area-inset-left, 0px));font-family:var(--f-mono);font-size:.78rem;color:var(--night-muted);letter-spacing:.06em;text-transform:uppercase}
+.reader .close{font:inherit;background:none;border:1px solid var(--night-muted);color:var(--night-ink);border-radius:999px;padding:6px 14px;cursor:pointer}
+.reader .stage{overflow-y:auto;padding:24px max(20px, env(safe-area-inset-right, 0px)) 24px max(20px, env(safe-area-inset-left, 0px))}
+.reader .inner{max-width:40rem;margin:0 auto;display:grid;gap:18px}
+.reader h2{color:var(--night-accent);font-size:clamp(1.9rem, 5vw, 2.6rem)}
+.reader .txt p{font-family:var(--f-display);font-size:clamp(1.3rem, 3.4vw, 1.6rem);line-height:1.55;margin:0 0 1em}
+.reader .pause{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--night-muted);border:1px solid var(--night-2);background:var(--night-2);padding:1px 8px;border-radius:999px;vertical-align:middle}
+.reader .controls{background:var(--night-2);padding:12px max(18px, env(safe-area-inset-right, 0px)) 14px max(18px, env(safe-area-inset-left, 0px));display:grid;gap:10px}
+.reader .prog{height:3px;background:var(--night);border-radius:2px;overflow:hidden}
+.reader .prog i{display:block;height:100%;width:0;background:var(--night-accent);transition:width .4s linear}
+.reader .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.reader .rb{font:inherit;font-size:.92rem;cursor:pointer;background:transparent;color:var(--night-ink);border:1px solid #3A4654;border-radius:999px;padding:8px 16px}
+.reader .rb[aria-pressed="true"]{background:var(--night-accent);color:var(--night);border-color:var(--night-accent)}
+.reader .rb:focus-visible,.reader .close:focus-visible{outline:2px solid var(--night-accent);outline-offset:2px}
+.reader .timer{font-family:var(--f-mono);font-size:.8rem;color:var(--night-muted);min-width:5ch;text-align:center;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.reader .prog i{transition:none}}
+@media (max-width:520px){ol.phases li{grid-template-columns:40px 1fr}ol.phases .min{grid-column:2}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">Programa de sessões · 4 pilares · 84 dias</span>
+  <h1>Reprogramação Raiz</h1>
+  <p class="lead col">Sessões de auto-hipnose para voltar ao ponto onde uma crença travou, resgatar a parte de você que ficou lá e instalar uma nova regra interna. Quatro frentes: dinheiro, medo, corpo e merecimento.</p>
+  <nav class="toc" aria-label="Seções">
+    <a href="#metodo">O método</a><a href="#pilares">Os 4 pilares</a><a href="#protocolo">Protocolo de 84 dias</a><a href="#bases">De onde vem cada técnica</a><a href="#magia">Maldições e magia</a><a href="#seguranca">Segurança</a>
+  </nav>
+</header>
+
+<section id="metodo">
+  <span class="eyebrow">O método</span>
+  <h2>Uma sessão em 10 fases</h2>
+  <p class="col">Toda sessão segue a mesma arquitetura. As fases 1 a 5 e a 10 são iguais em todos os pilares: o corpo aprende o caminho para o transe e cada sessão fica mais profunda que a anterior. As fases 6 a 9 mudam conforme o pilar.</p>
+  <ol class="phases">
+    <li><div><b>Preparação e intenção</b><span class="d">Lugar, postura, frase de intenção. Você continua no controle.</span></div><span class="min">1 min</span></li>
+    <li><div><b>Indução por fixação do olhar</b><span class="d">Método Dave Elman: olhar fixo, respiração 4-6, pálpebras que fecham sozinhas.</span></div><span class="min">2 min</span></li>
+    <li><div><b>Relaxamento progressivo</b><span class="d">Da testa aos pés, uma expiração de cada vez.</span></div><span class="min">2–3 min</span></li>
+    <li><div><b>Aprofundamento</b><span class="d">Escada de 10 degraus. Cada número dobra o relaxamento.</span></div><span class="min">2 min</span></li>
+    <li><div><b>Lugar seguro e Eu Sábio</b><span class="d">Recurso interno antes de tocar no passado. Sem isso, não se volta.</span></div><span class="min">2 min</span></li>
+    <li><div><b>Ponte de afeto (regressão)</b><span class="d">O sentimento de hoje vira ponte até a cena antiga onde a crença nasceu.</span></div><span class="min">3–4 min</span></li>
+    <li><div><b>Resgate e reescrita</b><span class="d">Seu eu adulto entra na cena, protege a criança e dá o que faltou.</span></div><span class="min">4 min</span></li>
+    <li><div><b>Devolução da crença</b><span class="d">A frase antiga vira objeto e volta para quem a entregou.</span></div><span class="min">2 min</span></li>
+    <li><div><b>Instalação, âncora e ponte ao futuro</b><span class="d">Frase nova, gesto-âncora, sugestões específicas e ensaio mental do futuro.</span></div><span class="min">4–5 min</span></li>
+    <li><div><b>Retorno</b><span class="d">Contagem de 1 a 5, ou passagem direta para o sono.</span></div><span class="min">1 min</span></li>
+  </ol>
+  <div class="callout col"><b>Como usar.</b> Abra um pilar abaixo, escreva a sua frase antiga e a nova, e clique em “Iniciar sessão guiada”. O texto aparece fase por fase em tela escura. Você pode ler para gravar com a sua voz (o mais eficaz), usar a narração do navegador, ou ativar o avanço automático e só ouvir.</div>
+</section>
+
+<section id="pilares">
+  <span class="eyebrow">Os 4 pilares</span>
+  <h2>Escolha onde trabalhar</h2>
+  <div class="tabs" role="tablist" aria-label="Pilares" id="tabs"></div>
+  <div id="panel" class="panel" role="tabpanel"></div>
+</section>
+
+<section id="protocolo">
+  <span class="eyebrow">Protocolo</span>
+  <h2>84 dias, um pilar por vez</h2>
+  <p class="col">Trabalhar os quatro ao mesmo tempo dilui o efeito. A ordem abaixo começa pela raiz: sem merecimento, a pessoa não cobra, não aparece e usa a comida como anestesia.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Semanas</th><th>Pilar</th><th>Por que nesta ordem</th></tr></thead>
+    <tbody>
+      <tr><td>1–3</td><td><b>Merecimento</b></td><td>Raiz dos outros três. Destrava a permissão de ter, aparecer e se cuidar.</td></tr>
+      <tr><td>4–6</td><td><b>Medo</b></td><td>Com o valor próprio firme, a exposição deixa de ser ameaça de rejeição.</td></tr>
+      <tr><td>7–9</td><td><b>Dinheiro</b></td><td>Cobrar mais e vender exige as duas camadas anteriores.</td></tr>
+      <tr><td>10–12</td><td><b>Corpo</b></td><td>Fome emocional cai quando vergonha, medo e aperto financeiro já baixaram. Os hábitos alimentares podem começar na semana 1 se houver urgência.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid2">
+    <div><h4>Rotina diária</h4>
+      <ul class="plain">
+        <li><b>Manhã, 3 min:</b> gesto-âncora e frase nova em voz alta, olhando nos próprios olhos no espelho.</li>
+        <li><b>Durante o dia:</b> uma ação no mundo real do pilar. Sem ação, a hipnose vira só relaxamento.</li>
+        <li><b>Noite, 25 min:</b> sessão guiada. Antes de dormir, troque o retorno pela passagem para o sono.</li>
+      </ul>
+    </div>
+    <div><h4>Regra de avanço</h4>
+      <ul class="plain">
+        <li>Todo domingo, dê uma nota de 0 a 10 para o quanto você acredita na frase nova.</li>
+        <li>Nota 8 ou mais no dia 21: passe ao próximo pilar.</li>
+        <li>Abaixo de 8: mais 7 dias, e reescreva a frase nova. Se ela soa falsa, está grande demais. Diminua até soar possível.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="bases">
+  <span class="eyebrow">Fontes</span>
+  <h2>De onde vem cada técnica</h2>
+  <p class="col">O programa junta o que há de mais útil em hipnose clínica, psicoterapia baseada em evidência e trabalho simbólico. A coluna de evidência diz com franqueza o quanto cada parte está comprovada. Onde a ciência é fraca, usamos só como imagem ou ritual.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Quem</th><th>O que entra no programa</th><th>Evidência</th></tr></thead>
+    <tbody id="sources"></tbody>
+  </table></div>
+</section>
+
+<section id="magia">
+  <span class="eyebrow">Maldições e magia</span>
+  <h2>O que é real nisso</h2>
+  <div class="col" style="display:grid;gap:14px">
+    <p>Não existe evidência de maldição lançada de fora que funcione sozinha. O que funciona como maldição é outra coisa: uma frase dita com autoridade emocional numa fase em que você não tinha filtro. <em class="q">“Você nunca vai ter nada.”</em> <em class="q">“Na nossa família todo mundo é gordo.”</em> <em class="q">“Quem você pensa que é?”</em> O cérebro trata isso como profecia e passa a cumprir. A psicologia chama de efeito nocebo e de profecia autorrealizável. Essas sim são quebradas aqui, na fase de devolução.</p>
+    <p>A parte “mágica” do programa é a <b>Psicomagia</b> de Alejandro Jodorowsky: atos simbólicos concretos que o inconsciente entende melhor do que argumentos. Pesquisas de Harvard (Norton e Gino) mostram que rituais reduzem ansiedade e ajudam a elaborar perdas, mesmo em quem não acredita neles. Por isso cada pilar tem um ato de psicomagia: ele fecha no corpo o que a sessão abriu na mente.</p>
+  </div>
+</section>
+
+<section id="seguranca">
+  <span class="eyebrow">Segurança</span>
+  <h2>Limites do autotrabalho</h2>
+  <div class="grid2">
+    <div><h4>Não use sozinho se houver</h4>
+      <ul class="plain">
+        <li>Trauma grave (abuso, violência) ainda não tratado, ou flashbacks.</li>
+        <li>Psicose, transtorno dissociativo ou bipolar em fase aguda.</li>
+        <li>Transtorno alimentar (anorexia, bulimia, compulsão grave). O pilar Corpo não substitui tratamento.</li>
+        <li>Pensamentos de suicídio. Na Áustria: <b>Telefonseelsorge 142</b>, emergência <b>144</b>.</li>
+      </ul>
+    </div>
+    <div><h4>Regras de ouro</h4>
+      <ul class="plain">
+        <li>Nunca ouça dirigindo ou operando máquinas.</li>
+        <li>As cenas que surgem são símbolos, não provas. Não use uma sessão para “descobrir” abusos ou acusar alguém. A memória é reconstruída a cada lembrança.</li>
+        <li>Se algo for intenso demais: abra os olhos, pés no chão, nomeie 5 coisas que vê. A sessão termina quando você quiser.</li>
+        <li>Na Áustria, hipnose como tratamento é reservada a médicos, psicoterapeutas e psicólogos clínicos. Para regressões profundas, procure alguém da ÖGATAP ou da MEGA (Milton Erickson Gesellschaft Austria).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="reader" id="reader" hidden role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="bar"><span id="rMeta"></span><button class="close" id="rClose" type="button">Fechar</button></div>
+  <div class="stage" id="rStage"><div class="inner"><h2 id="rTitle"></h2><div class="txt" id="rTxt"></div></div></div>
+  <div class="controls">
+    <div class="prog"><i id="rProg"></i></div>
+    <div class="row">
+      <button class="rb" id="rPrev" type="button">← Anterior</button>
+      <span class="timer" id="rTimer"></span>
+      <button class="rb" id="rNext" type="button">Próxima →</button>
+    </div>
+    <div class="row">
+      <button class="rb" id="rAuto" type="button" aria-pressed="false">Avanço automático</button>
+      <button class="rb" id="rSpeak" type="button" aria-pressed="false">Narrar em voz</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const P = s => '[pausa]';
+const COMMON = {
+  pre: [
+    {t:'Preparação', d:60, x:`Escolha um lugar onde ninguém vai te interromper pelos próximos 25 minutos. Celular em modo avião. Sente-se com os pés apoiados no chão ou deite-se de costas, braços soltos ao lado do corpo.
+Antes de começar, diga mentalmente a sua intenção: «Hoje eu volto para buscar uma parte de mim e trago essa parte para casa.»
+Você está no controle o tempo inteiro. Se em algum momento quiser parar, basta abrir os olhos. Saber disso é o que permite ir fundo com segurança.`},
+    {t:'Indução', d:120, x:`Escolha um ponto um pouco acima da linha dos olhos, no teto ou na parede. Fixe o olhar nele, sem desviar.
+Inspire contando até quatro… e solte o ar contando até seis. De novo. Inspira… e solta mais devagar do que entrou. [pausa]
+Repare que as pálpebras começam a pesar. Elas querem piscar. Deixe que pisquem. A cada piscada ficam mais pesadas, mais lentas… e quando estiverem prontas, deixe que fechem sozinhas. [pausa]
+Agora relaxe os pequenos músculos ao redor dos olhos, até o ponto em que eles simplesmente não querem mais abrir. Não teste. Apenas deixe esse relaxamento ser verdade. Ele é o modelo para o resto do corpo.`},
+    {t:'Relaxamento', d:150, x:`Leve esse mesmo relaxamento para a testa. Deixe a testa ficar lisa.
+Desça para a mandíbula. Deixe os dentes se afastarem um pouco, a língua repousar.
+Os ombros descem, como se alguém tirasse um casaco pesado das suas costas. Os braços ficam pesados… as mãos, mornas. [pausa]
+O peito sobe e desce sozinho. Você não precisa fazer nada para respirar.
+A barriga se solta. Os quadris afundam no apoio. As pernas pesam. Os pés descansam.
+Cada vez que você solta o ar, um pouco mais de tensão vai embora. [pausa]`},
+    {t:'Aprofundamento', d:120, x:`Imagine uma escada de dez degraus, macia, iluminada, descendo para um lugar de calma profunda. A cada degrau, o relaxamento dobra.
+Dez… nove… mais fundo… oito… sete… cada número leva você mais para dentro… seis… cinco… metade do caminho, e a calma já ocupa muito espaço… quatro… três… quase lá… dois… e um. [pausa]
+Aqui embaixo, a mente consciente pode descansar. Ela continua por perto, ouvindo, mas não precisa vigiar nada. A parte de você que aprende e muda está acordada e disponível.`},
+    {t:'Lugar seguro e Eu Sábio', d:120, x:`Ao pé da escada há uma porta. Do outro lado está o seu lugar seguro. Pode ser uma praia, uma floresta, uma casa que você conhece ou que inventa agora. Entre.
+Repare nas cores. Na temperatura do ar. Nos sons. No cheiro. No que está sob os seus pés. [pausa]
+Neste lugar nada pode te alcançar sem a sua permissão.
+Agora perceba que alguém está chegando para te acompanhar. É você, alguns anos à frente: a versão que já resolveu isso. Repare na postura, no olhar, na tranquilidade. Esse é o seu Eu Sábio, e ele fica ao seu lado durante toda a sessão.`}
+  ],
+  post: [
+    {t:'Retorno', d:60, x:`Agradeça ao seu Eu Sábio e à criança. Ela vem com você; agora ela mora no seu peito.
+Tudo o que foi feito aqui continua trabalhando enquanto você vive e enquanto você dorme, e fica mais forte a cada sessão.
+Vou contar de um a cinco. No cinco, você abre os olhos com presença total.
+Um… a energia volta para os pés e as mãos. Dois… você sente o peso do corpo no apoio. Três… a respiração fica mais profunda, mais desperta. Quatro… os olhos se preparam para abrir. Cinco… olhos abertos, presença total, sentindo-se bem.
+(Se esta sessão for antes de dormir, pule a contagem e diga: «e agora eu deslizo para um sono profundo e reparador».)`}
+  ]
+};
+
+const PILLARS = [
+{
+  id:'merecimento', name:'Merecimento', tag:'Pilar raiz', sub:'A permissão de ter, aparecer e ser cuidado',
+  why:`Este é o quarto pilar, escolhido por critério estratégico: ele é a raiz dos outros três. Quem não se sente digno cobra pouco, se esconde por medo de ser “descoberto” e usa a comida como anestesia para a vergonha. Por isso o protocolo começa aqui.`,
+  beliefs:['Eu não sou suficiente.','Amor e aprovação precisam ser conquistados.','Quem sou eu para ganhar, aparecer, brilhar?','Se descobrirem quem eu sou de verdade, vão embora.','Descansar é preguiça; eu preciso merecer cada pausa.'],
+  questions:['Qual elogio você mais desvia ou diminui?','Em que situação você se sente uma fraude?','O que precisava acontecer na infância para você “valer”: notas, ajudar em casa, não dar trabalho?','Quem na sua família nunca foi reconhecido?','Se uma amiga falasse de si mesma como você fala de você, o que você diria a ela?'],
+  trigger:'você se sentiu “pouco”: insuficiente, uma fraude, sem direito de ocupar espaço',
+  old:'Eu não sou suficiente.', neu:'Eu sou suficiente agora, do jeito que estou, e cresço por escolha, não por falta.',
+  rescue:`Olhe para essa criança com os olhos com que você olharia para a criança que mais ama no mundo. Repare: não há nada a consertar nela. Ela não precisa tirar nota máxima, ajudar, agradar ou ficar quieta para ser amada.
+Diga a ela: «Você não precisa conquistar o meu amor. Ele é seu desde sempre. Você não é demais e não é de menos. Você é exatamente do tamanho certo.»
+Deixe que ela sinta isso no corpo. Talvez ela chore, talvez sorria, talvez só respire fundo. Tudo está certo.`,
+  sugg:`A partir de agora, quando alguém te elogia, você respira e diz apenas «obrigado». O elogio entra e fica.
+Você ocupa o seu espaço: senta com a coluna inteira, fala no seu volume, termina as suas frases.
+Quando a voz crítica aparece, você reconhece que ela tentou te proteger e responde com a voz que usaria com uma criança amada.
+Você descansa sem pedir licença. O seu valor não depende do que você produziu hoje.
+Cada dia você nota com mais facilidade três provas do seu valor, e elas se acumulam como tijolos.`,
+  future:`Três meses à frente. Você está numa reunião, numa apresentação, num vídeo. Alguém questiona o seu trabalho e você responde com calma, sem se encolher. Repare na sua postura.
+Um ano à frente. Você está numa situação que antes te faria sentir uma fraude. Repare que agora há um chão firme dentro de você. Pergunte ao seu eu do futuro: «O que mudou?» E escute a resposta.`,
+  magic:[
+    {h:'A foto da criança', x:'Coloque uma foto sua de infância como tela de bloqueio do celular por 21 dias. Toda vez que for se criticar, olhe para ela e diga a frase em voz alta para a criança da foto. Se você não diria aquilo para ela, também não diz para si.'},
+    {h:'A carta de duas mãos', x:'Com a mão não dominante, deixe a criança escrever: “Do que eu preciso?”. A letra feia e lenta é proposital: ela acessa a parte não verbal. Com a mão dominante, responda como o adulto que cuida. Técnica de Lucia Capacchione. Guarde a carta junto da foto.'}
+  ],
+  actions:['Diário de evidências: toda noite, 3 provas concretas do seu valor do dia.','Por 21 dias, aceite todo elogio só com “obrigado”, sem devolver nem diminuir.','Uma vez por semana, peça ajuda ou um favor sem justificar.'],
+  progress:['Você recebe um elogio sem corrigir.','Pede o que quer sem pedir desculpas antes.','A crítica interna fica mais curta e mais gentil.'],
+  science:'Base: autocompaixão (Kristin Neff, Paul Gilbert), terapia do esquema e reparentalização (Jeffrey Young), partes internas (Richard Schwartz, IFS), pesquisa sobre vergonha (Brené Brown).'
+},
+{
+  id:'medo', name:'Medo', tag:'Pilar 2', sub:'Do congelamento à ação',
+  why:`O medo não é o problema; o problema é o medo decidir por você. O objetivo aqui não é deixar de sentir medo, e sim mudar a relação com ele: o corpo aprende que pode sentir e agir ao mesmo tempo. Para quem vive de conteúdo, isso é aparecer na câmera, publicar sem reescrever dez vezes, falar em público, cobrar.`,
+  beliefs:['Se eu me expuser, algo ruim vai acontecer.','Se eu errar, vão me rejeitar.','Eu não dou conta.','Eu preciso ter tudo sob controle para ficar seguro.','É melhor não tentar do que tentar e falhar.'],
+  questions:['O que você deixaria de evitar se o medo sumisse amanhã?','Onde o medo aparece no seu corpo, e qual o primeiro sinal?','Quem, na sua infância, vivia com medo, ou te punia quando você se expunha?','Qual é o pior cenário real, e você sobreviveria a ele?','Que decisão você está adiando agora?'],
+  trigger:'o medo te paralisou ou te fez recuar: antes de aparecer em vídeo, de falar, de decidir, de arriscar',
+  old:'Se eu me expuser, algo ruim vai acontecer.', neu:'Eu sinto o medo e vou mesmo assim. Eu dou conta do que vier.',
+  rescue:`Pegue a mão da criança. Se a cena assusta, leve-a para fora dali, para o seu lugar seguro. Mostre que o perigo daquele dia acabou. Aquilo já passou, e vocês sobreviveram.
+Diga: «Você não está mais só. Agora eu cuido de nós. Você não precisa mais vigiar o mundo inteiro.»
+Repare no corpo dela. Veja os ombros descendo. Sinta o sistema nervoso dela soltar um suspiro longo. E repare que o seu corpo, aqui e agora, suspira junto.`,
+  sugg:`O medo é energia se preparando para agir. Quando o coração acelera, você lê isso como prontidão, como um atleta antes da largada.
+Diante do medo, você faz duas inspirações curtas pelo nariz e uma expiração longa pela boca, e o corpo entende que está seguro.
+Você dá o primeiro passo pequeno antes que a mente termine de discutir. A ação vem antes da coragem; a coragem vem depois.
+Cada vez que você age apesar do medo, o medo diminui e a confiança cresce. O seu cérebro está registrando cada prova.
+A voz que perguntava «e se der errado?» agora pergunta também «e se der certo?».`,
+  future:`Três meses à frente. Veja-se fazendo exatamente aquilo que hoje você evita. A câmera liga, ou a porta abre, ou você aperta “enviar”. Você sente o frio na barriga e sorri para ele, porque sabe o que ele significa.
+Um ano à frente. Olhe para a lista de coisas que você fez neste ano. Quantas delas só existiram porque você foi com medo mesmo?`,
+  magic:[
+    {h:'Dar forma ao medo', x:'Desenhe o seu medo como um personagem. Dê a ele um nome um pouco ridículo. Escreva uma carta a ele: “Obrigado por me proteger. A partir de hoje você vai no banco de trás; quem dirige sou eu.” Cole o desenho num lugar onde você vai vê-lo antes de cada ação difícil.'},
+    {h:'O objeto da coragem', x:'Escolha um objeto (anel, pulseira, uma pedra no bolso) e consagre-o na sessão: segure-o enquanto faz o gesto-âncora. Use-o só nos dias de ação difícil. Ele passa a carregar o estado.'}
+  ],
+  actions:['Escada de exposição: liste 10 situações do menos ao mais temido e suba um degrau a cada 2 ou 3 dias.','Para conteúdo: grave um vídeo falando direto para a câmera, sem cortes, e publique em até 10 minutos.','Suspiro cíclico, 5 minutos por dia: duas inspirações pelo nariz, uma expiração longa pela boca.'],
+  progress:['O intervalo entre pensar e agir encurta.','O medo aparece e passa mais rápido.','Você faz algo difícil e não precisa de dias para se recuperar.'],
+  science:'Base: terapia de exposição (David Barlow), Terapia de Aceitação e Compromisso (Steven Hayes), trabalho somático (Peter Levine), suspiro cíclico (Balban e colegas, Stanford, 2023), reescrita de imagens (Arnoud Arntz).'
+},
+{
+  id:'dinheiro', name:'Dinheiro', tag:'Pilar 3', sub:'Da escassez ao fluxo',
+  why:`Pobreza raramente é só falta de informação. É um conjunto de regras herdadas sobre o que acontece com quem tem dinheiro: vira gente ruim, perde a família, é julgado, atrai inveja. O inconsciente protege você dessas consequências mantendo a renda num teto conhecido. Este pilar desmonta o teto.`,
+  beliefs:['Dinheiro não é para gente como eu.','Gente rica é desonesta, fria ou gananciosa.','Se eu ganhar muito, vou perder amor ou pertencimento.','Dinheiro só vem com sofrimento e muito esforço.','Eu não sei lidar com dinheiro.'],
+  questions:['Qual frase sobre dinheiro você mais ouviu em casa?','Como você se sente no exato momento de dizer o seu preço?','Quem na família “pagou o preço” por ter ou não ter dinheiro?','Qual é o seu teto invisível: o valor que, se você passar, dá desconforto?','Você evita olhar o extrato, ou olha o tempo todo com ansiedade?'],
+  trigger:'você sentiu aperto, culpa ou vergonha ligada a dinheiro: ao cobrar, ao olhar o extrato, ao ver alguém ganhar mais',
+  old:'Dinheiro não é para gente como eu.', neu:'Eu posso ganhar bem, ficar com o que ganho e continuar sendo quem eu sou.',
+  rescue:`Mostre a essa criança, como num filme, a vida adulta que vocês vão construir. Mostre que ter dinheiro não te tornou uma pessoa má e não te afastou de quem você ama. Mostre o que esse dinheiro permite: liberdade, escolha, cuidar dos seus, ajudar quem precisa.
+Se alguém da família sofreu, foi humilhado ou foi julgado por causa de dinheiro, diga à criança: «Aquela foi a história deles. Nós honramos essa história e escrevemos outra.»
+Deixe que a criança sinta segurança. Pela primeira vez, a falta não é o normal.`,
+  sugg:`A partir de hoje, quando você olha para os seus números, olha com curiosidade de estrategista, não com medo. Números são informação.
+Quando você diz o seu preço, a sua voz fica firme e calma, e você espera em silêncio pela resposta. O silêncio trabalha a seu favor.
+O dinheiro que entra fica, cresce e trabalha para você. Você paga a si primeiro.
+Você recebe pagamentos como recebe elogios: com um simples «obrigado».
+Oportunidades que antes passavam despercebidas ficam visíveis, porque a sua mente agora tem permissão para procurá-las.`,
+  future:`Três meses à frente. Você está enviando uma proposta com o seu novo preço. Repare na sua respiração tranquila. Veja o «sim» chegando.
+Um ano à frente. Abra a sua conta. Veja o número. Sinta segurança no corpo, não euforia: segurança. O que você está fazendo com esse dinheiro? Quem está ao seu lado? Repare que essas pessoas continuam ali.`,
+  magic:[
+    {h:'A nota que não se gasta', x:'Carregue na carteira, por 21 dias, a nota de maior valor que te dá um leve desconforto (50 ou 100 euros). Não gaste. O corpo se acostuma a andar com abundância. No dia 21, doe uma parte de forma anônima a alguém que precise. O ato ensina que o dinheiro circula por você, e não só até você.'},
+    {h:'A demissão da escassez', x:'Escreva uma carta formal de demissão à crença antiga: “Prezada Escassez, agradeço os anos de serviço. Você me protegeu quando eu não tinha recursos. Seu contrato termina hoje.” Assine, date, leia em voz alta e queime com segurança, ou rasgue e jogue em água corrente.'}
+  ],
+  actions:['Suba o seu preço em 15% no próximo cliente novo. Diga o valor e cale. Não se justifique.','“Encontro com o dinheiro”: 15 minutos por semana, sempre no mesmo dia, olhando entradas, saídas e meta.','Transferência automática de 10% de toda entrada para uma conta que você não toca.'],
+  progress:['Você diz o seu preço sem se desculpar.','Olhar o extrato deixa de gerar aperto no peito.','Você para de sabotar no fim do mês (gastos impulsivos depois de uma boa entrada).'],
+  science:'Base: roteiros de dinheiro (Brad Klontz: evitação, adoração, status e vigilância), terapia cognitiva (Aaron Beck), lealdades familiares (Bert Hellinger, usado só como imagem), intenções de implementação (Peter Gollwitzer).'
+},
+{
+  id:'corpo', name:'Corpo', tag:'Pilar 4', sub:'Peso que sai e não volta',
+  why:`Perder peso é uma corrida curta; manter é uma identidade. A maioria das dietas falha porque ataca o comportamento e deixa intacta a função emocional da comida: conforto, recompensa, companhia, às vezes proteção. Este pilar trata a função, e depois ensaia a identidade de quem mantém.`,
+  beliefs:['Comida é o meu conforto; sem ela eu não aguento.','Tem que limpar o prato.','Na minha família todo mundo é assim; é genética.','Dieta é sofrimento, e eu não consigo sofrer por muito tempo.','Se eu emagrecer, vou chamar atenção demais.'],
+  questions:['Você come mais quando está cansado, entediado, sozinho, ansioso ou depois de uma conquista?','Antes de comer, consegue dizer se é fome no estômago ou na cabeça?','O que a comida significava na sua infância: recompensa, consolo, amor, controle?','Já perdeu peso e recuperou? O que estava acontecendo na vida quando voltou?','Que vantagem escondida o peso te dá?'],
+  trigger:'você comeu sem fome, comeu além do ponto ou abandonou o seu plano de cuidado com o corpo',
+  old:'Comida é o meu conforto; sem ela eu não aguento.', neu:'Eu me nutro com comida e me conforto com presença. O meu corpo é um lugar seguro.',
+  rescue:`Pergunte à criança: «O que a comida estava fazendo por você naquele momento?» Talvez fosse conforto, companhia, recompensa, proteção, a única doçura do dia.
+Agradeça a essa parte que usou a comida para te proteger. Ela foi inteligente; fez o que podia com o que tinha.
+Agora ofereça o que ela realmente precisava: um abraço, uma voz que acalma, alguém que fica. Diga: «Você não precisa mais de uma armadura. Eu te protejo de outro jeito.»`,
+  sugg:`A partir de agora, você come sentado, devagar, e sente o sabor de verdade. Entre uma garfada e outra, os talheres descansam no prato.
+Você para quando o corpo diz «satisfeito», perto de oitenta por cento. Sobrar comida no prato é seguro.
+Quando surge vontade sem fome, você para por noventa segundos, respira e observa a onda subir, chegar ao topo e passar. Você é quem observa a onda.
+No prato, proteína e vegetais vêm primeiro. Água antes de cada refeição.
+O movimento é a forma como você agradece ao corpo. Você se move todos os dias porque se sente bem, não porque se pune.
+Perfeição não é necessária. Um deslize é só um dado, e a próxima refeição é um recomeço.`,
+  future:`Três meses à frente. Você está num jantar, num buffet, numa festa. Repare que você come o que quer, para quando basta e volta para a conversa. A comida perdeu o volume que tinha na sua cabeça.
+Um ano à frente. O seu peso está estável há meses. Repare em como você se move, em como a roupa veste, em como você se olha no espelho. Diga mentalmente: «Eu sou uma pessoa que cuida do próprio corpo.» Isso já não é meta; é quem você é.`,
+  magic:[
+    {h:'A pedra do peso emocional', x:'Escolha uma pedra do tamanho da sua mão. Escreva nela o que a comida estava carregando por você (solidão, cansaço, raiva). Carregue-a na bolsa por 3 dias e sinta o peso. No terceiro dia, leve-a a um rio ou ao mar e devolva-a à natureza, dizendo: “Eu não preciso mais carregar isto no corpo.”'},
+    {h:'A roupa da transição', x:'Doe hoje uma peça que você guarda “para quando engordar de novo”. Guardar essa roupa é um plano de recaída. Depois, compre uma única peça bonita no seu tamanho atual: você se veste bem no caminho, e não só na chegada.'}
+  ],
+  actions:['Regra dos 90 segundos antes de qualquer comida fora de hora.','Hábitos de quem mantém (National Weight Control Registry): pesagem semanal, cerca de 60 minutos de movimento por dia, café da manhã, a mesma rotina na semana e no fim de semana.','Prato montado na ordem: metade vegetais, um quarto proteína, um quarto carboidrato.'],
+  progress:['Você identifica a fome emocional antes de comer, e não depois.','Deixa comida no prato sem culpa.','Uma escorregada não vira uma semana perdida.'],
+  science:'Base: meta-análise de Kirsch e colegas (hipnose somada à terapia cognitiva aumentou a perda de peso, com efeito maior no acompanhamento), meta-análise de Milling e colegas (2018), alimentação consciente (Judson Brewer), National Weight Control Registry (Wing e Hill), identidade e hábitos (James Clear, BJ Fogg).'
+}
+];
+
+const SOURCES = [
+ ['Milton H. Erickson, Ernest Rossi','Linguagem permissiva, metáforas e sugestões indiretas em todos os roteiros','mod','Moderada'],
+ ['Dave Elman','Indução rápida por fixação do olhar e relaxamento dos olhos','mod','Prática clínica'],
+ ['David Spiegel, Michael Yapko','Hipnose como foco intenso de atenção; cautela com regressão','forte','Forte'],
+ ['Kirsch e colegas (1995–96); Milling e colegas (2018)','Hipnose somada à terapia cognitiva melhora resultados, inclusive em perda de peso','forte','Forte'],
+ ['Arnoud Arntz','Reescrita de imagens (imagery rescripting): base científica da fase de resgate','forte','Forte'],
+ ['Gil Boyne, Charles Tebbetts, Marisa Peer','Ponte de afeto, regressão à causa, “eu sou suficiente”','fraca','Popular, poucos estudos'],
+ ['Elizabeth Loftus','Falsas memórias: por que tratamos as cenas como símbolos, não como prova','forte','Forte'],
+ ['Aaron Beck, Albert Ellis, Byron Katie','Identificar e questionar crenças (Glaubenssätze)','forte','Forte (TCC)'],
+ ['Steven Hayes, David Barlow','Agir com o medo presente; escadas de exposição','forte','Forte'],
+ ['Peter Levine, Bessel van der Kolk','O corpo guarda a experiência; descarga e regulação somática','mod','Moderada'],
+ ['Richard Schwartz (IFS), Jeffrey Young','Partes protetoras, criança vulnerável, reparentalização','mod','Moderada'],
+ ['Kristin Neff, Paul Gilbert','Autocompaixão como antídoto da vergonha','forte','Forte'],
+ ['Brad Klontz','Roteiros de dinheiro (Money Scripts)','mod','Moderada'],
+ ['Judson Brewer','Fome emocional, curiosidade, surfar a vontade','mod','Moderada'],
+ ['National Weight Control Registry','Hábitos de quem mantém o peso perdido por anos','forte','Forte (observacional)'],
+ ['Balban e colegas, Stanford (2023)','Suspiro cíclico para reduzir ansiedade','mod','Moderada'],
+ ['Peter Gollwitzer, BJ Fogg, James Clear','Intenções de implementação, micro-hábitos, mudança por identidade','forte','Forte'],
+ ['Bert Hellinger','Lealdades familiares invisíveis; gesto de devolver','fraca','Fraca, só imagem'],
+ ['Alejandro Jodorowsky','Psicomagia: atos simbólicos que falam com o inconsciente','simb','Simbólica'],
+ ['Norton e Gino (Harvard, 2014)','Rituais reduzem ansiedade e luto, mesmo sem crença','mod','Moderada'],
+ ['Joe Dispenza, Bruce Lipton, Lei da Atração','Inspiração; usamos só o ensaio mental do futuro','fraca','Fraca']
+];
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store = {
+  get(k, f){ try{ const v = localStorage.getItem(k); return v === null ? f : JSON.parse(v); }catch(e){ return f; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---------- sources table ---------- */
+$('sources').innerHTML = SOURCES.map(r => `<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td><span class="chip ${r[2]}">${esc(r[3])}</span></td></tr>`).join('');
+
+/* ---------- tabs ---------- */
+let current = PILLARS[0].id;
+try{ const h = location.hash.slice(1); if (PILLARS.some(p => p.id === h)) current = h; }catch(e){}
+function renderTabs(){
+  $('tabs').innerHTML = PILLARS.map(p => `<button class="tab" role="tab" id="tab-${p.id}" aria-selected="${p.id===current}" aria-controls="panel" data-id="${p.id}"><small>${esc(p.tag)}</small><strong>${esc(p.name)}</strong></button>`).join('');
+}
+$('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; current = b.dataset.id; renderTabs(); renderPanel(); });
+$('tabs').addEventListener('keydown', e => {
+  if (!['ArrowRight','ArrowLeft'].includes(e.key)) return;
+  const i = PILLARS.findIndex(p => p.id === current);
+  current = PILLARS[(i + (e.key==='ArrowRight'?1:-1) + PILLARS.length) % PILLARS.length].id;
+  renderTabs(); renderPanel(); $('tab-'+current).focus();
+});
+
+function renderPanel(){
+  const p = PILLARS.find(x => x.id === current);
+  const custom = store.get('rr-custom-'+p.id, {});
+  const days = store.get('rr-days-'+p.id, []);
+  const score = store.get('rr-score-'+p.id, 3);
+  $('panel').setAttribute('aria-labelledby', 'tab-'+p.id);
+  $('panel').innerHTML = `
+    <div class="pillar-head col">
+      <h3>${esc(p.name)}</h3>
+      <p class="sub">${esc(p.sub)}</p>
+      <p>${esc(p.why)}</p>
+    </div>
+    <div class="grid2">
+      <div><h4>Crenças-raiz mais comuns</h4><ul class="beliefs">${p.beliefs.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div>
+      <div><h4>Perguntas de diagnóstico</h4><ul class="plain">${p.questions.map(b=>`<li>${esc(b)}</li>`).join('')}</ul><p class="science" style="margin-top:8px">Responda por escrito antes da primeira sessão. A frase que mais incomodar é a sua crença antiga.</p></div>
+    </div>
+    <form class="session-card" id="sessForm">
+      <h4 style="margin:0">Sessão guiada · cerca de 25 minutos</h4>
+      <label for="old-${p.id}">A sua frase antiga, nas suas palavras
+        <input id="old-${p.id}" name="old" value="${esc(custom.old || p.old)}" autocomplete="off"></label>
+      <label for="new-${p.id}">A frase nova que você quer instalar
+        <input id="new-${p.id}" name="neu" value="${esc(custom.neu || p.neu)}" autocomplete="off"></label>
+      <p class="science">Frase nova no presente, na primeira pessoa, sem “não”. Se soar mentira, diminua até soar possível.</p>
+      <button class="btn" type="submit">Iniciar sessão guiada</button>
+    </form>
+    <div class="grid2">
+      ${p.magic.map(m=>`<div class="ritual"><h4>Psicomagia</h4><h5>${esc(m.h)}</h5><p>${esc(m.x)}</p></div>`).join('')}
+    </div>
+    <div class="grid2">
+      <div><h4>Ação no mundo real</h4><ul class="plain">${p.actions.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div>
+      <div><h4>Sinais de que está funcionando</h4><ul class="plain">${p.progress.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="tracker">
+      <h4>Seus 21 dias neste pilar</h4>
+      <div class="days" id="days">${Array.from({length:21},(_,i)=>`<button type="button" class="day" data-d="${i}" aria-pressed="${days.includes(i)}" aria-label="Dia ${i+1}">${i+1}</button>`).join('')}</div>
+      <div class="score"><label for="score-${p.id}">Quanto você acredita na frase nova hoje</label>
+        <input type="range" id="score-${p.id}" min="0" max="10" value="${score}"><output id="scoreOut">${score}/10</output></div>
+      <p class="science">Fica salvo só neste navegador.</p>
+    </div>
+    <p class="science col">${esc(p.science)}</p>`;
+
+  const save = () => store.set('rr-custom-'+p.id, {old:$('old-'+p.id).value, neu:$('new-'+p.id).value});
+  $('old-'+p.id).addEventListener('input', save);
+  $('new-'+p.id).addEventListener('input', save);
+  $('sessForm').addEventListener('submit', e => { e.preventDefault(); save(); openReader(p, $('old-'+p.id).value.trim() || p.old, $('new-'+p.id).value.trim() || p.neu); });
+  $('days').addEventListener('click', e => {
+    const b = e.target.closest('.day'); if (!b) return;
+    const d = +b.dataset.d; let arr = store.get('rr-days-'+p.id, []);
+    arr = arr.includes(d) ? arr.filter(x=>x!==d) : arr.concat(d);
+    store.set('rr-days-'+p.id, arr); b.setAttribute('aria-pressed', arr.includes(d));
+  });
+  $('score-'+p.id).addEventListener('input', e => { $('scoreOut').textContent = e.target.value + '/10'; store.set('rr-score-'+p.id, +e.target.value); });
+}
+
+/* ---------- session builder ---------- */
+function buildSession(p, oldB, newB){
+  const mid = [
+    {t:'Ponte de afeto', d:210, x:`Ainda no seu lugar seguro, traga à mente uma situação recente em que ${p.trigger}. Não precisa ser a pior. Basta uma.
+Veja onde você está… quem está por perto… E repare no que sente no corpo. Onde mora esse sentimento? No peito, na garganta, no estômago? Dê a ele uma cor e um tamanho. [pausa]
+Agora deixe a imagem recente se dissolver e fique só com o sentimento. Sentimento puro. Deixe que ele seja uma ponte… uma ponte que volta no tempo… você mais jovem… mais jovem… até a primeira vez, ou a vez mais importante, em que você sentiu exatamente isso.
+Não procure. Deixe aparecer. Pode vir uma cena, uma idade, um cômodo de uma casa, uma voz. Pode vir só um símbolo. Tudo o que vier é útil. A sua mente não precisa provar que foi assim; ela só precisa mostrar o que ainda pede cuidado. [pausa]
+Onde você está? Que idade parece ter? Quem está ali?
+E o que essa versão mais jovem de você concluiu naquele momento sobre quem é e sobre a vida? Escute a frase. Muitas vezes ela soa assim: «${oldB}».`},
+    {t:'Resgate e reescrita', d:240, x:`Agora a sua versão adulta de hoje, com tudo o que você já sabe e tudo o que já superou, entra nessa cena. Ninguém ali pode te machucar. Você é maior, mais forte e chegou para ajudar.
+Se houver alguém que assusta ou machuca, você pode pausar a cena, congelar essa pessoa, tirá-la dali ou colocar um vidro grosso entre ela e a criança. A cena agora é sua.
+Vá até a criança. Abaixe-se na altura dela. Olhe nos olhos dela e diga: «Eu sou você, do futuro. Eu vim te buscar. O que aconteceu não foi culpa sua. Você fez o melhor que podia com o que tinha.» [pausa]
+Pergunte: «Do que você precisava naquele momento e não recebeu?» Escute. Pode ser proteção, colo, ser vista, ser defendida, uma explicação. Agora dê isso a ela. Com generosidade. Pelo tempo que for preciso. [pausa]
+${p.rescue}`},
+    {t:'Devolução da crença', d:120, x:`Repare que aquela frase, «${oldB}», não nasceu com você. Ela foi entregue. Por alguém cansado, assustado, que também carregava as próprias feridas. Ou foi a conclusão que uma criança tirou sozinha, sem ninguém para explicar.
+Imagine essa frase como um objeto: uma pedra, um pacote, um casaco pesado. Pegue esse objeto com as duas mãos. Sinta o peso que você carregou por tantos anos.
+Caminhe até quem o entregou. Ou, se não houver ninguém, até uma luz no horizonte. E diga, com respeito e firmeza: «Isto é seu. Eu carreguei por amor e por lealdade. Agora eu devolvo. Eu continuo pertencendo e escolho uma vida diferente.»
+Entregue. Solte. Sinta as mãos ficando leves… os ombros ficando leves… o peito com mais espaço. [pausa]`},
+    {t:'Instalação e âncora', d:210, x:`Volte com a criança para o seu lugar seguro. Ela pode ficar com você agora.
+Seu Eu Sábio se aproxima e coloca nas suas mãos uma frase nova. Escute: «${newB}».
+Repita mentalmente três vezes, cada vez mais devagar, sentindo onde ela pousa no corpo. [pausa]
+Agora junte a ponta do polegar com a do indicador da mão dominante. Enquanto pressiona, sinta tudo ao mesmo tempo: a calma, a criança protegida, a frase nova. Este gesto passa a ser a sua âncora. Sempre que você fizer este gesto, essa sensação volta, e fica mais forte cada vez que é usada. [pausa]
+${p.sugg}`},
+    {t:'Ponte ao futuro', d:150, x:`Agora o seu Eu Sábio te leva para a frente no tempo.
+${p.future}
+Traga essa sensação de volta com você. Ela já é sua. [pausa]`}
+  ];
+  return [...COMMON.pre, ...mid, ...COMMON.post];
+}
+
+/* ---------- reader ---------- */
+let segs = [], idx = 0, pillar = null, auto = false, speaking = false, tick = null, remain = 0, lastFocus = null;
+const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+if (!synth) $('rSpeak').hidden = true;
+
+function fmt(s){ const m = Math.floor(s/60), r = s%60; return m + ':' + String(r).padStart(2,'0'); }
+function toHTML(x){ return x.split('\n').map(l => `<p>${esc(l).replace(/\[pausa\]/g, '<span class="pause">pausa</span>')}</p>`).join(''); }
+
+function show(){
+  const s = segs[idx];
+  $('rMeta').textContent = `${pillar.name} · ${idx+1} de ${segs.length}`;
+  $('rTitle').textContent = s.t;
+  $('rTxt').innerHTML = toHTML(s.x);
+  $('rStage').scrollTop = 0;
+  $('rProg').style.width = ((idx+1)/segs.length*100) + '%';
+  $('rPrev').disabled = idx === 0;
+  $('rNext').textContent = idx === segs.length-1 ? 'Concluir' : 'Próxima →';
+  remain = s.d; $('rTimer').textContent = fmt(remain);
+  clearInterval(tick);
+  if (speaking) speak(s.x);
+  if (auto && !speaking) tick = setInterval(() => { remain--; $('rTimer').textContent = fmt(Math.max(remain,0)); if (remain <= 0){ clearInterval(tick); next(); } }, 1000);
+}
+function next(){ if (idx < segs.length-1){ idx++; show(); } else closeReader(true); }
+function prev(){ if (idx > 0){ idx--; show(); } }
+
+function speak(text){
+  if (!synth) return;
+  synth.cancel();
+  const parts = text.replace(/\(Se esta sessão[\s\S]*$/,'').split(/\[pausa\]/);
+  let i = 0;
+  const voice = synth.getVoices().find(v => /pt[-_]BR/i.test(v.lang)) || synth.getVoices().find(v => /^pt/i.test(v.lang));
+  const sayNext = () => {
+    if (!speaking) return;
+    if (i >= parts.length){ if (auto) setTimeout(() => { if (speaking && auto) next(); }, 4000); return; }
+    const u = new SpeechSynthesisUtterance(parts[i].replace(/[«»]/g,'').trim());
+    u.lang = 'pt-BR'; u.rate = 0.82; u.pitch = 0.95; if (voice) u.voice = voice;
+    u.onend = () => { i++; setTimeout(sayNext, i < parts.length ? 8000 : 0); };
+    synth.speak(u);
+  };
+  sayNext();
+}
+
+function openReader(p, oldB, newB){
+  pillar = p; segs = buildSession(p, oldB, newB); idx = 0; lastFocus = document.activeElement;
+  $('reader').hidden = false; document.body.style.overflow = 'hidden';
+  show(); $('rNext').focus();
+}
+function closeReader(done){
+  clearInterval(tick); if (synth) synth.cancel();
+  speaking = false; $('rSpeak').setAttribute('aria-pressed','false');
+  $('reader').hidden = true; document.body.style.overflow = '';
+  if (done && pillar){
+    const arr = store.get('rr-days-'+pillar.id, []);
+    const nextDay = Array.from({length:21},(_,i)=>i).find(i => !arr.includes(i));
+    if (nextDay !== undefined){ store.set('rr-days-'+pillar.id, arr.concat(nextDay)); if (current === pillar.id) renderPanel(); }
+  }
+  if (lastFocus) lastFocus.focus();
+}
+$('rNext').addEventListener('click', next);
+$('rPrev').addEventListener('click', prev);
+$('rClose').addEventListener('click', () => closeReader(false));
+$('rAuto').addEventListener('click', () => { auto = !auto; $('rAuto').setAttribute('aria-pressed', auto); show(); });
+$('rSpeak').addEventListener('click', () => {
+  speaking = !speaking; $('rSpeak').setAttribute('aria-pressed', speaking);
+  if (speaking) show(); else { synth.cancel(); show(); }
+});
+document.addEventListener('keydown', e => {
+  if ($('reader').hidden) return;
+  if (e.key === 'Escape') closeReader(false);
+  else if (e.key === 'ArrowRight') next();
+  else if (e.key === 'ArrowLeft') prev();
+});
+if (synth) synth.onvoiceschanged = () => {};
+
+renderTabs(); renderPanel();
+</script>
