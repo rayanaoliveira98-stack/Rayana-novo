@@ -1,0 +1,224 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Rayana//Idiomas//PT
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Idiomas
+X-WR-TIMEZONE:Europe/Vienna
+BEGIN:VTIMEZONE
+TZID:Europe/Vienna
+BEGIN:STANDARD
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:7bb098dd-7850-499d-b920-46c5229708e2@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261019T080000
+DTEND;TZID=Europe/Vienna:20261019T083000
+SUMMARY:🎧🇩🇪 OMR Podcast (marketing)
+DESCRIPTION:Ouvir no carro ou na cozinha. Repetir em voz alta 1 frase.\nFo
+ co: sem 'i' entre consoantes (Herbst\, não Herbist).\n\n▶ https://open.
+ spotify.com/search/OMR%20Podcast
+URL:https://open.spotify.com/search/OMR%20Podcast
+RRULE:FREQ=WEEKLY;BYDAY=MO;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎧🇩🇪 OMR Podcast (marketing)
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f8b81cef-ba16-409c-ac26-7d65501f625b@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261020T080000
+DTEND;TZID=Europe/Vienna:20261020T083000
+SUMMARY:🎧🇬🇧 The Diary of a CEO (negócios)
+DESCRIPTION:Ouvir no carro ou na cozinha. Repetir em voz alta 1 frase.\n\n
+ ▶ https://open.spotify.com/search/The%20Diary%20of%20a%20CEO
+URL:https://open.spotify.com/search/The%20Diary%20of%20a%20CEO
+RRULE:FREQ=WEEKLY;BYDAY=TU;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎧🇬🇧 The Diary of a CEO (negócios)
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:64b9fe1c-5920-4665-8589-b1110315b7c9@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261021T080000
+DTEND;TZID=Europe/Vienna:20261021T083000
+SUMMARY:🎧🇩🇪 Betreutes Fühlen (emoção)
+DESCRIPTION:Ouvir no carro ou na cozinha. Repetir em voz alta 1 frase.\nFo
+ co: sem 'i' entre consoantes.\n\n▶ https://open.spotify.com/search/Betre
+ utes%20F%C3%BChlen
+URL:https://open.spotify.com/search/Betreutes%20F%C3%BChlen
+RRULE:FREQ=WEEKLY;BYDAY=WE;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎧🇩🇪 Betreutes Fühlen (emoção)
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:65e3fbec-c479-47eb-a8d1-0b6076aecc31@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261022T080000
+DTEND;TZID=Europe/Vienna:20261022T083000
+SUMMARY:🎧🇬🇧 Good Inside with Dr. Becky (filhos)
+DESCRIPTION:Ouvir no carro ou na cozinha. Repetir em voz alta 1 frase.\n\n
+ ▶ https://open.spotify.com/search/Good%20Inside%20with%20Dr.%20Becky
+URL:https://open.spotify.com/search/Good%20Inside%20with%20Dr.%20Becky
+RRULE:FREQ=WEEKLY;BYDAY=TH;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎧🇬🇧 Good Inside with Dr. Becky (filhos)
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fa48574e-0d1b-4785-af63-5474fc81b1e0@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261023T080000
+DTEND;TZID=Europe/Vienna:20261023T083000
+SUMMARY:🎧🇦🇹 Thema des Tages – Der Standard
+DESCRIPTION:Alemão austríaco padrão. Repetir 2–3 frases junto com a l
+ ocutora (melodia).\n\n▶ https://open.spotify.com/search/Thema%20des%20Ta
+ ges%20Der%20Standard
+URL:https://open.spotify.com/search/Thema%20des%20Tages%20Der%20Standard
+RRULE:FREQ=WEEKLY;BYDAY=FR;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎧🇦🇹 Thema des Tages – Der Standard
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fb64cf91-928f-4357-bf3b-7920fbd113c1@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261024T100000
+DTEND;TZID=Europe/Vienna:20261024T104500
+SUMMARY:🎧🇬🇧 I Will Teach You to Be Rich (dinheiro)
+DESCRIPTION:Ouvir no fim de semana.\n\n▶ https://open.spotify.com/search
+ /I%20Will%20Teach%20You%20to%20Be%20Rich
+URL:https://open.spotify.com/search/I%20Will%20Teach%20You%20to%20Be%20Ric
+ h
+RRULE:FREQ=WEEKLY;BYDAY=SA;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎧🇬🇧 I Will Teach You to Be Rich (dinheiro)
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2e102027-dbb5-433f-85b3-7ca99af6c25b@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261019T123000
+DTEND;TZID=Europe/Vienna:20261019T124000
+SUMMARY:💬🇬🇧 Áudio de WhatsApp em inglês
+DESCRIPTION:Mandar pelo menos 1 áudio em inglês hoje. Se faltar a palavr
+ a\, contorne\; não troque de idioma.\n\n▶ https://web.whatsapp.com
+URL:https://web.whatsapp.com
+RRULE:FREQ=DAILY;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:💬🇬🇧 Áudio de WhatsApp em inglês
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a650a3c3-1aea-4203-b093-1953ebb7ee1b@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261021T170000
+DTEND;TZID=Europe/Vienna:20261021T173000
+SUMMARY:🎬🇬🇧 Reel da semana em inglês
+DESCRIPTION:Gravar 1 Reel em inglês para o público internacional. Postar
+  ou só guardar.\n\n▶ https://www.instagram.com
+URL:https://www.instagram.com
+RRULE:FREQ=WEEKLY;BYDAY=WE;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎬🇬🇧 Reel da semana em inglês
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:835cf0c0-e1a5-4152-ae15-802344e62b27@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261020T210000
+DTEND;TZID=Europe/Vienna:20261020T214500
+SUMMARY:📺🇬🇧 Ted Lasso (áudio e legenda em inglês)
+DESCRIPTION:1 episódio\, áudio e legenda em inglês.\n\n▶ https://tv.a
+ pple.com/search?term=Ted%20Lasso
+URL:https://tv.apple.com/search?term=Ted%20Lasso
+RRULE:FREQ=WEEKLY;BYDAY=TU;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:📺🇬🇧 Ted Lasso (áudio e legenda em inglês)
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:428c2114-0804-4f0f-b68a-e504105e7731@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261022T210000
+DTEND;TZID=Europe/Vienna:20261022T214500
+SUMMARY:📺🇦🇹 Vorstadtweiber (ORF ON)
+DESCRIPTION:1 episódio. Buscar 'Vorstadtweiber' no ORF ON.\n\n▶ https:/
+ /on.orf.at
+URL:https://on.orf.at
+RRULE:FREQ=WEEKLY;BYDAY=TH;UNTIL=20261118T225959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:📺🇦🇹 Vorstadtweiber (ORF ON)
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3aa89c8c-9d63-4ca4-b2f7-888b0d7f4f35@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261019T090000
+DTEND;TZID=Europe/Vienna:20261019T091500
+SUMMARY:🎤 Confirmar próxima sessão – Toastmasters Linz
+DESCRIPTION:Ver a data da próxima sessão (segundas quinzenais\, ~18h45\,
+  Tabakfabrik – Grand Garage) e se inscrever como visitante.\nPágina ofi
+ cial: https://www.toastmasters.org/Find-a-Club/02869957\n\n▶ https://www
+ .meetup.com/find/?keywords=Blue%20Danube%20Speakers&location=at--Linz
+URL:https://www.meetup.com/find/?keywords=Blue%20Danube%20Speakers&locatio
+ n=at--Linz
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🎤 Confirmar próxima sessão – Toastmasters Linz
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:cca41e15-ce50-4247-8b2f-eab22991fa3b@idiomas
+DTSTAMP:20261017T120000Z
+DTSTART;TZID=Europe/Vienna:20261118T180000
+DTEND;TZID=Europe/Vienna:20261118T182000
+SUMMARY:🔁 Revisão de 30 dias – idiomas
+DESCRIPTION:O que usei de verdade? O que larguei? Me pediram para repetir 
+ em alemão menos vezes? Voltar ao Claude e ajustar.\n\n▶ https://github.
+ com/rayanaoliveira98-stack/Rayana-novo/tree/estudos-idiomas/estudos-idioma
+ s
+URL:https://github.com/rayanaoliveira98-stack/Rayana-novo/tree/estudos-idi
+ omas/estudos-idiomas
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:🔁 Revisão de 30 dias – idiomas
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+END:VCALENDAR
