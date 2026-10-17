@@ -42,7 +42,7 @@ Transcrição:
 
 ### Roleplay de conversa (voz)
 ```
-Let's do a roleplay. You are [a potential client — HR director of a logistics company in Vienna / a candidate applying for a warehouse job / a skeptical CEO].
+Let's do a roleplay. You are [a potential client — HR director of an industrial company in Linz / a candidate applying for a warehouse job / a skeptical CEO].
 I'm a social media strategist pitching recruitment campaigns.
 Rules: speak naturally like a native, keep your answers short (2–3 sentences), challenge me with real objections.
 After 10 minutes, when I say "feedback", give me: 5 phrases I said unnaturally + the native version, and 3 moments where I hesitated and what I could have said.

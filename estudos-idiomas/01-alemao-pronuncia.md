@@ -32,7 +32,7 @@ lesen – lösen      Kuchen – Küchen   schwul – schwül   vier – für
 
 ### Frases de treino do SEU dia a dia (recrutamento/marketing)
 Grave, compare, regrave.
-1. *Wir suchen ab sofort engagierte Mitarbeiterinnen und Mitarbeiter für unser Team in Wien.*
+1. *Wir suchen ab sofort engagierte Mitarbeiterinnen und Mitarbeiter für unser Team in Linz.*
 2. *Die Bewerbung dauert keine zwei Minuten — einfach Lebenslauf hochladen.*
 3. *Unsere Kampagne hat die Kosten pro Bewerbung um vierzig Prozent gesenkt.*
 4. *Ich verantworte die gesamte Social-Media-Strategie, vom Konzept bis zur Auswertung.*
@@ -67,5 +67,5 @@ Grave, compare, regrave.
 - **ORF / ZIB (Zeit im Bild)** — telejornal austríaco: o modelo de Standarddeutsch austríaco para shadowing.
 
 ### Investimento que acelera de verdade
-- **Sprechtrainer / Sprecherziehung / Logopädie** — em Viena e outras cidades há treinadores de fala que trabalham com locutores e profissionais. **3–5 sessões** com alguém que diagnostique seus 3 vícios principais valem mais que 6 meses de app. Busque "Sprechtraining Akzentreduktion" + sua cidade.
-- Cursos de **Aussprachetraining** em universidades e centros de idiomas (ex.: há oferta em instituições como a [ZHAW](https://www.zhaw.ch/de/linguistik/institute-zentren/ilc/weiterbildung/deutschkurse/aussprachetraining-fuer-alltag-beruf-und-pruefung) e a [Uni Freiburg](https://www.sli.uni-freiburg.de/deutsch/kurse/Syllabi-Kursbeschreibungen/syllabi-deutsch-g-kurse/Syllabus%20Deutsch-G%20Aussprachetraining)); na Áustria vale checar VHS Wien e Sprachenzentrum da Uni Wien.
+- **Sprechtrainer / Sprecherziehung / Logopädie** — em Linz, busque treinadores de fala ou Logopädie que trabalham com locutores e profissionais. **3–5 sessões** com alguém que diagnostique seus 3 vícios principais valem mais que 6 meses de app. Busque "Sprechtraining Akzentreduktion" + sua cidade.
+- Cursos de **Aussprachetraining** em universidades e centros de idiomas (ex.: há oferta em instituições como a [ZHAW](https://www.zhaw.ch/de/linguistik/institute-zentren/ilc/weiterbildung/deutschkurse/aussprachetraining-fuer-alltag-beruf-und-pruefung) e a [Uni Freiburg](https://www.sli.uni-freiburg.de/deutsch/kurse/Syllabi-Kursbeschreibungen/syllabi-deutsch-g-kurse/Syllabus%20Deutsch-G%20Aussprachetraining)); em Linz, cheque a VHS Linz (Wissensturm) e o Sprachenzentrum da JKU — ver [06-austria-linz.md](06-austria-linz.md).

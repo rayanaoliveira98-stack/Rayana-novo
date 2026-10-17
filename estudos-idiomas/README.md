@@ -12,7 +12,7 @@ Você tem **dois problemas diferentes** e eles pedem **métodos diferentes**. Tr
 | O que resolve | Shadowing + gravação + feedback em sons específicos | Output forçado diário + chunks (blocos prontos de frase) |
 | Métrica | "Ninguém pediu pra eu repetir esta semana" | "Falei 10 min sem travar sobre um tema meu" |
 
-**Ponto estratégico que quase ninguém decide:** qual alemão você quer soar? Você vive na Áustria. Recomendo mirar no **österreichisches Standarddeutsch** (o do ORF / Ö1 / Der Standard), não no alemão de Berlim do YouTube. É o que seus clientes, candidatos e vizinhos ouvem como "normal". Use material da Alemanha para vocabulário, e material austríaco como **referência de melodia e pronúncia**.
+**Ponto estratégico que quase ninguém decide:** qual alemão você quer soar? Você vive em Linz. Recomendo mirar no **österreichisches Standarddeutsch** (o do ORF / Ö1 / Der Standard), não no alemão de Berlim do YouTube. É o que seus clientes, candidatos e vizinhos ouvem como "normal". Use material da Alemanha para vocabulário, e material austríaco como **referência de melodia e pronúncia** — detalhes em [06-austria-linz.md](06-austria-linz.md).
 
 ## Estrutura da pasta
 
@@ -23,6 +23,7 @@ Você tem **dois problemas diferentes** e eles pedem **métodos diferentes**. Tr
 | [03-ingles.md](03-ingles.md) | Plano de destravar a fala + recursos por tema |
 | [04-metodo-e-ferramentas.md](04-metodo-e-ferramentas.md) | Protocolo de shadowing, Anki, prompts de IA prontos para treino |
 | [05-tracker-semanal.md](05-tracker-semanal.md) | Checklist semanal + metas de 90 dias |
+| [06-austria-linz.md](06-austria-linz.md) | Pronúncia e vocabulário austríacos + onde praticar em Linz (alemão e inglês) |
 
 ## A rotina (realista para quem trabalha)
 
