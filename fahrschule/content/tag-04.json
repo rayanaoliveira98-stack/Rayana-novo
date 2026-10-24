@@ -1,0 +1,285 @@
+{
+  "id": "tag-04",
+  "tag": 4,
+  "titel": "Vorrangzeichen",
+  "dauerMinuten": 25,
+  "zusammenfassung": [
+    "Ein Vorrangzeichen ist stärker als die Rechtsregel.",
+    "Dreieck heißt: Vorrang geben. Achteck heißt: immer anhalten.",
+    "Gelbe Raute heißt: Du hast Vorrang."
+  ],
+  "schritte": [
+    {
+      "typ": "szene",
+      "audio": true,
+      "text_einfach": "Du kommst zu einer Kreuzung. Diesmal steht ein Schild. Es ist ein weißes Dreieck.",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><line x1=\"200\" y1=\"208\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><line x1=\"0\" y1=\"150\" x2=\"142\" y2=\"150\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><line x1=\"258\" y1=\"150\" x2=\"400\" y2=\"150\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><g><rect x=\"206\" y=\"228\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"211\" y=\"236\" width=\"18\" height=\"12\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"220\" y=\"268\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><rect x=\"290\" y=\"228\" width=\"8\" height=\"56\" fill=\"#8a8f97\"/><path d=\"M262 190 L326 190 L294 244 Z\" fill=\"#ffffff\" stroke=\"#c62828\" stroke-width=\"11\" stroke-linejoin=\"round\"/></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"14\" y=\"40\" font-size=\"17\" font-weight=\"700\" fill=\"#16181c\">Ein Schild für dich</text></svg>"
+    },
+    {
+      "typ": "erklaerung",
+      "text_einfach": "Das Dreieck heißt: Vorrang geben. Die andere Straße fährt zuerst. Das Schild ist stärker als die Rechtsregel. Steht ein Schild, gilt das Schild.",
+      "text_amtlich": "Ist der Vorrang durch das Vorschriftszeichen „Vorrang geben“ geregelt, so hat der Lenker den Fahrzeugen auf der Querstraße den Vorrang einzuräumen; eine solche Regelung geht der Rechtsregel vor.",
+      "vokabeln": [
+        {
+          "de": "Vorrangzeichen",
+          "einfach": "Ein Vorrangzeichen sagt dir: Wer fährt hier zuerst?",
+          "audio": true
+        },
+        {
+          "de": "Vorrang geben",
+          "einfach": "Vorrang geben heißt: Du lässt den anderen zuerst fahren.",
+          "audio": true
+        },
+        {
+          "de": "Rechtsregel",
+          "einfach": "Die Rechtsregel gilt nur ohne Schild und ohne Ampel.",
+          "audio": true
+        }
+      ]
+    },
+    {
+      "typ": "warum",
+      "text_einfach": "Manche Straßen haben viel Verkehr. Dort soll nicht jeder ständig warten. Das Schild gibt einer Straße immer den Vorrang. So läuft der Verkehr ruhig."
+    },
+    {
+      "typ": "folge",
+      "text_einfach": "Du siehst das Dreieck nicht. Du fährst einfach los. Von links kommt ein Auto mit Vorrang.",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g transform=\"rotate(14 214 152)\"><rect x=\"200\" y=\"130\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"214\" y=\"170\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(-12 166 172)\"><rect x=\"142\" y=\"158\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#1b7d34\"/></g><path d=\"M186 166 l18 -12 -7 17 20 -4 -14 19 16 6 -22 8 7 15 -20 -10 -6 17 -6 -19 -16 8 9 -17 -18 -4 16 -11 -12 -13z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><g><rect x=\"294\" y=\"224\" width=\"8\" height=\"56\" fill=\"#8a8f97\"/><path d=\"M266 186 L330 186 L298 240 Z\" fill=\"#ffffff\" stroke=\"#c62828\" stroke-width=\"11\" stroke-linejoin=\"round\"/></g><circle cx=\"60\" cy=\"56\" r=\"22\" fill=\"#c62828\"/><path d=\"M60 44 v14 M60 64 v1\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-linecap=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"92\" y=\"62\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Schild übersehen</text></svg>"
+    },
+    {
+      "typ": "entscheidung",
+      "frage": "Was machst du jetzt?",
+      "regel": "schild-schlaegt-rechtsregel",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><line x1=\"200\" y1=\"208\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><line x1=\"0\" y1=\"150\" x2=\"142\" y2=\"150\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><line x1=\"258\" y1=\"150\" x2=\"400\" y2=\"150\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><g><rect x=\"206\" y=\"228\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"211\" y=\"236\" width=\"18\" height=\"12\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"220\" y=\"268\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><rect x=\"290\" y=\"228\" width=\"8\" height=\"56\" fill=\"#8a8f97\"/><path d=\"M262 190 L326 190 L294 244 Z\" fill=\"#ffffff\" stroke=\"#c62828\" stroke-width=\"11\" stroke-linejoin=\"round\"/></g><g><rect x=\"46\" y=\"162\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#1b7d34\"/><rect x=\"74\" y=\"168\" width=\"13\" height=\"16\" rx=\"3\" fill=\"#d6ecdc\"/></g><path d=\"M102 176 H128 M120 168 L128 176 L120 184\" stroke=\"#1b7d34\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"14\" y=\"40\" font-size=\"16\" font-weight=\"700\" fill=\"#16181c\">Das Auto kommt von links.</text></svg>",
+      "optionen": [
+        {
+          "id": "a",
+          "text": "Ich warte. Das Schild sagt: Vorrang geben.",
+          "richtig": true,
+          "feedback_einfach": "Richtig. Mit Schild zählt die Rechtsregel nicht mehr."
+        },
+        {
+          "id": "b",
+          "text": "Ich fahre. Das Auto kommt ja von links.",
+          "richtig": false,
+          "feedback_einfach": "Das Schild ist stärker. Es steht nur bei dir. Der andere hat Vorrang.",
+          "neu_erklaert": "Neue Reihenfolge zum Merken. Erst Ampel. Dann Schild. Erst zuletzt die Rechtsregel.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g transform=\"rotate(16 212 154)\"><rect x=\"198\" y=\"132\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"212\" y=\"172\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(-12 164 172)\"><rect x=\"140\" y=\"158\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#1b7d34\"/></g><path d=\"M184 166 l18 -12 -7 17 20 -4 -14 19 16 6 -22 8 7 15 -20 -10 -6 17 -6 -19 -16 8 9 -17 -18 -4 16 -11 -12 -13z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"48\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Das Schild galt für dich</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "Ich fahre langsam hinein. Der andere bremst schon.",
+          "richtig": false,
+          "feedback_einfach": "Der andere muss nicht bremsen. Vorrang geben heißt: Du störst ihn nicht.",
+          "neu_erklaert": "Vorrang geben heißt warten. Der andere soll ohne Bremsen weiterfahren.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g><rect x=\"206\" y=\"170\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"220\" y=\"210\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(-16 150 176)\"><rect x=\"126\" y=\"162\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#1b7d34\"/></g><path d=\"M110 200 q22 -14 44 -6\" stroke=\"#c62828\" stroke-width=\"5\" fill=\"none\" stroke-dasharray=\"10 7\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"52\" font-size=\"16\" font-weight=\"700\" fill=\"#c62828\">Er muss stark bremsen</text></svg>"
+        }
+      ]
+    },
+    {
+      "typ": "entscheidung",
+      "frage": "Was machst du jetzt?",
+      "regel": "stop-immer-anhalten",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><line x1=\"200\" y1=\"208\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><rect x=\"152\" y=\"210\" width=\"96\" height=\"8\" fill=\"#ffffff\"/><g><rect x=\"206\" y=\"232\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"211\" y=\"240\" width=\"18\" height=\"12\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"220\" y=\"272\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><rect x=\"290\" y=\"232\" width=\"8\" height=\"52\" fill=\"#8a8f97\"/><polygon points=\"278,192 310,192 332,214 332,246 310,268 278,268 256,246 256,214\" fill=\"#c62828\" stroke=\"#ffffff\" stroke-width=\"5\"/><text x=\"294\" y=\"237\" font-size=\"20\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">STOP</text></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"14\" y=\"40\" font-size=\"16\" font-weight=\"700\" fill=\"#16181c\">Die Straße ist leer.</text></svg>",
+      "optionen": [
+        {
+          "id": "a",
+          "text": "Ich halte ganz an. Auch wenn niemand kommt.",
+          "richtig": true,
+          "feedback_einfach": "Richtig. Bei diesem Schild hältst du immer an. Stillstand ist Pflicht."
+        },
+        {
+          "id": "b",
+          "text": "Ich fahre langsam durch. Es kommt ja niemand.",
+          "richtig": false,
+          "feedback_einfach": "Das Schild verlangt Stillstand. Langsam rollen ist nicht anhalten. Das kostet dich die Prüfung.",
+          "neu_erklaert": "Merke den Unterschied. Dreieck heißt: warten, wenn nötig. Achteck heißt: immer stehen bleiben.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g><rect x=\"206\" y=\"150\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"220\" y=\"190\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><polygon points=\"290,60 322,60 344,82 344,114 322,136 290,136 268,114 268,82\" fill=\"#c62828\" stroke=\"#ffffff\" stroke-width=\"5\"/><text x=\"306\" y=\"105\" font-size=\"20\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">STOP</text></g><path d=\"M60 120 h90 M60 150 h60\" stroke=\"#c62828\" stroke-width=\"7\" stroke-linecap=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"70\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Nicht angehalten</text><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"210\" font-size=\"16\" font-weight=\"600\" fill=\"#16181c\">In der Prüfung: Fehler</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "Ich schaue kurz und rolle weiter.",
+          "richtig": false,
+          "feedback_einfach": "Rollen ist nicht anhalten. Das Auto muss wirklich stehen.",
+          "neu_erklaert": "Zähl beim Stehen bis zwei. Erst dann schaust du und fährst.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g transform=\"rotate(-10 218 150)\"><rect x=\"204\" y=\"128\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"218\" y=\"168\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(10 256 128)\"><rect x=\"232\" y=\"114\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/></g><path d=\"M232 132 l18 -12 -7 17 20 -4 -14 19 16 6 -22 8 7 15 -20 -10 -6 17 -6 -19 -16 8 9 -17 -18 -4 16 -11 -12 -13z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"56\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Zu spät gesehen</text></svg>"
+        }
+      ]
+    },
+    {
+      "typ": "entscheidung",
+      "frage": "Was machst du jetzt?",
+      "regel": "vorrangstrasse-gelbe-raute",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><line x1=\"200\" y1=\"208\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><g><rect x=\"206\" y=\"228\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"211\" y=\"236\" width=\"18\" height=\"12\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"220\" y=\"268\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><rect x=\"292\" y=\"230\" width=\"8\" height=\"54\" fill=\"#8a8f97\"/><g transform=\"rotate(45 296 200)\"><rect x=\"268\" y=\"172\" width=\"56\" height=\"56\" fill=\"#f9a825\" stroke=\"#ffffff\" stroke-width=\"7\"/></g></g><g><rect x=\"300\" y=\"110\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/><rect x=\"308\" y=\"116\" width=\"13\" height=\"16\" rx=\"3\" fill=\"#f7d5d2\"/></g><path d=\"M292 124 H270 M278 116 L270 124 L278 132\" stroke=\"#c62828\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"14\" y=\"40\" font-size=\"16\" font-weight=\"700\" fill=\"#16181c\">Du fährst auf der Vorrangstraße.</text></svg>",
+      "optionen": [
+        {
+          "id": "a",
+          "text": "Ich fahre. Ich bin auf der Vorrangstraße.",
+          "richtig": true,
+          "feedback_einfach": "Richtig. Die gelbe Raute gibt dir Vorrang. Auch gegen Autos von rechts."
+        },
+        {
+          "id": "b",
+          "text": "Ich warte. Das Auto kommt von rechts.",
+          "richtig": false,
+          "feedback_einfach": "Hier gilt die Rechtsregel nicht. Dein Schild ist stärker. Der andere muss warten.",
+          "neu_erklaert": "Die gelbe Raute ist dein Freund. Sie sagt: Diese Straße hat Vorrang.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g><rect x=\"206\" y=\"228\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"220\" y=\"268\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><rect x=\"206\" y=\"172\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#8a8f97\"/><rect x=\"300\" y=\"110\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/><circle cx=\"70\" cy=\"60\" r=\"22\" fill=\"#f9a825\"/><path d=\"M70 48 v14 M70 68 v1\" stroke=\"#16181c\" stroke-width=\"6\" stroke-linecap=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"102\" y=\"66\" font-size=\"16\" font-weight=\"700\" fill=\"#16181c\">Alle warten unnötig</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "Ich halte an und schaue lange.",
+          "richtig": false,
+          "feedback_einfach": "Anhalten ohne Grund verwirrt die anderen. Hinter dir bremst jemand stark.",
+          "neu_erklaert": "Vorrang heißt auch: Du darfst zügig fahren. Schau trotzdem kurz hin.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g><rect x=\"206\" y=\"210\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"220\" y=\"250\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(6 220 274)\"><rect x=\"206\" y=\"258\" width=\"28\" height=\"44\" rx=\"7\" fill=\"#8a8f97\"/></g><path d=\"M220 262 l14 -10 -5 14 16 -3 -11 15 13 5 -18 6 6 12 -16 -8 -5 14 -5 -15 -13 6 7 -14 -14 -3 13 -9 -10 -10z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"56\" font-size=\"17\" font-weight=\"700\" fill=\"#c62828\">Auffahrunfall</text></svg>"
+        }
+      ]
+    },
+    {
+      "typ": "entscheidung",
+      "frage": "Was machst du jetzt?",
+      "regel": "vorrang-geben-ohne-verkehr",
+      "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><line x1=\"200\" y1=\"208\" x2=\"200\" y2=\"300\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><line x1=\"0\" y1=\"150\" x2=\"142\" y2=\"150\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><line x1=\"258\" y1=\"150\" x2=\"400\" y2=\"150\" stroke=\"#ffffff\" stroke-width=\"6\" stroke-dasharray=\"22 18\"/><g><rect x=\"206\" y=\"228\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><rect x=\"211\" y=\"236\" width=\"18\" height=\"12\" rx=\"3\" fill=\"#cfe0f5\"/><text x=\"220\" y=\"268\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g><rect x=\"290\" y=\"228\" width=\"8\" height=\"56\" fill=\"#8a8f97\"/><path d=\"M262 190 L326 190 L294 244 Z\" fill=\"#ffffff\" stroke=\"#c62828\" stroke-width=\"11\" stroke-linejoin=\"round\"/></g><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"14\" y=\"40\" font-size=\"16\" font-weight=\"700\" fill=\"#16181c\">Die Querstraße ist leer.</text></svg>",
+      "optionen": [
+        {
+          "id": "a",
+          "text": "Ich schaue gut und fahre langsam weiter.",
+          "richtig": true,
+          "feedback_einfach": "Richtig. Beim Dreieck musst du nicht immer stehen. Nur schauen und Vorrang geben."
+        },
+        {
+          "id": "b",
+          "text": "Ich halte ganz an. Das ist Pflicht.",
+          "richtig": false,
+          "feedback_einfach": "Das Dreieck verlangt kein Anhalten. Nur das Achteck verlangt Stillstand.",
+          "neu_erklaert": "Zwei Schilder, zwei Regeln. Dreieck: schauen und Vorrang geben. Achteck: immer stehen bleiben.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><path d=\"M60 96 L124 96 L92 150 Z\" fill=\"#ffffff\" stroke=\"#c62828\" stroke-width=\"11\" stroke-linejoin=\"round\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"52\" y=\"180\" font-size=\"15\" font-weight=\"700\" fill=\"#16181c\">schauen</text><polygon points=\"288,96 320,96 342,118 342,150 320,172 288,172 266,150 266,118\" fill=\"#c62828\" stroke=\"#ffffff\" stroke-width=\"5\"/><text x=\"304\" y=\"141\" font-size=\"18\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">STOP</text><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"272\" y=\"200\" font-size=\"15\" font-weight=\"700\" fill=\"#16181c\">stehen</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "Ich fahre schnell durch. Es kommt niemand.",
+          "richtig": false,
+          "feedback_einfach": "Schnell fahren ist hier falsch. Ein Auto kann plötzlich kommen.",
+          "neu_erklaert": "Langsam heranfahren und schauen. Dann kannst du noch reagieren.",
+          "folge_svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"400\" height=\"300\" fill=\"#e6ebe4\"/><rect x=\"148\" y=\"0\" width=\"104\" height=\"300\" fill=\"#6f747c\"/><rect x=\"0\" y=\"98\" width=\"400\" height=\"104\" fill=\"#6f747c\"/><g transform=\"rotate(-14 216 150)\"><rect x=\"202\" y=\"128\" width=\"28\" height=\"48\" rx=\"7\" fill=\"#1258a8\"/><text x=\"216\" y=\"168\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#ffffff\">DU</text></g><g transform=\"rotate(12 254 128)\"><rect x=\"230\" y=\"114\" width=\"48\" height=\"28\" rx=\"7\" fill=\"#c62828\"/></g><path d=\"M230 132 l18 -12 -7 17 20 -4 -14 19 16 6 -22 8 7 15 -20 -10 -6 17 -6 -19 -16 8 9 -17 -18 -4 16 -11 -12 -13z\" fill=\"#f9a825\" stroke=\"#c62828\" stroke-width=\"3\"/><text stroke=\"#ffffff\" stroke-width=\"6\" paint-order=\"stroke\" x=\"18\" y=\"56\" font-size=\"16\" font-weight=\"700\" fill=\"#c62828\">Plötzlich kam ein Auto</text></svg>"
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "schild-schlaegt-rechtsregel",
+      "frage_amtlich": "An einer Kreuzung ist für Ihre Fahrtrichtung das Vorschriftszeichen „Vorrang geben“ angebracht. Aus der links einmündenden Querstraße nähert sich ein Fahrzeug. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Bei dir steht das Dreieck. Von links kommt ein Auto. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich habe dem Fahrzeug auf der Querstraße den Vorrang zu geben.",
+          "richtig": true,
+          "feedback": "Richtig. Das Schild ist stärker als die Rechtsregel."
+        },
+        {
+          "text": "Ich darf einfahren, weil sich das Fahrzeug von links nähert.",
+          "richtig": false,
+          "feedback": "Falsch. Mit Schild zählt die Rechtsregel nicht."
+        },
+        {
+          "text": "Der Vorrang richtet sich danach, wer zuerst bei der Kreuzung ist.",
+          "richtig": false,
+          "feedback": "Falsch. Das Schild entscheidet, nicht die Zeit."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "stop-immer-anhalten",
+      "frage_amtlich": "Sie nähern sich einer Kreuzung, an welcher das Vorschriftszeichen „Halt. Vorrang geben.“ angebracht ist. Die Querstraße ist frei einsehbar und unbefahren. Wie haben Sie sich zu verhalten?",
+      "frage_einfach": "Beim Stopp-Schild ist die Straße leer. Was tust du?",
+      "optionen": [
+        {
+          "text": "Ich habe mein Fahrzeug jedenfalls bis zum Stillstand anzuhalten.",
+          "richtig": true,
+          "feedback": "Richtig. Beim Stopp-Schild hältst du immer an."
+        },
+        {
+          "text": "Ich darf ohne Anhalten weiterfahren, wenn kein Querverkehr besteht.",
+          "richtig": false,
+          "feedback": "Falsch. Anhalten ist hier immer Pflicht."
+        },
+        {
+          "text": "Ein deutliches Verlangsamen genügt in diesem Fall.",
+          "richtig": false,
+          "feedback": "Falsch. Langsam rollen ist kein Anhalten."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "vorrangstrasse-gelbe-raute",
+      "frage_amtlich": "Sie befahren eine Straße, welche durch das Hinweiszeichen „Vorrangstraße“ gekennzeichnet ist. Aus einer rechts einmündenden Querstraße nähert sich ein Fahrzeug. Wie ist der Vorrang zu beurteilen?",
+      "frage_einfach": "Du bist auf der Vorrangstraße. Von rechts kommt ein Auto. Wer fährt zuerst?",
+      "optionen": [
+        {
+          "text": "Mir kommt der Vorrang zu; das einmündende Fahrzeug hat zu warten.",
+          "richtig": true,
+          "feedback": "Richtig. Die gelbe Raute gibt dir Vorrang."
+        },
+        {
+          "text": "Dem von rechts kommenden Fahrzeug ist der Vorrang zu geben.",
+          "richtig": false,
+          "feedback": "Falsch. Hier gilt die Rechtsregel nicht."
+        },
+        {
+          "text": "Der Vorrang ist durch gegenseitige Verständigung zu klären.",
+          "richtig": false,
+          "feedback": "Falsch. Das Schild regelt den Vorrang klar."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "vorrang-geben-ohne-verkehr",
+      "frage_amtlich": "Welche Verpflichtung ergibt sich aus dem Vorschriftszeichen „Vorrang geben“?",
+      "frage_einfach": "Was musst du beim weißen Dreieck tun?",
+      "optionen": [
+        {
+          "text": "Ich habe den Fahrzeugen auf der Querstraße den Vorrang einzuräumen.",
+          "richtig": true,
+          "feedback": "Richtig. Du lässt die Querstraße zuerst fahren."
+        },
+        {
+          "text": "Ich habe mein Fahrzeug in jedem Fall bis zum Stillstand anzuhalten.",
+          "richtig": false,
+          "feedback": "Falsch. Das verlangt nur das Stopp-Schild."
+        },
+        {
+          "text": "Ich darf ohne jede Verminderung der Geschwindigkeit weiterfahren.",
+          "richtig": false,
+          "feedback": "Falsch. Du fährst langsam und schaust."
+        }
+      ]
+    },
+    {
+      "typ": "pruefungsfrage",
+      "regel": "vorrang-reihenfolge",
+      "frage_amtlich": "In welcher Reihenfolge sind die Vorrangregelungen an einer Kreuzung zu beachten?",
+      "frage_einfach": "Was gilt zuerst? Wähle alles, was stimmt.",
+      "optionen": [
+        {
+          "text": "Zeichen eines Organs der Straßenaufsicht gehen allen anderen Regelungen vor.",
+          "richtig": true,
+          "feedback": "Richtig. Die Polizei ist immer stärker."
+        },
+        {
+          "text": "Lichtzeichen gehen den Vorrangzeichen vor.",
+          "richtig": true,
+          "feedback": "Richtig. Die Ampel steht über dem Schild."
+        },
+        {
+          "text": "Die Rechtsregel geht den Vorrangzeichen vor.",
+          "richtig": false,
+          "feedback": "Falsch. Das Schild ist stärker als die Regel."
+        }
+      ]
+    }
+  ]
+}
