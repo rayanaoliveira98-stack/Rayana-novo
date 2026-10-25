@@ -1,0 +1,313 @@
+<title>Mein 90-Tage-Planner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: summary band (progress + 13-week grid) above a day sheet with grouped checklist and notes */
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#16201D; --muted:#5C6B66; --line:#DCE3E0;
+  --accent:#1F6F5C; --accent-soft:#E1EFEA;
+  --fam:#B9466E; --biz:#2E5BA6; --health:#2F8552; --me:#A9741F;
+  --empty:#E6ECE9;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101614; --surface:#18201D; --ink:#E7EEEB; --muted:#94A39E; --line:#2A3531;
+  --accent:#4FB898; --accent-soft:#1D3A31;
+  --fam:#E27FA2; --biz:#7FA4E6; --health:#6CC48C; --me:#E0AE5A; --empty:#222C29; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101614; --surface:#18201D; --ink:#E7EEEB; --muted:#94A39E; --line:#2A3531;
+  --accent:#4FB898; --accent-soft:#1D3A31;
+  --fam:#E27FA2; --biz:#7FA4E6; --health:#6CC48C; --me:#E0AE5A; --empty:#222C29; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:24px 48px}
+.wrap{max-width:1040px;margin:0 auto;display:grid;gap:20px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(28px,5vw,40px);font-weight:700;line-height:1.05}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+
+header{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:end;justify-content:space-between}
+.goal{color:var(--muted);max-width:52ch;margin-top:6px}
+.stats{display:flex;gap:24px;flex-wrap:wrap}
+.stat .v{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1}
+.stat .l{font-size:12px;color:var(--muted)}
+.bar{height:10px;border-radius:99px;background:var(--empty);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:inherit;transition:width .3s}
+
+.grid-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px}
+.grid-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.legend{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.legend span{width:14px;height:14px;border-radius:4px;display:inline-block}
+.cal-scroll{overflow-x:auto}
+.cal{display:grid;grid-template-columns:44px repeat(7,minmax(30px,1fr));gap:5px;min-width:300px}
+.cal .wd,.cal .kw{font-size:11px;color:var(--muted);display:flex;align-items:center}
+.cal .wd{justify-content:center}
+.cell{aspect-ratio:1/1;max-width:100%;border:0;border-radius:7px;cursor:pointer;font:600 12px var(--f-body);font-variant-numeric:tabular-nums;
+  color:var(--ink);background:var(--empty);position:relative;padding:0}
+.cell.l1{background:color-mix(in srgb,var(--accent) 25%,var(--empty))}
+.cell.l2{background:color-mix(in srgb,var(--accent) 50%,var(--empty))}
+.cell.l3{background:color-mix(in srgb,var(--accent) 75%,var(--empty));color:var(--surface)}
+.cell.l4{background:var(--accent);color:var(--surface)}
+.cell.today::after{content:"";position:absolute;inset:-3px;border:2px dashed var(--ink);border-radius:9px;opacity:.5}
+.cell.sel{outline:2.5px solid var(--ink);outline-offset:2px}
+.cell:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.cell.blank{visibility:hidden}
+
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:20px}
+.sheet-head{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.sheet-head h2{font-size:26px}
+.nav{display:flex;gap:8px}
+button.btn{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:9px;padding:8px 12px;cursor:pointer}
+button.btn:hover{border-color:var(--accent)}
+button.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pillars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pill{display:grid;gap:6px;font-size:13px}
+.pill .top{display:flex;justify-content:space-between;color:var(--muted)}
+.pill .top b{color:var(--ink);font-weight:600}
+.pill .bar{height:6px}
+.body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.group{display:grid;gap:4px}
+.group h3{font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.group h3::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+.groups{display:grid;gap:18px;align-content:start}
+label.task{display:flex;gap:10px;align-items:center;padding:7px 8px;border-radius:8px;cursor:pointer}
+label.task:hover{background:var(--bg)}
+label.task input{appearance:none;width:20px;height:20px;border:2px solid var(--line);border-radius:6px;flex:none;display:grid;place-items:center;cursor:pointer;margin:0;background:var(--surface)}
+label.task input:checked{background:var(--c);border-color:var(--c)}
+label.task input:checked::after{content:"";width:5px;height:10px;border:solid var(--surface);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+label.task input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+label.task input:checked+span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.fields{display:grid;gap:14px;align-content:start}
+.field{display:grid;gap:5px}
+.field label{font-size:13px;font-weight:600}
+.field small{color:var(--muted);font-weight:400}
+textarea{font:15px/1.45 var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;resize:vertical;min-height:44px;width:100%}
+textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.save{font-size:12px;color:var(--muted)}
+.foot{font-size:12px;color:var(--muted);text-align:center}
+@media (max-width:760px){.body{grid-template-columns:1fr}.pillars{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Start 26. Okt. 2026 · Ende 23. Jän. 2027</div>
+      <h1>Mein 90-Tage-Planner</h1>
+      <p class="goal">Ziel: mehr Struktur, Kundenwachstum, Gesundheit und Familienzeit.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v num" id="s-total">0 %</div><div class="l">Fortschritt gesamt</div></div>
+      <div class="stat"><div class="v num" id="s-day">–</div><div class="l" id="s-day-l">Heute</div></div>
+      <div class="stat"><div class="v num" id="s-strong">0</div><div class="l">Starke Tage (≥ 80 %)</div></div>
+    </div>
+  </header>
+  <div class="bar" aria-hidden="true"><i id="totalbar" style="width:0%"></i></div>
+
+  <section class="grid-card" aria-label="Alle 90 Tage">
+    <div class="grid-head">
+      <h2 style="font-size:18px">13 Wochen auf einen Blick</h2>
+      <div class="legend">wenig <span style="background:var(--empty)"></span><span class="l1x"></span><span class="l2x"></span><span class="l3x"></span><span style="background:var(--accent)"></span> viel</div>
+    </div>
+    <div class="cal-scroll"><div class="cal" id="cal"></div></div>
+  </section>
+
+  <section class="sheet" aria-live="polite">
+    <div class="sheet-head">
+      <div>
+        <div class="eyebrow num" id="d-eyebrow">Tag 1 von 90</div>
+        <h2 id="d-title">Mo. 26. Okt.</h2>
+      </div>
+      <div class="nav">
+        <button class="btn" id="prev" aria-label="Vorheriger Tag">←</button>
+        <button class="btn" id="todayBtn">Heute</button>
+        <button class="btn" id="next" aria-label="Nächster Tag">→</button>
+      </div>
+    </div>
+    <div class="pillars" id="pillars"></div>
+    <div class="body">
+      <div class="groups" id="groups"></div>
+      <div class="fields">
+        <div class="field"><label for="f-priorities">Top-3-Prioritäten <small>was heute wirklich zählt</small></label><textarea id="f-priorities" rows="3" placeholder="1. &#10;2. &#10;3. "></textarea></div>
+        <div class="field"><label for="f-appointments">Termine</label><textarea id="f-appointments" rows="2"></textarea></div>
+        <div class="field"><label for="f-times">Zeiten <small>Zeitblöcke für den Tag</small></label><textarea id="f-times" rows="2"></textarea></div>
+        <div class="field"><label for="f-meals">Mahlzeiten</label><textarea id="f-meals" rows="2"></textarea></div>
+        <div class="field"><label for="f-notes">Notizen</label><textarea id="f-notes" rows="3"></textarea></div>
+        <div class="save" id="save">Wird geladen …</div>
+      </div>
+    </div>
+  </section>
+  <p class="foot" id="foot"></p>
+</div>
+<style>.legend .l1x{background:color-mix(in srgb,var(--accent) 25%,var(--empty))}.legend .l2x{background:color-mix(in srgb,var(--accent) 50%,var(--empty))}.legend .l3x{background:color-mix(in srgb,var(--accent) 75%,var(--empty))}</style>
+
+<script>
+(function(){
+const START = new Date(2026, 9, 26);
+const DAYS = 90;
+const GROUPS = [
+  {id:"fam", name:"Familie", c:"var(--fam)", tasks:[["kids","Kinder fertig machen / begleiten"],["kidstime","Zeit mit den Kindern"],["famorg","Familienorganisation"],["house","Haushalt"]]},
+  {id:"biz", name:"Business", c:"var(--biz)", tasks:[["top3","Top-3-Prioritäten festlegen"],["clients","Kundenarbeit / Meetings"],["content","Content & Businessaufbau"]]},
+  {id:"health", name:"Gesundheit", c:"var(--health)", tasks:[["train","Training / Bewegung"],["water","Wasser trinken"],["breakfast","Frühstück"],["lunch","Mittagessen"],["dinner","Abendessen"],["shower","Duschen & Körperpflege"]]},
+  {id:"me", name:"Für mich", c:"var(--me)", tasks:[["learn","Lesen / Lernen"],["metime","Zeit für mich"]]}
+];
+const ALL = GROUPS.flatMap(g=>g.tasks.map(t=>t[0]));
+const FIELDS = ["priorities","appointments","times","meals","notes"];
+const WD = ["So.","Mo.","Di.","Mi.","Do.","Fr.","Sa."];
+const MO = ["Jän.","Feb.","März","Apr.","Mai","Juni","Juli","Aug.","Sep.","Okt.","Nov.","Dez."];
+const LS = "planner90-v1";
+
+const dateOf = i => new Date(START.getFullYear(), START.getMonth(), START.getDate()+i);
+const fmt = d => `${WD[d.getDay()]} ${String(d.getDate()).padStart(2,"0")}. ${MO[d.getMonth()]}`;
+const key = i => "day-" + String(i+1).padStart(2,"0");
+function isoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const n=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-n);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y)/864e5+1)/7);}
+function todayIndex(){const n=new Date();const t=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.round((t-START)/864e5);}
+
+let state = {};      // key -> {checks:{}, priorities:"", ...}
+let db = null, col = null;
+let sel = Math.min(Math.max(todayIndex(),0),DAYS-1);
+
+try{ state = JSON.parse(localStorage.getItem(LS)) || {}; }catch(e){ state = {}; }
+const cache = () => { try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} };
+const day = i => state[key(i)] || (state[key(i)] = {checks:{}});
+const frac = i => { const d = state[key(i)]; if(!d||!d.checks) return 0; return ALL.filter(k=>d.checks[k]).length/ALL.length; };
+
+/* calendar */
+const cal = document.getElementById("cal");
+function buildCal(){
+  cal.innerHTML = "";
+  cal.appendChild(Object.assign(document.createElement("div"),{className:"wd"}));
+  ["Mo","Di","Mi","Do","Fr","Sa","So"].forEach(w=>cal.appendChild(Object.assign(document.createElement("div"),{className:"wd",textContent:w})));
+  const weeks = Math.ceil(DAYS/7);
+  for(let w=0; w<weeks; w++){
+    cal.appendChild(Object.assign(document.createElement("div"),{className:"kw num",textContent:"KW "+isoWeek(dateOf(w*7))}));
+    for(let k=0;k<7;k++){
+      const i = w*7+k;
+      const b = document.createElement("button");
+      b.className = "cell"; b.dataset.i = i;
+      if(i>=DAYS){ b.classList.add("blank"); b.tabIndex=-1; b.setAttribute("aria-hidden","true"); }
+      else { b.textContent = i+1; b.onclick = ()=>select(i); }
+      cal.appendChild(b);
+    }
+  }
+}
+function paintCal(){
+  const ti = todayIndex();
+  cal.querySelectorAll(".cell[data-i]").forEach(b=>{
+    const i = +b.dataset.i; if(i>=DAYS) return;
+    const f = frac(i), lvl = f===0?0:f<.34?1:f<.67?2:f<1?3:4;
+    b.className = "cell" + (lvl?" l"+lvl:"") + (i===ti?" today":"") + (i===sel?" sel":"");
+    b.setAttribute("aria-label", `Tag ${i+1}, ${fmt(dateOf(i))}, ${Math.round(f*100)} Prozent erledigt`);
+  });
+}
+
+/* day sheet */
+const groupsEl = document.getElementById("groups"), pillarsEl = document.getElementById("pillars");
+function buildSheet(){
+  groupsEl.innerHTML = ""; pillarsEl.innerHTML = "";
+  GROUPS.forEach(g=>{
+    const p = document.createElement("div"); p.className="pill"; p.style.setProperty("--c",g.c);
+    p.innerHTML = `<div class="top"><b>${g.name}</b><span class="num" id="pp-${g.id}">0/${g.tasks.length}</span></div><div class="bar"><i id="pb-${g.id}" style="background:${g.c};width:0%"></i></div>`;
+    pillarsEl.appendChild(p);
+    const box = document.createElement("div"); box.className="group"; box.style.setProperty("--c",g.c);
+    box.innerHTML = `<h3>${g.name}</h3>`;
+    g.tasks.forEach(([k,label])=>{
+      const l = document.createElement("label"); l.className="task";
+      l.innerHTML = `<input type="checkbox" id="t-${k}" data-k="${k}"><span>${label}</span>`;
+      box.appendChild(l);
+    });
+    groupsEl.appendChild(box);
+  });
+  groupsEl.addEventListener("change", e=>{
+    const k = e.target.dataset.k; if(!k) return;
+    const d = day(sel); d.checks = Object.assign({}, d.checks, {[k]: e.target.checked});
+    persist(sel, true); paintStats(); paintPillars(); paintCal();
+  });
+  FIELDS.forEach(f=>{
+    const ta = document.getElementById("f-"+f);
+    ta.addEventListener("input", ()=>{ day(sel)[f] = ta.value; persist(sel, false); });
+  });
+}
+function paintSheet(){
+  const d = state[key(sel)] || {checks:{}};
+  document.getElementById("d-eyebrow").textContent = `Tag ${sel+1} von 90 · KW ${isoWeek(dateOf(sel))}`;
+  document.getElementById("d-title").textContent = fmt(dateOf(sel));
+  ALL.forEach(k=>{ document.getElementById("t-"+k).checked = !!(d.checks&&d.checks[k]); });
+  FIELDS.forEach(f=>{ const ta=document.getElementById("f-"+f); if(document.activeElement!==ta) ta.value = d[f]||""; });
+  document.getElementById("prev").disabled = sel===0;
+  document.getElementById("next").disabled = sel===DAYS-1;
+  paintPillars();
+}
+function paintPillars(){
+  const d = state[key(sel)] || {checks:{}};
+  GROUPS.forEach(g=>{
+    const n = g.tasks.filter(t=>d.checks&&d.checks[t[0]]).length;
+    document.getElementById("pp-"+g.id).textContent = `${n}/${g.tasks.length}`;
+    document.getElementById("pb-"+g.id).style.width = (n/g.tasks.length*100)+"%";
+  });
+}
+function paintStats(){
+  let done=0, strong=0;
+  for(let i=0;i<DAYS;i++){ const f=frac(i); done+=f; if(f>=.8) strong++; }
+  const pct = Math.round(done/DAYS*1000)/10;
+  document.getElementById("s-total").textContent = pct.toLocaleString("de-AT")+" %";
+  document.getElementById("totalbar").style.width = pct+"%";
+  document.getElementById("s-strong").textContent = strong;
+  const ti = todayIndex();
+  const v = document.getElementById("s-day"), l = document.getElementById("s-day-l");
+  if(ti<0){ v.textContent = -ti===1?"morgen":`in ${-ti}`; l.textContent = -ti===1?"geht es los":"Tagen geht es los"; }
+  else if(ti>=DAYS){ v.textContent="90/90"; l.textContent="geschafft"; }
+  else { v.textContent = `${ti+1}/90`; l.textContent = "Heute"; }
+}
+function select(i){ sel = Math.min(Math.max(i,0),DAYS-1); paintSheet(); paintCal(); }
+document.getElementById("prev").onclick = ()=>select(sel-1);
+document.getElementById("next").onclick = ()=>select(sel+1);
+document.getElementById("todayBtn").onclick = ()=>select(todayIndex());
+
+/* saving: one write at a time per day, text debounced */
+const saveEl = document.getElementById("save");
+const timers = {}, chains = {};
+function persist(i, now){
+  cache();
+  if(!col){ saveEl.textContent = "Gespeichert in diesem Browser"; return; }
+  const k = key(i);
+  clearTimeout(timers[k]);
+  saveEl.textContent = "Speichert …";
+  timers[k] = setTimeout(()=>{
+    const body = JSON.parse(JSON.stringify(state[k]||{checks:{}}));
+    chains[k] = (chains[k]||Promise.resolve()).then(()=>col.doc(k).set(body)).then(()=>{
+      saveEl.textContent = "Gespeichert in deinem Konto";
+    }).catch(err=>{
+      saveEl.textContent = err&&err.code==="invalid_argument" ? "Kein Schreibzugriff, nur in diesem Browser gespeichert" : "Speichern fehlgeschlagen, bitte gleich nochmal ändern";
+    });
+  }, now?0:700);
+}
+
+buildCal(); buildSheet(); paintSheet(); paintStats(); paintCal();
+saveEl.textContent = "Gespeichert in diesem Browser";
+document.getElementById("foot").textContent = "Tippe einen Tag im Raster an, um ihn zu öffnen.";
+
+(async function connect(){
+  if(!window.claude || !window.claude.use) return;
+  try{
+    const [d, u] = await Promise.all([claude.use("db"), claude.use("user")]);
+    const uid = u ? await u.id() : null;
+    if(!d || !uid) return;
+    db = d; col = db.collection("data/users/"+uid);
+    saveEl.textContent = "Verbinde mit deinem Konto …";
+    col.onSnapshot(snap=>{
+      if(snap.empty && !snap.metadata.fromCache){
+        // first visit with an account: move anything typed in this browser up
+        Object.keys(state).forEach(k=>{ const i=+k.slice(4)-1; if(i>=0&&i<DAYS) persist(i,true); });
+      }
+      snap.docs.forEach(ds=>{ if(ds.exists){ const v=ds.data(); state[ds.id] = JSON.parse(JSON.stringify(v)); } });
+      cache(); paintSheet(); paintStats(); paintCal();
+      if(!snap.metadata.hasPendingWrites) saveEl.textContent = "Gespeichert in deinem Konto";
+    }, ()=>{ col=null; saveEl.textContent = "Gespeichert in diesem Browser"; });
+  }catch(e){ col=null; }
+})();
+})();
+</script>
