@@ -299,3 +299,38 @@ Pontos de ajuste rápido no `app.js`:
 6. **GDPR** — dados de saúde (testes, dor, medidas e sobretudo **fotos**) exigem consentimento
    explícito, base legal e política de retenção. Na demo as fotos são redimensionadas para 720 px
    e guardadas só no navegador; em produção vão cifradas para o servidor, com direito a apagar
+
+---
+
+## Instalável: a app no telemóvel do cliente
+
+A app é uma **PWA**. Quem abre o link pessoal pode instalá-la como aplicação própria
+— ícone no ecrã inicial, abertura em ecrã inteiro sem barra de endereço, funciona sem rede.
+
+**Ficheiros**
+
+- `manifest.webmanifest` — nome, cor da marca (`#06302B`), `display: standalone`,
+  ícones 192/512 + maskable, atalhos (Check-in, Fortschritt)
+- `sw.js` — service worker. Navegação: rede primeiro, cache como rede de segurança.
+  Estáticos: cache primeiro, renovados em segundo plano. Nada é enviado para servidor nenhum —
+  os dados continuam no próprio aparelho
+- `assets/icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png`,
+  `favicon-32.png` — gerados a partir do logo oficial sobre o verde da marca
+
+**Acesso por cliente, que persiste**
+
+1. Yalcin manda o link pessoal: `…/fitary/?zugang=fit-markus`
+2. No primeiro acesso o token é guardado no aparelho (`localStorage`, chave `fitary.access`)
+   e **removido da barra de endereço** — não viaja em screenshots nem no histórico
+3. A partir daí o ícone no ecrã inicial abre sempre a área daquele cliente — sem link, sem password
+4. Aba **Datenschutz → Abmelden** apaga o token do aparelho. Os dados ficam; um link novo reabre tudo
+
+Base legal da gravação no aparelho: § 165 Abs 3 TKG 2021 — armazenamento tecnicamente
+necessário, pedido pelo próprio utilizador. Sem ele o acesso não funciona.
+
+**Importante:** um link inválido ou expirado **nunca** cai no cockpit do estúdio —
+mostra o ecrã „Zugang abgelaufen" com o botão de pedir acesso novo.
+
+**Limite honesto desta fase:** o filtro por cliente acontece no navegador, não no servidor.
+Serve para demo, onboarding e uso real com clientes do estúdio. Para separação de dados
+à prova de bisbilhotice é preciso backend (ver ponto 1 e 4 acima).

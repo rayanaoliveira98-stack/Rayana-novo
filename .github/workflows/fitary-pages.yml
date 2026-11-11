@@ -38,6 +38,7 @@ jobs:
           cd site
           rm -rf fitary && mkdir -p fitary
           cp ../src/fitary-app/index.html ../src/fitary-app/app.css ../src/fitary-app/app.js fitary/
+          cp ../src/fitary-app/manifest.webmanifest ../src/fitary-app/sw.js fitary/
           cp -r ../src/fitary-app/assets fitary/
           rm -f fitary/assets/README.md
           touch .nojekyll

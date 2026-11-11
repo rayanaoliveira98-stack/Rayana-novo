@@ -1088,12 +1088,42 @@ const TITLES = {
   automations:['Automationen', 'Regeln, die für dich mitdenken']
 };
 
-const ACCESS = new URLSearchParams(location.search).get('zugang');
+/* ---------------- Zugang: Link einmal öffnen, danach eigene App ----------------
+   Der persönliche Link trägt den Token in der URL. Beim ersten Öffnen wird er auf dem
+   Gerät hinterlegt (§ 165 Abs 3 TKG 2021: Speicherung, die der Nutzer selbst angefordert
+   hat — der Zugang funktioniert ohne sie nicht) und aus der Adresszeile entfernt, damit
+   er nicht in Screenshots oder im Verlauf weiterwandert. Danach öffnet das Symbol am
+   Homescreen immer genau diesen Kundenbereich — ohne Link, ohne Passwort.
+   Abmelden löscht die Hinterlegung (Datenschutz-Tab). */
+const ACCESS_KEY = 'fitary.access';
+function accessStore(t)  { try { localStorage.setItem(ACCESS_KEY, t); } catch (e) {} }
+function accessForget()  { try { localStorage.removeItem(ACCESS_KEY); } catch (e) {} }
+function accessRead()    { try { return localStorage.getItem(ACCESS_KEY); } catch (e) { return null; } }
+
+const ACCESS_URL = new URLSearchParams(location.search).get('zugang');
+const ACCESS = ACCESS_URL || accessRead();
 const PORTAL_RAW = ACCESS ? db.clients.find(c =>
   (c.access && c.access.token.toLowerCase() === ACCESS.toLowerCase()) || c.code.toLowerCase() === ACCESS.toLowerCase()) : null;
 let PORTAL = PORTAL_RAW && accessValid(PORTAL_RAW) ? PORTAL_RAW : null;
 /* Jeder ?zugang-Aufruf, der nicht auf einen gültigen Link passt, landet NIE im Studio-Cockpit. */
 const PORTAL_EXPIRED = !!ACCESS && !PORTAL;
+
+if (PORTAL && ACCESS) {
+  accessStore(ACCESS);
+  if (ACCESS_URL && history.replaceState) {
+    const q = new URLSearchParams(location.search); q.delete('zugang');
+    const rest = q.toString();
+    try { history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '')); } catch (e) {}
+  }
+}
+/* Abmelden: Gerät vergisst den Zugang. Die Daten bleiben beim Studio — ein neuer Link
+   öffnet denselben Bereich wieder. */
+function accessSignOut() {
+  if (!confirm('Von diesem Gerät abmelden?\n\nDein Fortschritt bleibt erhalten. Zum Wiederanmelden brauchst du deinen persönlichen Link.')) return;
+  accessForget();
+  try { sessionStorage.removeItem('fitary.portal'); } catch (e) {}
+  location.href = location.pathname;
+}
 
 /* Demo-Umschalter: die Kundenansicht ohne Query-Parameter öffnen — nötig, sobald die
    App eingebettet läuft und die URL nicht durchgereicht wird. */
@@ -2303,6 +2333,11 @@ const PTABS = [
   { id: 'care',     label: 'Betreuung' },
   { id: 'privacy',  label: 'Datenschutz' }
 ];
+/* App-Shortcuts (Langdruck auf das Symbol) springen direkt in einen Bereich. */
+try {
+  const t0 = new URLSearchParams(location.search).get('tab');
+  if (t0 && PTABS.some(x => x.id === t0)) PVIEW = t0;
+} catch (e) {}
 
 function renderPortal(id) {
   const c = client(id), m = metrics(c);
@@ -2869,9 +2904,16 @@ function portalPrivacy(c, m) {
       </div>
 
       <div class="card" style="margin-top:16px">
-        <div class="card__head"><div><p class="card__title">Dein Zugang</p></div></div>
-        <p class="card__sub" style="color:var(--ink-2)">Persönlicher Link, ${c.access ? c.access.days : 30} Tage gültig,
-          nicht öffentlich auffindbar und jederzeit widerrufbar.</p>
+        <div class="card__head"><div><p class="card__title">Dein Zugang</p>
+          <p class="card__sub">Persönlicher Link, ${c.access ? c.access.days : 30} Tage gültig,
+          nicht öffentlich auffindbar und jederzeit widerrufbar.</p></div></div>
+        <div class="row">
+          <span class="avatar">▣</span>
+          <div class="row__main"><p class="row__name">Auf diesem Gerät angemeldet</p>
+            <p class="row__meta">Dein Zugang ist auf diesem Gerät hinterlegt — deshalb öffnet die App
+              direkt deinen Bereich. Auf einem fremden Gerät bitte abmelden.</p></div>
+          <div class="row__side"><button class="btn btn--sm btn--ghost" data-act="signout">Abmelden</button></div>
+        </div>
       </div>
     </div>
   </div>`;
@@ -3038,6 +3080,7 @@ document.addEventListener('click', e => {
     }
     case 'ptab':      PVIEW = el.dataset.t; render(); break;
     case 'dsgvo':     dsgvoModal(); break;
+    case 'signout':   accessSignOut(); break;
     case 'consentDecline': { const c = client(id); renderDeclined(c); break; }
 
     case 'consentSave': {

@@ -9,6 +9,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,400..800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="app.css" />
+
+  <!-- Installierbar: Symbol am Homescreen, eigener Start, läuft auch ohne Netz. -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#06302B" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" />
+  <link rel="icon" href="assets/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FITARY" />
+  <meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body data-palette="#B3360C,#5BE6B4,#F5B23B,#FF5A5F">
 
@@ -72,5 +84,13 @@
   <div class="toasts" id="toasts"></div>
 
   <script src="app.js"></script>
+  <script>
+    /* Service Worker nur über http(s) — aus einer lokalen Datei heraus gibt es keinen. */
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>
