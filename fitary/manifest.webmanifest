@@ -1,0 +1,25 @@
+{
+  "name": "FITARY — dein Training",
+  "short_name": "FITARY",
+  "description": "Dein persönlicher FITARY-Bereich: Termine, Trainingsverlauf, Fortschritt und Betreuung. Boutique Personal Training, Wels.",
+  "lang": "de-AT",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "id": "fitary-journey",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#06302B",
+  "theme_color": "#06302B",
+  "categories": ["health", "fitness", "lifestyle"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Check-in", "short_name": "Check-in", "url": "./?tab=checkin", "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Fortschritt", "short_name": "Fortschritt", "url": "./?tab=progress", "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
