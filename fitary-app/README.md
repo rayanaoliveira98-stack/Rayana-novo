@@ -334,3 +334,44 @@ mostra o ecrã „Zugang abgelaufen" com o botão de pedir acesso novo.
 **Limite honesto desta fase:** o filtro por cliente acontece no navegador, não no servidor.
 Serve para demo, onboarding e uso real com clientes do estúdio. Para separação de dados
 à prova de bisbilhotice é preciso backend (ver ponto 1 e 4 acima).
+
+---
+
+## Fortschrittsbericht — o instrumento de renovação
+
+O momento da renovação decide o valor de um cliente. Sem relatório, é uma conversa
+desconfortável no fim de uma sessão. Com relatório, não é venda — é consequência.
+
+**Quando fica devido** (`reportDue`)
+- 12 semanas de acompanhamento e nenhum relatório ainda, **ou**
+- 12 semanas desde o último relatório, **ou**
+- restam ≤ 3 unidades no bloco (o momento de renovar chegou antes do prazo)
+
+Leads nunca têm relatório — não há nada para comparar.
+
+**O que o relatório mostra** (`reportData` → `reportModal`), por esta ordem:
+
+1. **Was du getan hast** — unidades, semanas seguidas, Verlässlichkeit + Dokumentationsquote
+2. **Beweglichkeit** — Mobility-Score start → hoje, os 7 pontos de medição
+3. **Leistung** — Leistungsindex e os 6 valores com variação em %
+4. **Bestleistungen** — PRs com ganho percentual
+5. **Körpermaße** — com a ressalva de que a balança é a parte lenta
+6. **Wie es dir dabei ging** — score de bem-estar dos check-ins semanais
+7. **Dann und jetzt** — fotos start/hoje por posição (só com consentimento Art 9)
+8. **Empfehlung** — o próximo bloco, derivada dos dados, não genérica
+9. **Kontingent** — unidades restantes + o argumento do slot fixo
+
+A recomendação adapta-se: Adherence < 70 % → ritmo antes de intensidade.
+Mobility +8 → agora entra carga. Leistungsindex ≥ 115 → bloco mais pesado.
+Streak ≥ 8 → aumentar o estímulo. Caso contrário → consolidar fundamento.
+
+**Onde aparece**
+- Trainer: fila de ações (regra `report`, nível crítico) + botão na Betreuungsakte
+- Cliente: aba **Erfolge**, assim que Yalcin fecha o relatório ("Bericht abschließen")
+- `Strg/Cmd + P` imprime só o relatório, sobre branco, com quebras de página
+  controladas — vira PDF para a ficha do cliente ou anexo de email
+
+**Mensagem WhatsApp** (`TPL.reportSend`) gerada com os números reais do cliente,
+incluindo o pedido de renovação quando o contingente está baixo.
+
+Estado guardado em `c.reports[]`: `{ date, weeks, sessions, index, mobi }`.

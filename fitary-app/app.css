@@ -528,3 +528,88 @@ figure { margin: 0; }
   color: var(--ink-3); font-size: 11.5px; line-height: 1.4;
   border-style: dashed; background: transparent;
 }
+
+/* ---------------- 12-Wochen-Fortschrittsbericht ----------------
+   Ein Dokument im Markenlook, das sich als PDF drucken lässt. */
+.modal__box--wide { width: min(780px, calc(100% - 24px)); }
+.report { max-height: none; }
+.rep__head {
+  display: flex; align-items: center; gap: 16px;
+  padding-bottom: 16px; margin-bottom: 18px; border-bottom: 2px solid var(--brand-terracotta);
+}
+.rep__logo { width: 56px; height: auto; flex: 0 0 56px; }
+.rep__eyebrow {
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); margin: 0 0 4px;
+}
+.rep__title {
+  font-family: var(--font-d); font-stretch: 75%; font-weight: 700;
+  font-size: 27px; letter-spacing: -.02em; margin: 0; line-height: 1.1;
+}
+.rep__sub { font-size: 13px; color: var(--ink-2); margin: 6px 0 0; }
+.rep__section {
+  font-family: var(--font-d); font-stretch: 75%; font-weight: 700;
+  font-size: 15px; letter-spacing: .01em; margin: 26px 0 12px;
+  padding-bottom: 7px; border-bottom: 1px solid var(--line);
+}
+.rep__section:first-of-type { margin-top: 0; }
+.rep__row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid var(--line);
+}
+.rep__label { flex: 1; min-width: 0; font-size: 13.5px; font-weight: 600; }
+.rep__nums { font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+.rep__nums strong { color: var(--ink); }
+.rep__arrow { color: var(--ink-3); margin: 0 2px; }
+.rep__delta { width: 64px; text-align: right; font-size: 12.5px; white-space: nowrap; }
+.rep__note {
+  font-size: 13px; line-height: 1.75; color: var(--ink-2);
+  margin: 12px 0 0; padding-left: 12px; border-left: 2px solid var(--brand-terracotta);
+}
+.rep__foot {
+  margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line);
+  font-size: 11.5px; color: var(--ink-3); line-height: 1.7;
+}
+.rep__foot p { margin: 0 0 3px; }
+.rep__acts {
+  display: flex; gap: 9px; flex-wrap: wrap;
+  margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line);
+}
+.rep__acts .btn { flex: 1 1 auto; justify-content: center; }
+
+/* Auf dem Handy stapeln: drei Spalten sind bei 414 px nicht lesbar. */
+@media (max-width: 560px) {
+  .report .grid--3 { grid-template-columns: 1fr; gap: 10px; }
+  .rep__head { gap: 12px; }
+  .rep__logo { width: 42px; flex-basis: 42px; }
+  .rep__title { font-size: 23px; }
+  .rep__row { flex-wrap: wrap; gap: 4px 10px; }
+  .rep__label { flex: 1 0 100%; }
+  .rep__nums { flex: 1; }
+  .rep__delta { width: auto; }
+}
+
+/* Druck: nur der Bericht, auf Weiß, ohne App-Rahmen. */
+@media print {
+  .shell, .drawer, .toasts, .modal__scrim, .panel__head, .rep__acts, .closebtn { display: none !important; }
+  .modal { position: static !important; display: block !important; background: none !important; }
+  .modal__box {
+    position: static !important; max-width: none !important; max-height: none !important;
+    width: auto !important; margin: 0 !important; padding: 0 !important;
+    border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
+    overflow: visible !important; background: #fff !important;
+  }
+  html, body { background: #fff !important; }
+  .report, .report * { background: transparent !important; color: #10231F !important; }
+  .report .metricbox, .report .action, .report .card {
+    border: 1px solid #C9D8D2 !important; break-inside: avoid;
+  }
+  .rep__section { break-after: avoid; border-bottom-color: #C9D8D2 !important; }
+  .rep__row { border-bottom-color: #E2EBE7 !important; break-inside: avoid; }
+  .rep__head { border-bottom-color: #B3360C !important; }
+  .rep__note { border-left-color: #B3360C !important; }
+  .delta-good { color: #0A6B4C !important; }
+  .delta-crit { color: #9B1C1F !important; }
+  .photo img { break-inside: avoid; }
+  @page { margin: 14mm; }
+}
