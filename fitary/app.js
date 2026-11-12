@@ -235,6 +235,95 @@ function perfIndex(c, entry) {
   return Math.round(100 * (1 + avg));
 }
 
+/* ---------------- 12-Wochen-Fortschrittsbericht ----------------
+   Der Moment der Verlängerung entscheidet über den Kundenwert. Heute ist das ein
+   unangenehmes Gespräch am Ende einer Einheit. Mit Bericht ist es kein Verkauf,
+   sondern eine Konsequenz: wer 12 Wochen schwarz auf weiß vor sich sieht, muss
+   nicht überzeugt werden.
+   Fällig wird er nach 12 Wochen Betreuung, danach alle 12 Wochen — und immer,
+   sobald das Kontingent zur Neige geht. */
+const REPORT_WEEKS = 12;
+const reportsOf  = c => (c.reports || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+const lastReport = c => { const r = reportsOf(c); return r.length ? r[r.length - 1] : null; };
+function reportDue(c) {
+  if (c.lead) return false;
+  const weeks = Math.floor(daysBetween(c.start, iso(today())) / 7);
+  if (weeks < REPORT_WEEKS && c.credits > 3) return false;
+  const l = lastReport(c);
+  if (!l) return weeks >= REPORT_WEEKS || c.credits <= 3;
+  return daysBetween(l.date, iso(today())) >= REPORT_WEEKS * 7 || c.credits <= 3;
+}
+
+/* Alles, was der Bericht braucht, an einer Stelle — damit Trainer- und
+   Kundenansicht garantiert dieselben Zahlen zeigen. */
+function reportData(c) {
+  const m = metrics(c), t = iso(today());
+  const weeks = Math.max(1, Math.floor(daysBetween(c.start, t) / 7));
+  const bt = baseTest(c), lt = lastTest(c);
+  const bp = basePerf(c), lp = lastPerf(c);
+  const wk = (c.weekly || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+  const bodyRows = (c.body || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+
+  /* Dokumentationsquote: dokumentierte Einheiten / absolvierte Einheiten.
+     Eine Doku-App, die nicht gefüllt wird, ist wertlos — also wird sie gemessen. */
+  const ws = workoutsOf(c.id);
+  const dokuQuote = m.totalDone ? Math.round(Math.min(ws.length, m.totalDone) / m.totalDone * 100) : 0;
+
+  const mobi = (bt && lt && bt !== lt) ? {
+    from: mobiScore(bt), to: mobiScore(lt),
+    items: MOBI.map(i => ({ label: i.label, from: bt.items[i.id], to: lt.items[i.id],
+      d: +(lt.items[i.id] - bt.items[i.id]).toFixed(1) }))
+  } : null;
+
+  const perf = (bp && lp && bp !== lp) ? {
+    index: perfIndex(c, lp),
+    items: PERF.map(i => {
+      const a = bp.items[i.id], b = lp.items[i.id];
+      const pct = a ? Math.round((b - a) / a * 100 * i.dir) : 0;
+      return { label: i.label, unit: i.unit, from: a, to: b, pct, better: pct > 0 };
+    })
+  } : null;
+
+  const body = (bodyRows.length >= 2) ? BODY.map(f => {
+    const a = bodyRows[0][f.id], b = bodyRows[bodyRows.length - 1][f.id];
+    if (a == null || b == null) return null;
+    const d = +(b - a).toFixed(1);
+    return { label: f.label, unit: f.unit, from: a, to: b, d, better: d * f.dir > 0 };
+  }).filter(Boolean) : null;
+
+  const ci = wk.length ? {
+    from: checkinScore(wk[0]), to: checkinScore(wk[wk.length - 1]), n: wk.length,
+    items: CHECKIN.map(f => ({ label: f.label, from: wk[0][f.id], to: wk[wk.length - 1][f.id],
+      better: (f.good === 5 ? wk[wk.length - 1][f.id] - wk[0][f.id] : wk[0][f.id] - wk[wk.length - 1][f.id]) > 0 }))
+  } : null;
+
+  const pbs = personalBests(c).filter(b => b.gain > 0).sort((a, b) => b.gain - a.gain).slice(0, 4);
+  const photos = consentOk(c) && c.consent.photos
+    ? POSES.map(ps => { const arr = photosOfPose(c, ps.id);
+        return arr.length >= 2 ? { label: ps.label, first: arr[0], last: arr[arr.length - 1] } : null; }).filter(Boolean)
+    : [];
+
+  /* Die Empfehlung ist der eigentliche Zweck des Berichts: nach der Bilanz
+     steht die nächste Entscheidung, nicht ein Danke. */
+  const rec = (() => {
+    if (m.adherence < 70) return { head: 'Rhythmus vor Intensität',
+      text: `Deine Adherence liegt bei ${m.adherence} %. Das Programm ist nicht das Problem — der Termin ist es. Wir legen dich auf einen Slot, der wirklich in deine Woche passt, statt auf einen, den du dir vornimmst.` };
+    if (mobi && mobi.to - mobi.from >= 8) return { head: 'Beweglichkeit hält, jetzt kommt Last dazu',
+      text: `Mobility-Score ${mobi.from} → ${mobi.to}. Die Basis steht. Die nächsten 12 Wochen gehen auf Kraft bei dieser Qualität — das ist der Teil, der im Alltag ankommt.` };
+    if (perf && perf.index >= 115) return { head: 'Weiter auf Leistung',
+      text: `Leistungsindex ${perf.index} (Start: 100). Du verträgst mehr. Nächster Block: schwerer, weniger Wiederholungen, saubere Technik als Bedingung.` };
+    if (streak(c) >= 8) return { head: 'Konstanz ist dein Vorteil',
+      text: `${streak(c)} Wochen in Folge. Das schaffen die wenigsten. Jetzt den Reiz erhöhen, bevor der Körper sich daran gewöhnt.` };
+    return { head: 'Fundament weiter festigen',
+      text: 'Die nächsten 12 Wochen bleiben auf Technik und Grundmuster. Nicht spektakulär, aber das ist der Teil, der in zwei Jahren noch trägt.' };
+  })();
+
+  return { m, weeks, from: c.start, to: t, sessions: m.totalDone, streak: streak(c),
+           adherence: m.adherence, dokuQuote, dokuN: Math.min(ws.length, m.totalDone),
+           mobi, perf, body, ci, pbs, photos, rec, milestone: nextMilestone(c),
+           nr: reportsOf(c).length + 1 };
+}
+
 /* Videos: Willkommensnachricht, Testbesprechung, Technik-Clips */
 const VIDEO_KINDS = { welcome:'Willkommensvideo', test:'Testbesprechung', technik:'Technik-Feedback' };
 const unwatched = c => (c.videos || []).filter(v => !v.watched);
@@ -306,8 +395,16 @@ function buildSeed() {
         core: true, photos: i % 3 === 0, marketing: i % 4 === 0,
         guardian: null, withdrawnAt: null
       },
-      note: '', checkins: [], mobility: [], performance: [], videos: [], stoppedDaysAgo: s.stoppedDaysAgo || null
+      note: '', checkins: [], mobility: [], performance: [], videos: [], reports: [],
+      stoppedDaysAgo: s.stoppedDaysAgo || null
     };
+
+    /* Demodaten: wer schon über 24 Wochen dabei ist, hat einen Bericht hinter sich —
+       damit beide Zustände sichtbar sind: Bericht vorhanden und Bericht fällig. */
+    if (s.weeks >= 24) c.reports.push({
+      date: iso(addDays(t, -(s.weeks - 12) * 7)), weeks: 12,
+      sessions: Math.round(s.weeks * (s.freq || 1) * 0.5), index: null, mobi: null
+    });
 
     /* Leistungstest: Baseline am Start, Re-Test alle 12 Wochen */
     const k0 = s.kraft[0], gainFactor = (s.kraft[1] - s.kraft[0]) / Math.max(s.kraft[0], 1);
@@ -520,7 +617,7 @@ function buildSeed() {
       phone: s.phone, email: s.email, dow: (d.getDay() + 6) % 7 + 1, time: s.time,
       code: 'FIT-L' + (10 + i),
       access: null,   /* App-Zugang ist Teil des Programms, nicht des Gratis-Termins */
-      note: '', checkins: [], mobility: [], performance: [], videos: [],
+      note: '', checkins: [], mobility: [], performance: [], videos: [], reports: [],
       program: [], weekly: [], body: [], tasks: [], photos: [],
       consent: blankConsent(), age: null, stoppedDaysAgo: null
     };
@@ -652,6 +749,20 @@ Du wolltest diese Woche eine zusätzliche Einheit — der Slot gehört dir, wenn
     build: (c, b) => `Du warst heute nicht da — kein Vorwurf, aber ich frag trotzdem nach: Woran ist es gescheitert?
 Wenn ${b.time} dauerhaft zu eng ist, legen wir dich auf einen Termin, der wirklich zu deiner Woche passt. Das ist kein Fitnessstudio, hier fällt es auf, wenn du fehlst.`
   },
+  reportSend: {
+    label: '12-Wochen-Bericht', channel: 'WhatsApp',
+    build: (c, m) => {
+      const r = reportData(c);
+      const zahl = r.perf ? `Leistungsindex ${r.perf.index} (Start: 100)`
+                 : r.mobi ? `Mobility-Score ${r.mobi.from} → ${r.mobi.to}`
+                 : `${r.sessions} Einheiten, ${r.streak} Wochen in Folge`;
+      return `${c.name.split(' ')[0]}, ${r.weeks} Wochen sind um — ich hab dir den Fortschrittsbericht gemacht.
+Kurzfassung: ${r.sessions} Einheiten, ${r.adherence} % Verlässlichkeit, ${zahl}.
+${r.rec.head}: ${r.rec.text}
+Den ganzen Bericht siehst du in deinem FITARY-Bereich unter Erfolge. ${c.credits <= 3 ? `Dein Kontingent ist bei ${c.credits} Einheiten — sag mir kurz Bescheid, dann bleibt dein ${['So','Mo','Di','Mi','Do','Fr','Sa'][c.dow]} ${c.time} dir erhalten.` : 'Wenn du Fragen dazu hast, besprechen wir das in der nächsten Einheit.'}`;
+    }
+  },
+
   winback: {
     label: 'Win-back nach Inaktivität', channel: 'WhatsApp',
     build: (c, m) => `${c.name.split(' ')[0]}, ${m.inactive} Tage ohne Training. Kein Drama — aber die ${m.totalDone} Einheiten, die du schon drin hast, will ich nicht wegwerfen lassen.
@@ -824,6 +935,11 @@ Kein Sammel-Chat, keine Massen-App. Deine Reise, dein Zugang.`
 
 /* ---------------- Aktions-Queue (Automationen) ---------------- */
 const RULES = [
+  { id:'report', level:'crit', tpl:'reportSend', title:c=>`${c.name}: 12-Wochen-Bericht fällig`,
+    desc:'Der Verlängerungsmoment. Mit Bilanz auf dem Tisch ist Weitermachen eine Konsequenz, kein Verkaufsgespräch — ohne Bilanz ist es ein unangenehmes Gespräch am Ende einer Einheit.',
+    match:(c,m)=> reportDue(c),
+    why:(c,m)=>{ const r = reportData(c); return `${r.weeks} Wochen · ${r.sessions} Einheiten · ${c.credits} offen${r.perf ? ' · Index ' + r.perf.index : ''}`; } },
+
   { id:'leadfollow', level:'crit', tpl:'leadFollow', title:c=>`${c.name}: Empfehlung nach Gratis-Termin`,
     desc:'Entscheidungsfenster 24–48 h. Der Termin hat nichts gekostet — nur die Nachverfolgung macht daraus Umsatz.',
     match:(c,m)=> c.lead && leadState(c, m) === 'heiß',
@@ -1448,6 +1564,16 @@ function sheetOverview(c, m) {
       <span style="display:block;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden">
         <span style="display:block;height:100%;width:${clamp(ms.pct, 4, 100)}%;background:var(--flame-fill)"></span></span>
     </div>
+
+    ${reportDue(c) ? `<div class="action action--crit" style="margin-bottom:14px"><div class="action__body">
+      <p class="action__title">12-Wochen-Bericht fällig</p>
+      <p class="action__why">${Math.floor(daysBetween(c.start, iso(today())) / 7)} Wochen Betreuung, ${c.credits} Einheiten offen.
+        Der Verlängerungsmoment läuft besser mit Bilanz als ohne.</p>
+      <div class="action__acts">
+        <button class="btn btn--sm btn--primary" data-act="report" data-id="${c.id}">Bericht öffnen</button>
+        <button class="btn btn--sm btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="reportSend">Nachricht erstellen</button>
+      </div></div></div>` : (lastReport(c) || daysBetween(c.start, iso(today())) >= 56) ? `<div style="margin-bottom:14px">
+      <button class="btn btn--sm btn--ghost" data-act="report" data-id="${c.id}">Fortschrittsbericht ansehen${lastReport(c) ? ` · letzter ${fmtDate(lastReport(c).date)}` : ''}</button></div>` : ''}
 
     <div class="grid grid--3">
       <div class="metricbox"><p class="metricbox__label">Einheiten</p><p class="metricbox__val">${m.totalDone}</p>
@@ -2189,7 +2315,12 @@ function viewAutomations() {
 /* =========================================================
    MODALS & AKTIONEN
    ========================================================= */
-function modal(html) { $('#modalBox').innerHTML = html; $('#modal').setAttribute('aria-hidden', 'false'); }
+function modal(html, wide) {
+  const box = $('#modalBox');
+  box.innerHTML = html;
+  box.classList.toggle('modal__box--wide', !!wide);
+  $('#modal').setAttribute('aria-hidden', 'false');
+}
 function closeAll() { $('#modal').setAttribute('aria-hidden', 'true'); $('#drawer').setAttribute('aria-hidden', 'true'); }
 function toast(text) {
   const el = document.createElement('div');
@@ -2479,6 +2610,145 @@ function renderDeclined(c) {
 }
 
 /* Vollständige Datenschutzerklärung — Vorlage, vor dem Livegang anwaltlich prüfen lassen. */
+/* ---------------- 12-Wochen-Bericht: die Seite ----------------
+   Ein Dokument, nicht ein Dashboard. Chronologisch wie ein Gespräch:
+   Was war → was ist → was das heißt → was jetzt kommt.
+   Druckbar (Strg/Cmd+P) — damit daraus ein PDF für die Kundenakte wird. */
+function reportModal(id, opts) {
+  const c = client(id), r = reportData(c), own = !!(opts && opts.own);
+
+  const bar = (pct, tone) => `<span style="display:block;height:7px;border-radius:99px;background:var(--surface-3);overflow:hidden">
+    <span style="display:block;height:100%;width:${clamp(Math.abs(pct), 3, 100)}%;background:${tone};border-radius:99px"></span></span>`;
+
+  const line = (label, from, to, unit, better, extra) => `
+    <div class="rep__row">
+      <span class="rep__label">${label}</span>
+      <span class="rep__nums">${from}${unit ? ' ' + unit : ''} <span class="rep__arrow">→</span> <strong>${to}${unit ? ' ' + unit : ''}</strong></span>
+      <span class="rep__delta ${better ? 'delta-good' : 'delta-crit'}">${extra}</span>
+    </div>`;
+
+  modal(`
+  <div class="panel__head"><div>
+      <p class="panel__name">Fortschrittsbericht</p>
+      <p class="panel__meta">${c.name} · Bericht Nr. ${r.nr} · ${fmtDate(r.from)} – ${fmtDate(r.to)}</p></div>
+    <button class="closebtn" data-close>✕</button></div>
+
+  <div class="report" id="reportDoc">
+
+    <header class="rep__head">
+      <img src="assets/logo-mark.png" alt="FITARY" class="rep__logo" onerror="this.remove()" />
+      <div>
+        <p class="rep__eyebrow">FITARY · Boutique Personal Training · Wels</p>
+        <h2 class="rep__title">${r.weeks} Wochen ${c.name.split(' ')[0]}</h2>
+        <p class="rep__sub">${fmtDate(r.from)} bis ${fmtDate(r.to)} · Ziel: ${c.goal}</p>
+      </div>
+    </header>
+
+    <!-- 1. Was du getan hast -->
+    <p class="rep__section">Was du getan hast</p>
+    <div class="grid grid--3">
+      <div class="metricbox"><p class="metricbox__label">Einheiten</p>
+        <p class="metricbox__val">${r.sessions}</p><p class="card__sub">in ${r.weeks} Wochen</p></div>
+      <div class="metricbox"><p class="metricbox__label">Wochen in Folge</p>
+        <p class="metricbox__val">${r.streak}</p><p class="card__sub">ohne Unterbrechung</p></div>
+      <div class="metricbox"><p class="metricbox__label">Verlässlichkeit</p>
+        <p class="metricbox__val">${r.adherence} %</p><p class="card__sub">der geplanten Termine</p></div>
+    </div>
+    <p class="rep__note">${r.sessions} Einheiten sind ${r.sessions} Entscheidungen, aufzutauchen. Das ist der Teil,
+      den kein Programm für dich übernimmt — und der Grund, warum die Zahlen darunter so aussehen, wie sie aussehen.
+      ${r.dokuQuote >= 70 ? `Davon sind ${r.dokuN} Einheiten vollständig dokumentiert (${r.dokuQuote} %) — deshalb lässt sich hier überhaupt etwas beweisen.` : `Dokumentiert sind davon ${r.dokuN} (${r.dokuQuote} %). Je lückenloser wir mitschreiben, desto genauer wird dieser Bericht.`}</p>
+
+    <!-- 2. Beweglichkeit -->
+    ${r.mobi ? `
+    <p class="rep__section">Beweglichkeit — womit alles angefangen hat</p>
+    <div class="metricbox" style="margin-bottom:10px">
+      <p class="metricbox__label">Mobility-Score</p>
+      <p class="metricbox__val">${r.mobi.from} → ${r.mobi.to}<span style="font-size:12px;color:var(--ink-3);font-weight:500"> / 100</span>
+        <span class="${r.mobi.to >= r.mobi.from ? 'delta-good' : 'delta-crit'}">${r.mobi.to >= r.mobi.from ? '+' : ''}${r.mobi.to - r.mobi.from}</span></p>
+      ${bar(r.mobi.to, 'var(--good)')}
+    </div>
+    ${r.mobi.items.map(i => line(i.label, i.from, i.to, '', i.d >= 0, `${i.d >= 0 ? '+' : ''}${i.d}`)).join('')}` : ''}
+
+    <!-- 3. Leistung -->
+    ${r.perf ? `
+    <p class="rep__section">Leistung — die harten Zahlen</p>
+    <div class="metricbox" style="margin-bottom:10px">
+      <p class="metricbox__label">Leistungsindex</p>
+      <p class="metricbox__val">${r.perf.index}<span style="font-size:12px;color:var(--ink-3);font-weight:500"> (Start: 100)</span></p>
+      <p class="card__sub">Mittlere Verbesserung über alle sechs Messwerte gegenüber deinem Eingangstest.</p>
+    </div>
+    ${r.perf.items.map(i => line(i.label, i.from, i.to, i.unit, i.better, `${i.pct >= 0 ? '+' : ''}${i.pct} %`)).join('')}` : ''}
+
+    <!-- 4. Bestleistungen -->
+    ${r.pbs.length ? `
+    <p class="rep__section">Deine Bestleistungen</p>
+    ${r.pbs.map(b => line(EXERCISES[b.ex].label, b.start, b.value, EXERCISES[b.ex].unit, true, `+${b.gain} %`)).join('')}` : ''}
+
+    <!-- 5. Körper -->
+    ${r.body ? `
+    <p class="rep__section">Körpermaße</p>
+    ${r.body.map(f => line(f.label, f.from, f.to, f.unit, f.better, `${f.d >= 0 ? '+' : ''}${f.d}`)).join('')}
+    <p class="rep__note">Maße sind nur ein Teil der Wahrheit — Kraft, Beweglichkeit und wie du dich fühlst,
+      bewegen sich oft schneller als die Waage.</p>` : ''}
+
+    <!-- 6. Wie es dir dabei ging -->
+    ${r.ci ? `
+    <p class="rep__section">Wie es dir dabei ging</p>
+    <div class="metricbox" style="margin-bottom:10px">
+      <p class="metricbox__label">Wohlbefinden-Score aus ${r.ci.n} Check-ins</p>
+      <p class="metricbox__val">${r.ci.from} → ${r.ci.to}
+        <span class="${r.ci.to >= r.ci.from ? 'delta-good' : 'delta-crit'}">${r.ci.to >= r.ci.from ? '+' : ''}${r.ci.to - r.ci.from}</span></p>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${r.ci.items.map(i => `<span class="pill ${i.better ? 'pill--good' : ''}">${i.label} ${i.from} → ${i.to}</span>`).join('')}
+    </div>` : ''}
+
+    <!-- 7. Fotos -->
+    ${r.photos.length ? `
+    <p class="rep__section">Dann und jetzt</p>
+    <div class="grid grid--3">
+      ${r.photos.map(ps => `<div>
+        <p class="metricbox__label" style="margin-bottom:6px">${ps.label}</p>
+        <div class="pose__pair">
+          <figure class="photo"><img src="${ps.first.src}" alt="${ps.label} Start" />
+            <figcaption>${fmtDate(ps.first.date)}</figcaption></figure>
+          <figure class="photo"><img src="${ps.last.src}" alt="${ps.label} heute" />
+            <figcaption>${fmtDate(ps.last.date)}</figcaption></figure>
+        </div></div>`).join('')}
+    </div>` : ''}
+
+    <!-- 8. Empfehlung -->
+    <p class="rep__section">Was ich dir für die nächsten ${REPORT_WEEKS} Wochen empfehle</p>
+    <div class="action action--flame"><div class="action__body">
+      <p class="action__title">${r.rec.head}</p>
+      <p class="action__why">${r.rec.text}</p>
+      <p class="action__why" style="margin-top:8px">Nächster Meilenstein: <strong>${r.milestone.label}</strong>
+        · Stand ${r.milestone.now}/${r.milestone.goal} ${r.milestone.unit}</p>
+    </div></div>
+
+    <!-- 9. Kontingent -->
+    <div class="metricbox" style="margin-top:14px">
+      <p class="metricbox__label">Dein Kontingent</p>
+      <p class="metricbox__val">${c.credits} ${c.credits === 1 ? 'Einheit' : 'Einheiten'} offen
+        <span style="font-size:12px;color:var(--ink-3);font-weight:500"> · ${c.plan}</span></p>
+      <p class="card__sub">${c.credits <= 3
+        ? `Dein fixer Termin ist ${['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'][c.dow]} ${c.time}. Der Slot bleibt dir erhalten, solange er gebucht ist — bei einem Boutique-Studio mit einem Trainer ist er sonst weg.`
+        : 'Reicht noch für die kommenden Wochen.'}</p>
+    </div>
+
+    <footer class="rep__foot">
+      <p>Erstellt am ${fmtDate(r.to)} von Yalcin Arslan · FITARY, Plobergerstraße 7, 4600 Wels</p>
+      <p>Grundlage: ${r.sessions} dokumentierte Einheiten${r.mobi ? `, ${c.mobility.length} Beweglichkeitstests` : ''}${r.perf ? `, ${c.performance.length} Leistungstests` : ''}${r.ci ? `, ${r.ci.n} Wochen-Check-ins` : ''}. Keine Schätzungen.</p>
+    </footer>
+  </div>
+
+  <div class="rep__acts">
+    <button class="btn btn--ghost" data-act="reportPrint">Als PDF speichern</button>
+    ${own ? '' : `<button class="btn btn--ghost" data-act="draft" data-id="${c.id}" data-tpl="reportSend">Nachricht erstellen</button>
+    <button class="btn btn--primary" data-act="reportMark" data-id="${c.id}">Bericht abschließen</button>`}
+  </div>`, true);
+}
+
 function dsgvoModal() {
   modal(`
     <div class="panel__head"><div><p class="panel__name">Datenschutzerklärung</p>
@@ -2756,7 +3026,18 @@ function portalWins(c, m) {
   const prCount = workoutsOf(c.id).reduce((a, w) => a + w.exercises.filter(e => e.pr).length, 0);
   const marks = [10, 20, 30, 50, 75, 100].filter(x => m.totalDone >= x);
 
+  const rep = lastReport(c);
+
   return `
+  ${rep ? `<div class="card" style="margin-bottom:16px;border-color:rgba(91,230,180,.45)">
+    <div class="card__head"><div><p class="card__title">Dein ${rep.weeks}-Wochen-Bericht</p>
+      <p class="card__sub">Abgeschlossen am ${fmtDate(rep.date)} · ${rep.sessions} Einheiten</p></div>
+      <span class="pill pill--good">neu</span></div>
+    <p class="card__sub" style="margin-bottom:12px">Die ganze Bilanz auf einer Seite: was du getan hast, was sich
+      gemessen verändert hat, und was Yalcin dir für die nächsten Wochen empfiehlt.</p>
+    <button class="btn btn--primary" data-act="reportOwn" data-id="${c.id}" style="width:100%;justify-content:center">Bericht öffnen</button>
+  </div>` : ''}
+
   ${top ? `<div class="card" style="margin-bottom:16px;border-color:rgba(255,138,80,.45)">
     <p class="metricbox__label">🏆 Dein bisher größter Fortschritt</p>
     <p style="font-family:var(--font-d);font-stretch:75%;font-size:30px;font-weight:700;letter-spacing:-.02em;margin:6px 0">
@@ -3081,6 +3362,19 @@ document.addEventListener('click', e => {
     case 'ptab':      PVIEW = el.dataset.t; render(); break;
     case 'dsgvo':     dsgvoModal(); break;
     case 'signout':   accessSignOut(); break;
+    case 'report':     closeAll(); reportModal(id); break;
+    case 'reportOwn':  reportModal(PORTAL ? PORTAL.id : id, { own: true }); break;
+    case 'reportPrint': window.print(); break;
+    case 'reportMark': {
+      const c = client(id);
+      c.reports = c.reports || [];
+      const r = reportData(c);
+      c.reports.push({ date: iso(today()), weeks: r.weeks, sessions: r.sessions,
+                       index: r.perf ? r.perf.index : null, mobi: r.mobi ? r.mobi.to : null });
+      logEvent('progress', `12-Wochen-Bericht Nr. ${r.nr} für ${c.name} abgeschlossen`, id);
+      save(); toast('Bericht abgeschlossen · im Kundenbereich sichtbar'); closeAll(); render();
+      break;
+    }
     case 'consentDecline': { const c = client(id); renderDeclined(c); break; }
 
     case 'consentSave': {
